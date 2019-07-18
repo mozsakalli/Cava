@@ -28,7 +28,7 @@ After this step every class file converted to equivalent C files and headers.
 
 ## How to compile
 
-Check out the project and in project folder from console enter "mvn clean instal"
-Cava requires JDK 1.8 and a Mac XCode with commandline tools installed to test generated sample project.
+** Check out the project and in project folder from console enter "mvn clean instal"
+** Cava requires JDK 1.8 and a Mac XCode with commandline tools installed to test generated sample project.
 
 

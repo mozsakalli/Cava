@@ -1,6 +1,6 @@
 # Cava
 
-Cava is a compiler for Java bytecode to plain C codes targeting Ios, Android and OsX,Linux,Windows soon...
+Cava is a compiler for Java bytecode to plain C code targeting Ios, Android and OsX,Linux,Windows soon...
 
 Big inspiration comes from RoboVM and MobiVM fork.
 

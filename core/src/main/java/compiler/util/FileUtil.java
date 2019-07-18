@@ -19,6 +19,7 @@ package compiler.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  *
@@ -35,7 +36,19 @@ public class FileUtil {
     
     public static void copyFile(File src, File dest) throws Exception {
         byte[] bytes = readFile(src);
+        dest.getParentFile().mkdirs();
         new FileOutputStream(dest).write(bytes);
     }
     
+    public static void copyFile(InputStream in, File dest) throws Exception {
+        byte[] buffer = new byte[8192];
+        dest.getParentFile().mkdirs();
+        FileOutputStream out = new FileOutputStream(dest);
+        while(true) {
+            int readed = in.read(buffer);
+            if(readed <= 0) break;
+            out.write(buffer, 0, readed);
+        }
+        out.close();
+    }
 }

@@ -23,6 +23,9 @@ import compiler.backend.SourceWriter;
 import compiler.project.xcode.PBXProject;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 /**
  *
@@ -32,14 +35,10 @@ public class XCodeProject extends Project {
     
     PBXProject pbxProject;
     File projectDir;
-    File infoPList;
     
     final static String GROUP_GENERATED = "generated";
     
     public void build() throws Exception {
-        infoPList = CavaOptions.getFile("info-plist");
-        if(infoPList == null || !infoPList.exists())
-            throw new RuntimeException("Info.plist file missing at "+infoPList);
         projectDir = new File(CompilerContext.platformBuildDir,"project.xcodeproj");
         projectDir.mkdirs();
         pbxProject = new PBXProject(this);
@@ -48,6 +47,9 @@ public class XCodeProject extends Project {
             pbxProject.addSourceFile(GROUP_GENERATED, file);
         }
         
+        copyCavaFiles();
+        
+        /*
         pbxProject.addSourceFile("cava", new File("/Users/mustafa/Work/experimental/cava/compiler/core/jvm.c"));
         pbxProject.addSourceFile("cava", new File("/Users/mustafa/Work/experimental/cava/compiler/core/jvm.h"));
         
@@ -56,7 +58,7 @@ public class XCodeProject extends Project {
                 new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/thumbv7"),
                 new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/x86_64"),
                 new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/x86"));
-        
+        */
         SourceWriter out = new SourceWriter();
         pbxProject.export(out);
         
@@ -67,18 +69,31 @@ public class XCodeProject extends Project {
         return projectDir;
     }
     
-    public File getInfoPList() {
-        return infoPList;
-    }
-    
     public String getIosSdk() {
-        return CavaOptions.get("ios-sdk", "8.0");
+        return CavaOptions.getStr("ios-sdk", "8.0");
     }
     
     void copyCavaFiles() throws Exception {
-        String root = "/Users/mustafa/Work/experimental/cava/core/compiler";
-        FileUtil.copyFile(new File(root+"/jvm.h"), new File(CompilerContext.platformBuildDir,"generated"));
-        FileUtil.copyFile(new File(root+"/jvm.c"), new File(CompilerContext.platformBuildDir,"generated"));
+        File root = new File(CompilerContext.platformBuildDir, "cava");
+        if(!root.exists()) {
+            JarInputStream jar = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.jar"));
+            JarEntry entry = jar.getNextJarEntry();
+            byte[] buffer = new byte[8192];
+            while(entry != null) {
+                File dest = new File(root, entry.getName());
+                dest.getParentFile().mkdirs();
+                FileOutputStream out = new FileOutputStream(dest);
+                int len = (int)entry.getSize();
+                int ptr = 0;
+                while(ptr < len) {
+                    int readed = jar.read(buffer, ptr, Math.min(len - ptr, buffer.length));
+                    out.write(buffer, 0, readed);
+                    ptr += readed;
+                }
+                out.close();
+                entry = jar.getNextJarEntry();
+            }
+        }
     }
     
 }

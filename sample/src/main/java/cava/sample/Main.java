@@ -14,34 +14,15 @@
  * limitations under the License.
  */
 
-package compiler;
-
-import java.io.File;
-import java.io.FileInputStream;
+package cava.sample;
 
 /**
  *
  * @author mustafa
  */
-public class FileClassSource implements ClassSource {
+public class Main {
 
-    File file;
-    
-    public FileClassSource(File file) {
-        this.file = file;
+    public static void main() {
+        System.out.println("Hello World!");
     }
-    
-    @Override
-    public long lastModified() {
-        return file.lastModified();
-    }
-
-    @Override
-    public byte[] read() throws Exception {
-        int len = (int)file.length();
-        byte[] bytes = new byte[len];
-        new FileInputStream(file).read(bytes);
-        return bytes;
-    }
-    
 }

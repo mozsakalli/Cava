@@ -72,18 +72,12 @@ public class CBackend {
             }
         }
         
-        StringBuilder script = new StringBuilder("#!/bin/sh\n");
         for(Clazz c : sortedClasses) {
             if(c.name.startsWith("[")) continue;
             generateClass(c, vTable, globalRefs);
-            script.append("clang -Wno-everything -c \"c/").append(naming.clazz(c.name)).append(".m\" -o \"out/").append(naming.clazz(c.name))
-                    .append(".o\"")
-                    .append("\n");
             allInvokeTypes.addAll(invokeTypes);
             invokeTypes.clear();
         }
-        
-        new FileOutputStream("build.sh").write(script.toString().getBytes());
         
         SourceWriter out = new SourceWriter();
         out.println("#include \"jvm.h\"");

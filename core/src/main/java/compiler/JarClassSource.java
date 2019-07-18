@@ -16,10 +16,38 @@
 
 package compiler;
 
+import java.io.InputStream;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 /**
  *
  * @author mustafa
  */
-public class JarClassSource {
+public class JarClassSource implements ClassSource {
     
+    JarFile file;
+    JarEntry entry;
+    
+    public JarClassSource(JarFile file, JarEntry entry) throws Exception {
+        this.entry = entry;
+        this.file = file;
+    }
+
+    @Override
+    public long lastModified() {
+        return entry.getTime();
+    }
+
+    @Override
+    public byte[] read() throws Exception {
+        try (InputStream in = file.getInputStream(entry)) {
+            byte[] bytes = new byte[(int)entry.getSize()];
+            int ptr = 0;
+            while(ptr < bytes.length) {
+                ptr += in.read(bytes, ptr, bytes.length - ptr);
+            }
+            return bytes;
+        }
+    }
 }

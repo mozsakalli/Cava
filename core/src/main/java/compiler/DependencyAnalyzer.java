@@ -44,7 +44,7 @@ public class DependencyAnalyzer {
         
     }
     
-    public void analyze(String mainClass, String mainMethod, String mainSignature) throws Exception {
+    public void analyze(String mainClass/*, String mainMethod, String mainSignature*/) throws Exception {
         final Set<Method> analyzedMethods = new HashSet();
         final Set<Clazz> analyzedClasses = new HashSet();
         final ArrayList<Method> methodQueue = new ArrayList();
@@ -77,12 +77,22 @@ public class DependencyAnalyzer {
             pendingClasses.add(name);
         }
         
-        if(CompilerContext.isDebug)
+        if(CavaOptions.debug())
             pendingClasses.add("debugger/Debugger");
         
         pendingClasses.add(mainClass);
         
+        //todo
+        String mainMethod = null;
+        String mainSignature = null;
+        
         Clazz c = CompilerContext.resolve(mainClass);
+        if(mainMethod == null) {
+            mainMethod = "main";
+        }
+        if(mainSignature == null) {
+            mainSignature = "()V";
+        }
         Method m = c.findDeclaredMethod(mainMethod, mainSignature);
         if(m == null) throw new Exception("Can't find main method "+mainClass+"."+mainMethod+mainSignature);
         methodQueue.add(m);

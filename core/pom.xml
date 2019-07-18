@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.cava</groupId>
     <artifactId>cava-compiler</artifactId>
-    <version>1.0</version>
+    <version>2019.07.18</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -12,9 +12,9 @@
             <version>1.3</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>com.cava</groupId>
             <artifactId>cava-procyon</artifactId>
-            <version>${project.version}</version>
+            <version>2019.07.18</version>
         </dependency>
     </dependencies>
     <properties>

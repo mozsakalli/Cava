@@ -23,17 +23,13 @@ import compiler.backend.StringCollector;
 import compiler.backend.c.CBackend;
 import compiler.model.Clazz;
 import compiler.model.Method;
-import compiler.model.ast.Block;
-import compiler.model.ast.Return;
 import compiler.project.XCodeProject;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,9 +41,9 @@ import java.util.Map;
  */
 public class CompilerContext {
     
-    public static String mainClassName;
-    public static String mainName;
-    public static String mainSignature;
+    //public static String mainClassName;
+    //public static String mainName;
+    //public static String mainSignature;
     public static File[] classPath;
     public static File[] shadowClassPath;
     public static Map<String, Clazz> classes = new HashMap();
@@ -56,10 +52,10 @@ public class CompilerContext {
     public static String[] keepClasses;
     
     public static boolean keepAll;
-    public static boolean isDebug = true;
-    public static Platform targetPlatform = Platform.Ios;
+    //public static boolean isDebug = true;
+    //public static Platform targetPlatform = Platform.Ios;
     
-    public static File buildDir = new File("build");
+    //public static File buildDir = new File("build");
     public static File platformBuildDir;
     public static File classCacheDir;
     
@@ -78,21 +74,15 @@ public class CompilerContext {
     }
     
     public static Method getMainMethod() {
-        return classes.get(mainClassName).findMethod(mainName, mainSignature);
+        //todo: 
+        return classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
     }
     
-    static String getShadowName(String name) {
-        StringBuilder shadowName = new StringBuilder("compiler/"+name.replace('.', '/'));
-        int p = shadowName.lastIndexOf("/");
-        if(p>0) shadowName.insert(p+1, "T");
-        return shadowName.toString();
-    }
-    
+    /*
     public static File findClassFile(String name) {
         name = name.replace('.', '/') + ".class";
         for(File path : CompilerContext.classPath) {
             File file = new File(path, name);
-            //System.out.println(file+" : "+file.exists());
             if(file.exists()) return file;
         }
         return null;
@@ -102,7 +92,7 @@ public class CompilerContext {
         File file = findClassFile(name);
         return file != null ? file.lastModified() : 0;
     }
-    
+    */
     static Clazz load(String name) {
         System.out.println("Decompiling "+name);
         PlainTextOutput po = new PlainTextOutput();
@@ -152,7 +142,7 @@ public class CompilerContext {
             } else clazz.elementType = name;
             return clazz;
         }
-        long classTime = getClassTime(name);
+        long classTime = ClassFileFinder.getClassTime(name);// getClassTime(name);
         File path = new File(classCacheDir,name.replace('/', '.')+".model");
         boolean isLambdaClass = name.endsWith("$Lambda");
         if(isLambdaClass) {
@@ -188,17 +178,16 @@ public class CompilerContext {
         return clazz;
     }
     
-    public static void transpile(String...args) throws Exception {
-        CavaOptions.parse(args);
-        //create directories if required
-        platformBuildDir = new File(buildDir, targetPlatform.name());
+    public static void transpile() throws Exception {
+        File buildDir = CavaOptions.buildDir();
+        platformBuildDir = new File(buildDir, CavaOptions.targetPlatform().name());
         platformBuildDir.mkdirs();
         new File(platformBuildDir, "generated").mkdirs();
         classCacheDir = new File(buildDir,"classcache");
         classCacheDir.mkdirs();
         
         long time = System.currentTimeMillis();
-        new DependencyAnalyzer().analyze(mainClassName, mainName, mainSignature);
+        new DependencyAnalyzer().analyze(CavaOptions.mainClass());// mainClassName, mainName, mainSignature);
         time = System.currentTimeMillis() - time;
         System.out.println("Dependency: "+time);
         //new JSBackend().generate();

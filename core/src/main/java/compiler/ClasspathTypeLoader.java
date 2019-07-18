@@ -18,8 +18,6 @@ package compiler;
 
 import com.strobel.assembler.metadata.Buffer;
 import com.strobel.assembler.metadata.ITypeLoader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,18 +33,12 @@ public class ClasspathTypeLoader implements ITypeLoader {
     public boolean tryLoadType(String internalName, Buffer buffer) {
         String name = internalName;//internalName.concat(".class");
         byte[] array = classes.get(name);
-        if(array == null) {
-            File file = CompilerContext.findClassFile(name);
-            if(file != null) try {
-                int len = (int)file.length();
-                array = new byte[len];
-                FileInputStream in = new FileInputStream(file);
-                in.read(array);
-                in.close();
-                classes.put(name, array);                
-            } catch(Exception e){
-                throw new RuntimeException(e);                
-            }
+        if(array == null) try {
+            ClassSource file = ClassFileFinder.findClass(name);
+            if(file != null) 
+                classes.put(name, array = file.read());
+        } catch(Exception e) {
+            throw new RuntimeException(e);
         }
         
         if(array != null) {

@@ -52,7 +52,7 @@ public class PBXProject extends PBXNode {
         super(null, "Project object");
         this.xcodeProject = project;
         projectDir = project.getProjectDir().getParentFile();
-        addResourceFile("", xcodeProject.getInfoPList());
+        addResourceFile("", CavaOptions.infoPList());
     }
 
     public File getProjectDir() {
@@ -219,7 +219,7 @@ public class PBXProject extends PBXNode {
         .println("buildSettings = {")
         .indent().println("SDKROOT = iphoneos;")
         .println("PRODUCT_NAME = \"%s\";", CavaOptions.get("project-name", "Cava"))
-        .println("INFOPLIST_FILE = \"%s\";", xcodeProject.getInfoPList().getAbsolutePath())
+        .println("INFOPLIST_FILE = \"%s\";", CavaOptions.infoPList().getAbsolutePath())
         .println("IPHONEOS_DEPLOYMENT_TARGET = %s;", xcodeProject.getIosSdk())
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
         .println("OTHER_CFLAGS = \"-fshort-wchar\";")     

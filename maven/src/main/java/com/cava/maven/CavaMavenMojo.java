@@ -59,13 +59,16 @@ public class CavaMavenMojo extends AbstractMojo {
     protected File buildDir;
     
     @Parameter(property = "cava.debug")
-    protected boolean isDebug;
+    protected boolean debug;
 
     @Parameter(property = "cava.debugPort", defaultValue = "10000")
     protected int debugPort;
 
     @Parameter(property = "cava.infoPList")
     protected File infoPList;
+    
+    @Parameter(property = "cava.simulator", defaultValue = "true")
+    protected boolean simulator;
     
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -82,6 +85,9 @@ public class CavaMavenMojo extends AbstractMojo {
                     break;
                     
             }
+            CavaOptions.simulator(simulator);
+            CavaOptions.debug(debug);
+            
             prepareClassPath();
             CompilerContext.transpile();
             

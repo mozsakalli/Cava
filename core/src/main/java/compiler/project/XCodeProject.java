@@ -20,12 +20,14 @@ import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.backend.SourceWriter;
 import compiler.project.xcode.PBXProject;
+import compiler.util.IosDevice;
+import compiler.util.XCodeUtil;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import sun.tools.jar.resources.jar;
 
 /**
  *
@@ -38,7 +40,7 @@ public class XCodeProject extends Project {
     
     final static String GROUP_GENERATED = "generated";
     
-    public void build() throws Exception {
+    public void generate() throws Exception {
         projectDir = new File(CompilerContext.platformBuildDir,"project.xcodeproj");
         projectDir.mkdirs();
         pbxProject = new PBXProject(this);
@@ -97,5 +99,17 @@ public class XCodeProject extends Project {
             }
         }
     }
+ 
+    public void build() throws Exception {
+        generate();
+        XCodeUtil.build(projectDir, CavaOptions.applicationName(), CavaOptions.simulator());
+    }
     
+    public void run() throws Exception {
+        build();
+        List<IosDevice> devices = XCodeUtil.getSimulators();
+        IosDevice device = devices.stream().filter(d -> d.status() == IosDevice.Status.Booted).findFirst().orElse(null);
+        XCodeUtil.installApplicationOnSimulator(device, projectDir, CavaOptions.applicationName());
+        XCodeUtil.runOnSimulator(device, CavaOptions.applicationId());
+    }
 }

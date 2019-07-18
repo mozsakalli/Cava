@@ -230,6 +230,11 @@ public class Executor {
         }
     }
 
+    private int exitCode;
+    public int exitCode() {
+        return exitCode;
+    }
+    
     public String execCapture() throws IOException {
         ExecuteStreamHandler oldStreamHandler = streamHandler;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -238,7 +243,7 @@ public class Executor {
             streamHandler(new PumpStreamHandler(baos, System.err));
             logCommandLine(commandLine);
             DefaultExecutor executor = initExecutor(new DefaultExecutor());
-            executor.execute(commandLine, generateEnv());
+            exitCode = executor.execute(commandLine, generateEnv());
             return new String(baos.toByteArray()).trim();
         } catch (ExecuteException e) {
             String output = new String(baos.toByteArray()).trim();

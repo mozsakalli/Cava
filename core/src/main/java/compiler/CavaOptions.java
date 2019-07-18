@@ -116,6 +116,12 @@ public class CavaOptions {
         set("debug", value);
     }
     
+    public static boolean simulator() {
+        return getBool("simulator");
+    }
+    public static void simulator(boolean value) {
+        set("simulator", value);
+    }
     public static File infoPList() {
         File file = getFile("infoPList");
         if(file == null || !file.exists()) throw new RuntimeException("Info.plist file must be supplied");
@@ -131,5 +137,14 @@ public class CavaOptions {
     }
     public static void applicationName(String name) {
         set("appName", name);
+    }
+    
+    public static String applicationId() {
+        String name = getStr("appId", null);
+        if(name == null) throw new RuntimeException("Application Id must be supplied");
+        return name;
+    }
+    public static void applicationId(String id) {
+        set("appId", id);
     }
 }

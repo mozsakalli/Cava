@@ -1,0 +1,64 @@
+/*
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package cava.c;
+
+import cava.annotation.Native;
+import cava.platform.NativeCode;
+
+/**
+ *
+ * @author mustafa
+ */
+@Native("char*")
+public class CharPtr {
+    
+    public static CharPtr alloc(int size) {
+        return NativeCode.CharPtr("(char*)malloc(%s*sizeof(char*))", size);
+    }
+    
+    public static CharPtr allocAsciiZ(String str) {
+        CharPtr result = alloc(str.length()+1);
+        for(int i=0; i<str.length(); i++)
+            result.set(i, str.charAt(i));
+        result.set(str.length(), 0);
+        return result;
+    }
+    
+    public static CharPtr from(Object object) {
+        return NativeCode.CharPtr("(char*)%s", object);
+    }
+    
+    public static CharPtr from(long object) {
+        return NativeCode.CharPtr("(char*)%s", object);
+    }
+    
+    public static CharPtr from(byte[] bytes) {
+        return fromAnyArray(bytes);
+    }
+    
+    public static CharPtr fromAnyArray(Object array) {
+        return NativeCode.CharPtr("(char*)JvmArrayData(%s)", array);
+    }
+    
+    public void set(int index, int value) {
+        NativeCode.Void("((char*)%s)[%s] = (char)%s", this, index, value);
+    }
+    
+    public CharPtr add(int amount) {
+        return NativeCode.CharPtr("(char*)%s + %s", this, amount);
+    }
+}

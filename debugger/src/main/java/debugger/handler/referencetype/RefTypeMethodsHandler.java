@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2019 Digitoy Games.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package debugger.handler.referencetype;
+
+import debugger.JdwpConsts;
+import debugger.JdwpUtil;
+import debugger.OutBuffer;
+import debugger.Packet;
+import debugger.VM;
+import java.lang.reflect.Method;
+
+/**
+ *
+ * @author ozsak
+ */
+public class RefTypeMethodsHandler extends RefTypeHandler {
+
+    @Override
+    public int handle(Packet packet, OutBuffer out) {
+        long referenceTypeId = packet.readLong();
+        Class klass = VM.getClassByReference(referenceTypeId);
+        if(klass != null) {
+            Method[] methods = VM.getMethodsByClass(klass);
+            if(methods != null) {
+                out.writeInt(methods.length);
+                for(Method m : methods) {
+                    out.writeLong(VM.getMethodReference(m));
+                    out.writeString(m.getName());
+                    out.writeString(JdwpUtil.methodSignature(m));
+                    String generic = getGenericSignature();
+                    if(generic != null) {
+                        out.writeString(generic);
+                    }
+                    out.writeInt(m.getModifiers());
+                }
+                return JdwpConsts.Error.NONE;
+            }
+        }
+        return JdwpConsts.Error.INVALID_OBJECT;
+    }
+
+    
+    public String getGenericSignature() {
+        return null;
+    }
+    
+    @Override
+    public int getCommand() {
+        return 5;
+    }
+    
+}

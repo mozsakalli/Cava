@@ -78,21 +78,6 @@ public class CompilerContext {
         return classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
     }
     
-    /*
-    public static File findClassFile(String name) {
-        name = name.replace('.', '/') + ".class";
-        for(File path : CompilerContext.classPath) {
-            File file = new File(path, name);
-            if(file.exists()) return file;
-        }
-        return null;
-    }
-    
-    public static long getClassTime(String name) {
-        File file = findClassFile(name);
-        return file != null ? file.lastModified() : 0;
-    }
-    */
     static Clazz load(String name) {
         System.out.println("Decompiling "+name);
         PlainTextOutput po = new PlainTextOutput();
@@ -100,7 +85,6 @@ public class CompilerContext {
         Decompiler.decompile(name.replace('.', '/'), po, settings);
         Clazz clazz = ((ModelLanguage)settings.getLanguage()).clazz;
         return clazz;
-        //return BytecoderDecompiler.load(name);
     }
     
     
@@ -179,6 +163,9 @@ public class CompilerContext {
     }
     
     public static void transpile() throws Exception {
+        String version = System.getProperty("java.version");        
+        if(!version.startsWith("1.8")) throw new RuntimeException("Cava requires JDK 1.8");
+        
         File buildDir = CavaOptions.buildDir();
         platformBuildDir = new File(buildDir, CavaOptions.targetPlatform().name());
         platformBuildDir.mkdirs();

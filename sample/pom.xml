@@ -24,9 +24,11 @@
                 <artifactId>cava-maven</artifactId>
                 <version>2019.07.18</version>
                 <configuration>
+                    <applicationName>Cava Sample</applicationName>
                     <mainClass>cava.sample.Main</mainClass>
                     <platform>Ios</platform>
                     <infoPList>Info.plist</infoPList>
+                    <buildDir>${project.build.directory}/cava-build</buildDir>
                 </configuration>
                 <executions>
                     <execution>

@@ -26,6 +26,9 @@ Cava checks all required classes and methods from the beginning of main method o
 class files using Procyon decompiler's Bytecode AST only feature.
 After this step every class file converted to equivalent C files and headers.
 
+## How to compile
 
+Check out the project and in project folder from console enter "mvn clean instal"
+Cava requires JDK 1.8 and a Mac XCode with commandline tools installed to test generated sample project.
 
 

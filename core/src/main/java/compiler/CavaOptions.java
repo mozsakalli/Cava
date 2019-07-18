@@ -101,7 +101,7 @@ public class CavaOptions {
     }
     
     public static void mainClass(String name) {
-        set("mainClass", name);
+        set("mainClass", name.replace('.', '/'));
     }
     public static String mainClass() {
         if(!argMap.containsKey("mainClass"))
@@ -124,5 +124,12 @@ public class CavaOptions {
     public static void infoPList(File file) {
         set("infoPList", file);
     }
-    
+    public static String applicationName() {
+        String name = getStr("appName", null);
+        if(name == null) throw new RuntimeException("Application Name must be supplied");
+        return name;
+    }
+    public static void applicationName(String name) {
+        set("appName", name);
+    }
 }

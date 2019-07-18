@@ -95,7 +95,11 @@ public class DependencyAnalyzer {
         }
         Method m = c.findDeclaredMethod(mainMethod, mainSignature);
         if(m == null) throw new Exception("Can't find main method "+mainClass+"."+mainMethod+mainSignature);
+        if(!m.isStatic() || !m.type.equals("V")) throw new Exception("Main method must be a static void method");
+        
+        System.out.println("Main method: "+m);
         methodQueue.add(m);
+        m.usedInProject = true;
         while(!methodQueue.isEmpty()) {
             while(!methodQueue.isEmpty()) {
                 m = methodQueue.remove(0);

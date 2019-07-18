@@ -16,16 +16,16 @@
 
 package compiler.project;
 
-import compiler.util.FileUtil;
 import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.backend.SourceWriter;
 import compiler.project.xcode.PBXProject;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import sun.tools.jar.resources.jar;
 
 /**
  *
@@ -49,16 +49,16 @@ public class XCodeProject extends Project {
         
         copyCavaFiles();
         
-        /*
-        pbxProject.addSourceFile("cava", new File("/Users/mustafa/Work/experimental/cava/compiler/core/jvm.c"));
-        pbxProject.addSourceFile("cava", new File("/Users/mustafa/Work/experimental/cava/compiler/core/jvm.h"));
+        pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.c"));
+        pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.h"));
         
+
         pbxProject.addStaticLibrary("gc", 
-                new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/arm64"),
-                new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/thumbv7"),
-                new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/x86_64"),
-                new File("/Users/mustafa/Work/experimental/cava/compiler/core/lib/ios/x86"));
-        */
+                new File(CompilerContext.platformBuildDir,"cava/lib/ios/arm64"),
+                new File(CompilerContext.platformBuildDir,"cava/lib/ios/thumbv7"),
+                new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86_64"),
+                new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86"));
+        
         SourceWriter out = new SourceWriter();
         pbxProject.export(out);
         
@@ -76,22 +76,24 @@ public class XCodeProject extends Project {
     void copyCavaFiles() throws Exception {
         File root = new File(CompilerContext.platformBuildDir, "cava");
         if(!root.exists()) {
-            JarInputStream jar = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.jar"));
-            JarEntry entry = jar.getNextJarEntry();
+            ZipInputStream zip = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.zip"));
+            ZipEntry entry = zip.getNextEntry();
             byte[] buffer = new byte[8192];
             while(entry != null) {
-                File dest = new File(root, entry.getName());
-                dest.getParentFile().mkdirs();
-                FileOutputStream out = new FileOutputStream(dest);
-                int len = (int)entry.getSize();
-                int ptr = 0;
-                while(ptr < len) {
-                    int readed = jar.read(buffer, ptr, Math.min(len - ptr, buffer.length));
-                    out.write(buffer, 0, readed);
-                    ptr += readed;
+                if(!entry.isDirectory()) {
+                    File dest = new File(root, entry.getName());
+                    dest.getParentFile().mkdirs();
+                    FileOutputStream out = new FileOutputStream(dest);
+                    int len = (int)entry.getSize();
+                    int ptr = 0;
+                    while(ptr < len) {
+                        int readed = zip.read(buffer, 0, Math.min(len - ptr, buffer.length));
+                        out.write(buffer, 0, readed);
+                        ptr += readed;
+                    }
+                    out.close();
                 }
-                out.close();
-                entry = jar.getNextJarEntry();
+                entry = zip.getNextEntry();
             }
         }
     }

@@ -112,9 +112,6 @@ public class ITableCalculator {
         
         for(Clazz k : CompilerContext.classes.values()) {
             if(!k.isInterface) {
-            if(k.name.equals("java/util/HashMap$Entry"))
-                System.out.println("...");
-                
                 Set<Clazz> set = getAllInterfaces(k);
                 int maxIndex = -1;
                 for(Clazz ik : set) {

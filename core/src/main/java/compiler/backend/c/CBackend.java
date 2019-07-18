@@ -481,9 +481,6 @@ public class CBackend {
             }
         }
         
-        if(c.name.equals("java/util/HashMap$Entry"))
-            System.out.println("...");
-        
         //generate interface method table
         out.print("void** _iTable = ");
         if(!c.isInterface && c.interfaceTableSize > 0) {

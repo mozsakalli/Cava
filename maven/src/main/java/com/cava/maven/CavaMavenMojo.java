@@ -17,6 +17,7 @@ package com.cava.maven;
 
 import compiler.CavaOptions;
 import compiler.CompilerContext;
+import compiler.util.Executor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,9 @@ public class CavaMavenMojo extends AbstractMojo {
     @Component
     protected MavenProject project;
 
+    @Parameter(property = "cava.appName", required = true)
+    protected String applicationName;
+        
     @Parameter(property = "cava.mainClass", required = true)
     protected String mainClass;
 
@@ -67,9 +71,10 @@ public class CavaMavenMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             CavaOptions.targetPlatform(platform);
+            CavaOptions.applicationName(applicationName);
+            CavaOptions.mainClass(mainClass);
             if(buildDir != null)
                 CavaOptions.buildDir(buildDir);
-            CavaOptions.mainClass(mainClass);
             switch(platform) {
                 case "Ios":
                     if(infoPList == null || !infoPList.exists()) throw new RuntimeException("Info.plist file missing");
@@ -79,6 +84,13 @@ public class CavaMavenMojo extends AbstractMojo {
             }
             prepareClassPath();
             CompilerContext.transpile();
+            
+            switch(platform) {
+                case "Ios":
+                    new Executor("open").args(new File(CavaOptions.buildDir(), "Ios/project.xcodeproj")).exec();
+                    break;
+            }
+            
         } catch (Exception problem) {
             throw new MojoExecutionException("Error compiling Cava", problem);
         }
@@ -99,7 +111,6 @@ public class CavaMavenMojo extends AbstractMojo {
         List<File> classPath = new ArrayList();
         if(classFiles != null) {
             classPath.add(classFiles);
-            System.out.println(classFiles+":"+classFiles.lastModified());
         }
         for (Artifact artifact : project.getArtifacts()) {
             if (!isSupportedScope(artifact.getScope())) {
@@ -107,7 +118,6 @@ public class CavaMavenMojo extends AbstractMojo {
             }
             final File file = artifact.getFile();
             classPath.add(file);
-            System.out.println("classpath: "+ file+":"+file.lastModified());
         }
         
         CompilerContext.classPath = classPath.toArray(new File[classPath.size()]);

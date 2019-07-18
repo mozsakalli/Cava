@@ -38,21 +38,26 @@ public class PBXProject extends PBXNode {
     private final Map<Arch, Set<File>> staticLibs = new HashMap();
     
     private final PBXGroup rootGroup = new PBXGroup(this, "root");;
-    private final PBXGroup sourcesGroup = rootGroup.addChild(new PBXGroup(this, "sources"));;
-    private final PBXGroup resourcesGroup = rootGroup.addChild(new PBXGroup(this, "resources"));
-    private final PBXGroup frameworksGroup = rootGroup.addChild(new PBXGroup(this, "frameworks"));
+    private final PBXGroup sourcesGroup = rootGroup.addChild(new PBXGroup(this, "Sources"));;
+    private final PBXGroup resourcesGroup = rootGroup.addChild(new PBXGroup(this, "Resources"));
+    private final PBXGroup frameworksGroup = rootGroup.addChild(new PBXGroup(this, "Frameworks"));
+    private final PBXGroup productGroup = rootGroup.addChild(new PBXGroup(this, "Products"));
+    
     private final PBXGroup buildFilesGroup = new PBXGroup(this, "buildFileGroup");;
     private final PBXNode buildConfigurationList = new PBXNode(this, "Build configuration list for PBXProject");
-    private final PBXNode buildConfigurationCava = new PBXNode(this, "Cava");
+    private final PBXNode buildConfigurationCava = new PBXNode(this, "Release");
     private final PBXNode sourcesBuildPhaseCava = new PBXNode(this, "Sources");
     private final PBXNode frameworksBuildPhaseCava = new PBXNode(this, "Frameworks");
-    private final PBXNode buildNativeTarget = new PBXNode(this, "Cava");
-
+    private final PBXNode buildNativeTarget = new PBXNode(this, CavaOptions.applicationName());
+    
+    private final PBXProduct productNode = productGroup.addChild(new PBXProduct(this, "cava.app"));
+    
     public PBXProject(XCodeProject project) {
         super(null, "Project object");
         this.xcodeProject = project;
         projectDir = project.getProjectDir().getParentFile();
         addResourceFile("", CavaOptions.infoPList());
+        
     }
 
     public File getProjectDir() {
@@ -181,7 +186,7 @@ public class PBXProject extends PBXNode {
 
     private void dumpPBXfiles(PBXGroup group, SourceWriter out) {
         for (PBXNode node : group.getChildren()) {
-            if (node instanceof PBXFile)
+            if (node instanceof PBXFile || node instanceof PBXProduct)
                 node.dump(out);
             else if (node instanceof PBXGroup)
                 dumpPBXfiles((PBXGroup) node, out);
@@ -218,17 +223,22 @@ public class PBXProject extends PBXNode {
         .indent().println("isa = XCBuildConfiguration;")
         .println("buildSettings = {")
         .indent().println("SDKROOT = iphoneos;")
-        .println("PRODUCT_NAME = \"%s\";", CavaOptions.get("project-name", "Cava"))
+        .println("PRODUCT_NAME = \"%s\";", CavaOptions.applicationName())
+        .println("WRAPPER_EXTENSION = app;")
         .println("INFOPLIST_FILE = \"%s\";", CavaOptions.infoPList().getAbsolutePath())
         .println("IPHONEOS_DEPLOYMENT_TARGET = %s;", xcodeProject.getIosSdk())
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
         .println("OTHER_CFLAGS = \"-fshort-wchar\";")     
-        .println("CODE_SIGN_STYLE = Automatic;")
-        .println("DEVELOPMENT_TEAM = 7TN55SRW8B;")
+        //.println("CODE_SIGN_STYLE = Automatic;")
+        //.println("DEVELOPMENT_TEAM = 7TN55SRW8B;")
         .println("ENABLE_BITCODE = NO;")
         .println("GCC_OPTIMIZATION_LEVEL = s;")        
-        .println("VALID_ARCHS = \"$(ARCHS_STANDARD)\";");        
-        
+        .println("COPY_PHASE_STRIP = NO;") 
+        .println("DEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";") 
+        .println("ENABLE_NS_ASSERTIONS = NO;") 
+        .println("TARGETED_DEVICE_FAMILY = \"1,2\";") 
+        .println("VALID_ARCHS = arm64;");
+
         dumpStaticLibraries(out);
         dumpLinkerFlags(out);
         //.println("OTHER_LDFLAGS = \"-lgc\";")
@@ -300,6 +310,7 @@ public class PBXProject extends PBXNode {
         .println(");")
         .println("name = \"" + buildNativeTarget.getName() +"\";")
         .println("productName = \"" + buildNativeTarget.getName() +"\";")
+        .println("productReference = %s;", productNode.uuidWithComment())
         .println("productType = \"com.apple.product-type.application\";")
         .undent().println("};");
     }
@@ -316,6 +327,7 @@ public class PBXProject extends PBXNode {
         .indent().println("en,").undent()
         .println(");")
         .println("mainGroup = " + this.rootGroup.getUuid() + ";")
+        .println("productRefGroup = %s;", productGroup.uuidWithComment())
         .println("projectDirPath = \"\";")
         .println("projectRoot = \"\";")
         .println("targets = (")

@@ -127,7 +127,7 @@ public class Debugger {
             outputQueue.add(data);
         }
     }
-    public static void start() throws Exception {
+    public static void start(int port) throws Exception {
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {

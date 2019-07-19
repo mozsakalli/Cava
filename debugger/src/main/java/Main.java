@@ -9,7 +9,7 @@ public class Main {
     
     
     public static void main(String...args) throws Exception {
-        Debugger.start();
+        Debugger.start(10000);
         //Debugger debugger = new Debugger();
         /*
         ServerSocket ss =new ServerSocket(9090);

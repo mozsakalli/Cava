@@ -80,6 +80,12 @@ public class CavaOptions {
         }
         return false;
     }
+    public static int getInt(String name, int def) {
+        Object o = get(name, null);
+        if(o != null && o instanceof Number)
+            return ((Number)o).intValue();
+        return def;
+    }
     
     public static Platform targetPlatform() {
         if(!argMap.containsKey("platform"))
@@ -115,7 +121,12 @@ public class CavaOptions {
     public static void debug(boolean value) {
         set("debug", value);
     }
-    
+    public static int debugPort() {
+        return getInt("debugPort", 10000);
+    }
+    public static void debugPort(int port) {
+        set("debug", port);
+    }
     public static boolean simulator() {
         return getBool("simulator");
     }

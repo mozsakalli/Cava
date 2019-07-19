@@ -37,6 +37,8 @@ public class Clazz implements Serializable {
     public String name;
     public String superName;
     public String elementType;
+    
+    //only declared interfaces in this class
     public List<String> interfaces = new ArrayList();
     public List<NameAndType> fields = new ArrayList();
     public List<Method> methods = new ArrayList();
@@ -46,7 +48,20 @@ public class Clazz implements Serializable {
     public boolean isAbstract;
     public String sourceFile;
     
+    //all interfaces declared or inherited (not objC or JNI)
+    public Set<String> allInterfaces = new HashSet();
+    public Set<String> allObjCInterfaces = new HashSet();
+    
+    //all classes implements this class
+    public Set<String> childClasses = new HashSet();
+    
+    public boolean extendedFromObjC;
+    public boolean extendedFromJNI;
+    
+    
     public transient int interfaceTableSize = -1;
+    //if modified after saved to disk
+    public transient boolean modelDirty;
     
     public String getSimpleName() {
         return DecompilerUtils.simpleName(name);

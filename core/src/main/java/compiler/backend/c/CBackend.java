@@ -395,6 +395,7 @@ public class CBackend {
                 if(m.boolAnnotation("cava.annotation.ObjC", "property")) {
                     
                 } else {
+                    /*
                     int argCount = m.args.size();
                     if(!m.isStatic()) argCount--;
                     out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
@@ -423,6 +424,7 @@ public class CBackend {
                     //writer.writeChildren(m.body.children);
                     out.undent().println("}").ln();
                     //usedLiterals.addAll(writer.usedListerals);
+                    */
                 }
             }
             out.println("@end");

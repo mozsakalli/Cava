@@ -66,6 +66,28 @@ public class CompilerContext {
         return decompilerSettings;
     }
     
+    public static void markClassModelDirty(String name) {
+        Clazz c = classes.get(name.replace('.', '/'));
+        if(c != null) c.modelDirty = true;
+    }
+    
+    public static void flushDirtyClassModels() throws Exception {
+        for(Clazz c : classes.values()) {
+            if(c.modelDirty) {
+                File path = new File(classCacheDir,c.name.replace('/', '.')+".model");
+                if(!path.exists()) throw new Exception("Trying to flush missing class model "+c.name);
+                long classTime = path.lastModified();
+                FileOutputStream fout = new FileOutputStream(path);
+                ObjectOutputStream out = new ObjectOutputStream(fout);
+                out.writeObject(c);
+                out.close();
+                fout.close();
+                path.setLastModified(classTime);
+                c.modelDirty = false;
+            }
+        }
+    }
+    
     public static Method getMainMethod() {
         //todo: 
         return classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");

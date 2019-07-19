@@ -36,15 +36,152 @@ import java.util.Set;
  * @author mustafa
  */
 public class DependencyAnalyzer {
+    Set analyzed = new HashSet();
+    List pending = new ArrayList();
     
-    List queue = new ArrayList();
-    Set seen = new HashSet();
+    
+    public void analyze(String mainClass) throws Exception {
+        Clazz c = CompilerContext.resolve(mainClass);
+        Method m = c.findDeclaredMethod("main", "()V");
+        if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
+        if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
+        
+        addRequiredClasses();
+        depends(m);
+        
+        while(!pending.isEmpty()) {
+            process();
+            int count = pending.size();
+            link();
+            System.out.println("link: "+(pending.size() - count));
+        }
+        
+        CompilerContext.flushDirtyClassModels();
+    }
+    
+    void link() throws Exception {
+        CompilerContext.classes.values().forEach(c -> {
+            c.childClasses.forEach(name -> {
+                Clazz cc = CompilerContext.classes.get(name.replace('.', '/'));
+                if(cc != null) {
+                    for(Method m : c.methods) {
+                        //if(m.usedInProject) {
+                        Method imp = cc.findMethod(m.name, m.signature);
+                        if(imp != null) {
+                            if(m.usedInProject)
+                                depends(imp);
+                            if(imp.usedInProject)
+                                depends(m);
+                        }
+                        //}
+                    }
+                }
+            });
+        });
+    }
+    
+    void process() throws Exception {
+        while(!pending.isEmpty()) {
+            Object p = pending.remove(0);
+            if(analyzed.contains(p)) continue;
+            analyzed.add(p);
+            if(p instanceof Clazz) {
+                Clazz c = (Clazz)p;
+                if(c.superName != null) depends(c.superName);
+                for(String name : c.interfaces) depends(name);
+                final boolean isKeepClass = A.hasKeep(c);
+                c.methods.forEach(cm -> { 
+                    if(isKeepClass || A.hasKeep(cm) || (cm.name.equals("<init>") && cm.args.isEmpty()) || cm.name.equals("<clinit>")) {
+                        depends(cm); 
+                        depends(cm.declaringClass);
+                    }
+                });
+            } else if(p instanceof Method) {
+                Method m = (Method)p;
+                m.usedInProject = true;
+                depends(m.declaringClass);
+                depends(m.type);
+                m.args.forEach(arg -> depends(arg.type));
+                m.body.visit(new Visitor() {
+                    @Override
+                    public void call(Call c) {
+                        final Clazz pc = CompilerContext.resolve(c.className);
+                        Method pm = pc.findMethod(c.methodName, c.signature);
+                        if(pm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
+                        depends(pm);
+                        depends(pm.declaringClass);
+                        depends(c.className);
+                    }
 
-    void buildRootMethods() {
+                    @Override
+                    public void field(Field f) {
+                        final Clazz pc = CompilerContext.resolve(f.className);
+                        NameAndType field = pc.findField(f.name);
+                        if(field == null) throw new RuntimeException("Can't find field: "+f.className+"."+f.name);
+                        field.usedInProject = true;
+                        depends(field.type);
+                        depends(field.declaringClass);
+                        depends(f.className);
+                    }
+                    
+                    @Override
+                    public void visitClassReference(String className) {
+                        depends(className);
+                    }
+                });
+            }
+        }        
+    }
+    
+    void depends(String name) {
+        if(DecompilerUtils.isArray(name)) {
+            name = DecompilerUtils.elementType(name);
+        }
+        if(!DecompilerUtils.isPrimitive(name)) {
+            depends(CompilerContext.resolve(name));
+        }
+    }
+    void depends(Object p) {
+        if(!analyzed.contains(p) && !pending.contains(p)) 
+            pending.add(p);
+    }
+    
+    void addRequiredClasses() {
+        for(String name : new String[]{
+            "java/lang/Class",
+            "java/lang/String",
+            "java/lang/Thread",
+            "java/lang/Throwable",
+            "java/lang/Byte",
+            "java/lang/Boolean",
+            "java/lang/Character",
+            "java/lang/Short",
+            "java/lang/Integer",
+            "java/lang/Float",
+            "java/lang/Long",
+            "java/lang/Double",
+            "java/lang/NullPointerException",
+            "java/lang/ClassCastException",
+            "java/lang/ArrayIndexOutOfBoundsException",
+            "java/lang/StackOverflowError",
+            "java/lang/reflect/Method",
+            "java/lang/reflect/Field",
+            "java/lang/reflect/Constructor",            
+        }) {
+            depends(name);
+        }
+        if(CavaOptions.debug())
+            depends("debugger/Debugger");
         
     }
     
-    public void analyze(String mainClass/*, String mainMethod, String mainSignature*/) throws Exception {
+    
+    
+    //List queue = new ArrayList();
+    //Set seen = new HashSet();
+
+    
+    public void analyzex(String mainClass/*, String mainMethod, String mainSignature*/) throws Exception {
         final Set<Method> analyzedMethods = new HashSet();
         final Set<Clazz> analyzedClasses = new HashSet();
         final ArrayList<Method> methodQueue = new ArrayList();

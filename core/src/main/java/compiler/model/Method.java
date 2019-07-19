@@ -16,7 +16,6 @@
 
 package compiler.model;
 
-import compiler.DecompilerUtils;
 import compiler.model.ast.Block;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +48,11 @@ public class Method extends NameAndType implements Serializable {
 
     public HashSet<String> requiredTypes = new HashSet();
     public HashSet<String> requiredMethods = new HashSet();
+    
+    //child classes overrides this method
+    public HashSet<String> childClasses = new HashSet();
+    //which class has this method overrides
+    public String parentClass;
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);

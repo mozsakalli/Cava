@@ -77,7 +77,11 @@ public final class Class<T> {
     }
     
     public Constructor getConstructor(Class[] args) {
-        return (Constructor)getMethod("<init>", args);
+        Method result = getMethod("<init>", args);
+        if(result != null) {
+            result.$$$$klass = Constructor.class; //hack for ClassCastException
+        }
+        return (Constructor)result;
     }
     
     public java.lang.String getName() {

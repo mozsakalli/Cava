@@ -17,6 +17,7 @@
 package cava.apple.uikit;
 
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -27,9 +28,9 @@ import cava.platform.NativeCode;
 public class UIWindow extends UIView {
     
     public UIWindow(){
-        super(NativeCode.Long("[UIWindow alloc]"));
+        super(NativeCode.VoidPtr("[UIWindow alloc]"));
     }
-    public UIWindow(long handle) {
+    public UIWindow(VoidPtr handle) {
         super(handle);
     }
     

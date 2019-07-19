@@ -116,10 +116,13 @@ public class ITableCalculator {
                 int maxIndex = -1;
                 for(Clazz ik : set) {
                     for(Method im : ik.methods) {
+                            if(im.name.contains("didFinishLaunchingWithOptions"))
+                                System.out.println("...");
                         if(im.usedInProject) {
                             Method m = k.findMethod(im.name, im.signature);
                             if(m != null) {
                                 m.interfaceTableIndex = indexes.get(signature(im));
+                                m.interfaceBaseClass = ik.name;
                                 maxIndex = Math.max(maxIndex, m.interfaceTableIndex);
                             }
                         }

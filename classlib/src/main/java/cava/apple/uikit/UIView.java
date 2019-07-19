@@ -17,6 +17,7 @@
 package cava.apple.uikit;
 
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 
 /**
  *
@@ -26,7 +27,7 @@ import cava.annotation.ObjC;
 public class UIView extends UIResponder {
     
     public UIView(){}
-    public UIView(long handle) {
+    public UIView(VoidPtr handle) {
         super(handle);
     }
 }

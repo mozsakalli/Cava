@@ -32,7 +32,6 @@ import compiler.model.NameAndType;
 import compiler.model.ast.Switch;
 import compiler.model.ast.Throw;
 import compiler.model.ast.TryCatch;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,8 +168,12 @@ public class CBackend {
         .println("extern void JvmSetup_%s();", naming.clazz(c.name))
         .ln();
         
+        if(c.name.contains("SampleApp"))
+            System.out.println("...");
+        
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
+        
         List<Method> virtualMethods = !c.isInterface ? vt.getVirtualMethodList(c) : null;
         
         for(Method m : c.methods) {
@@ -217,17 +220,31 @@ public class CBackend {
         
         //generate objc interface
         if(isObjC) {
+            if(c.name.contains("NSAutoreleasePool"))
+                System.out.println("...");
+            
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
             out.print("@interface %s_ObjC : %s", naming.clazz(c.name), DecompilerUtils.objcType(cType,c.superName,false));
             if(!c.interfaces.isEmpty()) {
+                int objcIfCount = 0;
+                for(String ifcName : c.interfaces) {
+                    Clazz ifc = CompilerContext.resolve(ifcName);
+                    if(A.hasObjC(ifc)) {
+                        if(objcIfCount == 0) out.print("<"); else out.print(",");
+                        out.print(DecompilerUtils.objcType(cType, ifcName, false));
+                        objcIfCount++;
+                    }
+                }
+                if(objcIfCount > 0) out.print(">");
+                /*
                 out.print(" <");
                 for(int i=0; i<c.interfaces.size(); i++) {
                     if(i > 0) out.print(",");
                     out.print(DecompilerUtils.objcType(cType,c.interfaces.get(i),false));
                     cType.dependency.add(c.interfaces.get(i));
                 }
-                out.print(">");
+                out.print(">");*/
             }
             out.println("{").println("jobject javaobject;").println("}");
             for(Method om : objcMethods) {
@@ -365,9 +382,11 @@ public class CBackend {
         }
         
         if(isObjC) {
+            if(c.name.contains("SampleApp"))
+                System.out.println("...");
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
             for(Method m : objcMethods) {
-                String objcDesc = m.annotations.get("cava.annotation.ObjC") != null ?
+                String objcDesc =  m.annotations.get("cava.annotation.ObjC") != null ?
                                   m.annotations.get("cava.annotation.ObjC").get("value").toString() : null;
                 if(objcDesc == null) {
                     System.out.println(m.declaringClass+":"+m.name+" doesn't have ObjC description");

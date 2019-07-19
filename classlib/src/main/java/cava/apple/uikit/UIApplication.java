@@ -22,6 +22,7 @@ import cava.apple.foundation.NSObject;
 import cava.apple.foundation.NSString;
 import cava.c.CharPtr;
 import cava.c.CharPtrPtr;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -35,12 +36,12 @@ public class UIApplication extends UIResponder {
     private static UIApplication currentApplication;
     
     @Keep
-    private static void initFromLaunch(long handle) {
+    private static void initFromLaunch(VoidPtr handle) {
         currentApplication = new UIApplication(handle);
     }
     
     public UIApplication(){}
-    public UIApplication(long handle) {
+    public UIApplication(VoidPtr handle) {
         super(handle);
     }
     
@@ -62,7 +63,6 @@ public class UIApplication extends UIResponder {
         currentDelegate = (UIApplicationDelegate)delegateClass.newInstance();
         System.out.println("principal: "+principalClassName+"  delegate:"+delegateClassName);
         main(argc, argv, principalClassName, delegateClassName);
-        //NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", argc, argv, principalClassName, delegateClassName);
     }
     
     public static void main(int argc, CharPtrPtr argv, String principal, String delegate) {

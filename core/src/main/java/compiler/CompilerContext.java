@@ -41,9 +41,6 @@ import java.util.Map;
  */
 public class CompilerContext {
     
-    //public static String mainClassName;
-    //public static String mainName;
-    //public static String mainSignature;
     public static File[] classPath;
     public static File[] shadowClassPath;
     public static Map<String, Clazz> classes = new HashMap();
@@ -52,13 +49,9 @@ public class CompilerContext {
     public static String[] keepClasses;
     
     public static boolean keepAll;
-    //public static boolean isDebug = true;
-    //public static Platform targetPlatform = Platform.Ios;
-    
-    //public static File buildDir = new File("build");
     public static File platformBuildDir;
     public static File classCacheDir;
-    
+
     static DecompilerSettings getDecompilerSettings() {
         DecompilerSettings decompilerSettings = new DecompilerSettings();
         decompilerSettings.setDisableForEachTransforms(true);
@@ -194,7 +187,7 @@ public class CompilerContext {
         });
         
         XCodeProject project = new XCodeProject();
-        project.build();
+        project.generate();
         
         System.out.println(stat[0]+" methods "+stat[1]+" virtual "+stat[2]+" devirtualized");
         System.out.println("decompile="+decompileTime+" io="+ioTime);        

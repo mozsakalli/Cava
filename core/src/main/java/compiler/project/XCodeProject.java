@@ -19,12 +19,16 @@ package compiler.project;
 import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.backend.SourceWriter;
+import compiler.backend.c.A;
+import compiler.model.Clazz;
 import compiler.project.xcode.PBXProject;
 import compiler.util.IosDevice;
 import compiler.util.XCodeUtil;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -61,10 +65,24 @@ public class XCodeProject extends Project {
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86_64"),
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86"));
         
+        addRequiredFrameworks();
+        
         SourceWriter out = new SourceWriter();
         pbxProject.export(out);
         
         new FileOutputStream(new File(projectDir,"project.pbxproj")).write(out.toString().getBytes());
+    }
+    
+    void addRequiredFrameworks() {
+        Set<String> usedFrameworks = new HashSet();
+        for(Clazz clazz : CompilerContext.classes.values()) {
+            String framework = A.framework(clazz);
+            if(framework != null && !framework.isEmpty() && !usedFrameworks.contains(framework)) {
+                usedFrameworks.add(framework);
+                pbxProject.addFramework(framework, null);
+            }
+        }
+            
     }
     
     public File getProjectDir() {

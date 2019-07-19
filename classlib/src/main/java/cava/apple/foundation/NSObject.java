@@ -27,19 +27,18 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 
-@Framework("Foundation")
 @Include("<Foundation/Foundation.h>")
 @ObjC
 public class NSObject<T> {
     
-    protected long handle;
+    protected VoidPtr handle;
     
     public static NSObject alloc() {
-        return new NSObject(NativeCode.Long("[NSObject alloc]"));
+        return new NSObject(NativeCode.VoidPtr("[NSObject alloc]"));
     }
     
     public NSObject(){}
-    public NSObject(long handle) {
+    public NSObject(VoidPtr handle) {
         this.handle = handle;
     }
     
@@ -58,9 +57,9 @@ public class NSObject<T> {
     }
     
     public void release() {
-        if(handle != 0) {
+        if(handle != null) {
             NativeCode.Void("[(NSObject*)%s release]", handle );
-            handle = 0;
+            handle = null;
         }
     }
     

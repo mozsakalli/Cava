@@ -17,6 +17,7 @@
 package cava.apple.foundation;
 
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 import cava.c.WCharPtr;
 import cava.platform.NativeCode;
 
@@ -28,21 +29,21 @@ import cava.platform.NativeCode;
 public final class NSString extends NSObject<NSString> {
     
     public static NSString alloc() {
-        return new NSString(NativeCode.Long("[NSString alloc]"));
+        return new NSString(NativeCode.VoidPtr("[NSString alloc]"));
     }
     
     public NSString(){}
-    public NSString(long handle) {
+    public NSString(VoidPtr handle) {
         super(handle);
     }
     
     public NSString(String string) {
-        handle = NativeCode.Long("[NSString alloc]");
+        handle = NativeCode.VoidPtr("[NSString alloc]");
         initWithCharacters(WCharPtr.from(string), string.length());
     }
     
     public final NSString initWithCharacters(WCharPtr chars, int length) {
-        NativeCode.Void("%s=(jlong)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", handle, handle, chars, length);
+        NativeCode.Void("%s=(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", handle, handle, chars, length);
         return this;
     }
 

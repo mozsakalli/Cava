@@ -17,6 +17,7 @@
 package cava.apple.foundation;
 
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 
 /**
  *
@@ -26,7 +27,7 @@ import cava.annotation.ObjC;
 public class NSDictionary extends NSObject<NSDictionary> {
     
     public NSDictionary(){}
-    public NSDictionary(long handle) {
+    public NSDictionary(VoidPtr handle) {
         super(handle);
     }
 }

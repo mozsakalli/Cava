@@ -228,9 +228,7 @@ public class PBXProject extends PBXNode {
         .println("INFOPLIST_FILE = \"%s\";", CavaOptions.infoPList().getAbsolutePath())
         .println("IPHONEOS_DEPLOYMENT_TARGET = %s;", xcodeProject.getIosSdk())
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
-        .println("OTHER_CFLAGS = \"-fshort-wchar\";")     
-        //.println("CODE_SIGN_STYLE = Automatic;")
-        //.println("DEVELOPMENT_TEAM = 7TN55SRW8B;")
+        .println("OTHER_CFLAGS = \"-fshort-wchar%s\";", CavaOptions.debug() ? " -DJVM_DEBUG" : "")     
         .println("ENABLE_BITCODE = NO;")
         .println("GCC_OPTIMIZATION_LEVEL = s;")        
         .println("COPY_PHASE_STRIP = NO;") 
@@ -239,6 +237,9 @@ public class PBXProject extends PBXNode {
         .println("TARGETED_DEVICE_FAMILY = \"1,2\";") 
         .println("VALID_ARCHS = arm64;");
 
+        //.println("CODE_SIGN_STYLE = Automatic;")
+        //.println("DEVELOPMENT_TEAM = 7TN55SRW8B;")
+        
         dumpStaticLibraries(out);
         dumpLinkerFlags(out);
         //.println("OTHER_LDFLAGS = \"-lgc\";")

@@ -24,7 +24,6 @@ import compiler.model.ast.Call;
 import compiler.model.ast.Field;
 import compiler.model.ast.Visitor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -48,12 +47,12 @@ public class DependencyAnalyzer {
         
         addRequiredClasses();
         depends(m);
+        System.out.println("Main method: "+m);
         
         while(!pending.isEmpty()) {
             process();
             int count = pending.size();
             link();
-            System.out.println("link: "+(pending.size() - count));
         }
         
         CompilerContext.flushDirtyClassModels();
@@ -65,7 +64,6 @@ public class DependencyAnalyzer {
                 Clazz cc = CompilerContext.classes.get(name.replace('.', '/'));
                 if(cc != null) {
                     for(Method m : c.methods) {
-                        //if(m.usedInProject) {
                         Method imp = cc.findMethod(m.name, m.signature);
                         if(imp != null) {
                             if(m.usedInProject)
@@ -73,7 +71,6 @@ public class DependencyAnalyzer {
                             if(imp.usedInProject)
                                 depends(m);
                         }
-                        //}
                     }
                 }
             });
@@ -88,7 +85,7 @@ public class DependencyAnalyzer {
             if(p instanceof Clazz) {
                 Clazz c = (Clazz)p;
                 if(c.superName != null) depends(c.superName);
-                for(String name : c.interfaces) depends(name);
+                c.interfaces.forEach(intf -> depends(intf));
                 final boolean isKeepClass = A.hasKeep(c);
                 c.methods.forEach(cm -> { 
                     if(isKeepClass || A.hasKeep(cm) || (cm.name.equals("<init>") && cm.args.isEmpty()) || cm.name.equals("<clinit>")) {
@@ -170,15 +167,15 @@ public class DependencyAnalyzer {
         }) {
             depends(name);
         }
-        if(CavaOptions.debug())
-            depends("debugger/Debugger");
+        if(CavaOptions.debug()) {
+            Clazz c = CompilerContext.resolve("com/cava/debugger/Debugger");
+            Method m = c.findDeclaredMethod("start", "(I)V");
+            if(m == null) throw new RuntimeException("Can't find com.cava.debugger.Debugger.start(I)V method");
+            depends(m);
+        }
         
     }
     
-    
-    
-    //List queue = new ArrayList();
-    //Set seen = new HashSet();
 
     
     public void analyzex(String mainClass/*, String mainMethod, String mainSignature*/) throws Exception {

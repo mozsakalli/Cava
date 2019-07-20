@@ -17,9 +17,7 @@
 package compiler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,30 +26,11 @@ import java.util.Map;
  */
 public class CavaOptions {
     
-    static Map<String, List<Object>> argMap = new HashMap();
+    static Map<String, Object> argMap = new HashMap();
     
     public static Object set(String name, Object value) {
-        if(value instanceof List)
-            argMap.put(name, (List)value);
-        else {
-            List list = new ArrayList();
-            list.add(value);
-            argMap.put(name, list);
-        }
+        argMap.put(name, value);
         return value;    
-    }
-    
-    public static void parse(String[] args) {
-        int i=0;
-        while(i < args.length) {
-            if(args[i].startsWith("--")) {
-                String name = args[i++].substring(2).trim();
-                List<Object> params = new ArrayList();
-                while(i < args.length && !args[i].startsWith("--"))
-                    params.add(args[i++].trim());
-                argMap.put(name, params);
-            }
-        }
     }
     
     public static File getFile(String name) {
@@ -62,10 +41,8 @@ public class CavaOptions {
     }
     
     public static Object get(String name, Object def) {
-        List params = argMap.get(name);
-        if(params == null || params.isEmpty())
-            return def;
-        return params.get(0);
+        Object arg = argMap.get(name);
+        return arg == null ? def : arg;
     }
     
     public static String getStr(String name, String def) {
@@ -125,7 +102,7 @@ public class CavaOptions {
         return getInt("debugPort", 10000);
     }
     public static void debugPort(int port) {
-        set("debug", port);
+        set("debugPort", port);
     }
     public static boolean simulator() {
         return getBool("simulator");

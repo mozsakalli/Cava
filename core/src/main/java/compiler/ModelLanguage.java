@@ -72,7 +72,6 @@ public class ModelLanguage extends Language {
         for (final MethodDefinition method : type.getDeclaredMethods()) {
             decompileMethod(method, output, options);
         }
-        
         clazz.extendedFromObjC = clazz.isExtendedFromObjC();
         
         //collect all interfaces
@@ -131,7 +130,6 @@ public class ModelLanguage extends Language {
          currentMethod.modifiers = method.getModifiers();
          currentMethod.type = DecompilerUtils.getTypeName(method.getReturnType());
          currentMethod.signature = DecompilerUtils.getSignature(method.getErasedSignature());
-         
          currentMethod.annotations = DecompilerUtils.parseAnnotations(method.getAnnotations());
          
          for(ParameterDefinition p : method.getParameters()) {

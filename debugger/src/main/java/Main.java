@@ -1,5 +1,5 @@
 
-import debugger.Debugger;
+import com.cava.debugger.Debugger;
 
 /**
  *

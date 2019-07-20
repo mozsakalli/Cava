@@ -168,9 +168,6 @@ public class CBackend {
         .println("extern void JvmSetup_%s();", naming.clazz(c.name))
         .ln();
         
-        if(c.name.contains("SampleApp"))
-            System.out.println("...");
-        
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
@@ -220,8 +217,6 @@ public class CBackend {
         
         //generate objc interface
         if(isObjC) {
-            if(c.name.contains("NSAutoreleasePool"))
-                System.out.println("...");
             
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
@@ -382,8 +377,6 @@ public class CBackend {
         }
         
         if(isObjC) {
-            if(c.name.contains("SampleApp"))
-                System.out.println("...");
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
             for(Method m : objcMethods) {
                 String objcDesc =  m.annotations.get("cava.annotation.ObjC") != null ?
@@ -524,17 +517,6 @@ public class CBackend {
                 else kk = null;
             }
             
-            /*
-            out.println("malloc(sizeof(void*) * %d);", c.interfaceTableSize);
-            if(c.superName != null) {
-                Clazz sc = CompilerContext.classes.get(c.superName);
-                if(sc.interfaceTableSize > 0)
-                    out.println("memcpy(_iTable, %s_Class.itable, sizeof(void*)*%d);", naming.clazz(c.superName), sc.interfaceTableSize);
-            }
-            for(Method m : c.methods)
-                if(m.usedInProject && m.interfaceTableIndex != -1)
-                    out.println("_iTable[%d] = &%s;", m.interfaceTableIndex, naming.method(m));
-            */
         } else out.println("jnull;");
         
         out.println("JvmClass* cls = &%s_Class;", naming.clazz(c.name))
@@ -825,12 +807,21 @@ public class CBackend {
 
         Method mainMethod = CompilerContext.getMainMethod();
         out.println("extern void %s();", naming.method(mainMethod));
-        out.println("extern void InitJvmLiterals();");
+        out.println("extern void InitJvmLiterals();")
+           .println("#ifdef JVM_DEBUG") 
+           .println("extern void mcom_cava_debugger_Debugger_start__I_V(jint pport);")
+           .println("#ifndef JVM_DEBUG_PORT")
+           .println("#define JVM_DEBUG_POR 10000")
+           .println("#endif")
+           .println("#endif");
         out.println("void cavamain() {").indent()
            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size())
            .println("SetupAllClasses();")
            .println("InitJvmLiterals();")
            .println("InitAllClasses();")
+           .println("#ifdef JVM_DEBUG")
+           .println("mcom_cava_debugger_Debugger_start__I_V(JVM_DEBUG_PORT);")
+           .println("#endif")
            .println("%s();", naming.method(mainMethod))
            .undent()
            .println("}");

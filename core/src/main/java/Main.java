@@ -18,7 +18,8 @@ public class Main {
         CompilerContext.classPath = new File[]{
             //new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
-            new File("/Users/mustafa/Work/CAVA/sample/target/classes")
+            new File("/Users/mustafa/Work/CAVA/sample/target/classes"),
+            new File("/Users/mustafa/Work/CAVA/debugger/target/cava-debugger-2019.07.18.jar"),
             //new File(p+"light-classlib/target/classes"),
             //new File(p+"../openjdk-12"),
             //new File(p+"classlib/target/classes"),
@@ -39,7 +40,7 @@ public class Main {
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);
         CavaOptions.applicationId("com.cava.sample");
-        CavaOptions.debug(false);
+        CavaOptions.debug(true);
         CavaOptions.debugPort(9999);
         CompilerContext.transpile();
 

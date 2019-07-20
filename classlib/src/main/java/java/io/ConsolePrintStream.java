@@ -43,22 +43,28 @@ public class ConsolePrintStream extends PrintStream {
     } 
     
     @Override
-    public synchronized void print(String str) {
-        buffer.append(str);
+    public void print(String str) {
+        synchronized(this) {
+            buffer.append(str);
+        }
     }
 
     @Override
-    public synchronized void println(String str) {
-        buffer.append(str);
-        printImpl(buffer);
-        buffer.setLength(0);
-    }
-
-    @Override
-    public synchronized void flush() {
-        if(buffer.length() > 0)
+    public void println(String str) {
+        synchronized(this) {
+            buffer.append(str);
             printImpl(buffer);
-        buffer.setLength(0);
+            buffer.setLength(0);
+        }
+    }
+
+    @Override
+    public  void flush() {
+        synchronized(this) {
+            if(buffer.length() > 0)
+                printImpl(buffer);
+            buffer.setLength(0);
+        }
     }
 
 }

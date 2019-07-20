@@ -138,7 +138,7 @@ JvmObject* JvmAllocObject(JvmClass* klass) {
     object->klass = klass;
     if(klass->finalizeFunction)
         GC_REGISTER_FINALIZER_NO_ORDER(object, _finalizeObject, NULL, NULL, NULL);
-	return object;
+    return object;
 }
 JvmString* JvmAllocString(jchar* chars, jint length) {
     JvmString* string = gcAlloc(sizeof(JvmString));
@@ -295,7 +295,7 @@ jobject JvmCheckCast(jobject object, jobject klass) {
     if(!JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass)) {
         JvmClassCastException();
     }
-	return object;
+    return object;
 }
 
 pthread_mutex_t JvmMonitorListLock;
@@ -657,7 +657,7 @@ void JvmRemoveBreakpoint(jlong method, jint line) {
 void JvmRemoveAllBreakpoints() {
     JvmBreakpointCount = 0;
 }
-extern void mdebugger_VM_onHitBreakpoint__JII_V(jlong pmethodId, jint pline, jint requestId);
+extern void mcom_cava_debugger_VM_onHitBreakpoint__JII_V(jlong pmethodId, jint pline, jint prequestId);
 void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
     if(thread->skipBreakpointCheck) return;
     if(thread->targetFramePtr > 0) {
@@ -665,7 +665,7 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
             thread->suspendCount++;
             thread->targetFramePtr = 0;
             thread->skipBreakpointCheck = jtrue;
-            mdebugger_VM_onHitBreakpoint__JII_V((jlong)method, line, -1);
+            mcom_cava_debugger_VM_onHitBreakpoint__JII_V((jlong)method, line, -1);
             thread->skipBreakpointCheck = jfalse;
         }
     } else {
@@ -674,7 +674,7 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
                 thread->suspendCount++;
                 thread->targetFramePtr = 0;
                 thread->skipBreakpointCheck = jtrue;
-                mdebugger_VM_onHitBreakpoint__JII_V((jlong)method, line, JvmBreakpoints[i].requestId);
+                mcom_cava_debugger_VM_onHitBreakpoint__JII_V((jlong)method, line, JvmBreakpoints[i].requestId);
                 thread->skipBreakpointCheck = jfalse;
                 break;
             }

@@ -26,12 +26,10 @@ import cava.apple.uikit.UIApplication;
 public class Main {
 
     public static void main() {
-        try{
-            NSAutoreleasePool pool = NSAutoreleasePool.alloc();
+        try (NSAutoreleasePool pool = NSAutoreleasePool.alloc()) {
+            if(true) throw new RuntimeException();
             UIApplication.main(new String[0], (Class)null, SampleApp.class);
             pool.close();
-        }catch(Exception e){
-            e.printStackTrace();
         }
     }
 }

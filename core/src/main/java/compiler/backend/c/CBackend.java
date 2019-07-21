@@ -55,8 +55,8 @@ public class CBackend {
     public void generate() throws Exception {
         //NativeGenerator.process(naming);
         final List<Clazz> sortedClasses = sortClasses();
-        final VirtualTable vTable = new VirtualTable();
-        vTable.build(sortedClasses);
+        //final VirtualTable vTable = new VirtualTable();
+        //vTable.build(sortedClasses);
         
         //interfaceTableSize = ITable.calculate();
         ITableCalculator.calculate();
@@ -73,7 +73,7 @@ public class CBackend {
         
         for(Clazz c : sortedClasses) {
             if(c.name.startsWith("[")) continue;
-            generateClass(c, vTable, globalRefs);
+            generateClass(c, globalRefs);
             allInvokeTypes.addAll(invokeTypes);
             invokeTypes.clear();
         }
@@ -123,7 +123,7 @@ public class CBackend {
     }
     
     List<Method> reflectMethods = new ArrayList();
-    void generateClass(Clazz c, VirtualTable vt, List<NameAndType> globalRefs) throws Exception {
+    void generateClass(Clazz c, List<NameAndType> globalRefs) throws Exception {
         CType cType = new CType();
         new ConstructorFixer().fix(c);
         boolean isObjC = c.superName != null ? CompilerContext.resolve(c.superName).isExtendedFromObjC() : false;
@@ -171,7 +171,7 @@ public class CBackend {
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
-        List<Method> virtualMethods = !c.isInterface ? vt.getVirtualMethodList(c) : null;
+        //List<Method> virtualMethods = null;//!c.isInterface ? vt.getVirtualMethodList(c) : null;
         
         for(Method m : c.methods) {
             if(m.interfaceBaseClass != null) {
@@ -204,8 +204,20 @@ public class CBackend {
                 }
             }
         }
+
         
         //generate virtual method headers
+        if(!c.isInterface) {
+            for(Method vm : c.methods) {
+                if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
+                    out.print("extern %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+                    printArgs(vm, cType, out);
+                    out.println(");");
+                }
+                //if(vm.usedInProject && !vm.isStatic() && !vm.name.equals("<init>"))
+            }
+        }
+        /*
         if(virtualMethods != null) {
             for(Method vm : virtualMethods) 
                 if(vm.virtualBaseClass.equals(c.name)) {
@@ -213,7 +225,7 @@ public class CBackend {
                     printArgs(vm, cType, out);
                     out.println(");");
                 }
-        }
+        }*/
         
         //generate objc interface
         if(isObjC) {
@@ -363,6 +375,21 @@ public class CBackend {
             }
         }
         
+        //generate virtual method bodies
+        if(!c.isInterface) {
+            for(Method vm : c.methods) {
+                if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
+                    out.print("%s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+                    printArgs(vm, cType, out);
+                    out.println(") {").indent();
+                    generateMethodCallWrapper(out, c, vm, cType, "vtable", vm.virtualTableIndex);
+                    out.undent().println("}");
+                }
+                //if(vm.usedInProject && !vm.isStatic() && !vm.name.equals("<init>"))
+            }
+        }
+        
+        /*
         if(virtualMethods != null) {
             for(int i=0; i<virtualMethods.size(); i++) {
                 Method vm = virtualMethods.get(i);
@@ -374,7 +401,7 @@ public class CBackend {
                     out.undent().println("}");
                 }
             }
-        }
+        }*/
         
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
@@ -427,7 +454,7 @@ public class CBackend {
            .println("JvmClass ArrOf_ArrOf_%s_Class;", naming.clazz(c.name))     
            .ln();
         
-        generateJvmSetup(c, out, virtualMethods, globalRefs, cType);
+        generateJvmSetup(c, out, globalRefs, cType);
         
         code = out.toString();
         cType.dependency.add(c.name);
@@ -452,7 +479,7 @@ public class CBackend {
             collectInheritedClasses(CompilerContext.classes.get(c.superName), list);
     }
     
-    void generateJvmSetup(Clazz c, SourceWriter out, List<Method> virtualMethods, List<NameAndType> globalRefs, CType cType) {
+    void generateJvmSetup(Clazz c, SourceWriter out, List<NameAndType> globalRefs, CType cType) {
         
         out.println("jbool %s_isChildOf(JvmClass* klass) {", naming.clazz(c.name)).indent()
            .print("return ");
@@ -482,13 +509,35 @@ public class CBackend {
         out.print("void** _vTable = ");
         if(c.isInterface) out.println("java_lang_Object_Class.vtable;");
         else {
-            if(virtualMethods == null || virtualMethods.isEmpty())
+            //collect all virtual methods
+            List<Method> virtualMethods = new ArrayList();
+            Set<String> virtualMethodSignatures = new HashSet();
+            int tableSize = 0;
+            if(!c.isInterface) {
+                Clazz vc = c;
+                while(vc != null) {
+                    for(Method vm : vc.methods) {
+                        if(vm.usedInProject && vm.virtualBaseClass != null) {
+                            String sign = vm.name+":"+vm.signature;
+                            if(!virtualMethodSignatures.contains(sign)) {
+                                virtualMethods.add(vm);
+                                virtualMethodSignatures.add(sign);
+                                tableSize = Math.max(tableSize, vm.virtualTableIndex+1);
+                            }
+                        }
+                    }
+                    if(vc.superName == null) break;
+                    vc = CompilerContext.resolve(vc.superName);
+                }
+            }
+            
+            if(virtualMethods.isEmpty())
                 out.println("java_lang_Object_Class.vtable;");
             else {
-                out.println("malloc(sizeof(void*) * %d);", virtualMethods.size());
+                out.println("malloc(sizeof(void*) * %d);", tableSize);
                 for(int i=0; i<virtualMethods.size(); i++) {
                     Method vm = virtualMethods.get(i);
-                    out.println("_vTable[%d] = %s;", i, 
+                    out.println("_vTable[%d] = %s;", vm.virtualTableIndex, 
                             vm.isAbstract() ? "jnull" : 
                             "&"+naming.method(virtualMethods.get(i)));
                 }

@@ -39,6 +39,8 @@ public class Method extends NameAndType implements Serializable {
     public transient String virtualBaseClass;
     public transient String interfaceBaseClass;
 
+    public transient int virtualTableIndex;
+    
     //if there is only 1 method for this interface method
     public transient Method interfaceImplementor;
     public transient int interfaceTableIndex = -1;

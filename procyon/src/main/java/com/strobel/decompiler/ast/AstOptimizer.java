@@ -86,7 +86,7 @@ public final class AstOptimizer {
             return;
         }
 
-        rewriteFinallyBlocks(method);
+        //mst rewriteFinallyBlocks(method);
         
         if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.SplitToMovableBlocks)) {
             return;

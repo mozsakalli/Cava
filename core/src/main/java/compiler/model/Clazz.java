@@ -49,14 +49,14 @@ public class Clazz implements Serializable {
     public String sourceFile;
     
     //all interfaces declared or inherited (not objC or JNI)
-    public Set<String> allInterfaces = new HashSet();
-    public Set<String> allObjCInterfaces = new HashSet();
+    //public Set<String> allInterfaces = new HashSet();
+    //public Set<String> allObjCInterfaces = new HashSet();
     
     //all classes implements this class
-    public Set<String> childClasses = new HashSet();
+    //public Set<String> childClasses = new HashSet();
     
-    public boolean extendedFromObjC;
-    public boolean extendedFromJNI;
+    //public boolean extendedFromObjC;
+    //public boolean extendedFromJNI;
     
     
     public transient int interfaceTableSize = -1;
@@ -145,6 +145,20 @@ public class Clazz implements Serializable {
         return CompilerContext.resolve(superName).isExtendedFromObjC();
     }
     
+    public boolean implementsInterface(String name) {
+        if(this.name.equals(name)) return true;
+        for(String iName : interfaces) {
+            if(iName.equals(name)) return true;
+            Clazz ic = CompilerContext.resolve(iName);
+            while(ic != null) {
+                if(ic.name.equals(name)) return true;
+                if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
+                ic = CompilerContext.resolve(ic.superName);
+            }
+        }
+        if(superName != null) return CompilerContext.resolve(superName).implementsInterface(name);
+        return false;
+    }
     public Set<Clazz> getAllInterfaces(Set<Clazz> list) {
         boolean addSelf = true;
         if(list == null) {

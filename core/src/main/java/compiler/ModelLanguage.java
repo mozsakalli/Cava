@@ -72,6 +72,7 @@ public class ModelLanguage extends Language {
         for (final MethodDefinition method : type.getDeclaredMethods()) {
             decompileMethod(method, output, options);
         }
+        /*
         clazz.extendedFromObjC = clazz.isExtendedFromObjC();
         
         //collect all interfaces
@@ -118,7 +119,7 @@ public class ModelLanguage extends Language {
                 sc = CompilerContext.resolve(sc.superName);
             }
         }
-        
+        */
         return new TypeDecompilationResults( null /*no line number mapping*/);      
     }    
     

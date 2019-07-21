@@ -426,6 +426,9 @@ public class MethodDecompiler {
                     return new ClassRef(operand.toString());
                 }                
                 
+            case LoadException:
+                return new CaughtException();
+                
             case Bind:
                 //Lambda lambda = (Lambda)operand;
                 //System.out.println(lambda.getMethod());

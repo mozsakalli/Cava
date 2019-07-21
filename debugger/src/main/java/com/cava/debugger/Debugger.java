@@ -127,12 +127,12 @@ public class Debugger {
             outputQueue.add(data);
         }
     }
-    public static void start(int port) throws Exception {
+    public static void start(final int port) throws Exception {
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {
                 try {
-                    debuggerLoop();
+                    debuggerLoop(port);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -147,11 +147,11 @@ public class Debugger {
     
     static boolean debugSessionActive;
     
-    static void debuggerLoop() throws Exception {
-        ServerSocket ss = new ServerSocket(10000);
+    static void debuggerLoop(final int port) throws Exception {
+        ServerSocket ss = new ServerSocket(port);
         byte[] bytes = new byte[1024*16];
         Debugger debugger = new Debugger();
-        System.out.println("Debug server started on port 10000");
+        System.out.println("Debug server started on port "+port);
         
         while(true) {
             debugSessionActive = false;

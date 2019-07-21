@@ -193,7 +193,6 @@ public class CWriter extends CodeWriter {
             out.print(pattern);
             return;
         }
-        
         Clazz c = CompilerContext.resolve(call.className);
         Method m = c.findMethod(call.methodName, call.signature);
         if(m == null) throw new RuntimeException("Cant find method: "+call.className+"::"+call.methodName+"::"+call.signature);

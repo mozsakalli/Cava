@@ -37,99 +37,13 @@ import java.util.Set;
 public class DependencyAnalyzer {
     Set analyzed = new HashSet();
     List pending = new ArrayList();
+    Map<Method, Set<Method>> vRoot = new HashMap();
+    Map<Method, Set<Method>> iRoot = new HashMap();
     
-    
-    public void analyze(String mainClass) throws Exception {
-        Clazz c = CompilerContext.resolve(mainClass);
-        Method m = c.findDeclaredMethod("main", "()V");
-        if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
-        if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
-        
-        addRequiredClasses();
-        depends(m);
-        System.out.println("Main method: "+m);
-        
-        while(!pending.isEmpty()) {
-            process();
-            int count = pending.size();
-            link();
-        }
-        
-        CompilerContext.flushDirtyClassModels();
+    void depends(Object o) {
+        if(!analyzed.contains(o) && !pending.contains(o))
+            pending.add(o);
     }
-    
-    void link() throws Exception {
-        CompilerContext.classes.values().forEach(c -> {
-            c.childClasses.forEach(name -> {
-                Clazz cc = CompilerContext.classes.get(name.replace('.', '/'));
-                if(cc != null) {
-                    for(Method m : c.methods) {
-                        Method imp = cc.findMethod(m.name, m.signature);
-                        if(imp != null) {
-                            if(m.usedInProject)
-                                depends(imp);
-                            if(imp.usedInProject)
-                                depends(m);
-                        }
-                    }
-                }
-            });
-        });
-    }
-    
-    void process() throws Exception {
-        while(!pending.isEmpty()) {
-            Object p = pending.remove(0);
-            if(analyzed.contains(p)) continue;
-            analyzed.add(p);
-            if(p instanceof Clazz) {
-                Clazz c = (Clazz)p;
-                if(c.superName != null) depends(c.superName);
-                c.interfaces.forEach(intf -> depends(intf));
-                final boolean isKeepClass = A.hasKeep(c);
-                c.methods.forEach(cm -> { 
-                    if(isKeepClass || A.hasKeep(cm) || (cm.name.equals("<init>") && cm.args.isEmpty()) || cm.name.equals("<clinit>")) {
-                        depends(cm); 
-                        depends(cm.declaringClass);
-                    }
-                });
-            } else if(p instanceof Method) {
-                Method m = (Method)p;
-                m.usedInProject = true;
-                depends(m.declaringClass);
-                depends(m.type);
-                m.args.forEach(arg -> depends(arg.type));
-                m.body.visit(new Visitor() {
-                    @Override
-                    public void call(Call c) {
-                        final Clazz pc = CompilerContext.resolve(c.className);
-                        Method pm = pc.findMethod(c.methodName, c.signature);
-                        if(pm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
-                        depends(pm);
-                        depends(pm.declaringClass);
-                        depends(c.className);
-                    }
-
-                    @Override
-                    public void field(Field f) {
-                        final Clazz pc = CompilerContext.resolve(f.className);
-                        NameAndType field = pc.findField(f.name);
-                        if(field == null) throw new RuntimeException("Can't find field: "+f.className+"."+f.name);
-                        field.usedInProject = true;
-                        depends(field.type);
-                        depends(field.declaringClass);
-                        depends(f.className);
-                    }
-                    
-                    @Override
-                    public void visitClassReference(String className) {
-                        depends(className);
-                    }
-                });
-            }
-        }        
-    }
-    
     void depends(String name) {
         if(DecompilerUtils.isArray(name)) {
             name = DecompilerUtils.elementType(name);
@@ -138,9 +52,166 @@ public class DependencyAnalyzer {
             depends(CompilerContext.resolve(name));
         }
     }
-    void depends(Object p) {
-        if(!analyzed.contains(p) && !pending.contains(p)) 
-            pending.add(p);
+    
+    public void analyze(String mainClass) throws Exception {
+        Clazz c = CompilerContext.resolve(mainClass);
+        Method m = c.findDeclaredMethod("main", "()V");
+        if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
+        if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
+     
+        pending.add(m);
+        addRequiredClasses();
+        while(!pending.isEmpty()) {
+            Object o = pending.remove(0);
+            if(analyzed.contains(o)) continue;
+            analyzed.add(o);
+            
+            if(o instanceof Method) {
+                m = (Method)o;
+                m.usedInProject = true;
+                depends(m.declaringClass);
+                depends(m.type);
+                m.args.forEach(arg -> depends(arg.type));
+                c = CompilerContext.resolve(m.declaringClass);
+                if(!m.isStatic() && !m.isNative() && c.superName != null && !m.name.equals("<init>")) {
+                    if(!c.isInterface) {
+                        Clazz sc = CompilerContext.resolve(c.superName);
+                        Method root = m;
+                        Set<Method> children = new HashSet();
+                        children.add(m);
+                        while(sc != null) {
+                            Method sm = sc.findDeclaredMethod(m.name, m.signature);
+                            if(sm != null) {
+                                root = sm;
+                                children.add(sm);
+                                depends(sm);
+                            }
+                            if(sc.superName == null) break;
+                            sc = CompilerContext.resolve(sc.superName);
+                        }
+                        Set<Method> set = vRoot.computeIfAbsent(root, (k) -> new HashSet());
+                        children.remove(root);
+                        set.addAll(children);
+                        
+                    } else {
+                        iRoot.computeIfAbsent(m, (k) -> new HashSet());
+                    }
+                }
+
+                m.body.visit(new Visitor(){
+                    @Override
+                    public void call(Call c) {
+                        Clazz cc = CompilerContext.resolve(c.className);
+                        Method cm = cc.findMethod(c.methodName, c.signature);
+                        if(cm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+"."+c.signature);
+                        depends(cm);
+                        if(cc.isInterface) {
+                            pending.remove(cc);
+                            analyzed.remove(cc);
+                            depends(cc);
+                        }
+                    }
+
+                    @Override
+                    public void field(Field f) {
+                        Clazz cc = CompilerContext.resolve(f.className);
+                        NameAndType field = cc.findField(f.name);
+                        if(field == null) throw new RuntimeException("Can't find field: "+f.className+"."+f.name);
+                        field.usedInProject = true;
+                        depends(field.type);
+                    }
+
+                    
+                    @Override
+                    public void visitClassReference(String className) {
+                        depends(className);
+                    }
+
+                    
+                });
+            } else {
+                final Clazz fc = (Clazz)o;
+                if(fc.superName != null) depends(fc.superName);
+                final boolean isClassKeep = A.hasKeep(fc);
+                fc.methods.forEach(cm -> {
+                    if(isClassKeep || (cm.name.equals("<init>") && cm.args.isEmpty()) || cm.name.equals("<clinit>"))
+                        depends(cm);
+                });
+
+                if(fc.isInterface) {
+                    for(Method im : fc.methods) {
+                        if(!iRoot.containsKey(im)) continue;
+                        List<Clazz> list = new ArrayList();
+                        list.addAll(CompilerContext.classes.values());
+                        for(Clazz impc : list) {
+                            if(!impc.isInterface) {
+                                Method fm = impc.findMethod(im.name, im.signature);
+                                if(fm != null) depends(fm);
+                            }
+                        }
+                    }
+                } else {
+                    for(Method vm : fc.methods) {
+                        if(vm.isStatic() || vm.isNative()) continue;
+                        Clazz sc = fc;
+                        Method root = vm;
+                        List<Method> list = new ArrayList();
+                        while(sc != null) {
+                            Method fm = sc.findDeclaredMethod(vm.name, vm.signature);
+                            if(fm != null) {
+                                root = fm;
+                                list.add(fm);
+                            }
+                            if(sc.superName == null) break;
+                            sc = CompilerContext.resolve(sc.superName);
+                        }
+                        if(vRoot.containsKey(root)) {
+                            for(Method lvm : list) {
+                                depends(lvm);
+                                vRoot.get(root).add(lvm);
+                            }
+                        }
+                    }
+                }   
+                
+                fc.interfaces.forEach(intfName -> {
+                    depends(intfName);
+                    Clazz intf = CompilerContext.resolve(intfName);
+                    while(intf != null) {
+                        intf.methods.forEach(im -> {
+                            if(iRoot.containsKey(im)) {
+                                Method mm = fc.findMethod(im.name, im.signature);
+                                if(mm != null) iRoot.get(im).add(mm);
+                            }
+                        });
+                        
+                        if(intf.superName == null || intf.superName.equals("java/lang/Object")) break;
+                        intf = CompilerContext.resolve(intf.superName);
+                    }
+                });
+            }
+        }
+
+        
+        List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
+        tmp.addAll(vRoot.entrySet());
+        tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);
+        int vtIndex = 0;
+        for(Map.Entry<Method,Set<Method>> e : tmp) {
+            Method root = e.getKey();
+            Set<Method> children = e.getValue();
+            children.remove(root);
+            root.virtualBaseClass = root.declaringClass;
+            if(children.size() > 0 || root.isAbstract()) {
+                root.virtualTableIndex = vtIndex++;
+                for(Method vm : children) {
+                    vm.virtualBaseClass = root.declaringClass;
+                    vm.virtualTableIndex = root.virtualTableIndex;
+                }
+            } else {
+                root.virtualBaseClass = null;
+            }
+        }
     }
     
     void addRequiredClasses() {
@@ -174,302 +245,6 @@ public class DependencyAnalyzer {
             depends(m);
         }
         
-    }
-    
-
-    
-    public void analyzex(String mainClass/*, String mainMethod, String mainSignature*/) throws Exception {
-        final Set<Method> analyzedMethods = new HashSet();
-        final Set<Clazz> analyzedClasses = new HashSet();
-        final ArrayList<Method> methodQueue = new ArrayList();
-        final Map<Method, Set<Method>> rootVirtualMethods = new HashMap();
-        final Map<Method, Set<Method>> rootInterfaceMethods = new HashMap();
-        final List<String> pendingClasses = new ArrayList();
-        
-        //first load required system classes
-        for(String name : new String[]{
-            "java/lang/Class",
-            "java/lang/String",
-            "java/lang/Thread",
-            "java/lang/Throwable",
-            "java/lang/Byte",
-            "java/lang/Boolean",
-            "java/lang/Character",
-            "java/lang/Short",
-            "java/lang/Integer",
-            "java/lang/Float",
-            "java/lang/Long",
-            "java/lang/Double",
-            "java/lang/NullPointerException",
-            "java/lang/ClassCastException",
-            "java/lang/ArrayIndexOutOfBoundsException",
-            "java/lang/StackOverflowError",
-            "java/lang/reflect/Method",
-            "java/lang/reflect/Field",
-            "java/lang/reflect/Constructor",            
-        }) {
-            pendingClasses.add(name);
-        }
-        
-        if(CavaOptions.debug())
-            pendingClasses.add("debugger/Debugger");
-        
-        pendingClasses.add(mainClass);
-        
-        //todo
-        String mainMethod = null;
-        String mainSignature = null;
-        
-        Clazz c = CompilerContext.resolve(mainClass);
-        if(mainMethod == null) {
-            mainMethod = "main";
-        }
-        if(mainSignature == null) {
-            mainSignature = "()V";
-        }
-        Method m = c.findDeclaredMethod(mainMethod, mainSignature);
-        if(m == null) throw new Exception("Can't find main method "+mainClass+"."+mainMethod+mainSignature);
-        if(!m.isStatic() || !m.type.equals("V")) throw new Exception("Main method must be a static void method");
-        
-        System.out.println("Main method: "+m);
-        methodQueue.add(m);
-        m.usedInProject = true;
-        while(!methodQueue.isEmpty()) {
-            while(!methodQueue.isEmpty()) {
-                m = methodQueue.remove(0);
-                m.usedInProject = true;
-                if(analyzedMethods.contains(m)) continue;
-                analyzedMethods.add(m);
-                pendingClasses.add(m.declaringClass);
-                
-                for(NameAndType arg : m.args) {
-                    String type = DecompilerUtils.elementType(arg.type);
-                    if(!DecompilerUtils.isPrimitive(type))
-                        pendingClasses.add(type);
-                }
-                
-                if(!m.type.equals("V")) {
-                    String type = DecompilerUtils.elementType(m.type);
-                    if(!DecompilerUtils.isPrimitive(type))
-                        pendingClasses.add(type);
-                }
-                
-                while(!pendingClasses.isEmpty()) {
-                    c = CompilerContext.resolve(pendingClasses.remove(0));
-                    if(analyzedClasses.contains(c)) continue;
-                    analyzedClasses.add(c);
-                    boolean isClassKeep = CompilerContext.keepAll || A.hasKeep(c);
-                    for(Method cm : c.methods) {
-                        boolean isInitializer = (cm.name.equals("<clinit>") || (cm.name.equals("<init>") && cm.args.size() == 0));
-                        if(!analyzedMethods.contains(cm) && !methodQueue.contains(cm) && (isClassKeep || A.hasKeep(cm) || isInitializer)) {
-                            methodQueue.add(cm);
-                        }
-                    }
-                    
-                    for(NameAndType f : c.fields) {
-                        if(isClassKeep || A.hasKeep(f)) f.usedInProject = true;
-                    }
-                    
-                    if(c.superName != null) {
-                        Clazz sc = CompilerContext.resolve(c.superName);
-                        if(!analyzedClasses.contains(sc)) pendingClasses.add(c.superName);
-                    }
-                    
-                    for(String iname : c.interfaces) {
-                        Clazz cc = CompilerContext.resolve(iname);
-                        if(!analyzedClasses.contains(cc)) pendingClasses.add(iname);
-                    }
-                }
-
-                if(m.body != null && !m.body.children.isEmpty()) {
-                    m.body.visit(new Visitor() {
-
-                        @Override
-                        public void call(Call c) {
-                            final Clazz pc = CompilerContext.resolve(c.className);
-                            Method pm = pc.findMethod(c.methodName, c.signature);
-                            if(pm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
-                            pm.usedInProject = true;
-                            if(!analyzedMethods.contains(pm) && !methodQueue.contains(pm)) {
-                                methodQueue.add(pm);
-                            }
-                            if(c.callType == Call.CallType.Virtual ) {
-                                Clazz rc = pc;
-                                List<Method> methods = new ArrayList();
-                                while(rc != null) {
-                                    Method frc = rc.findDeclaredMethod(pm.name, pm.signature);
-                                    if(frc != null) methods.add(frc);
-                                    if(rc.superName != null)
-                                        rc = CompilerContext.resolve(rc.superName);
-                                    else break;
-                                }
-                                for(Method im : methods) {
-                                    if(!analyzedMethods.contains(im) && !methodQueue.contains(im)) methodQueue.add(im);
-                                }
-
-                                Method root = methods.remove(methods.size() - 1);
-                                Set<Method> implementors = rootVirtualMethods.computeIfAbsent(root, (k) -> new HashSet());
-                                implementors.addAll(methods);
-                            } else if(c.callType == Call.CallType.Interface) {
-                                Set<Method> implementors = rootInterfaceMethods.computeIfAbsent(pm, (k) -> new HashSet());
-                            }
-                        }
-
-                        @Override
-                        public void field(Field f) {
-                            pendingClasses.add(f.className);
-                            Clazz fc = CompilerContext.resolve(f.className);
-                            NameAndType ft = fc.findField(f.name);
-                            if(ft == null) throw new RuntimeException("Can't find field: "+f.className+":"+f.name);
-                            ft.usedInProject = true;
-                            if(!ft.declaringClass.equals(f.className)) pendingClasses.add(ft.declaringClass);
-                            String type = DecompilerUtils.elementType(ft.type);
-                            if(!DecompilerUtils.isPrimitive(type))
-                                pendingClasses.add(type);
-                        }
-                        
-                        @Override
-                        public void visitClassReference(String className) {
-                            pendingClasses.add(className);
-                        }
-
-                    });
-                }
-            }
-
-            //check interface methods must be included
-            for(Map.Entry<Method, Set<Method>> e : rootInterfaceMethods.entrySet()) {
-                Method im = e.getKey();
-                
-                //method's interface may be extended from another interface
-                Set<String> searchedInterfaces = new HashSet();
-                Clazz imc = CompilerContext.resolve(im.declaringClass);
-                while(imc != null) {
-                    if(imc.findDeclaredMethod(im.name, im.signature) != null)
-                        searchedInterfaces.add(imc.name);
-                    for(String iname : imc.interfaces)
-                        if(CompilerContext.resolve(iname).findDeclaredMethod(im.name, im.signature) != null)
-                            searchedInterfaces.add(iname);
-                    if(imc.superName == null || imc.superName.equals("java/lang/Object")) break;
-                    imc = CompilerContext.resolve(imc.superName);
-                }
-                
-                for(Clazz cls : analyzedClasses) {
-                    if(!cls.isInterface) {
-                        Clazz root = cls;
-                        Set<String> implementedInterfaces = new HashSet();
-                        while(root != null) {
-                            implementedInterfaces.addAll(root.interfaces);
-                            if(root.superName == null) break;
-                            root = CompilerContext.resolve(root.superName);
-                        }
-                        root = cls;
-                        while(root != null) {
-                            boolean implemented = false;
-                            for(String iname : implementedInterfaces)
-                                if(searchedInterfaces.contains(iname)) {
-                                    implemented = true;
-                                    break;
-                                }
-                            if(implemented) {
-                                Method fm = root.findDeclaredMethod(im.name, im.signature);
-                                if(fm != null) {
-                                    if(!fm.isAbstract() && !fm.isNative()) {
-                                        e.getValue().add(fm);
-                                    }
-                                    pendingClasses.add(fm.declaringClass);
-                                    if(!analyzedMethods.contains(fm))
-                                        methodQueue.add(fm);
-                                }
-                            }
-                            if(root.superName == null) break;
-                            root = CompilerContext.resolve(root.superName);
-                        }
-                    }
-                }
-            }
-            
-            //check virtual methods must be included
-            for(Map.Entry<Method, Set<Method>> e : rootVirtualMethods.entrySet()) {
-                Method vm = e.getKey();
-                for(Clazz cls : analyzedClasses) {
-                    if(cls.isInterface) continue;
-                    Clazz root = cls;
-                    while(root != null) {
-                        Method fm = root.findDeclaredMethod(vm.name, vm.signature);
-                        pendingClasses.add(root.name);
-                        if(fm != null) {
-                            if(fm != vm)
-                                e.getValue().add(fm);
-                            if(!analyzedMethods.contains(fm))
-                                methodQueue.add(fm);
-                        }
-                        if(root.superName == null) break;
-                        root = CompilerContext.resolve(root.superName);
-                    }
-                }
-            }
-            
-            
-        }
-        /*
-        for(Map.Entry<Method, Set<Method>> e : rootVirtualMethods.entrySet()) {
-            Method root = e.getKey();
-            Set<Method> implementors = e.getValue();
-            int implementorCount = implementors.size();
-            if(!root.isAbstract()) implementorCount++;
-            //this virtual method overriden
-            if(implementorCount > 1) {
-                root.virtualBaseClass = root.declaringClass;
-                for(Method vm : implementors) {
-                    vm.usedInProject = true;
-                    vm.virtualBaseClass = root.declaringClass;
-                }
-            } else if(root.isAbstract()) {
-                System.out.println("abstract root: "+root);
-            }
-        }
-        
-        Map.Entry<Method, Set<Method>> list[] = rootVirtualMethods.entrySet().toArray(new Map.Entry[rootVirtualMethods.size()]);
-        Arrays.sort(list, (m1, m2) -> m1.getKey().toString().compareTo(m2.getKey().toString()));
-        
-        for(Map.Entry<Method, Set<Method>> e : list) {
-            System.out.print(e.getKey()+" = ");
-            for(Method m2 : e.getValue())
-                System.out.print(m2+"  ");
-            System.out.println();
-        }
-        /*
-        System.out.println("ınterfaces--------------------");
-        list = rootInterfaceMethods.entrySet().toArray(new Map.Entry[rootInterfaceMethods.size()]);
-        Arrays.sort(list, (m1, m2) -> m1.getKey().toString().compareTo(m2.getKey().toString()));
-        for(Map.Entry<Method, Set<Method>> e : list) {
-            System.out.print(e.getKey()+" = ");
-            for(Method m2 : e.getValue())
-                System.out.print(m2+"  ");
-            System.out.println();
-        }*/
-    }
-
-    Map<Clazz, Set<String>> interfaceCache = new HashMap();
-    Set<String> getAllInterfaces(Clazz c) {
-        Set<String> set = interfaceCache.get(c);
-        if(set != null) return set;
-        set = new HashSet();
-        while(c != null) {
-            for(String iname : c.interfaces) {
-                Clazz ic = CompilerContext.resolve(iname);
-                while(ic != null) {
-                    set.add(ic.name);
-                    if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
-                    ic = CompilerContext.resolve(ic.superName);
-                }
-            }
-            if(c.superName == null) break;
-            c = CompilerContext.resolve(c.superName);
-        }
-        interfaceCache.put(c, set);
-        return set;
     }
   
 }

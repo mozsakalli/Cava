@@ -118,7 +118,7 @@ public class ITableCalculator {
                     for(Method im : ik.methods) {
                         if(im.usedInProject) {
                             Method m = k.findMethod(im.name, im.signature);
-                            if(m != null) {
+                            if(m != null && m.usedInProject) {
                                 m.interfaceTableIndex = indexes.get(signature(im));
                                 maxIndex = Math.max(maxIndex, m.interfaceTableIndex);
                             }

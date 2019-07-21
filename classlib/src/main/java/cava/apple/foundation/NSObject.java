@@ -53,10 +53,10 @@ public class NSObject<T> {
     
     @Override
     protected void finalize() throws Throwable {
-        release();
+        dispose();
     }
     
-    public void release() {
+    public void dispose() {
         if(handle != null) {
             NativeCode.Void("[(NSObject*)%s release]", handle );
             handle = null;

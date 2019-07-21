@@ -16,8 +16,8 @@ public class Main {
         String p = isMac ? "/Users/mustafa/Work/experimental/cava/compiler/" :
                 "c:/Work/experimental/cava/compiler/";
         CompilerContext.classPath = new File[]{
-            //new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
-            new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
+            new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
+            //new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/target/classes"),
             new File("/Users/mustafa/Work/CAVA/debugger/target/cava-debugger-2019.07.18.jar"),
             //new File(p+"light-classlib/target/classes"),
@@ -40,7 +40,7 @@ public class Main {
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);
         CavaOptions.applicationId("com.cava.sample");
-        CavaOptions.debug(true);
+        CavaOptions.debug(false);
         CavaOptions.debugPort(9999);
         CompilerContext.transpile();
 

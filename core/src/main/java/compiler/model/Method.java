@@ -48,13 +48,7 @@ public class Method extends NameAndType implements Serializable {
     public transient int minLine;
     public transient int maxLine;
 
-    public HashSet<String> requiredTypes = new HashSet();
-    public HashSet<String> requiredMethods = new HashSet();
-    
-    //child classes overrides this method
-    public HashSet<String> childClasses = new HashSet();
-    //which class has this method overrides
-    public String parentClass;
+    public transient boolean isObjCImplementation;
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);

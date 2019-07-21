@@ -126,7 +126,7 @@ public class CBackend {
     void generateClass(Clazz c, List<NameAndType> globalRefs) throws Exception {
         CType cType = new CType();
         new ConstructorFixer().fix(c);
-        boolean isObjC = c.superName != null ? CompilerContext.resolve(c.superName).isExtendedFromObjC() : false;
+        boolean isObjC = c.superName != null ? A.hasObjC(CompilerContext.resolve(c.superName)) : false;//.isExtendedFromObjC() : false;
 
         reflectMethods.clear();
         for(Method m : c.methods) {
@@ -161,6 +161,7 @@ public class CBackend {
                 out.println("extern %s %s;", cType.toC(f.type), naming.field(f));
         }
         
+        if(c.isObjCImplementation) out.println("/* ObjC */");
         out.ln();
         out.println("extern JvmClass %s_Class;", naming.clazz(c.name))
         .println("extern JvmClass ArrOf_%s_Class;", naming.clazz(c.name))                
@@ -171,7 +172,8 @@ public class CBackend {
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
-        //List<Method> virtualMethods = null;//!c.isInterface ? vt.getVirtualMethodList(c) : null;
+        if(c.name.contains("SampleApp"))
+            System.out.println("...");
         
         for(Method m : c.methods) {
             if(m.interfaceBaseClass != null) {
@@ -232,7 +234,15 @@ public class CBackend {
             
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
-            out.print("@interface %s_ObjC : %s", naming.clazz(c.name), DecompilerUtils.objcType(cType,c.superName,false));
+            if(c.name.contains("SampleApp"))
+                System.out.println("...");
+            Clazz objCSuper = CompilerContext.resolve(c.superName);
+            while(objCSuper != null) {
+                if(A.hasObjC(objCSuper) || objCSuper.isExtendedFromObjC()) break;
+                if(objCSuper.superName == null) throw new RuntimeException(c+" must be extended from Objective-C class");
+                objCSuper = CompilerContext.resolve(objCSuper.superName);
+            }
+            out.print("@interface %s_ObjC : %s", naming.clazz(c.name), DecompilerUtils.objcType(cType,objCSuper.name,false));
             if(!c.interfaces.isEmpty()) {
                 int objcIfCount = 0;
                 for(String ifcName : c.interfaces) {
@@ -253,7 +263,7 @@ public class CBackend {
                 }
                 out.print(">");*/
             }
-            out.println("{").println("jobject javaobject;").println("}");
+            out.println("{").println("jobject javaPeer;").println("}");
             for(Method om : objcMethods) {
                 if(A.objcProperty(om)) {
                     String selector = A.objcSelector(om);
@@ -322,7 +332,7 @@ public class CBackend {
                         out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
                         
                         out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
-
+                        if(m.isObjCImplementation) out.println("/* ObjC */");
                         int index = 0;
                         for(NameAndType a : m.args) {
                             out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
@@ -403,6 +413,9 @@ public class CBackend {
             }
         }*/
         
+        if(c.name.contains("SampleApp"))
+            System.out.println("...");
+        
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
             for(Method m : objcMethods) {
@@ -415,7 +428,7 @@ public class CBackend {
                 if(m.boolAnnotation("cava.annotation.ObjC", "property")) {
                     
                 } else {
-                    /*
+                    
                     int argCount = m.args.size();
                     if(!m.isStatic()) argCount--;
                     out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
@@ -424,6 +437,34 @@ public class CBackend {
                         out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+1).type), m.args.get(i+1).name);
                     }
                     out.println("{").indent();
+                    
+                    if(m.name.equals("didFinishLaunchingWithOptions")) {
+                         NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
+                         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate field missing");
+                         int index = globalRefs.indexOf(field);
+                         if(index == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate not defined as globalRef");
+                         
+                         field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentApplication");
+                         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication field missing");
+                         int index2 = globalRefs.indexOf(field);
+                         if(index2 == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
+                         
+                         out.print("JVMGLOBALS[%d] = ", index2);
+                         printObjCArg(m.args.get(1), out);
+                         out.println(";");
+                         if(m.interfaceBaseClass != null) {
+                            Method im = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
+                            out.print("interface_%s", naming.method(im));
+                         } else {
+                            out.print("%s", naming.method(m));
+                         }
+                        out.print("(JVMGLOBALS[%d], JVMGLOBALS[%d], ", index, index2);
+                        printObjCArg(m.args.get(2), out);
+                        out.println(");");
+                    } else {
+                        out.println("%s(javaPeer", naming.method(m));
+                    }
+                    /*
                     NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
                     out.println("javaobject = %s;", naming.field(field));
                     Method lm = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredMethod("initFromLaunch", "(J)V");
@@ -439,12 +480,12 @@ public class CBackend {
                         } else out.print(", %s", arg.name);
 
                     }
-                    out.println(");");
+                    out.println(");");*/
                     //CWriter writer = new CWriter(m, out, naming, cType);
                     //writer.writeChildren(m.body.children);
                     out.undent().println("}").ln();
                     //usedLiterals.addAll(writer.usedListerals);
-                    */
+                    
                 }
             }
             out.println("@end");
@@ -793,6 +834,15 @@ public class CBackend {
             NameAndType a = m.args.get(i);
             out.print("%s %s", cType.toC(a.type), naming.arg(a));
         }
+    }
+    
+    void printObjCArg(NameAndType arg, SourceWriter out) {
+        if(!DecompilerUtils.isPrimitive(arg.type)) {
+            Clazz argClass = CompilerContext.resolve(arg.type);
+            Method im = argClass.findMethod("<init>", "(Lcava/c/VoidPtr;)V");
+            if(im == null || !im.usedInProject) throw new RuntimeException("Can't find Objective-C bridge <init> method for "+arg.type);
+            out.print("%s(JvmAllocObject(&%s_Class),(void*)%s)", naming.method(im), naming.clazz(argClass.name), arg.name);
+        } else out.print("%s", arg.name);
     }
 
     

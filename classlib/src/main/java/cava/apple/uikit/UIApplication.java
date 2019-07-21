@@ -32,18 +32,8 @@ import cava.platform.NativeCode;
 @ObjC
 public class UIApplication extends UIResponder {
     
-    private static UIApplicationDelegate currentDelegate;
-    private static UIApplication currentApplication;
-    
-    @Keep
-    private static void initFromLaunch(VoidPtr handle) {
-        currentApplication = new UIApplication(handle);
-    }
-    
-    public UIApplication(){}
-    public UIApplication(VoidPtr handle) {
-        super(handle);
-    }
+    @Keep private static UIApplicationDelegate currentDelegate;
+    @Keep private static UIApplication currentApplication;
     
     public static <P extends UIApplication, D extends NSObject & UIApplicationDelegate> 
     void main(String[] args, Class<P> principalClass, Class<D> delegateClass) {
@@ -51,7 +41,10 @@ public class UIApplication extends UIResponder {
         CharPtrPtr argv = null;
         
         String principalClassName = principalClass != null ? NSObject.getObjCClassName(principalClass)  : null;
-        String delegateClassName = delegateClass != null ? NSObject.getObjCClassName(delegateClass) : null;
+        Class dc = delegateClass;
+        while(dc != null && dc.getSuperclass() != NSObject.class)
+            dc = dc.getSuperclass();
+        String delegateClassName = dc != null ? NSObject.getObjCClassName(dc) : null;
         
         if(args != null && args.length > 0) {
             argv = CharPtrPtr.alloc(args.length);

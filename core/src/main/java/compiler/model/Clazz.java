@@ -60,8 +60,7 @@ public class Clazz implements Serializable {
     
     
     public transient int interfaceTableSize = -1;
-    //if modified after saved to disk
-    public transient boolean modelDirty;
+    public transient boolean isObjCImplementation;    
     
     public String getSimpleName() {
         return DecompilerUtils.simpleName(name);

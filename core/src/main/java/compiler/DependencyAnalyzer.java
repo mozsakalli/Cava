@@ -131,11 +131,28 @@ public class DependencyAnalyzer {
                 });
             } else {
                 final Clazz fc = (Clazz)o;
+                if(fc.name.contains("UIApplicationDelegate"))
+                    System.out.println("...");
                 if(fc.superName != null) depends(fc.superName);
-                final boolean isClassKeep = A.hasKeep(fc);
+                final boolean isObjCInterface = fc.isInterface && A.hasObjC(fc);
+                final boolean isClassKeep = A.hasKeep(fc) || isObjCInterface;
                 fc.methods.forEach(cm -> {
-                    if(isClassKeep || (cm.name.equals("<init>") && cm.args.isEmpty()) || cm.name.equals("<clinit>"))
+                    if(isClassKeep || 
+                       (cm.name.equals("<init>") && cm.args.isEmpty()) || 
+                        cm.name.equals("<clinit>") ||
+                       (cm.name.equals("<init>") && cm.args.size()==1 && cm.args.get(0).type.equals("cava/c/VoidPtr")) //objc init     
+                    )
                         depends(cm);
+                    if(isObjCInterface) {
+                        iRoot.computeIfAbsent(cm, (k) -> new HashSet());
+                        cm.usedInProject = true; 
+                    }
+                });
+                fc.fields.forEach(f -> {
+                    if(isClassKeep || A.hasKeep(f)) {
+                        f.usedInProject = true;
+                        depends(f.type);
+                    }
                 });
 
                 if(fc.isInterface) {
@@ -146,7 +163,16 @@ public class DependencyAnalyzer {
                         for(Clazz impc : list) {
                             if(!impc.isInterface) {
                                 Method fm = impc.findMethod(im.name, im.signature);
-                                if(fm != null) depends(fm);
+                                if(fm != null) {
+                                    depends(fm);
+                                    iRoot.get(im).add(fm);
+                                    fm.usedInProject = true;
+                                    if(isObjCInterface) {
+                                        fm.isObjCImplementation = true;
+                                        fm.interfaceBaseClass = im.declaringClass;
+                                        impc.isObjCImplementation = true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -178,10 +204,14 @@ public class DependencyAnalyzer {
                     depends(intfName);
                     Clazz intf = CompilerContext.resolve(intfName);
                     while(intf != null) {
+                        final boolean isObjC = A.hasObjC(intf);
                         intf.methods.forEach(im -> {
                             if(iRoot.containsKey(im)) {
                                 Method mm = fc.findMethod(im.name, im.signature);
-                                if(mm != null) iRoot.get(im).add(mm);
+                                if(mm != null) {
+                                    iRoot.get(im).add(mm);
+                                    mm.isObjCImplementation = true;
+                                }
                             }
                         });
                         
@@ -192,7 +222,9 @@ public class DependencyAnalyzer {
             }
         }
 
-        
+        iRoot.entrySet().forEach(e -> {
+            System.out.println(e.getKey()+" -> "+e.getValue());
+        });
         List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
         tmp.addAll(vRoot.entrySet());
         tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);

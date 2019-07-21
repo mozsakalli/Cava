@@ -18,31 +18,27 @@ package cava.sample;
 
 import cava.annotation.Keep;
 import cava.apple.foundation.NSDictionary;
-import cava.apple.foundation.NSObject;
+import cava.apple.foundation.NSString;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegate;
+import cava.apple.uikit.UIApplicationDelegateAdapter;
 import cava.apple.uikit.UIWindow;
+import cava.c.VoidPtr;
 
 /**
  *
  * @author mustafa
  */
 @Keep
-public class SampleApp extends NSObject implements UIApplicationDelegate {
-
-    @Override
-    public UIWindow getWindow() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setWindow(UIWindow window) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class SampleApp extends UIApplicationDelegateAdapter {
 
     @Override
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ((UIApplicationDelegate)this).setWindow(new UIWindow());
+        System.out.println("Sample App Started...");
+        
+        new NSString((VoidPtr)null);
+        return true;
     }
 
 }

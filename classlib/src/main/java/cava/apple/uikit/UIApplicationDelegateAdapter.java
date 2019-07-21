@@ -16,22 +16,30 @@
 
 package cava.apple.uikit;
 
-import cava.annotation.ObjC;
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+import cava.apple.foundation.NSDictionary;
+import cava.apple.foundation.NSObject;
 
 /**
  *
  * @author mustafa
  */
-@ObjC
-public class UIWindow extends UIView {
+public class UIApplicationDelegateAdapter extends NSObject implements UIApplicationDelegate {
+
+    private UIWindow window;
     
-    public UIWindow(){
-        super(NativeCode.VoidPtr("[[UIWindow alloc] init]"));
+    @Override
+    public UIWindow getWindow() {
+        return window;
     }
-    public UIWindow(VoidPtr handle) {
-        super(handle);
+
+    @Override
+    public void setWindow(UIWindow window) {
+        this.window = window;
+    }
+
+    @Override
+    public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
+        return true;
     }
     
 }

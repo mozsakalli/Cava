@@ -241,6 +241,7 @@ public class ModelLanguage extends Language {
         for(FieldDefinition f : type.getDeclaredFields()) {
             NameAndType nt = new NameAndType(f);
             nt.declaringClass = clazz.name;
+            nt.annotations = DecompilerUtils.parseAnnotations(f.getAnnotations());
             clazz.fields.add(nt);
         }
         clazz.annotations = DecompilerUtils.parseAnnotations(type.getAnnotations());

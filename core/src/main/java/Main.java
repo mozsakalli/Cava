@@ -20,6 +20,7 @@ public class Main {
             //new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/target/classes"),
             new File("/Users/mustafa/Work/CAVA/debugger/target/cava-debugger-2019.07.18.jar"),
+            new File("/Users/mustafa/Work/CAVA/sample/gdx.jar"),
             //new File(p+"light-classlib/target/classes"),
             //new File(p+"../openjdk-12"),
             //new File(p+"classlib/target/classes"),
@@ -34,7 +35,7 @@ public class Main {
         //CompilerContext.mainName = "main";
         //CompilerContext.mainSignature = "()Ldebugger/Debugger;";
 
-        CavaOptions.mainClass("cava.sample.Main");
+        CavaOptions.mainClass("cava.sample.IOSLauncher");
         CavaOptions.targetPlatform("Ios");
         CavaOptions.infoPList(new File("/Users/mustafa/Work/CAVA/sample/Info.plist"));
         CavaOptions.applicationName("Cava Sample");

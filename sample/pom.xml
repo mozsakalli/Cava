@@ -11,6 +11,13 @@
             <artifactId>cava-maven</artifactId>
             <version>2019.07.18</version>
         </dependency>
+        <dependency>
+              <groupId>libgdx</groupId>  
+               <artifactId>libgdx</artifactId>  
+               <version>1.0</version> 
+              <scope>system</scope>
+              <systemPath>/Users/mustafa/Work/CAVA/sample/gdx.jar</systemPath>
+        </dependency>        
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,7 +25,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <build>
-        <plugins>
+        <!-- plugins>
             <plugin>
                 <groupId>com.cava</groupId>
                 <artifactId>cava-maven</artifactId>
@@ -38,6 +45,6 @@
                     </execution>
                 </executions>                
             </plugin>
-        </plugins>
+        </plugins -->
     </build>
 </project>

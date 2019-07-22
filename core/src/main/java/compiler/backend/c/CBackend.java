@@ -65,6 +65,9 @@ public class CBackend {
         //collect all used non primitive static fields
         List<NameAndType> globalRefs = new ArrayList();
         for(Clazz c : sortedClasses) {
+            if(c.name.contains("gdx/Gdx"))
+                System.out.println("...");
+            
             for(NameAndType f : c.fields) {
                 if(f.usedInProject && f.isStatic() && !DecompilerUtils.isPrimitive(f.type) && !f.type.equals("java/lang/Class"))
                     globalRefs.add(f);
@@ -157,8 +160,13 @@ public class CBackend {
         out.ln();
         
         for(NameAndType f : c.fields) {
-            if(f.isStatic() && f.usedInProject && (DecompilerUtils.isPrimitive(f.type) || f.type.equals("java/lang/Class")))
+            boolean isPrimitive = DecompilerUtils.isPrimitive(f.type);
+            if(f.isStatic() && f.usedInProject && (isPrimitive || f.type.equals("java/lang/Class")))
                 out.println("extern %s %s;", cType.toC(f.type), naming.field(f));
+            
+            //include field type headers
+            if(f.usedInProject && !isPrimitive)
+                cType.dependency.add(f.type);
         }
         
         if(c.isObjCImplementation) out.println("/* ObjC */");
@@ -448,7 +456,8 @@ public class CBackend {
                          
                          out.print("JVMGLOBALS[%d] = ", index2);
                          printObjCArg(m.args.get(1), out);
-                         out.println(";");
+                         out.println(";")
+                            .println("return ");
                          if(m.interfaceBaseClass != null) {
                             Method im = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
                             out.print("interface_%s", naming.method(im));

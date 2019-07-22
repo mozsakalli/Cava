@@ -28,6 +28,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
     @Override
     protected IOSApplication createApplication() {
+        System.out.println("-- create application --");
         return new IOSApplication(new LibgdxSample());
     }
 

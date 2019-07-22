@@ -42,6 +42,9 @@ public class ITableCalculator {
     }
     
     static Set<Clazz> getAllInterfaces(Clazz c) {
+        if(c == null) {
+            System.out.println("...");
+        }
         Set<Clazz> cache = interfaceCache.get(c);
         if(cache != null) {
             return cache;
@@ -49,6 +52,9 @@ public class ITableCalculator {
         Set<Clazz> set = new HashSet();
         for(String iname : c.interfaces) {
             Clazz ic = CompilerContext.classes.get(iname);
+            if(ic == null) {
+                System.out.println("...");
+            }
             while(true) {
                 set.add(ic);
                 if(ic.superName != null) {

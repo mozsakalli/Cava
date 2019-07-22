@@ -26,6 +26,7 @@ import compiler.model.ast.Visitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,293 @@ import java.util.Set;
  * @author mustafa
  */
 public class DependencyAnalyzer {
+
+    Map<Method, Set<Method>> vRoot = new HashMap();
+    Map<Method, Set<Method>> iRoot = new HashMap();
+    List<Clazz> classQueue = new LinkedList();
+    Set<Clazz> analyzedClasses = new HashSet();
+    
+    List<Method> methodQueue = new LinkedList();
+    Set<Method> analyzedMethods = new HashSet();
+    
+    public void analyze(String mainClass) throws Exception {
+        Clazz c = CompilerContext.resolve(mainClass);
+        Method m = c.findDeclaredMethod("main", "()V");
+        if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
+        if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
+        
+        dependsClass(c);
+        dependsMethod(m);
+        addRequiredClasses();
+        
+        while(!classQueue.isEmpty() || !methodQueue.isEmpty()) {
+            while(!classQueue.isEmpty()) {
+                c = classQueue.remove(0);
+                analyzedClasses.add(c);
+                analyzeClass(c);
+            }
+            
+            while(!methodQueue.isEmpty()) {
+                m = methodQueue.remove(0);
+                analyzedMethods.add(m);
+                analyzeMethod(m);
+            }
+            
+            collectUsedMethods();
+        }
+        
+        List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
+        tmp.addAll(vRoot.entrySet());
+        tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);
+        tmp.forEach(e -> {
+            System.out.println(e.getKey()+" -> "+e.getValue());
+        });
+        
+        //generate virtual table indices
+        int vtIndex = 0;
+        for(Map.Entry<Method,Set<Method>> e : tmp) {
+            Method root = e.getKey();
+            Set<Method> children = e.getValue();
+            children.remove(root);
+            if(root.usedInProject) {
+                root.virtualBaseClass = root.declaringClass;
+                if(children.size() > 0 || root.isAbstract()) {
+                    root.virtualTableIndex = vtIndex++;
+                    for(Method vm : children) {
+                        vm.virtualBaseClass = root.declaringClass;
+                        vm.virtualTableIndex = root.virtualTableIndex;
+                    }
+                } else {
+                    root.virtualBaseClass = null;
+                }
+            }
+        }
+        
+        //generate interface table indices
+        System.out.println("-- interfaces --");
+        tmp.clear();
+        tmp.addAll(iRoot.entrySet());
+        tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);
+        int itIndex = 0;
+        for(Map.Entry<Method,Set<Method>> e : tmp) {
+            Method root = e.getKey();
+            Set<Method> children = e.getValue();
+            children.remove(root);
+            if(root.usedInProject) {
+                root.interfaceTableIndex = itIndex++;
+                for(Method im : children) {
+                    im.interfaceTableIndex = root.interfaceTableIndex;
+                    im.interfaceBaseClass = root.declaringClass;
+                    Clazz ic = CompilerContext.resolve(im.declaringClass);
+                    ic.interfaceTableSize = Math.max(ic.interfaceTableSize, im.interfaceTableIndex+1);
+                }
+            }
+        }
+        
+        //correct interface table sizes
+        CompilerContext.classes.values().forEach(mc -> {
+            if(!mc.isInterface && mc.superName != null) {
+                Clazz sc = CompilerContext.resolve(mc.superName);
+                while(sc != null) {
+                    mc.interfaceTableSize = Math.max(mc.interfaceTableSize, sc.interfaceTableSize);
+                    if(sc.superName == null) break;
+                    sc = CompilerContext.resolve(sc.superName);
+                }
+            }
+            
+        });
+        tmp.forEach(e -> {
+            System.out.println("ıntf: "+e.getKey().usedInProject+":" +e.getKey()+" -> "+e.getValue());
+        });
+    }
+
+    private void collectUsedMethods() {
+        collectRoot(vRoot);
+        collectRoot(iRoot);
+    }
+    
+    private void collectRoot(Map<Method, Set<Method>> rootMap) {
+        rootMap.forEach((root,set) -> {
+            boolean used = root.usedInProject;
+            if(!used) {
+                for(Method m : set)
+                    if(m.usedInProject) {
+                        used = true;
+                        break;
+                    }
+            }
+            if(used) {
+                if(!root.usedInProject) dependsMethod(root);
+                for(Method m : set)
+                    if(!m.usedInProject) dependsMethod(m);
+            }
+        });
+    }
+    
+    private void analyzeClass(Clazz c) {
+        List<Clazz> superList = new LinkedList();
+        if(c.superName != null) {
+            Clazz sc = CompilerContext.resolve(c.superName);
+            while(sc != null) {
+                dependsClass(sc);
+                superList.add(sc);
+                if(sc.superName == null) break;
+                sc = CompilerContext.resolve(sc.superName);
+            }
+        }
+        
+        Set<Clazz> interfaceList = new HashSet();
+        collectInterfaces(c, interfaceList);
+        for(Clazz sc : superList)
+            collectInterfaces(sc, interfaceList);
+        
+        if(c.name.contains("UIApplicationDelegate"))
+            System.out.println("...");
+        final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
+        boolean isClassKeep = A.hasKeep(c) || isObjCInterface;
+        for(Method m : c.methods) {
+            m.interfaceTableIndex = -1;
+            if(isClassKeep || m.name.equals("<clinit>") || 
+               (m.name.equals("<init>") && m.args.isEmpty()) ||
+               (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr")) //objc      
+            )
+                dependsMethod(m);
+            
+            if(!m.isStatic() && !m.name.equals("<init>")) {
+                if(!c.isInterface) {
+                    //build virtual tree
+                    List<Method> list = new ArrayList();
+                    list.add(m);
+                    for(Clazz sc : superList) {
+                        Method rm = sc.findDeclaredMethod(m.name, m.signature);
+                        if(rm != null) list.add(rm);
+                    }
+
+                    Method root = list.get(list.size() - 1);
+                    Set<Method> set = vRoot.computeIfAbsent(root, (k) -> new HashSet());
+                    for(int i=0; i<list.size()-1; i++)
+                        set.add(list.get(i));
+
+
+                    //build interface tree
+                    for(Clazz ic : interfaceList) {
+                        Method im = ic.findDeclaredMethod(m.name, m.signature);
+                        if(im != null) {
+                            set = iRoot.computeIfAbsent(im, (k) -> new HashSet());
+                            set.add(m);
+                        }
+                    }
+                }
+            }
+        }
+
+        c.fields.forEach(field -> {
+            if(!field.usedInProject)
+                field.usedInProject = isClassKeep || A.hasKeep(field);
+            if(field.usedInProject)
+                dependsClass(field.type);
+        });
+    }
+    
+    void collectInterfaces(Clazz c, Set<Clazz> set) {
+        for(String iName : c.interfaces) {
+            Clazz ic = CompilerContext.resolve(iName);
+            while(ic != null) {
+                set.add(ic);
+                dependsClass(ic);
+                if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
+                ic = CompilerContext.resolve(ic.superName);
+            }
+        }
+    }
+    private void analyzeMethod(Method m) {
+        m.usedInProject = true;
+        dependsClass(m.type);
+        m.args.forEach(arg -> dependsClass(arg.type));
+        m.body.visit(new Visitor() {
+            @Override
+            public void call(Call c) {
+                Clazz tc = CompilerContext.resolve(c.className);
+                dependsClass(tc);
+                Method tm = tc.findMethod(c.methodName, c.signature);
+                if(tm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
+                dependsMethod(tm);
+            }
+
+            @Override
+            public void field(Field f) {
+                Clazz tc = CompilerContext.resolve(f.className);
+                dependsClass(tc);
+                NameAndType field = tc.findField(f.name);
+                if(field == null) throw new RuntimeException("Can't find field: "+f.className+"."+f.name);
+                field.usedInProject = true;
+                dependsClass(field.type);
+            }
+
+            
+            @Override
+            public void visitClassReference(String className) {
+                dependsClass(className);
+            }
+        });
+    }
+    
+    private void dependsClass(Clazz c) {
+        if(!analyzedClasses.contains(c) && !classQueue.contains(c))
+            classQueue.add(c);
+    }
+    
+    private void dependsClass(String name) {
+        if(DecompilerUtils.isArray(name)) {
+            name = DecompilerUtils.elementType(name);
+        }
+        if(!DecompilerUtils.isPrimitive(name)) {
+            dependsClass(CompilerContext.resolve(name));
+        }
+    }
+    
+    private void dependsMethod(Method m) {
+        if(!analyzedMethods.contains(m) && !methodQueue.contains(m))
+            methodQueue.add(m);
+    }
+    
+    void addRequiredClasses() {
+        for(String name : new String[]{
+            "java/lang/Class",
+            "java/lang/String",
+            "java/lang/Thread",
+            "java/lang/Throwable",
+            "java/lang/Byte",
+            "java/lang/Boolean",
+            "java/lang/Character",
+            "java/lang/Short",
+            "java/lang/Integer",
+            "java/lang/Float",
+            "java/lang/Long",
+            "java/lang/Double",
+            "java/lang/NullPointerException",
+            "java/lang/ClassCastException",
+            "java/lang/ArrayIndexOutOfBoundsException",
+            "java/lang/StackOverflowError",
+            "java/lang/reflect/Method",
+            "java/lang/reflect/Field",
+            "java/lang/reflect/Constructor",            
+        }) {
+            dependsClass(name);
+        }
+        if(CavaOptions.debug()) {
+            Clazz c = CompilerContext.resolve("com/cava/debugger/Debugger");
+            Method m = c.findDeclaredMethod("start", "(I)V");
+            if(m == null) throw new RuntimeException("Can't find com.cava.debugger.Debugger.start(I)V method");
+            dependsClass(c);
+            dependsMethod(m);
+        }
+        
+    }
+    
+    /*
+    
+    
     Set analyzed = new HashSet();
     List pending = new ArrayList();
     Map<Method, Set<Method>> vRoot = new HashMap();
@@ -68,6 +356,8 @@ public class DependencyAnalyzer {
             
             if(o instanceof Method) {
                 m = (Method)o;
+                if(m.name.contains("createApplication"))
+                    System.out.println("...");
                 m.usedInProject = true;
                 depends(m.declaringClass);
                 depends(m.type);
@@ -92,7 +382,9 @@ public class DependencyAnalyzer {
                         Set<Method> set = vRoot.computeIfAbsent(root, (k) -> new HashSet());
                         children.remove(root);
                         set.addAll(children);
-                        
+                        sc = CompilerContext.resolve(root.declaringClass);
+                        analyzed.remove(sc);
+                        depends(sc);
                     } else {
                         iRoot.computeIfAbsent(m, (k) -> new HashSet());
                     }
@@ -131,7 +423,7 @@ public class DependencyAnalyzer {
                 });
             } else {
                 final Clazz fc = (Clazz)o;
-                if(fc.name.contains("UIApplicationDelegate"))
+                if(fc.name.contains("$Delegate"))
                     System.out.println("...");
                 if(fc.superName != null) depends(fc.superName);
                 final boolean isObjCInterface = fc.isInterface && A.hasObjC(fc);
@@ -179,6 +471,12 @@ public class DependencyAnalyzer {
                 } else {
                     for(Method vm : fc.methods) {
                         if(vm.isStatic() || vm.isNative()) continue;
+                        
+                        //this is a root method check for children
+                        if(vRoot.containsKey(vm)) {
+                            
+                            System.out.println("vRoot: "+vm);
+                        }
                         Clazz sc = fc;
                         Method root = vm;
                         List<Method> list = new ArrayList();
@@ -223,7 +521,7 @@ public class DependencyAnalyzer {
         }
 
         iRoot.entrySet().forEach(e -> {
-            System.out.println(e.getKey()+" -> "+e.getValue());
+            //System.out.println(e.getKey()+" -> "+e.getValue());
         });
         List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
         tmp.addAll(vRoot.entrySet());
@@ -243,6 +541,7 @@ public class DependencyAnalyzer {
             } else {
                 root.virtualBaseClass = null;
             }
+            System.out.println(e.getKey()+" -> "+e.getValue());
         }
     }
     
@@ -278,5 +577,5 @@ public class DependencyAnalyzer {
         }
         
     }
-  
+    */
 }

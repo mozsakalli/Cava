@@ -24,6 +24,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.ApplicationLogger;
 import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.LifecycleListener;
@@ -86,6 +87,8 @@ public class IOSApplication implements Application {
     }
 
     final boolean didFinishLaunching (UIApplication uiApp, NSDictionary options) {    
+        Gdx.app = this;
+        
         return true;
     }
     

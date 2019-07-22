@@ -59,7 +59,7 @@ public class CBackend {
         //vTable.build(sortedClasses);
         
         //interfaceTableSize = ITable.calculate();
-        ITableCalculator.calculate();
+        //ITableCalculator.calculate();
         assignables = InstanceOfBuilder.build();
         
         //collect all used non primitive static fields
@@ -234,8 +234,6 @@ public class CBackend {
             
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
-            if(c.name.contains("SampleApp"))
-                System.out.println("...");
             Clazz objCSuper = CompilerContext.resolve(c.superName);
             while(objCSuper != null) {
                 if(A.hasObjC(objCSuper) || objCSuper.isExtendedFromObjC()) break;
@@ -320,7 +318,7 @@ public class CBackend {
                     out.println(") {").indent();
 
                     if(c.isInterface) {
-                        generateMethodCallWrapper(out, c, m, cType, "itable", ITableCalculator.getIfaceIndex(m));
+                        generateMethodCallWrapper(out, c, m, cType, "itable", m.interfaceTableIndex);// ITableCalculator.getIfaceIndex(m));
                         out.undent().println("}");
                     } else {
                         if(c.name.equals("java/lang/Thread") && m.name.equals("threadProc")) {
@@ -413,9 +411,8 @@ public class CBackend {
             }
         }*/
         
-        if(c.name.contains("SampleApp"))
+        if(c.name.contains("UIApplicationDelegateAdapter"))
             System.out.println("...");
-        
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
             for(Method m : objcMethods) {
@@ -546,6 +543,9 @@ public class CBackend {
             out.println("JvmSetup_%s();", naming.clazz(iname));
         }
         
+        if(c.name.contains("IOSLauncher"))
+            System.out.println("...");
+        
         //generate virtual method table
         out.print("void** _vTable = ");
         if(c.isInterface) out.println("java_lang_Object_Class.vtable;");
@@ -554,22 +554,20 @@ public class CBackend {
             List<Method> virtualMethods = new ArrayList();
             Set<String> virtualMethodSignatures = new HashSet();
             int tableSize = 0;
-            if(!c.isInterface) {
-                Clazz vc = c;
-                while(vc != null) {
-                    for(Method vm : vc.methods) {
-                        if(vm.usedInProject && vm.virtualBaseClass != null) {
-                            String sign = vm.name+":"+vm.signature;
-                            if(!virtualMethodSignatures.contains(sign)) {
-                                virtualMethods.add(vm);
-                                virtualMethodSignatures.add(sign);
-                                tableSize = Math.max(tableSize, vm.virtualTableIndex+1);
-                            }
+            Clazz vc = c;
+            while(vc != null) {
+                for(Method vm : vc.methods) {
+                    if(vm.usedInProject && vm.virtualBaseClass != null) {
+                        String sign = vm.name+":"+vm.signature;
+                        if(!virtualMethodSignatures.contains(sign)) {
+                            virtualMethods.add(vm);
+                            virtualMethodSignatures.add(sign);
+                            tableSize = Math.max(tableSize, vm.virtualTableIndex+1);
                         }
                     }
-                    if(vc.superName == null) break;
-                    vc = CompilerContext.resolve(vc.superName);
                 }
+                if(vc.superName == null) break;
+                vc = CompilerContext.resolve(vc.superName);
             }
             
             if(virtualMethods.isEmpty())
@@ -590,16 +588,16 @@ public class CBackend {
         if(!c.isInterface && c.interfaceTableSize > 0) {
             out.println("(void**)malloc(%d * sizeof(void*));", c.interfaceTableSize);
             Clazz kk = c;
-            HashSet<String> used = new HashSet();
+            HashSet<Integer> used = new HashSet();
             while(kk != null) {
                 for(Method m : kk.methods) {
-                    String sign = ITableCalculator.signature(m);
-                    if(!m.isStatic() && !m.isAbstract() && !used.contains(sign)) {
-                        int idx = ITableCalculator.getIfaceIndex(m);
-                        if(idx != -1 && idx < c.interfaceTableSize) {
-                            out.println("_iTable[%d] = (void*)&%s;", idx, naming.method(m));
-                            used.add(sign);
-                        }
+                    if(m.interfaceTableIndex == -1) continue;
+                    if(!used.contains(m.interfaceTableIndex)) {
+                        if(m.isAbstract())
+                        out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(m));
+                        else
+                        out.println("_iTable[%d] = (void*)&%s;", m.interfaceTableIndex, naming.method(m));
+                        used.add(m.interfaceTableIndex);
                     }
                 }
                 if(kk.superName != null)

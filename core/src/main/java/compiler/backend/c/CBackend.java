@@ -200,13 +200,6 @@ public class CBackend {
             }
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
-                /*
-                if(isStruct && m.name.equals("fromNative")) {
-                    out.println("extern jobject %s(%s %s);", naming.method(m), nativeClassName, naming.arg(m.args.get(0)));
-                } 
-                else if(isStruct && m.name.equals("toNative")) {
-                    out.println("extern %s %s(jobject pthis);", nativeClassName, naming.method(m));
-                } else*/
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
                     if(c.isInterface)
                     out.print("extern %s interface_%s(",cType.toC(m.type), naming.method(m));
@@ -239,19 +232,9 @@ public class CBackend {
                 //if(vm.usedInProject && !vm.isStatic() && !vm.name.equals("<init>"))
             }
         }
-        /*
-        if(virtualMethods != null) {
-            for(Method vm : virtualMethods) 
-                if(vm.virtualBaseClass.equals(c.name)) {
-                    out.print("extern %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
-                    printArgs(vm, cType, out);
-                    out.println(");");
-                }
-        }*/
         
         //generate objc interface
         if(isObjC) {
-            
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
             Clazz objCSuper = CompilerContext.resolve(c.superName);
@@ -386,7 +369,8 @@ public class CBackend {
                         if(m.isObjCImplementation) out.println("/* ObjC */");
                         int index = 0;
                         for(NameAndType a : m.args) {
-                            out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
+                            if(DecompilerUtils.isPrimitive(a.type) || (!DecompilerUtils.isPrimitive(a.type) && !CompilerContext.resolve(a.type).isStruct()))
+                                out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
                         }
                         for(NameAndType l : m.locals) {
                             out.println("DEFLOCAL(%s,%s,%d);", naming.local(l), cType.toC(l.type), index++);
@@ -466,7 +450,6 @@ public class CBackend {
                 if(m.boolAnnotation("cava.annotation.ObjC", "property")) {
                     
                 } else {
-                    
                     int argCount = m.args.size();
                     if(!m.isStatic()) argCount--;
                     out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
@@ -501,7 +484,31 @@ public class CBackend {
                         printObjCArg(m.args.get(2), out);
                         out.println(");");
                     } else {
-                        out.println("%s(javaPeer", naming.method(m));
+                        SourceWriter tmpOut = new SourceWriter();
+                        Method tm = m;
+                        if(m.interfaceBaseClass != null) {
+                            tm = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
+                            tmpOut.print("interface_");
+                        } else if(m.virtualBaseClass != null) {
+                            tm = CompilerContext.resolve(m.virtualBaseClass).findMethod(m.name, m.signature);
+                            tmpOut.print("virtual_");
+                        }
+                            
+                        tmpOut.print("%s(javaPeer", naming.method(tm));
+                        for(int i=1; i<m.args.size(); i++) {
+                            NameAndType arg = m.args.get(i);
+                            tmpOut.print(",");
+                            printObjCArg(arg, tmpOut);
+                        }
+                        tmpOut.print(")");
+                        
+                        if(!DecompilerUtils.isVoid(m.type)) {
+                            out.print("return ");
+                        }
+                        if(!DecompilerUtils.isPrimitive(m.type)) {
+                            printObjCMarshaller(m.type, tmpOut.toString(), out);
+                            out.println(";");
+                        } else out.println("%s;",tmpOut.toString());
                     }
                     /*
                     NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
@@ -884,13 +891,17 @@ public class CBackend {
         }
     }
     
+    void printObjCMarshaller(String type, String value, SourceWriter out) {
+        if(!DecompilerUtils.isPrimitive(type)) {
+            Clazz argClass = CompilerContext.resolve(type);
+            Method im = argClass.findMethod("<init>", argClass.isStruct() ? "(Lcava/c/Struct;)V" : "(Lcava/c/VoidPtr;)V");
+            if(im == null || !im.usedInProject) throw new RuntimeException("Can't find native bridge <init> method for "+type);
+            out.print("%s(JvmAllocObject(&%s_Class),%s)", naming.method(im), naming.clazz(argClass.name), value);
+        } else out.print("%s", value);
+    }
+    
     void printObjCArg(NameAndType arg, SourceWriter out) {
-        if(!DecompilerUtils.isPrimitive(arg.type)) {
-            Clazz argClass = CompilerContext.resolve(arg.type);
-            Method im = argClass.findMethod("<init>", "(Lcava/c/VoidPtr;)V");
-            if(im == null || !im.usedInProject) throw new RuntimeException("Can't find Objective-C bridge <init> method for "+arg.type);
-            out.print("%s(JvmAllocObject(&%s_Class),(void*)%s)", naming.method(im), naming.clazz(argClass.name), arg.name);
-        } else out.print("%s", arg.name);
+        printObjCMarshaller(arg.type, arg.name, out);
     }
 
     

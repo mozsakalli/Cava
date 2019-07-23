@@ -135,12 +135,12 @@ public class Clazz implements Serializable {
     }
     
     public boolean isObjC() {
-        return hasAnnotation("cava.annotation.ObjC");
+        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC();
     }
     
     public boolean isExtendedFromObjC() {
         if(superName == null) return false;
-        if(isObjC()) return true;
+        if(hasAnnotation("cava.annotation.ObjC")) return true;
         return CompilerContext.resolve(superName).isExtendedFromObjC();
     }
     

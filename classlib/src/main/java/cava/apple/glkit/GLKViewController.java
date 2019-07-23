@@ -16,6 +16,8 @@
 
 package cava.apple.glkit;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.apple.foundation.NSObject;
 import cava.apple.uikit.UIViewController;
 import cava.platform.NativeCode;
@@ -24,8 +26,14 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
+@Include("<GLKit/GLKit.h>")
+@Framework("GLKit.framework")
 public class GLKViewController extends UIViewController {
     GLKViewControllerDelegate delegate;
+    
+    public GLKViewController() {
+        $handle = NativeCode.VoidPtr("[[GLKViewController alloc] init]");
+    }
     
     public GLKViewControllerDelegate getDelegate() {
         return delegate;

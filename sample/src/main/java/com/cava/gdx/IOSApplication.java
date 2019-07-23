@@ -95,6 +95,7 @@ public class IOSApplication implements Application {
         graphics = new IOSGraphics(this);
         
         uiWindow = new UIWindow(UIScreen.getMainScreen().getBounds());
+        uiWindow.setRootViewController(graphics.viewController);
         uiWindow.makeKeyAndVisible();
         
         return true;

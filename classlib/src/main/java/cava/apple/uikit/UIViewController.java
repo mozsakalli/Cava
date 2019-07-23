@@ -16,10 +16,15 @@
 
 package cava.apple.uikit;
 
+import cava.platform.NativeCode;
+
 /**
  *
  * @author mustafa
  */
 public class UIViewController extends UIResponder {
-
+    
+    public void setView(UIView view) {
+        NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
+    }
 }

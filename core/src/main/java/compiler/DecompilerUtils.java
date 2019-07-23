@@ -21,6 +21,7 @@ import com.strobel.assembler.metadata.TypeReference;
 import com.strobel.assembler.metadata.annotations.AnnotationElement;
 import com.strobel.assembler.metadata.annotations.ConstantAnnotationElement;
 import com.strobel.assembler.metadata.annotations.CustomAnnotation;
+import compiler.backend.c.A;
 import compiler.backend.c.CType;
 import compiler.model.Clazz;
 import compiler.model.Method;
@@ -99,6 +100,10 @@ public class DecompilerUtils {
                 || c=='C' || c=='D' || c=='F' || c=='S');
     }
     
+    public static boolean isVoid(String name) {
+        return name.length() == 1 && name.charAt(0) == 'V';
+    }
+    
     public static boolean isFloatingNumber(String name) {
         return name.equals("D") || name.equals("F");
     }
@@ -146,6 +151,11 @@ public class DecompilerUtils {
         }
         Clazz c = CompilerContext.resolve(type);
         if(c != null) {
+            if(c.isStruct()) {
+                String name = A.nativeValue(c);
+                if(name == null || name.isEmpty()) throw new RuntimeException(c+" must have @Native annotation");
+                return name;
+            }
             String ret = c.isObjC() ? simpleName(c.name) : cType.toC(type);
             if(pointer) ret += "*";
             return ret;

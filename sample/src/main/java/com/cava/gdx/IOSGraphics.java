@@ -19,6 +19,9 @@ package com.cava.gdx;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
 import cava.apple.glkit.GLKView;
+import cava.apple.glkit.GLKViewController;
+import cava.apple.glkit.GLKViewControllerDelegate;
+import cava.apple.glkit.GLKViewDelegate;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIScreen;
@@ -33,11 +36,23 @@ import com.badlogic.gdx.graphics.glutils.GLVersion;
  *
  * @author mustafa
  */
-public class IOSGraphics extends NSObject implements Graphics {
+public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, GLKViewControllerDelegate {
+
+    
+    public static class IOSUIViewController extends GLKViewController {
+        IOSApplication app;
+        IOSGraphics graphics;
+        
+        public IOSUIViewController(IOSApplication app, IOSGraphics graphics) {
+            this.app = app;
+            this.graphics = graphics;
+        }
+    }
     
     IOSApplication app;
     EAGLContext context;
     GLKView view;
+    IOSUIViewController viewController;
     
     public IOSGraphics(IOSApplication app) {
         this.app = app;
@@ -45,7 +60,31 @@ public class IOSGraphics extends NSObject implements Graphics {
         final CGRect bounds = UIScreen.getMainScreen().getBounds();
         context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
         view = new GLKView(bounds, context);
+        view.setDelegate(this);
+        
+        viewController = new IOSUIViewController(app, this);
+        viewController.setView(view);
+        viewController.setDelegate(this);
     }
+    
+    // Delegate methods
+    @Override
+    public void draw(GLKView view, CGRect rect) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(GLKViewController controller) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void willPause(GLKViewController controller, boolean pause) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    // Delegate methods
+    
+    
     
     @Override
     public boolean isGL30Available() {

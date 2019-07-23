@@ -39,10 +39,10 @@ public class Main {
         CavaOptions.targetPlatform("Ios");
         CavaOptions.infoPList(new File("/Users/mustafa/Work/CAVA/sample/Info.plist"));
         CavaOptions.applicationName("Cava Sample");
-        CavaOptions.simulator(true);
+        CavaOptions.simulator(false);
         CavaOptions.applicationId("com.cava.sample");
         CavaOptions.debug(false);
-        CavaOptions.debugPort(9999);
+        //CavaOptions.debugPort(9999);
         CompilerContext.transpile();
 
     }

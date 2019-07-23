@@ -16,12 +16,16 @@
 
 package cava.apple.glkit;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.annotation.ObjC;
 
 /**
  *
  * @author mustafa
  */
+@Include("<GLKit/GLKit.h>")
+@Framework("GLKit.framework")
 @ObjC
 public interface GLKViewControllerDelegate {
     

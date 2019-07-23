@@ -187,7 +187,11 @@ public class CWriter extends CodeWriter {
                     args[i] = tmp.toString();
                     tmp.clear();
                 }
-                pattern = String.format(pattern, args);
+                try {
+                    pattern = String.format(pattern, args);
+                } catch(Exception e){
+                    throw new RuntimeException(e.getMessage()+" at "+method, e.getCause());
+                }
                 this.out = saved;
             }
             out.print(pattern);

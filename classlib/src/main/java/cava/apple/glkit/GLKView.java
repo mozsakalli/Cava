@@ -49,6 +49,6 @@ public class GLKView extends UIView {
     
     public void setDelegate(GLKViewDelegate delegate) {
         this.delegate = delegate;
-        NativeCode.Void("((GLKView*)%s)->delegate = (GLKViewDelegate*)%s", ((NSObject)delegate).getHandle());
+        NativeCode.Void("((GLKView*)%s).delegate = %s", getHandle(), ((NSObject)delegate).getHandle());
     }
 }

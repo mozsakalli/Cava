@@ -16,6 +16,8 @@
 
 package cava.apple.glkit;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 
@@ -23,6 +25,8 @@ import cava.apple.coregraphics.CGRect;
  *
  * @author mustafa
  */
+@Include("<GLKit/GLKit.h>")
+@Framework("GLKit.framework")
 @ObjC
 public interface GLKViewDelegate {
 

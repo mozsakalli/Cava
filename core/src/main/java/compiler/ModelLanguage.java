@@ -132,6 +132,9 @@ public class ModelLanguage extends Language {
          currentMethod.type = DecompilerUtils.getTypeName(method.getReturnType());
          currentMethod.signature = DecompilerUtils.getSignature(method.getErasedSignature());
          currentMethod.annotations = DecompilerUtils.parseAnnotations(method.getAnnotations());
+
+         if(method.getName().contains("viewWillAppear"))
+             System.out.println("...");
          
          for(ParameterDefinition p : method.getParameters()) {
              String type = DecompilerUtils.getTypeName(p.getParameterType());

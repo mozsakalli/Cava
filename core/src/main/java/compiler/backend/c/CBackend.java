@@ -26,6 +26,7 @@ import compiler.backend.VirtualTable;
 import compiler.backend.ConstructorFixer;
 import compiler.backend.ITableCalculator;
 import compiler.backend.InstanceOfBuilder;
+import compiler.backend.ObjCWriter;
 import compiler.model.Clazz;
 import compiler.model.Method;
 import compiler.model.NameAndType;
@@ -137,6 +138,9 @@ public class CBackend {
                 invokeTypes.add(getInvokeSignature(m));
             }
         }
+        
+        if(c.name.contains("UIViewController"))
+            System.out.println("...");
         
         boolean isStruct = c.isStruct();
         String nativeClassName = A.nativeValue(c);
@@ -256,7 +260,11 @@ public class CBackend {
             }
         }
         
+        ObjCWriter objc = new ObjCWriter(c);
+        objc.writeInterface(naming, out);
+        
         //generate objc interface
+        /*
         if(isObjC) {
             cType.dependency.add(c.superName);
             Set<String> writtenProperties = new HashSet();
@@ -278,14 +286,6 @@ public class CBackend {
                     }
                 }
                 if(objcIfCount > 0) out.print(">");
-                /*
-                out.print(" <");
-                for(int i=0; i<c.interfaces.size(); i++) {
-                    if(i > 0) out.print(",");
-                    out.print(DecompilerUtils.objcType(cType,c.interfaces.get(i),false));
-                    cType.dependency.add(c.interfaces.get(i));
-                }
-                out.print(">");*/
             }
             out.println("{").println("jobject javaPeer;").println("}");
             for(Method om : objcMethods) {
@@ -297,8 +297,10 @@ public class CBackend {
                     }
                 }
             }
+            
             out.println("@end");
         }
+        */
         out.ln().println("#endif");
         
         Set<String> tmpSet = new HashSet();
@@ -459,8 +461,8 @@ public class CBackend {
             }
         }*/
         
-        if(c.name.contains("UIViewController"))
-            System.out.println("...");
+        objc.writeImplementation(naming, cType, out);
+        /*
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
             for(Method m : objcMethods) {
@@ -535,23 +537,7 @@ public class CBackend {
                             out.println(";");
                         } else out.println("%s;",tmpOut.toString());
                     }
-                    /*
-                    NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
-                    out.println("javaobject = %s;", naming.field(field));
-                    Method lm = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredMethod("initFromLaunch", "(J)V");
-                    out.println("%s((jlong)self);", naming.method(lm));
-                    if(!m.type.equals("V")) out.print("return ");
-                    out.print("%s(javaobject", naming.method(m));
-                    for(int i=1; i<m.args.size(); i++) {
-                        NameAndType arg = m.args.get(i);
-                        if(!DecompilerUtils.isPrimitive(arg.type)) {
-                            Clazz argClass = CompilerContext.resolve(arg.type);
-                            Method im = argClass.findMethod("<init>", "(J)V");
-                            out.print(", %s(JvmAllocObject(&%s_Class),(jlong)%s)", naming.method(im), naming.clazz(argClass.name), arg.name);
-                        } else out.print(", %s", arg.name);
-
-                    }
-                    out.println(");");*/
+                    
                     //CWriter writer = new CWriter(m, out, naming, cType);
                     //writer.writeChildren(m.body.children);
                     out.undent().println("}").ln();
@@ -561,6 +547,7 @@ public class CBackend {
             }
             out.println("@end");
         }
+        */
         out.println("JvmClass %s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_%s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_ArrOf_%s_Class;", naming.clazz(c.name))     

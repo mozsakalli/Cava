@@ -24,7 +24,7 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
-@Keep
+@ObjC
 public class UIViewController extends UIResponder {
     
     public void setView(UIView view) {
@@ -32,5 +32,5 @@ public class UIViewController extends UIResponder {
     }
     
     @ObjC("viewWillAppear")
-    public native void viewWillAppear(boolean animated);
+    public void viewWillAppear(boolean animated) {}
 }

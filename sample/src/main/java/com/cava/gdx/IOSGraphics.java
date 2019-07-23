@@ -47,6 +47,14 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
             this.app = app;
             this.graphics = graphics;
         }
+
+        @Override
+        public void viewWillAppear(boolean animated) {
+            System.out.println("!!!!!!!! Appear !!!!!!!!!!!!");
+            setPaused(false);
+        }
+        
+        
     }
     
     IOSApplication app;

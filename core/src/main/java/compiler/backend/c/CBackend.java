@@ -186,7 +186,30 @@ public class CBackend {
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
+        if(c.name.contains("UIViewController"))
+            System.out.println("...");
+        
         for(Method m : c.methods) {
+            Method objCMethod = null;
+            if(m.interfaceBaseClass != null) {
+                objCMethod = CompilerContext.resolve(m.interfaceBaseClass).findDeclaredMethod(m.name, m.signature);
+            } else {
+                Clazz sc = c;
+                while(sc != null) {
+                    Method sm = sc.findDeclaredMethod(m.name, m.signature);
+                    if(sm != null && A.hasObjC(sm)) {
+                        objCMethod = sm;
+                        break;
+                    }
+                    if(sc.superName == null) break;
+                    sc = CompilerContext.resolve(sc.superName);
+                }
+            }
+            if(objCMethod != null) {
+                m.annotations.put(A.ObjC, objCMethod.annotations.get(A.ObjC));
+                objcMethods.add(m);
+            }
+            /*
             if(m.interfaceBaseClass != null) {
                 Clazz ifc = CompilerContext.resolve(m.interfaceBaseClass);
                 if(A.hasObjC(ifc)) {
@@ -197,7 +220,7 @@ public class CBackend {
                     if(A.objcProperty(ifMethod))
                         objcPropertyMethods.add(m);
                 }
-            }
+            }*/
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
@@ -436,7 +459,7 @@ public class CBackend {
             }
         }*/
         
-        if(c.name.contains("UIApplicationDelegateAdapter"))
+        if(c.name.contains("UIViewController"))
             System.out.println("...");
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
@@ -453,6 +476,7 @@ public class CBackend {
                     int argCount = m.args.size();
                     if(!m.isStatic()) argCount--;
                     out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
+                    System.out.println(m+" -> "+objcDesc);
                     String[] parts = objcDesc.split(":");
                     for(int i=0; i<parts.length; i++) {
                         out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+1).type), m.args.get(i+1).name);
@@ -627,7 +651,7 @@ public class CBackend {
                 for(int i=0; i<virtualMethods.size(); i++) {
                     Method vm = virtualMethods.get(i);
                     out.println("_vTable[%d] = %s;", vm.virtualTableIndex, 
-                            vm.isAbstract() ? "jnull" : 
+                            vm.isAbstract() || vm.isNative() ? "jnull" : 
                             "&"+naming.method(virtualMethods.get(i)));
                 }
             }

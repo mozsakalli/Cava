@@ -99,7 +99,6 @@ public class DependencyAnalyzer {
         }
         
         //generate interface table indices
-        System.out.println("-- interfaces --");
         tmp.clear();
         tmp.addAll(iRoot.entrySet());
         tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);
@@ -131,9 +130,7 @@ public class DependencyAnalyzer {
             }
             
         });
-        tmp.forEach(e -> {
-            System.out.println("ıntf: "+e.getKey().usedInProject+":" +e.getKey()+" -> "+e.getValue());
-        });
+        
     }
 
     private void collectUsedMethods() {

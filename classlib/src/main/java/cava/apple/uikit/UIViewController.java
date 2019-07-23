@@ -16,15 +16,21 @@
 
 package cava.apple.uikit;
 
+import cava.annotation.Keep;
+import cava.annotation.ObjC;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
+@Keep
 public class UIViewController extends UIResponder {
     
     public void setView(UIView view) {
         NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
     }
+    
+    @ObjC("viewWillAppear")
+    public native void viewWillAppear(boolean animated);
 }

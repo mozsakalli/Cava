@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.apple.coregraphics;
 
 import cava.annotation.Framework;
 import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
+import cava.annotation.Native;
+import cava.c.Struct;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
-@ObjC
-public class UIResponder extends NSObject {
+@Include("<CoreGraphics/CoreGraphics.h>")
+@Framework("CoreGraphics.framework")
+@Native("CGSize")
+public class CGSize extends Struct<CGSize> {
+
+    @Native("width") public native double getWidth();
+    @Native("width") public native void setWidth(double value);
+
+    @Native("height") public native double getHeight();
+    @Native("height") public native void setHeight(double value);
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
-    }
 }

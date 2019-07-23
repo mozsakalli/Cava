@@ -16,11 +16,12 @@
 
 package cava.apple.foundation;
 
-import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.ObjC;
+import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
+import static javafx.scene.input.KeyCode.T;
 
 /**
  *
@@ -29,37 +30,24 @@ import cava.platform.NativeCode;
 
 @Include("<Foundation/Foundation.h>")
 @ObjC
-public class NSObject<T> {
-    
-    protected VoidPtr handle;
+public class NSObject extends NativeObject {
     
     public static NSObject alloc() {
         return new NSObject(NativeCode.VoidPtr("[NSObject alloc]"));
     }
     
     public NSObject(){}
-    public NSObject(VoidPtr handle) {
-        this.handle = handle;
-    }
-    
-    public T init() {
-        NativeCode.Void("[(NSObject*)%s init]", handle);
-        return (T)this;
-    }
-    
-    public VoidPtr toNative() {
-        return NativeCode.VoidPtr("(void*)%s", handle);
+    public NSObject(VoidPtr handle) { this(handle, false); }
+    public NSObject(VoidPtr handle, boolean sub) {
+        this.$handle = handle;
+        this.$sub = sub;
     }
     
     @Override
-    protected void finalize() throws Throwable {
-        dispose();
-    }
-    
     public void dispose() {
-        if(handle != null) {
-            NativeCode.Void("[(NSObject*)%s release]", handle );
-            handle = null;
+        if($handle != null) {
+            NativeCode.Void("[(NSObject*)%s release]", $handle );
+            $handle = null;
         }
     }
     

@@ -160,6 +160,11 @@ public class DependencyAnalyzer {
     }
     
     private void analyzeClass(Clazz c) {
+        boolean isStruct = c.isStruct();
+        final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
+        boolean isClassKeep = A.hasKeep(c) || isObjCInterface;
+        
+        if(!isStruct) {
         List<Clazz> superList = new LinkedList();
         if(c.superName != null) {
             Clazz sc = CompilerContext.resolve(c.superName);
@@ -176,15 +181,12 @@ public class DependencyAnalyzer {
         for(Clazz sc : superList)
             collectInterfaces(sc, interfaceList);
         
-        if(c.name.contains("UIApplicationDelegate"))
-            System.out.println("...");
-        final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
-        boolean isClassKeep = A.hasKeep(c) || isObjCInterface;
         for(Method m : c.methods) {
             m.interfaceTableIndex = -1;
             if(isClassKeep || m.name.equals("<clinit>") || 
                (m.name.equals("<init>") && m.args.isEmpty()) ||
-               (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr")) //objc      
+               (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr"))  || //objc      
+               (isStruct && A.hasNative(m))     
             )
                 dependsMethod(m);
             
@@ -215,10 +217,14 @@ public class DependencyAnalyzer {
                 }
             }
         }
+        } else {
+            for(Method m : c.methods) 
+                dependsMethod(m);
+        }
 
         c.fields.forEach(field -> {
             if(!field.usedInProject)
-                field.usedInProject = isClassKeep || A.hasKeep(field);
+                field.usedInProject = isClassKeep || isStruct || A.hasKeep(field);
             if(field.usedInProject)
                 dependsClass(field.type);
         });

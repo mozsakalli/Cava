@@ -16,18 +16,24 @@
 
 package cava.apple.uikit;
 
-import cava.annotation.ObjC;
+import cava.annotation.Include;
+import cava.apple.coregraphics.CGRect;
 import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@ObjC
+@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 public class UIView extends UIResponder {
     
     public UIView(){}
     public UIView(VoidPtr handle) {
         super(handle);
+    }
+    
+    public UIView(CGRect frame) {
+        $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
     }
 }

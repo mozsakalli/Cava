@@ -65,12 +65,11 @@ public class CBackend {
         //collect all used non primitive static fields
         List<NameAndType> globalRefs = new ArrayList();
         for(Clazz c : sortedClasses) {
-            if(c.name.contains("gdx/Gdx"))
-                System.out.println("...");
-            
-            for(NameAndType f : c.fields) {
-                if(f.usedInProject && f.isStatic() && !DecompilerUtils.isPrimitive(f.type) && !f.type.equals("java/lang/Class"))
-                    globalRefs.add(f);
+            if(!c.isStruct()) {
+                for(NameAndType f : c.fields) {
+                    if(f.usedInProject && f.isStatic() && !DecompilerUtils.isPrimitive(f.type) && !f.type.equals("java/lang/Class"))
+                        globalRefs.add(f);
+                }
             }
         }
         
@@ -139,6 +138,11 @@ public class CBackend {
             }
         }
         
+        boolean isStruct = c.isStruct();
+        String nativeClassName = A.nativeValue(c);
+        if(isStruct && (nativeClassName == null || nativeClassName.isEmpty())) 
+                throw new RuntimeException(c.name+" must have @Native annotation with name");
+        
         SourceWriter out = new SourceWriter();
         out.println("#ifndef __Defined_%s__",naming.clazz(c.name))
            .println("#define __Defined_%s__",naming.clazz(c.name)).ln();
@@ -156,6 +160,8 @@ public class CBackend {
             if(!f.isStatic() && f.usedInProject)
                 out.println("%s %s;", cType.toC(f.type), naming.field(f));
         }
+        if(isStruct)
+            out.println("%s $struct;", nativeClassName);
         out.undent().println("} %s;", naming.clazz(c.name));
         out.ln();
         
@@ -180,9 +186,6 @@ public class CBackend {
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
-        if(c.name.contains("SampleApp"))
-            System.out.println("...");
-        
         for(Method m : c.methods) {
             if(m.interfaceBaseClass != null) {
                 Clazz ifc = CompilerContext.resolve(m.interfaceBaseClass);
@@ -197,6 +200,13 @@ public class CBackend {
             }
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
+                /*
+                if(isStruct && m.name.equals("fromNative")) {
+                    out.println("extern jobject %s(%s %s);", naming.method(m), nativeClassName, naming.arg(m.args.get(0)));
+                } 
+                else if(isStruct && m.name.equals("toNative")) {
+                    out.println("extern %s %s(jobject pthis);", nativeClassName, naming.method(m));
+                } else*/
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
                     if(c.isInterface)
                     out.print("extern %s interface_%s(",cType.toC(m.type), naming.method(m));
@@ -207,14 +217,16 @@ public class CBackend {
                             printArgs(m, cType, out);
                             out.println(");");
                         }
-                        out.print("extern %s %s(",cType.toC(m.type), naming.method(m));
+                        if(isStruct && m.isNative() && m.name.equals("getStruct"))
+                            out.print("extern %s %s(",nativeClassName, naming.method(m));
+                        else
+                            out.print("extern %s %s(",cType.toC(m.type), naming.method(m));
                     }
                     printArgs(m, cType, out);
                     out.println(");");
                 }
             }
         }
-
         
         //generate virtual method headers
         if(!c.isInterface) {
@@ -315,6 +327,39 @@ public class CBackend {
                 
         Set<String> usedLiterals = new HashSet();
         for(Method m : c.methods) {
+            if(isStruct && m.isNative()) {
+                String field = A.nativeValue(m);
+                if(!m.name.equals("getStruct") && !m.name.equals("setStruct") && 
+                    (field == null || field.isEmpty())) throw new RuntimeException("Struct method must have @Native annotation "+m);
+                if(m.name.equals("getStruct")) {
+                    out.println("%s %s(jobject thiz) { return ((%s*)thiz)->$struct; }",
+                            nativeClassName, naming.method(m), naming.clazz(c.name));
+                }
+                else if(m.name.equals("setStruct")) {
+                    out.println("%s %s(jobject thiz, %s value) { ((%s*)thiz)->$struct = value; }",
+                            cType.toC(m.type), naming.method(m), nativeClassName, naming.clazz(c.name));
+                }
+                else if(m.args.size() == 1) { //getter
+                    if(m.type.equals("V")) throw new RuntimeException("Struct getter must return value "+m);
+                    out.println("%s %s(jobject thiz) {", cType.toC(m.type), naming.method(m)).indent();
+                    if(DecompilerUtils.isPrimitive(m.type))
+                        out.println("return ((%s*)thiz)->$struct.%s;", naming.clazz(c.name), field);
+                    out.undent().println("}");
+                } else if(m.args.size() == 2) { //setter
+                    if(!m.type.equals("V")) throw new RuntimeException("Struct setter must be void "+m);
+                    NameAndType arg = m.args.get(1);
+                    out.println("%s %s(jobject thiz, %s value) {", cType.toC(m.type), naming.method(m), cType.toC(arg.type)).indent();
+                    if(DecompilerUtils.isPrimitive(arg.type))
+                        out.println("((%s*)thiz)->$struct.%s = value;", naming.clazz(c.name), field);
+                    else
+                        out.println("((%s*)thiz)->$struct.%s = ((%s*)value)->$struct;", 
+                                naming.clazz(c.name), field,
+                                naming.clazz(arg.type));
+                        
+                    out.undent().println("}");
+                } else throw new RuntimeException("Invalid argument count for struct method "+m);
+                continue;
+            }
             boolean isAbstract = !c.isInterface && m.isAbstract();
             if(((m.name.equals("<clinit>") || m.usedInProject) && !m.isNative())) {
                 if(!isAbstract) {
@@ -376,18 +421,6 @@ public class CBackend {
                         usedLiterals.addAll(writer.usedListerals);
                     }
                 }
-                /*
-                if(m.virtualBaseClass != null && m.virtualBaseClass.equals(c.name)) {
-                    out.print("%s virtual_%s(",cType.toC(m.type), naming.method(m));
-                    printArgs(m, cType, out);
-                    out.println(") {").indent();
-                    out.println("//todo: call method from virtual table");
-                    if(!m.type.equals("V")) {
-                        out.println("return %s;", DecompilerUtils.isPrimitive(m.type) ? "0" : "jnull");
-                    }
-                    out.undent().println("}").ln();
-                }*/
-                
             }
         }
         
@@ -748,7 +781,7 @@ public class CBackend {
                 if(f.declaringClass.equals(c.name)) fieldCount++;
             }
         }
-        out.println("cls->fields = JvmMakeObjectArray(&ArrOf_java_lang_reflect_Field_Class, %d, &(JvmMethod*[]){", fieldCount);
+        out.println("cls->fields = JvmMakeObjectArray(&ArrOf_java_lang_reflect_Field_Class, %d, &(JvmField*[]){", fieldCount);
         int index = 0;
         for(NameAndType f : instanceFields) {
             if(f.declaringClass.equals(c.name)) {
@@ -836,10 +869,18 @@ public class CBackend {
     }
     
     void printArgs(Method m, CType cType, SourceWriter out) {
+        Clazz c = CompilerContext.resolve(m.declaringClass);
+        boolean isStructClass = c.name.equals("cava/c/Struct");
         for(int i=0; i<m.args.size(); i++) {
             if(i > 0) out.print(", ");
             NameAndType a = m.args.get(i);
-            out.print("%s %s", cType.toC(a.type), naming.arg(a));
+            String type = null;
+            if(!isStructClass && a.type.equals("cava/c/Struct")) {
+                type = A.nativeValue(c);
+                if(type == null && type.isEmpty())
+                    throw new RuntimeException(c.name+" must define native struct name");
+            } else type = cType.toC(a.type);
+            out.print("%s %s", type, naming.arg(a));
         }
     }
     

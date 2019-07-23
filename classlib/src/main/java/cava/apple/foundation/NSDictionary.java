@@ -24,7 +24,7 @@ import cava.c.VoidPtr;
  * @author mustafa
  */
 @ObjC
-public class NSDictionary extends NSObject<NSDictionary> {
+public class NSDictionary extends NSObject {
     
     public NSDictionary(){}
     public NSDictionary(VoidPtr handle) {

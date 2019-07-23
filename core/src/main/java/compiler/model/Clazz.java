@@ -186,6 +186,10 @@ public class Clazz implements Serializable {
         
         return list;
     }  
+    
+    public boolean isStruct() {
+        return superName != null && superName.equals("cava/c/Struct");
+    }
 
     @Override
     public String toString() {

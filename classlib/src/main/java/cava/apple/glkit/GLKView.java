@@ -16,12 +16,39 @@
 
 package cava.apple.glkit;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
+import cava.apple.coregraphics.CGRect;
+import cava.apple.foundation.NSObject;
+import cava.apple.opengles.EAGLContext;
 import cava.apple.uikit.UIView;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
+@Include("<GLKit/GLKit.h>")
+@Framework("GLKit.framework")
 public class GLKView extends UIView {
-
+    
+    GLKViewDelegate delegate;
+    
+    public GLKView(CGRect frame) {
+        this(frame, null);
+    }
+    
+    public GLKView(CGRect frame, EAGLContext context) {
+        $handle = NativeCode.VoidPtr("[[GLKView alloc] initWithFrame:%s context:(EAGLContext*)%s]", 
+                frame.getStruct(), context != null ? context.getHandle() : null);
+    }
+    
+    public GLKViewDelegate getDelegate() {
+        return delegate;
+    }
+    
+    public void setDelegate(GLKViewDelegate delegate) {
+        this.delegate = delegate;
+        NativeCode.Void("((GLKView*)%s)->delegate = (GLKViewDelegate*)%s", ((NSObject)delegate).getHandle());
+    }
 }

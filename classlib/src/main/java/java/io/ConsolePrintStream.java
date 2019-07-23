@@ -38,8 +38,7 @@ public class ConsolePrintStream extends PrintStream {
 
     private void printImpl(StringBuilder buffer){
         String str = buffer.toString();
-        //NativeCode.Void("printf(\"%%ls\\n\",%s)", WCharPtr.from(str));
-        NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).toNative());
+        NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).getHandle());
     } 
     
     @Override

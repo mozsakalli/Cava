@@ -17,22 +17,35 @@
 package cava.apple.coregraphics;
 
 import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.annotation.Native;
-import cava.c.NativeCObject;
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+import cava.c.Struct;
 
 /**
  *
  * @author mustafa
  */
-@Framework("CoreGraphics")
+@Include("<CoreGraphics/CoreGraphics.h>")
+@Framework("CoreGraphics.framework")
 @Native("CGRect")
-public class CGRect extends NativeCObject {
-    private CGPoint origin;
-    private CGPoint size;
+public class CGRect extends Struct<CGRect> {
     
-    public CGRect() { this(NativeCode.VoidPtr("new CGPoint()"), false); }
-    public CGRect(VoidPtr $handle) { this($handle, false); }
-    public CGRect(VoidPtr $handle, boolean $sub) { this.$handle = $handle; }
+    @Native("origin") public final native CGPoint getOrigin();
+    @Native("origin") public final native void setOrigin(CGPoint value);
+
+    @Native("size") public final native CGSize getSize();
+    @Native("size") public final native void setSize(CGSize value);
+    
+    public final native Struct getStruct();
+    public final native void setStruct(Struct value);
+    
+    public CGRect() {}
+    public CGRect(Struct struct) {
+        setStruct(struct);
+    }
+    public CGRect(CGPoint origin, CGSize size) {
+        setOrigin(origin);
+        setSize(size);
+    }
+    
 }

@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.apple.opengles;
 
 import cava.annotation.Framework;
 import cava.annotation.Include;
-import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
-@ObjC
-public class UIResponder extends NSObject {
+@Include("<OpenGLES/EAGL.h>")
+@Framework("OpenGLES.framework")
+public class EAGLContext extends NSObject {
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
+    public EAGLContext(EAGLRenderingAPI api) {
+        $handle = NativeCode.VoidPtr("[[EAGLContext alloc] initWithAPI:%s]", api.value());
     }
 }

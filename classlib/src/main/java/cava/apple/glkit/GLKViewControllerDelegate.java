@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.apple.glkit;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
 @ObjC
-public class UIResponder extends NSObject {
+public interface GLKViewControllerDelegate {
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
-    }
+    @ObjC("glkViewControllerUpdate:")
+    public void update(GLKViewController controller);
+    
+    @ObjC("glkViewController:willPause:")
+    public void willPause(GLKViewController controller, boolean pause);
+    
 }

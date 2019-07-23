@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
-
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
+package cava.apple.opengles;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
-@ObjC
-public class UIResponder extends NSObject {
+public enum EAGLRenderingAPI {
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
+    OpenGLES1(1),
+    OpenGLES2(2),
+    OpenGLES3(3)
+    ;
+    
+    int value;
+    
+    private EAGLRenderingAPI(int v) {
+        value = v;
     }
+    
+    public int value() { return value; }
+
 }

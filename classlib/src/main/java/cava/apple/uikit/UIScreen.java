@@ -18,6 +18,7 @@ package cava.apple.uikit;
 
 import cava.annotation.Include;
 import cava.apple.coregraphics.CGRect;
+import cava.apple.foundation.NSObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
@@ -25,25 +26,16 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-public class UIWindow extends UIView {
+@Include("<UIKit/UIKit.h>")
+public class UIScreen extends NSObject {
     
-    public UIWindow(){
-        super(NativeCode.VoidPtr("[[UIWindow alloc] init]"));
-    }
-    public UIWindow(VoidPtr handle) {
-        super(handle);
-    }
+    private UIScreen(VoidPtr handle) { super(handle, true); }
     
-    public UIWindow(CGRect frame) {
-        $handle = NativeCode.VoidPtr("[[UIWindow alloc] initWithFrame:%s]", frame.getStruct());
+    public static UIScreen getMainScreen() {
+        return new UIScreen(NativeCode.VoidPtr("[UIScreen mainScreen]"));
     }
     
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getHandle(), controller.getHandle());
-    }
-    
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getHandle());
+    public CGRect getBounds() {
+        return new CGRect(NativeCode.Struct("[(UIScreen*)%s bounds]",getHandle())); 
     }
 }

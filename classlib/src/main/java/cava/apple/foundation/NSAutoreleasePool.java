@@ -27,7 +27,7 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 @ObjC
-public class NSAutoreleasePool extends NSObject<NSAutoreleasePool> implements AutoCloseable {
+public class NSAutoreleasePool extends NSObject implements AutoCloseable {
     
     public static NSAutoreleasePool alloc() {
         return new NSAutoreleasePool(NativeCode.VoidPtr("[NSAutoreleasePool alloc]"));
@@ -40,7 +40,7 @@ public class NSAutoreleasePool extends NSObject<NSAutoreleasePool> implements Au
     
     @Override
     public void close() {
-        NativeCode.Void("[(NSAutoreleasePool*)%s close]", handle);
+        NativeCode.Void("[(NSAutoreleasePool*)%s close]", $handle);
     }
     
 }

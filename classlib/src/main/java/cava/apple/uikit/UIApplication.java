@@ -16,19 +16,20 @@
 
 package cava.apple.uikit;
 
+import cava.annotation.Include;
 import cava.annotation.Keep;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
 import cava.apple.foundation.NSString;
 import cava.c.CharPtr;
 import cava.c.CharPtrPtr;
-import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
+@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
 public class UIApplication extends UIResponder {
     
@@ -62,8 +63,8 @@ public class UIApplication extends UIResponder {
         NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", 
                 argc, 
                 argv, 
-                principal != null ? new NSString(principal).toNative() : null,
-                delegate != null ? new NSString(delegate).toNative() : null);
+                principal != null ? new NSString(principal).getHandle() : null,
+                delegate != null ? new NSString(delegate).getHandle() : null);
     }
     
     public static UIApplication getSharedApplication() {
@@ -71,11 +72,11 @@ public class UIApplication extends UIResponder {
     }
     
     public boolean getIdleTimerDisabled() {
-        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", handle);
+        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", $handle);
     }
     
     public void setIdleTimerDisabled(boolean disabled) {
-        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", handle, disabled);
+        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", $handle, disabled);
     }
     
 }

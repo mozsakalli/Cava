@@ -16,26 +16,29 @@
 
 package cava.apple.coregraphics;
 
-import cava.c.NativeCObject;
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+import cava.annotation.Framework;
+import cava.annotation.Include;
+import cava.annotation.Native;
+import cava.c.Struct;
 
 /**
  *
  * @author mustafa
  */
-public class CGPoint extends NativeCObject {
+@Include("<CoreGraphics/CoreGraphics.h>")
+@Framework("CoreGraphics.framework")
+@Native("CGPoint")
+public class CGPoint extends Struct<CGPoint> {
 
-    public CGPoint() { this(NativeCode.VoidPtr("new CGPoint()"), false); }
-    public CGPoint(VoidPtr $handle) { this($handle, false); }
-    public CGPoint(VoidPtr $handle, boolean $sub) { this.$handle = $handle; }
+    @Native("x") public native double getX();
+    @Native("x") public native void setX(double value);
+    @Native("y") public native double getY();
+    @Native("y") public native void setY(double value);
     
-    public double getX() {
-        return NativeCode.Double("((CGPoint*)%s)->x", $handle);
-    }
-    
-    public double getY() {
-        return NativeCode.Double("((CGPoint*)%s)->y", $handle);
+    public CGPoint() {}
+    public CGPoint(double x, double y) {
+        setX(x);
+        setY(y);
     }
     
 }

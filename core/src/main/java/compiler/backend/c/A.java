@@ -61,6 +61,9 @@ public class A {
     public static boolean hasNative(Object o) {
         return has(o, Native);
     }
+    public static String nativeValue(Object o) {
+        return string(o, Native, "value");
+    }
     public static boolean hasObjC(Object o) {
         return has(o, ObjC);
     }

@@ -19,6 +19,8 @@ package com.cava.gdx;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
+import cava.apple.uikit.UIScreen;
+import cava.apple.uikit.UIWindow;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.ApplicationLogger;
@@ -81,13 +83,19 @@ public class IOSApplication implements Application {
     }
     
     ApplicationListener listener;
-
+    IOSGraphics graphics;
+    UIWindow uiWindow;
+    
     public IOSApplication(ApplicationListener listener) {
         this.listener = listener;
     }
 
     final boolean didFinishLaunching (UIApplication uiApp, NSDictionary options) {    
         Gdx.app = this;
+        graphics = new IOSGraphics(this);
+        
+        uiWindow = new UIWindow(UIScreen.getMainScreen().getBounds());
+        uiWindow.makeKeyAndVisible();
         
         return true;
     }

@@ -30,10 +30,13 @@ public abstract class NativeObject {
     
     public abstract void dispose();
 
+    public VoidPtr getHandle() { return $handle; }
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        dispose();
+        if(!$sub)
+            dispose();
     }
     
 }

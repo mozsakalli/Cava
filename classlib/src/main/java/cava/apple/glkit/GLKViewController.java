@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.apple.glkit;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
+import cava.apple.uikit.UIViewController;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
-@ObjC
-public class UIResponder extends NSObject {
+public class GLKViewController extends UIViewController {
+    GLKViewControllerDelegate delegate;
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
+    public GLKViewControllerDelegate getDelegate() {
+        return delegate;
+    }
+    
+    public void setDelegate(GLKViewControllerDelegate delegate) {
+        this.delegate = delegate;
+        NativeCode.Void("((GLKViewController*)%s).delegate = %s;", getHandle(), ((NSObject)delegate).getHandle());
     }
 }

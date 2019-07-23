@@ -16,23 +16,10 @@
 
 package cava.apple.uikit;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
-
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h>")
-@Framework("UIKit.framework")
-@ObjC
-public class UIResponder extends NSObject {
-    
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
-    }
+public class UIViewController extends UIResponder {
+
 }

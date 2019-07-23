@@ -16,12 +16,17 @@
 
 package cava.apple.glkit;
 
+import cava.annotation.ObjC;
+import cava.apple.coregraphics.CGRect;
+
 /**
  *
  * @author mustafa
  */
+@ObjC
 public interface GLKViewDelegate {
 
+    @ObjC("glkView:drawInRect:")
     void draw(GLKView view, CGRect rect);
     
 }

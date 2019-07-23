@@ -685,4 +685,12 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
     }
 }
 
+extern void mcom_cava_debugger_Debugger_start__I_V(jint pport);
+#ifndef JVM_DEBUG_PORT
+    #define JVM_DEBUG_POR 10000
+#endif
+void JvmStartDebugger() {
+    mcom_cava_debugger_Debugger_start__I_V(JVM_DEBUG_PORT);
+}
+
 #endif

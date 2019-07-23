@@ -40,7 +40,7 @@ typedef unsigned long long u_jlong;
 
 #define Infinity    INFINITY
 #define NaN         NAN
-#define NOGC	-1
+#define NOGC    -1
 
 
 #define JvmObjectHeader \
@@ -52,18 +52,18 @@ typedef struct JvmClass {
     //java/lang/Class
     JvmObjectHeader;
     jint size;
-	struct JvmString* name;
-	struct JvmClass* superClass;
-	struct JvmClass* componentType;
-	jint modifiers;
-	struct JvmArray* fields;
-	struct JvmArray* interfaces;
-	struct JvmArray* methods;
+    struct JvmString* name;
+    struct JvmClass* superClass;
+    struct JvmClass* componentType;
+    jint modifiers;
+    struct JvmArray* fields;
+    struct JvmArray* interfaces;
+    struct JvmArray* methods;
     
     //internal
     void** vtable;
     void** itable;
-	void (*finalizeFunction)(jobject);
+    void (*finalizeFunction)(jobject);
     jbool (*isChildOf)(struct JvmClass* klass);
     
 #ifdef JVM_DEBUG
@@ -77,15 +77,15 @@ typedef struct JvmObject {
 
 typedef struct JvmArray {
     JvmObjectHeader;
-	int len;
-	//void* data;
+    int len;
+    //void* data;
 } JvmArray;
 
 typedef struct JvmString {
-	JvmObjectHeader;
-	struct JvmArray* value;
-	jint offset;
-	jint count;
+    JvmObjectHeader;
+    struct JvmArray* value;
+    jint offset;
+    jint count;
     jint hashCode;
 } JvmString;
 
@@ -340,6 +340,7 @@ extern void** JVMCLASSPATH;
     extern void JvmRemoveBreakpoint(jlong method, jint line);
     extern void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line);
     extern void JvmRemoveAllBreakpoints();
+    extern void JvmStartDebugger();
     #define JVMLINE(lineNo) frame->line = lineNo; JvmCheckBreakpoint(thread, frame->method, frame->line);
     #define DEFLOCAL(n,t,i) union JvmLocalVariable* dbg_##n = &frame->locals[i]; LOCAL(n,jlong) = 0;
     #define DEFARG(n,t,i) union JvmLocalVariable* dbg_##n = &frame->locals[i]; LOCAL(n,t) = n;
@@ -351,6 +352,7 @@ extern void** JVMCLASSPATH;
     #define JvmRemoveBreakpoint(m,l)
     #define JvmCheckBreakpoint(t,m,l)
     #define JvmRemoveAllBreakpoints
+    #define JvmStartDebugger()
     #define JVMLINE(lineNo) frame->line = lineNo;
     #define DEFLOCAL(n,t,i) t n;
     #define DEFARG(n,t,i)

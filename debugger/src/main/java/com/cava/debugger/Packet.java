@@ -66,6 +66,14 @@ public class Packet {
         return (((long) h) << 32L) | ((long) l) & 0xffffffffL;        
     }
     
+    public float readFloat() {
+        return Float.intBitsToFloat(readInt());
+    }
+    
+    public double readDouble() {
+        return Double.longBitsToDouble(readLong());
+    }
+    
     final public String readString() {
         int len = readInt();
         String result = new String(buffer, ptr, len);

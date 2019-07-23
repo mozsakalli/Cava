@@ -122,6 +122,10 @@ public class DecompilerUtils {
         return parts[parts.length - 1];
     }
   
+    public static boolean isStruct(String type) {
+        return !isPrimitive(type) && !isArray(type) ? CompilerContext.resolve(type).isStruct() : false;
+    }
+    
     public static Map<String, Map<String,Object>> parseAnnotations(List<CustomAnnotation> list) {
         final Map<String, Map<String,Object>> result = new HashMap();
         if(list != null)

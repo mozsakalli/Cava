@@ -438,11 +438,15 @@ public class CWriter extends CodeWriter {
 
     @Override
     public void write(Local local) {
-        out.print("LOCAL(%s,%s)",naming.local(local.ref), cType.toC(local.ref.type));
-        if(currentLine != Integer.MAX_VALUE) {
-            int[] loc = variableLocations.computeIfAbsent(local.ref.name, (k) -> new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
-            loc[0] = Math.min(loc[0], currentLine);
-            loc[1] = Math.max(loc[1], currentLine);
+        if(local.ref.type.equals("cava/c/Struct"))
+            out.print(naming.local(local.ref));
+        else {
+            out.print("LOCAL(%s,%s)",naming.local(local.ref), cType.toC(local.ref.type));
+            if(currentLine != Integer.MAX_VALUE) {
+                int[] loc = variableLocations.computeIfAbsent(local.ref.name, (k) -> new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
+                loc[0] = Math.min(loc[0], currentLine);
+                loc[1] = Math.max(loc[1], currentLine);
+            }
         }
         
     }

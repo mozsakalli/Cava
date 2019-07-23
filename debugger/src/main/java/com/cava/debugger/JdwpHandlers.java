@@ -25,6 +25,8 @@ import com.cava.debugger.handler.eventrequest.EventRequestSetHandler;
 import com.cava.debugger.handler.method.MethodLineTableHandler;
 import com.cava.debugger.handler.method.MethodVariableTableHandler;
 import com.cava.debugger.handler.method.MethodVariableTableWithGenericHandler;
+import com.cava.debugger.handler.objectreference.ObjRefDisableCollectionHandler;
+import com.cava.debugger.handler.objectreference.ObjRefEnableCollectionHandler;
 import com.cava.debugger.handler.objectreference.ObjRefGetValuesHandler;
 import com.cava.debugger.handler.objectreference.ObjRefInvokeMethodHandler;
 import com.cava.debugger.handler.objectreference.ObjRefIsCollectedHandler;
@@ -41,6 +43,7 @@ import com.cava.debugger.handler.referencetype.RefTypeSignatureHandler;
 import com.cava.debugger.handler.referencetype.RefTypeSignatureWithGenericHandler;
 import com.cava.debugger.handler.referencetype.RefTypeSourceFileHandler;
 import com.cava.debugger.handler.stackframe.StackFrameGetValuesHandler;
+import com.cava.debugger.handler.stackframe.StackFrameThisObjectHandler;
 import com.cava.debugger.handler.string.StringGetValueHandler;
 import com.cava.debugger.handler.thread.ThreadFrameCountHandler;
 import com.cava.debugger.handler.thread.ThreadFramesHandler;
@@ -120,6 +123,8 @@ public class JdwpHandlers {
         registerHandler(new ObjRefReferenceTypeHandler());      //1
         registerHandler(new ObjRefGetValuesHandler());          //2
         registerHandler(new ObjRefInvokeMethodHandler());       //6
+        registerHandler(new ObjRefDisableCollectionHandler());   //7
+        registerHandler(new ObjRefEnableCollectionHandler());   //8
         registerHandler(new ObjRefIsCollectedHandler());        //9
         //string 0xa
         registerHandler(new StringGetValueHandler());           //1
@@ -147,6 +152,7 @@ public class JdwpHandlers {
         
         //stackframe 0x10
         registerHandler(new StackFrameGetValuesHandler());      //1
+        registerHandler(new StackFrameThisObjectHandler());     //3
         
         //classobjectreference
         registerHandler(new ClassObjRefReflectedTypeHandler());

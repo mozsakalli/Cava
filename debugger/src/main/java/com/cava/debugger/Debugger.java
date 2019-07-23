@@ -87,7 +87,7 @@ public class Debugger {
         
         JdwpHandler handler = JdwpHandlers.get(packet);
         if(handler != null) {
-            System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
+            //System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
             outBuffer.reset();
             int errorCode = handler.handle(packet, outBuffer);
             outBuffer.complete(packet.id, errorCode);
@@ -128,17 +128,21 @@ public class Debugger {
         }
     }
     public static void start(final int port) throws Exception {
+        System.out.println("Waiting debugger to connect on port "+port);
+        ServerSocket ss = new ServerSocket(port);
+        final Socket s = ss.accept();
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {
                 try {
-                    debuggerLoop(port);
+                    debuggerLoop(s);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
             }
         }, "Debugger Thread");
         loopThread.start();
+        Thread.sleep(1000);
     }
     
     public static boolean isDebuggerThread(Thread thread) {
@@ -147,49 +151,47 @@ public class Debugger {
     
     static boolean debugSessionActive;
     
-    static void debuggerLoop(final int port) throws Exception {
-        ServerSocket ss = new ServerSocket(port);
+    static void debuggerLoop(Socket s) throws Exception {
         byte[] bytes = new byte[1024*16];
         Debugger debugger = new Debugger();
-        System.out.println("Debug server started on port "+port);
+        //System.out.println("Debug server started on port "+port);
         
-        while(true) {
-            debugSessionActive = false;
-            VM.resumeAllThreads();
-            VM.removeAllBreakpoints();
-            Socket s = ss.accept();
-            System.out.println("Debug client connected");
-            InputStream in = s.getInputStream();
-            socketOut = s.getOutputStream();
-            resetState();
-            debugSessionActive = true;
-            
-            processThread = new Thread(new Runnable(){
-                @Override
-                public void run() {
-                    debuggerProcessLoop();
-                }
-            }, "Debugger Process Thread");
-            processThread.start();
-            
-            try {
-                while(true) {
-                    int readed = in.read(bytes);
-                    if(readed > 0) {
-                        debugger.receive(bytes, 0, readed);
-                        OutBuffer output = debugger.process();
-                        while(output != null) {
-                            write(output.getBuffer(), 0, output.getSize());
-                            output = debugger.process();
-                        }
-                    }   
-                }    
-            } catch(Exception e){
-                s.close();
-                e.printStackTrace();
-                System.out.println("Debug client disconnected");
+        //while(true) {
+        VM.resumeAllThreads();
+        VM.removeAllBreakpoints();
+        //Socket s = ss.accept();
+        InputStream in = s.getInputStream();
+        socketOut = s.getOutputStream();
+        resetState();
+        debugSessionActive = true;
+
+        processThread = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                debuggerProcessLoop();
             }
+        }, "Debugger Process Thread");
+        processThread.start();
+
+        try {
+            while(true) {
+                int readed = in.read(bytes);
+                if(readed > 0) {
+                    debugger.receive(bytes, 0, readed);
+                    OutBuffer output = debugger.process();
+                    while(output != null) {
+                        write(output.getBuffer(), 0, output.getSize());
+                        output = debugger.process();
+                    }
+                }   
+            }    
+        } catch(Exception e){
+            s.close();
+            e.printStackTrace();
+            System.out.println("Debug client disconnected");
         }
+        debugSessionActive = false;
+        //}
     }
     
     static void debuggerProcessLoop() {

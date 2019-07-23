@@ -369,7 +369,7 @@ public class CBackend {
                         if(m.isObjCImplementation) out.println("/* ObjC */");
                         int index = 0;
                         for(NameAndType a : m.args) {
-                            if(DecompilerUtils.isPrimitive(a.type) || (!DecompilerUtils.isPrimitive(a.type) && !CompilerContext.resolve(a.type).isStruct()))
+                            if(!a.type.equals("cava/c/Struct"))
                                 out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
                         }
                         for(NameAndType l : m.locals) {
@@ -470,6 +470,7 @@ public class CBackend {
                          int index2 = globalRefs.indexOf(field);
                          if(index2 == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
                          
+                         out.println("JvmStartDebugger();");
                          out.print("JVMGLOBALS[%d] = ", index2);
                          printObjCArg(m.args.get(1), out);
                          out.println(";")
@@ -752,11 +753,17 @@ public class CBackend {
             }
             List<NameAndType> locals = new ArrayList();
             locals.addAll(m.args);
+            if(!m.isStatic()) {
+                //move this from parameters to locals
+                locals.add(locals.remove(0));
+            }
             locals.addAll(m.locals);
             out.print("}), &%s, &invoke_%s \n#ifdef JVM_DEBUG\n , %d, %d, %d, %d, (JvmLocalVariableInfo[]){", 
                     naming.method(m), 
                     getInvokeSignature(m),
-                    m.minLine != Integer.MAX_VALUE ? m.minLine : -1, m.maxLine, m.args.size(), m.locals.size());
+                    m.minLine != Integer.MAX_VALUE ? m.minLine : -1, m.maxLine, 
+                    m.isStatic() ? m.args.size() : m.args.size() - 1, 
+                    m.isStatic() ? m.locals.size() : m.locals.size() + 1);
             Map<String,int[]> locations = variableLocations.get(m);
             for(int k=0; k<locals.size(); k++) {
                 if(k > 0) out.print(",");
@@ -965,21 +972,12 @@ public class CBackend {
 
         Method mainMethod = CompilerContext.getMainMethod();
         out.println("extern void %s();", naming.method(mainMethod));
-        out.println("extern void InitJvmLiterals();")
-           .println("#ifdef JVM_DEBUG") 
-           .println("extern void mcom_cava_debugger_Debugger_start__I_V(jint pport);")
-           .println("#ifndef JVM_DEBUG_PORT")
-           .println("#define JVM_DEBUG_POR 10000")
-           .println("#endif")
-           .println("#endif");
+        out.println("extern void InitJvmLiterals();");
         out.println("void cavamain() {").indent()
            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size())
            .println("SetupAllClasses();")
            .println("InitJvmLiterals();")
            .println("InitAllClasses();")
-           .println("#ifdef JVM_DEBUG")
-           .println("mcom_cava_debugger_Debugger_start__I_V(JVM_DEBUG_PORT);")
-           .println("#endif")
            .println("%s();", naming.method(mainMethod))
            .undent()
            .println("}");

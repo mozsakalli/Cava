@@ -129,7 +129,6 @@ public class CBackend {
     void generateClass(Clazz c, List<NameAndType> globalRefs) throws Exception {
         CType cType = new CType();
         new ConstructorFixer().fix(c);
-        boolean isObjC = c.superName != null ? A.hasObjC(CompilerContext.resolve(c.superName)) : false;//.isExtendedFromObjC() : false;
 
         reflectMethods.clear();
         for(Method m : c.methods) {
@@ -189,38 +188,6 @@ public class CBackend {
         
         
         for(Method m : c.methods) {
-            /*
-            Method objCMethod = null;
-            if(m.interfaceBaseClass != null) {
-                objCMethod = CompilerContext.resolve(m.interfaceBaseClass).findDeclaredMethod(m.name, m.signature);
-            } else {
-                Clazz sc = c;
-                while(sc != null) {
-                    Method sm = sc.findDeclaredMethod(m.name, m.signature);
-                    if(sm != null && A.hasObjC(sm)) {
-                        objCMethod = sm;
-                        break;
-                    }
-                    if(sc.superName == null) break;
-                    sc = CompilerContext.resolve(sc.superName);
-                }
-            }
-            if(objCMethod != null) {
-                m.annotations.put(A.ObjC, objCMethod.annotations.get(A.ObjC));
-                objcMethods.add(m);
-            }*/
-            /*
-            if(m.interfaceBaseClass != null) {
-                Clazz ifc = CompilerContext.resolve(m.interfaceBaseClass);
-                if(A.hasObjC(ifc)) {
-                    Method ifMethod = ifc.findDeclaredMethod(m.name, m.signature);
-                    m.annotations.put(A.ObjC, 
-                    ifMethod.annotations.get(A.ObjC));
-                    objcMethods.add(m);
-                    if(A.objcProperty(ifMethod))
-                        objcPropertyMethods.add(m);
-                }
-            }*/
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
@@ -252,51 +219,12 @@ public class CBackend {
                     printArgs(vm, cType, out);
                     out.println(");");
                 }
-                //if(vm.usedInProject && !vm.isStatic() && !vm.name.equals("<init>"))
             }
         }
         
         ObjCWriter objc = new ObjCWriter(c);
         objc.writeInterface(naming, out);
         
-        //generate objc interface
-        /*
-        if(isObjC) {
-            cType.dependency.add(c.superName);
-            Set<String> writtenProperties = new HashSet();
-            Clazz objCSuper = CompilerContext.resolve(c.superName);
-            while(objCSuper != null) {
-                if(A.hasObjC(objCSuper) || objCSuper.isExtendedFromObjC()) break;
-                if(objCSuper.superName == null) throw new RuntimeException(c+" must be extended from Objective-C class");
-                objCSuper = CompilerContext.resolve(objCSuper.superName);
-            }
-            out.print("@interface %s_ObjC : %s", naming.clazz(c.name), DecompilerUtils.objcType(cType,objCSuper.name,false));
-            if(!c.interfaces.isEmpty()) {
-                int objcIfCount = 0;
-                for(String ifcName : c.interfaces) {
-                    Clazz ifc = CompilerContext.resolve(ifcName);
-                    if(A.hasObjC(ifc)) {
-                        if(objcIfCount == 0) out.print("<"); else out.print(",");
-                        out.print(DecompilerUtils.objcType(cType, ifcName, false));
-                        objcIfCount++;
-                    }
-                }
-                if(objcIfCount > 0) out.print(">");
-            }
-            out.println("{").println("jobject javaPeer;").println("}");
-            for(Method om : objcMethods) {
-                if(A.objcProperty(om)) {
-                    String selector = A.objcSelector(om);
-                    if(!selector.isEmpty() && !writtenProperties.contains(selector)) {
-                        writtenProperties.add(selector);
-                        out.println("@property %s %s;", DecompilerUtils.objcType(cType, om.type), selector);
-                    }
-                }
-            }
-            
-            out.println("@end");
-        }
-        */
         out.ln().println("#endif");
         
         Set<String> tmpSet = new HashSet();
@@ -398,6 +326,13 @@ public class CBackend {
                             //out.println("%s %s;", cType.toC(l.type), naming.local(l));
                         }
                         out.ln();
+
+                        if(c.isObjCImplementation && m.name.equals("<init>")) {
+                            String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
+                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_$handle = [%s alloc];", 
+                                    objcName, objcName)
+                                .println("objcPeer->javaPeer = pthis;");    
+                        }
                         
                         int reflectIndex = reflectMethods.indexOf(m);
                         if(reflectIndex == -1)

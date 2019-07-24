@@ -20,6 +20,7 @@ import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
+import cava.c.WCharPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -31,7 +32,9 @@ import cava.platform.NativeCode;
 @ObjC
 public class NSObject extends NativeObject {
     
-    public NSObject(){}
+    public NSObject(){
+        this(NativeCode.VoidPtr("[NSObject alloc]"));
+    }
     public NSObject(VoidPtr handle) { this(handle, false); }
     public NSObject(VoidPtr handle, boolean sub) {
         this.$handle = handle;

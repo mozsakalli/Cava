@@ -68,7 +68,7 @@ public final class System {
             }
         } else {
             //todo: check if classes are compatible
-            int size = src.$$$$klass.componentType.size;
+            int size = NativeCode.Int("sizeof(jobject)");
             CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
                         CharPtr.fromAnyArray(src).add(srcOffset*size),
                         length * size);

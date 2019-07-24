@@ -29,14 +29,13 @@ import cava.platform.NativeCode;
  */
 @Include("<GLKit/GLKit.h>")
 @Framework("GLKit.framework")
-@ObjC("GLKViewController")
+@ObjC
 public class GLKViewController extends UIViewController {
     GLKViewControllerDelegate delegate;
     
     public GLKViewController() {
-        $handle = NativeCode.VoidPtr("[[GLKViewController alloc] init]");
+        super(NativeCode.VoidPtr("[[GLKViewController alloc] init]"));
     }
-    
     public GLKViewControllerDelegate getDelegate() {
         return delegate;
     }
@@ -44,6 +43,7 @@ public class GLKViewController extends UIViewController {
     public void setDelegate(GLKViewControllerDelegate delegate) {
         this.delegate = delegate;
         NativeCode.Void("((GLKViewController*)%s).delegate = %s;", getHandle(), ((NSObject)delegate).getHandle());
+        System.out.println("GLKDelegate = "+delegate.getClass()+" / "+NativeCode.Long("(jlong)%s", ((NSObject)delegate).getHandle()));
     }
     
     public boolean isPaused() {
@@ -52,4 +52,5 @@ public class GLKViewController extends UIViewController {
     public void setPaused(boolean paused) {
         NativeCode.Void("((GLKViewController*)%s).paused = %s", getHandle(), paused);
     }
+
 }

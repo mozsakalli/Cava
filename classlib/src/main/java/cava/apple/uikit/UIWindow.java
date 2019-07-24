@@ -17,6 +17,7 @@
 package cava.apple.uikit;
 
 import cava.annotation.Include;
+import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
@@ -26,6 +27,7 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 @Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
+@ObjC
 public class UIWindow extends UIView {
     
     public UIWindow(){
@@ -40,10 +42,13 @@ public class UIWindow extends UIView {
     }
     
     public void setRootViewController(UIViewController controller) {
+        System.out.println("RootController: "+controller.getClass()+" / "+NativeCode.Long("(jlong)%s", controller.getHandle()));
         NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getHandle(), controller.getHandle());
     }
     
     public void makeKeyAndVisible() {
         NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getHandle());
     }
+
+    
 }

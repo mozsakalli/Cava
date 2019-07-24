@@ -18,6 +18,7 @@ package cava.apple.foundation;
 
 import cava.annotation.ObjC;
 import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
@@ -26,7 +27,11 @@ import cava.c.VoidPtr;
 @ObjC
 public class NSDictionary extends NSObject {
     
+    public NSDictionary() {
+        super(NativeCode.VoidPtr("[[NSDictionary alloc] init]"));
+    }
     public NSDictionary(VoidPtr handle) {
         super(handle);
     }
+
 }

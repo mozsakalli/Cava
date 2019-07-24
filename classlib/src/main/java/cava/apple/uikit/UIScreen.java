@@ -17,6 +17,7 @@
 package cava.apple.uikit;
 
 import cava.annotation.Include;
+import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
 import cava.c.VoidPtr;
@@ -27,6 +28,7 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 @Include("<UIKit/UIKit.h>")
+@ObjC
 public class UIScreen extends NSObject {
     
     private UIScreen(VoidPtr handle) { super(handle, true); }
@@ -38,4 +40,5 @@ public class UIScreen extends NSObject {
     public CGRect getBounds() {
         return new CGRect(NativeCode.Struct("[(UIScreen*)%s bounds]",getHandle())); 
     }
+
 }

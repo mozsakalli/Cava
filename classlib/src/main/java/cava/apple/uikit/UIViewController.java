@@ -16,21 +16,37 @@
 
 package cava.apple.uikit;
 
-import cava.annotation.Keep;
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
+@Include("<UIKit/UIKit.h>")
+@Framework("UIKit.framework")
 @ObjC
 public class UIViewController extends UIResponder {
     
+    public UIViewController() {
+        this(NativeCode.VoidPtr("[[UIViewController alloc] init]"));
+    }
+    public UIViewController(VoidPtr handle) {
+        this(handle, false);
+    }
+    public UIViewController(VoidPtr handle, boolean sub) {
+        super(handle, sub);
+    }
     public void setView(UIView view) {
         NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
     }
     
     @ObjC("viewWillAppear")
     public native void viewWillAppear(boolean animated);
+
+    @ObjC("viewDidAppear")
+    public native void viewDidAppear(boolean animated);
 }

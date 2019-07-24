@@ -32,7 +32,7 @@ public final class NSString extends NSObject {
         super(handle);
     }
     public NSString(String string) {
-        $handle = NativeCode.VoidPtr("[NSString alloc]");
+        super(NativeCode.VoidPtr("[NSString alloc]"));
         initWithCharacters(WCharPtr.from(string), string.length());
     }
     
@@ -41,5 +41,4 @@ public final class NSString extends NSObject {
         return this;
     }
 
-    
 }

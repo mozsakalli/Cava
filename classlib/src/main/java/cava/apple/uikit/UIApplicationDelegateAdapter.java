@@ -41,5 +41,5 @@ public class UIApplicationDelegateAdapter extends NSObject implements UIApplicat
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
         return true;
     }
-    
+
 }

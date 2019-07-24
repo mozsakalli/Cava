@@ -57,6 +57,8 @@ public class ObjCWriter {
             if(sc.superName == null) break;
             sc = CompilerContext.resolve(sc.superName);
         }
+        
+        if(!methods.isEmpty()) c.isObjCImplementation = true;
     }
     
     public void writeInterface(NameManager naming, SourceWriter out) {
@@ -73,6 +75,7 @@ public class ObjCWriter {
             out.print(">");
         }
         out.println(" {").indent()
+           .println("@public")
            .println("jobject javaPeer;");
         
         out.undent().println("}").println("@end");

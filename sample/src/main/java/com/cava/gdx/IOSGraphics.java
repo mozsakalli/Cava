@@ -16,6 +16,7 @@
 
 package com.cava.gdx;
 
+import cava.annotation.Keep;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
 import cava.apple.glkit.GLKView;
@@ -37,8 +38,8 @@ import com.badlogic.gdx.graphics.glutils.GLVersion;
  * @author mustafa
  */
 public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, GLKViewControllerDelegate {
-
     
+    @Keep
     public static class IOSUIViewController extends GLKViewController {
         IOSApplication app;
         IOSGraphics graphics;
@@ -52,6 +53,11 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         public void viewWillAppear(boolean animated) {
             System.out.println("!!!!!!!! Appear !!!!!!!!!!!!");
             setPaused(false);
+        }
+
+        @Override
+        public void viewDidAppear(boolean animated) {
+            System.out.println("!!!!!!!! Did Appear !!!!!!!!!!!!");
         }
         
         
@@ -78,17 +84,14 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     // Delegate methods
     @Override
     public void draw(GLKView view, CGRect rect) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void update(GLKViewController controller) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void willPause(GLKViewController controller, boolean pause) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     // Delegate methods
     

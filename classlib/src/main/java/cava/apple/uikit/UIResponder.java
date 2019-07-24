@@ -18,8 +18,10 @@ package cava.apple.uikit;
 
 import cava.annotation.Framework;
 import cava.annotation.Include;
+import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
 import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
@@ -27,10 +29,17 @@ import cava.c.VoidPtr;
  */
 @Include("<UIKit/UIKit.h>")
 @Framework("UIKit.framework")
+@ObjC
 public class UIResponder extends NSObject {
     
-    public UIResponder(){}
-    public UIResponder(VoidPtr handle) {
-        super(handle);
+    public UIResponder(){
+        this(NativeCode.VoidPtr("[[UIResponder alloc] init]"));
     }
+    public UIResponder(VoidPtr handle) {
+        this(handle, false);
+    }
+    public UIResponder(VoidPtr handle, boolean sub) {
+        super(handle, sub);
+    }
+
 }

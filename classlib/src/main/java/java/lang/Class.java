@@ -356,7 +356,8 @@ public final class Class<T> {
         else if(componentType == int.class) name = "I";
         else if(componentType == float.class) name = "F";
         else if(componentType == long.class) name = "J";
-        else name = "D";
+        else if(componentType == double.class) name = "D";
+        else throw new RuntimeException(componentType.getName()+" is not primitive class");
         return name;
     }
     

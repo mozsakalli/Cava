@@ -17,6 +17,7 @@
 package cava.apple.uikit;
 
 import cava.annotation.Include;
+import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
@@ -26,6 +27,7 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 @Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
+@ObjC
 public class UIView extends UIResponder {
     
     public UIView(){}
@@ -36,4 +38,5 @@ public class UIView extends UIResponder {
     public UIView(CGRect frame) {
         $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
     }
+
 }

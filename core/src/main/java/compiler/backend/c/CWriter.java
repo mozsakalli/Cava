@@ -60,11 +60,14 @@ public class CWriter extends CodeWriter {
     CType cType;
     Stack<Integer> returnExceptionId = new Stack();
     List<NameAndType> globalRefs;
-
+    boolean skipSuperConstructor;
+    
     public CWriter(Method method, SourceWriter out, INameManager naming, CType cType, List<NameAndType> globalRefs) {
         super(method, out, naming);
         this.cType = cType;
         this.globalRefs = globalRefs;
+        Clazz c = CompilerContext.resolve(method.declaringClass);
+        skipSuperConstructor = c.isObjCImplementation || A.hasObjC(c);
     }
     
     public void requireInclude(String name) {
@@ -198,6 +201,11 @@ public class CWriter extends CodeWriter {
             return;
         }
         Clazz c = CompilerContext.resolve(call.className);
+        if(call.callType == Call.CallType.Special && call.args.size() == 1 && skipSuperConstructor) {
+                //call.methodName.equals("<init>") && (c.isObjCImplementation || A.hasObjC(c))) {
+            //skip objective-C super constructor calls
+            return;
+        }
         Method m = c.findMethod(call.methodName, call.signature);
         if(m == null) throw new RuntimeException("Cant find method: "+call.className+"::"+call.methodName+"::"+call.signature);
         if(call.callType == Call.CallType.Virtual && m.virtualBaseClass != null) {

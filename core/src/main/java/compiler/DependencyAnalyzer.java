@@ -74,9 +74,9 @@ public class DependencyAnalyzer {
         List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
         tmp.addAll(vRoot.entrySet());
         tmp.sort((e1,e2) -> e1.getKey().declaringClass.compareTo(e2.getKey().declaringClass) + (e2.getValue().size() - e1.getValue().size()) * 1000);
-        tmp.forEach(e -> {
+        /*tmp.forEach(e -> {
             System.out.println(e.getKey()+" -> "+e.getValue());
-        });
+        });*/
         
         //generate virtual table indices
         int vtIndex = 0;

@@ -21,8 +21,6 @@ import cava.annotation.ObjC;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -33,9 +31,7 @@ import java.util.Map;
 @ObjC
 public class NSObject extends NativeObject {
     
-    public NSObject() {
-        this(NativeCode.VoidPtr("[NSObject alloc]"));
-    }
+    public NSObject(){}
     public NSObject(VoidPtr handle) { this(handle, false); }
     public NSObject(VoidPtr handle, boolean sub) {
         this.$handle = handle;
@@ -49,5 +45,10 @@ public class NSObject extends NativeObject {
             $handle = null;
         }
     }
+
+    public static String getObjectiveCName(Class cls) {
+        return cls.getName().replace('.', '_').replace('$', '_') + "_ObjC";
+    }
+    
     
 }

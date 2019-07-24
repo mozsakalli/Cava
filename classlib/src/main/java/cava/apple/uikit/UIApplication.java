@@ -41,11 +41,11 @@ public class UIApplication extends UIResponder {
         int argc = 0;
         CharPtrPtr argv = null;
         
-        String principalClassName = null;//principalClass != null ? NSObject.getObjCClassName(principalClass)  : null;
+        String principalClassName = principalClass != null ? NSObject.getObjectiveCName(principalClass)  : null;
         Class dc = delegateClass;
         while(dc != null && dc.getSuperclass() != NSObject.class)
             dc = dc.getSuperclass();
-        String delegateClassName = null;//dc != null ? NSObject.getObjCClassName(dc) : null;
+        String delegateClassName = dc != null ? NSObject.getObjectiveCName(dc) : null;
         
         if(args != null && args.length > 0) {
             argv = CharPtrPtr.alloc(args.length);

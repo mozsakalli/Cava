@@ -33,7 +33,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     }
 
     public static void main() {
-        NSAutoreleasePool pool = NSAutoreleasePool.alloc();
+        NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main((String[])null, null, IOSLauncher.class);
         pool.close();
     }

@@ -139,9 +139,6 @@ public class CBackend {
             }
         }
         
-        if(c.name.contains("UIViewController"))
-            System.out.println("...");
-        
         boolean isStruct = c.isStruct();
         String nativeClassName = A.nativeValue(c);
         if(isStruct && (nativeClassName == null || nativeClassName.isEmpty())) 
@@ -190,10 +187,9 @@ public class CBackend {
         List<Method> objcMethods = new ArrayList();
         Set<Method> objcPropertyMethods = new HashSet();
         
-        if(c.name.contains("UIViewController"))
-            System.out.println("...");
         
         for(Method m : c.methods) {
+            /*
             Method objCMethod = null;
             if(m.interfaceBaseClass != null) {
                 objCMethod = CompilerContext.resolve(m.interfaceBaseClass).findDeclaredMethod(m.name, m.signature);
@@ -212,7 +208,7 @@ public class CBackend {
             if(objCMethod != null) {
                 m.annotations.put(A.ObjC, objCMethod.annotations.get(A.ObjC));
                 objcMethods.add(m);
-            }
+            }*/
             /*
             if(m.interfaceBaseClass != null) {
                 Clazz ifc = CompilerContext.resolve(m.interfaceBaseClass);
@@ -461,7 +457,7 @@ public class CBackend {
             }
         }*/
         
-        objc.writeImplementation(naming, cType, out);
+        objc.writeImplementation(naming, cType, globalRefs, out);
         /*
         if(isObjC) {
             out.println("@implementation %s_ObjC", naming.clazz(c.name));
@@ -603,9 +599,6 @@ public class CBackend {
         for(String iname : c.interfaces) {
             out.println("JvmSetup_%s();", naming.clazz(iname));
         }
-        
-        if(c.name.contains("IOSLauncher"))
-            System.out.println("...");
         
         //generate virtual method table
         out.print("void** _vTable = ");
@@ -909,18 +902,7 @@ public class CBackend {
         }
     }
     
-    void printObjCMarshaller(String type, String value, SourceWriter out) {
-        if(!DecompilerUtils.isPrimitive(type)) {
-            Clazz argClass = CompilerContext.resolve(type);
-            Method im = argClass.findMethod("<init>", argClass.isStruct() ? "(Lcava/c/Struct;)V" : "(Lcava/c/VoidPtr;)V");
-            if(im == null || !im.usedInProject) throw new RuntimeException("Can't find native bridge <init> method for "+type);
-            out.print("%s(JvmAllocObject(&%s_Class),%s)", naming.method(im), naming.clazz(argClass.name), value);
-        } else out.print("%s", value);
-    }
-    
-    void printObjCArg(NameAndType arg, SourceWriter out) {
-        printObjCMarshaller(arg.type, arg.name, out);
-    }
+
 
     
     List<Clazz> sortClasses() {

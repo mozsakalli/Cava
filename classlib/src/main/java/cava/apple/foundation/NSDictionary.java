@@ -26,7 +26,6 @@ import cava.c.VoidPtr;
 @ObjC
 public class NSDictionary extends NSObject {
     
-    public NSDictionary(){}
     public NSDictionary(VoidPtr handle) {
         super(handle);
     }

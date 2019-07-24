@@ -17,7 +17,6 @@
 package cava.apple.uikit;
 
 import cava.annotation.Include;
-import cava.annotation.Keep;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSDictionary;
 
@@ -27,7 +26,6 @@ import cava.apple.foundation.NSDictionary;
  */
 @Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
-@Keep
 public interface UIApplicationDelegate {
     
     @ObjC(value="window", property=true)

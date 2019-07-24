@@ -60,6 +60,7 @@ public class ObjCWriter {
     }
     
     public void writeInterface(NameManager naming, SourceWriter out) {
+        /*
         if(methods.isEmpty()) return;
         out.print("@interface %s_ObjC : %s ", naming.clazz(clazz.name), 
                 clazz.isInterface ? "NSObject" : superName);
@@ -75,15 +76,18 @@ public class ObjCWriter {
         out.println(" {").indent();
         
         out.undent().println("}").println("@end");
+        */
     }
     
     public void writeImplementation(NameManager naming, CType cType, SourceWriter out) {
+        /*
         if(methods.isEmpty()) return;
         out.println("@implementation %s_ObjC", naming.clazz(clazz.name));
         for(Method m : methods) {
             writeMethod(m, naming, cType, out);
         }
         out.println("@end");
+        */
     }
     
     void writeMethod(Method m, NameManager naming, CType cType, SourceWriter out) {

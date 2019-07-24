@@ -18,7 +18,6 @@ package cava.apple.uikit;
 
 import cava.annotation.Framework;
 import cava.annotation.Include;
-import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
 import cava.c.VoidPtr;
 
@@ -28,7 +27,6 @@ import cava.c.VoidPtr;
  */
 @Include("<UIKit/UIKit.h>")
 @Framework("UIKit.framework")
-@ObjC
 public class UIResponder extends NSObject {
     
     public UIResponder(){}

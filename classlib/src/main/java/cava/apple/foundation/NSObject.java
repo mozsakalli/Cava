@@ -21,7 +21,8 @@ import cava.annotation.ObjC;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
-import static javafx.scene.input.KeyCode.T;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -32,11 +33,9 @@ import static javafx.scene.input.KeyCode.T;
 @ObjC
 public class NSObject extends NativeObject {
     
-    public static NSObject alloc() {
-        return new NSObject(NativeCode.VoidPtr("[NSObject alloc]"));
+    public NSObject() {
+        this(NativeCode.VoidPtr("[NSObject alloc]"));
     }
-    
-    public NSObject(){}
     public NSObject(VoidPtr handle) { this(handle, false); }
     public NSObject(VoidPtr handle, boolean sub) {
         this.$handle = handle;
@@ -51,7 +50,4 @@ public class NSObject extends NativeObject {
         }
     }
     
-    public static String getObjCClassName(Class aClass) {
-        return aClass.getName().replace('.', '_').replace('$', '_') + "_ObjC";
-    }
 }

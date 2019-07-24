@@ -32,5 +32,5 @@ public class UIViewController extends UIResponder {
     }
     
     @ObjC("viewWillAppear")
-    public void viewWillAppear(boolean animated) {}
+    public native void viewWillAppear(boolean animated);
 }

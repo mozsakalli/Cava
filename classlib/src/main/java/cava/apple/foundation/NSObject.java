@@ -34,8 +34,8 @@ import cava.platform.NativeCode;
 public class NSObject extends NativeObject {
     
     public NSObject(){
-        if(!getClass().getName().contains("NSString"))
-            System.out.println("-- nsobject: "+getClass().getName());
+        //if(!getClass().getName().contains("NSString"))
+        //    System.out.println("-- nsobject: "+getClass().getName());
         //this(NativeCode.VoidPtr("[NSObject alloc]"));
     }
     

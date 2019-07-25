@@ -333,7 +333,7 @@ public class CBackend {
                             String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
                             out.println("/* create objc: %s */", objcName);
                             
-                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_$handle = [%s alloc];", 
+                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_$handle = [[%s alloc] init];", 
                                     objcName, objcName)
                                 .println("objcPeer->javaPeer = pthis;");    
                             

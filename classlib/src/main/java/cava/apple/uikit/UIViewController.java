@@ -30,6 +30,7 @@ import cava.platform.NativeCode;
 @Framework("UIKit.framework")
 @ObjC
 public class UIViewController extends UIResponder {
+    UIView view;
     /*
     public UIViewController() {
         this(NativeCode.VoidPtr("[[cava_apple_uikit_UIViewController_ObjC alloc] initWithJavaPeer:pthis]"));
@@ -46,6 +47,7 @@ public class UIViewController extends UIResponder {
     }
     */
     public void setView(UIView view) {
+        this.view = view;
         NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
     }
     

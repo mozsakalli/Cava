@@ -209,6 +209,12 @@ public class ObjCWriter {
                     if(im != null) {
                         selector = A.objcSelector(im);
                         if(selector != null && selector.isEmpty()) selector = null;
+                        else {
+                            String protocol = A.objcSelector(ic);
+                            if(protocol == null || protocol.isEmpty())
+                                protocol = DecompilerUtils.simpleName(m.interfaceBaseClass);
+                            protocols.add(protocol);
+                        }
                     }
                 }
             }

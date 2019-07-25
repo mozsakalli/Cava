@@ -31,7 +31,10 @@ import cava.platform.NativeCode;
 @ObjC
 public class UIScreen extends NSObject {
     
-    private UIScreen(VoidPtr handle) { super(handle, true); }
+    private UIScreen(VoidPtr handle) { 
+        $handle = handle;
+        $sub = true;
+    }
     
     public static UIScreen getMainScreen() {
         return new UIScreen(NativeCode.VoidPtr("[UIScreen mainScreen]"));

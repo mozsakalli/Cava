@@ -21,6 +21,7 @@ import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
 import cava.apple.uikit.UIViewController;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -32,10 +33,13 @@ import cava.platform.NativeCode;
 @ObjC
 public class GLKViewController extends UIViewController {
     GLKViewControllerDelegate delegate;
-    
+    /*
     public GLKViewController() {
         super(NativeCode.VoidPtr("[[GLKViewController alloc] init]"));
     }
+    public GLKViewController(VoidPtr handle) {
+        super(handle);
+    }*/
     public GLKViewControllerDelegate getDelegate() {
         return delegate;
     }

@@ -28,10 +28,11 @@ import cava.platform.NativeCode;
 public class NSDictionary extends NSObject {
     
     public NSDictionary() {
-        super(NativeCode.VoidPtr("[[NSDictionary alloc] init]"));
+        $handle = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
     }
+    /*
     public NSDictionary(VoidPtr handle) {
         super(handle);
-    }
+    }*/
 
 }

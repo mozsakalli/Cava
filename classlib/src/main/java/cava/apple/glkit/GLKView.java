@@ -41,9 +41,8 @@ public class GLKView extends UIView {
     }
     
     public GLKView(CGRect frame, EAGLContext context) {
-        super();
-        $handle = NativeCode.VoidPtr("[(GLKView*)%s initWithFrame:%s context:(EAGLContext*)%s]", 
-                $handle,frame.getStruct(), context != null ? context.getHandle() : null);
+        $handle = NativeCode.VoidPtr("[[GLKView alloc] initWithFrame:%s context:(EAGLContext*)%s]", 
+                frame.getStruct(), context != null ? context.getHandle() : null);
     }
     
     public GLKViewDelegate getDelegate() {

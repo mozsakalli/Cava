@@ -37,7 +37,6 @@ public class ConsolePrintStream extends PrintStream {
     }
 
     private void printImpl(StringBuilder buffer){
-        String str = buffer.toString();
         NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).getHandle());
     } 
     

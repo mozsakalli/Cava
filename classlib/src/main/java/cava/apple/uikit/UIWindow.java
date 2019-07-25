@@ -31,11 +31,12 @@ import cava.platform.NativeCode;
 public class UIWindow extends UIView {
     
     public UIWindow(){
-        super(NativeCode.VoidPtr("[[UIWindow alloc] init]"));
+        $handle = NativeCode.VoidPtr("[[UIWindow alloc] init]");
     }
+    /*
     public UIWindow(VoidPtr handle) {
         super(handle);
-    }
+    }*/
     
     public UIWindow(CGRect frame) {
         $handle = NativeCode.VoidPtr("[[UIWindow alloc] initWithFrame:%s]", frame.getStruct());

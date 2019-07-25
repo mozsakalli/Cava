@@ -45,6 +45,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         IOSGraphics graphics;
         
         public IOSUIViewController(IOSApplication app, IOSGraphics graphics) {
+            //super(NativeCode.VoidPtr("[[com_cava_gdx_IOSGraphics_IOSUIViewController_ObjC alloc] init]"));
+            //NativeCode.Void("((com_cava_gdx_IOSGraphics_IOSUIViewController_ObjC*)%s)->javaPeer = pthis", $handle);
             this.app = app;
             this.graphics = graphics;
         }
@@ -69,6 +71,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     IOSUIViewController viewController;
     
     public IOSGraphics(IOSApplication app) {
+        //super(NativeCode.VoidPtr("[[com_cava_gdx_IOSGraphics_ObjC alloc] init]"));
+        //NativeCode.Void("((com_cava_gdx_IOSGraphics_ObjC*)%s)->javaPeer = pthis", $handle);
         this.app = app;
         
         final CGRect bounds = UIScreen.getMainScreen().getBounds();
@@ -84,14 +88,17 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     // Delegate methods
     @Override
     public void draw(GLKView view, CGRect rect) {
+        System.out.println("draw");
     }
 
     @Override
     public void update(GLKViewController controller) {
+        System.out.println("update");
     }
 
     @Override
     public void willPause(GLKViewController controller, boolean pause) {
+        System.out.println("!!!!!!!!!!!!!!!!!! Will Pause !!!!!!!!!!!!!!!!");
     }
     // Delegate methods
     

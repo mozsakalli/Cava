@@ -17,10 +17,10 @@
 package cava.apple.foundation;
 
 import cava.annotation.Include;
+import cava.annotation.Keep;
 import cava.annotation.ObjC;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
-import cava.c.WCharPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -30,21 +30,27 @@ import cava.platform.NativeCode;
 
 @Include("<Foundation/Foundation.h>")
 @ObjC
+@Keep
 public class NSObject extends NativeObject {
     
     public NSObject(){
-        this(NativeCode.VoidPtr("[NSObject alloc]"));
+        if(!getClass().getName().contains("NSString"))
+            System.out.println("-- nsobject: "+getClass().getName());
+        //this(NativeCode.VoidPtr("[NSObject alloc]"));
     }
+    
     public NSObject(VoidPtr handle) { this(handle, false); }
     public NSObject(VoidPtr handle, boolean sub) {
         this.$handle = handle;
         this.$sub = sub;
+        //if(!getClass().getName().contains("NSString"))
+        //    System.out.println("-- nsobject-init: "+getClass().getName());
     }
     
     @Override
     public void dispose() {
         if($handle != null) {
-            NativeCode.Void("[(NSObject*)%s release]", $handle );
+            NativeCode.Void("[(NSObject*)%s dealloc]", $handle );
             $handle = null;
         }
     }

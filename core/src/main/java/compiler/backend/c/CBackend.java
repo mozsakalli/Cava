@@ -22,9 +22,7 @@ import compiler.DependencyOrderSet;
 import compiler.backend.BootstrapSorter;
 import compiler.backend.ClassInitInserter;
 import compiler.backend.SourceWriter;
-import compiler.backend.VirtualTable;
 import compiler.backend.ConstructorFixer;
-import compiler.backend.ITableCalculator;
 import compiler.backend.InstanceOfBuilder;
 import compiler.backend.ObjCWriter;
 import compiler.model.Clazz;
@@ -56,6 +54,10 @@ public class CBackend {
     public void generate() throws Exception {
         //NativeGenerator.process(naming);
         final List<Clazz> sortedClasses = sortClasses();
+        final ConstructorFixer cf = new ConstructorFixer();
+        sortedClasses.forEach(cls -> {
+                cf.fix(cls);
+        });
         //final VirtualTable vTable = new VirtualTable();
         //vTable.build(sortedClasses);
         
@@ -128,7 +130,6 @@ public class CBackend {
     List<Method> reflectMethods = new ArrayList();
     void generateClass(Clazz c, List<NameAndType> globalRefs) throws Exception {
         CType cType = new CType();
-        new ConstructorFixer().fix(c);
 
         reflectMethods.clear();
         for(Method m : c.methods) {
@@ -175,7 +176,6 @@ public class CBackend {
                 cType.dependency.add(f.type);
         }
         
-        if(c.isObjCImplementation) out.println("/* ObjC */");
         out.ln();
         out.println("extern JvmClass %s_Class;", naming.clazz(c.name))
         .println("extern JvmClass ArrOf_%s_Class;", naming.clazz(c.name))                
@@ -224,6 +224,7 @@ public class CBackend {
         
         ObjCWriter objc = new ObjCWriter(c);
         objc.writeInterface(naming, out);
+        if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
         
         out.ln().println("#endif");
         
@@ -326,12 +327,16 @@ public class CBackend {
                             //out.println("%s %s;", cType.toC(l.type), naming.local(l));
                         }
                         out.ln();
-
+                        
+                        
                         if(c.isObjCImplementation && m.name.equals("<init>")) {
                             String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
+                            out.println("/* create objc: %s */", objcName);
+                            
                             out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_$handle = [%s alloc];", 
                                     objcName, objcName)
                                 .println("objcPeer->javaPeer = pthis;");    
+                            
                         }
                         
                         int reflectIndex = reflectMethods.indexOf(m);
@@ -596,6 +601,8 @@ public class CBackend {
             
         } else out.println("jnull;");
         
+        Method finalize = c.findMethod("finalize", "()V");
+        
         out.println("JvmClass* cls = &%s_Class;", naming.clazz(c.name))
            .println("cls->klass = &java_lang_Class_Class;")
            .println("cls->size = sizeof(%s);", c.name.equals("java/lang/Thread") ? "JvmThread" : naming.clazz(c.name))     
@@ -610,9 +617,14 @@ public class CBackend {
            .println("#ifdef JVM_DEBUG")
            .println("cls->sourceFile = JvmMakeString(L\"%s\",%d);", c.sourceFile == null ? "" : c.sourceFile, c.sourceFile == null ? 0 : c.sourceFile.length())
            .println("#endif")
+           .print("cls->finalizeFunction = ")
            ;  
         
-            
+        if(finalize != null && !finalize.body.children.isEmpty()) 
+            out.println("&%s;", naming.method(finalize));
+        else
+            out.println("jnull;");
+        
         out.print("cls->interfaces = ");
         if(!c.interfaces.isEmpty()) {
             out.print("JvmMakeObjectArray(&ArrOf_java_lang_Class_Class,%d,&(JvmClass*[]){",c.interfaces.size());

@@ -18,6 +18,7 @@ package compiler.model;
 
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
+import compiler.backend.c.A;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,6 +187,15 @@ public class Clazz implements Serializable {
         
         return list;
     }  
+    
+    public boolean isCustomObjCClass() {
+        if(isInterface) return false;
+        for(Method m : methods) {
+            String selector = A.objcSelector(m);
+            if(selector != null && !selector.isEmpty()) return true;
+        }
+        return false;
+    }
     
     public boolean isStruct() {
         return superName != null && superName.equals("cava/c/Struct");

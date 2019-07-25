@@ -24,7 +24,6 @@ import compiler.backend.c.NameManager;
 import compiler.model.Clazz;
 import compiler.model.Method;
 import compiler.model.NameAndType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,30 +38,43 @@ public class ObjCWriter {
     
     Clazz clazz;
     String superName;
+    Clazz customSuper;
+    
     Set<String> protocols = new HashSet();
     Map<String, Method> methods = new HashMap();
     
     public ObjCWriter(Clazz c) {
         clazz = c;
         if(c.isInterface) return;
-        for(Method m : c.methods) {
-            checkMethod(m);
-        }
+        if(clazz.name.contains("GLKViewController"))
+            System.out.println("...");
+        
+        
         Clazz sc = c;
+        
         while(sc != null) {
+            for(Method m : sc.methods) {
+                checkMethod(m);
+            }
+
+            
             if(superName == null && A.hasObjC(sc)) {
                 superName = A.objcSelector(sc);
                 if(superName.isEmpty()) superName = DecompilerUtils.simpleName(sc.name);
             }
+            
+            if(customSuper == null && sc != clazz && sc.isCustomObjCClass()) customSuper = sc;
+            
             if(sc.superName == null) break;
             sc = CompilerContext.resolve(sc.superName);
         }
-        
+
         if(!methods.isEmpty()) c.isObjCImplementation = true;
     }
     
     public void writeInterface(NameManager naming, SourceWriter out) {
         if(methods.isEmpty()) return;
+        //String zuper = customSuper != null ? customSuper.name.replace('/', '_').replace('$', '_')+"_ObjC" : superName;
         out.print("@interface %s_ObjC : %s ", naming.clazz(clazz.name), 
                 clazz.isInterface ? "NSObject" : superName);
         if(!protocols.isEmpty()) {
@@ -76,13 +88,14 @@ public class ObjCWriter {
         }
         out.println(" {").indent()
            .println("@public")
-           .println("jobject javaPeer;");
-        
-        out.undent().println("}").println("@end");
+           .println("jobject javaPeer;")
+           .undent().print("}");
+                
+        out.ln().println("@end");
     }
     
     public void writeImplementation(NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
-        if(methods.isEmpty()) return;
+        if(methods.isEmpty() && customSuper == null) return;
         out.println("@implementation %s_ObjC", naming.clazz(clazz.name));
         methods.forEach((s,m) -> writeMethod(m,s,naming,cType,globalRefs, out));
         out.println("@end");
@@ -91,8 +104,9 @@ public class ObjCWriter {
     void writeMethod(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
         String[] parts = selector.split(":");
+        int start = m.args.size() > parts.length ? 1 : 0;
         for(int i=0; i<parts.length; i++) {
-            out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+1).type), m.args.get(i+1).name);
+            out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+start).type), m.args.get(i+start).name);
         }
         out.println("{").indent();
         
@@ -161,8 +175,12 @@ public class ObjCWriter {
     
     void printObjCMarshaller(String type, String value, NameManager naming, SourceWriter out) {
         if(!DecompilerUtils.isPrimitive(type)) {
+            Clazz nsObject = CompilerContext.resolve("cava/apple/foundation/NSObject");
             Clazz argClass = CompilerContext.resolve(type);
-            Method im = argClass.findMethod("<init>", argClass.isStruct() ? "(Lcava/c/Struct;)V" : "(Lcava/c/VoidPtr;)V");
+            
+            Method im = argClass.isStruct() ? 
+                    argClass.findMethod("<init>", "(Lcava/c/Struct;)V") :
+                    nsObject.findMethod("<init>", "(Lcava/c/VoidPtr;)V");
             if(im == null || !im.usedInProject) throw new RuntimeException("Can't find native bridge <init> method for "+type);
             out.print("%s(JvmAllocObject(&%s_Class),%s)", naming.method(im), naming.clazz(argClass.name), value);
         } else out.print("%s", value);
@@ -173,6 +191,33 @@ public class ObjCWriter {
     }
     
     void checkMethod(Method m) {
+        if(m.usedInProject) {
+            String selector = null;
+            if(m.virtualBaseClass != null) {
+                Clazz vc = CompilerContext.resolve(m.virtualBaseClass);
+                Method vm = vc.findDeclaredMethod(m.name, m.signature);
+                if(vm != null) {
+                    selector = A.objcSelector(vm);
+                    if(selector != null && selector.isEmpty()) selector = null;
+                }
+            }
+            
+            if(selector == null && m.interfaceBaseClass != null) {
+                Clazz ic = CompilerContext.resolve(m.interfaceBaseClass);
+                if(ic != null) {
+                    Method im = ic.findDeclaredMethod(m.name, m.signature);
+                    if(im != null) {
+                        selector = A.objcSelector(im);
+                        if(selector != null && selector.isEmpty()) selector = null;
+                    }
+                }
+            }
+            
+            if(selector != null) {
+                methods.put(selector, m);
+            }
+        }
+        /*
         if(m.usedInProject && (m.virtualBaseClass == null || m.virtualBaseClass.equals(m.declaringClass))) {
             String selector = !A.objcProperty(m) ? A.objcSelector(m) : null;
             if((selector == null || selector.isEmpty()) && m.interfaceBaseClass != null) {
@@ -184,11 +229,13 @@ public class ObjCWriter {
             }
 
             if(selector != null && !selector.isEmpty()) {
-                methods.put(selector, m);
+                if(!methods.containsKey(selector)) {
+                    methods.put(selector, m);
+                }
                 if(m.interfaceBaseClass != null)
                     protocols.add(DecompilerUtils.simpleName(m.interfaceBaseClass));
             } 
-        }
+        }*/
         
     }
     /*

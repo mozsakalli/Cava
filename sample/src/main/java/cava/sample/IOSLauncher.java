@@ -33,12 +33,6 @@ public class IOSLauncher extends IOSApplication.Delegate {
     }
 
     public static void main() {
-        for(int i=0; i<10000; i++) {
-            Object[] src = new Object[200];
-            for(int k=0; k<src.length; k++)
-                src[k] = new Object();
-            src = src.clone();
-        }
         NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main((String[])null, null, IOSLauncher.class);
         pool.close();

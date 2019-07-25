@@ -37,7 +37,6 @@ public class SampleApp extends UIApplicationDelegateAdapter {
         ((UIApplicationDelegate)this).setWindow(new UIWindow());
         System.out.println("Sample App Started...");
         
-        new NSString((VoidPtr)null);
         return true;
     }
 

@@ -32,7 +32,7 @@ public class UIView extends UIResponder {
     
     public UIView(){}
     public UIView(VoidPtr handle) {
-        super(handle);
+        $handle = handle;
     }
     
     public UIView(CGRect frame) {

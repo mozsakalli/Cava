@@ -27,18 +27,21 @@ import cava.platform.NativeCode;
  */
 @ObjC
 public final class NSString extends NSObject {
-    
+    /*
     public NSString(VoidPtr handle) {
         super(handle);
-    }
+    }*/
     public NSString(String string) {
-        super(NativeCode.VoidPtr("[NSString alloc]"));
+        alloc();
         initWithCharacters(WCharPtr.from(string), string.length());
+    }
+    void alloc() {
+        $handle = NativeCode.VoidPtr("[NSString alloc]");
     }
     
     public final NSString initWithCharacters(WCharPtr chars, int length) {
         NativeCode.Void("%s=(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", $handle, $handle, chars, length);
         return this;
     }
-
+    
 }

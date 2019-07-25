@@ -14,12 +14,29 @@
  * limitations under the License.
  */
 
-package cava.apple;
+package cava.sample;
+
+import cava.annotation.Keep;
+import cava.annotation.ObjC;
+import cava.apple.coreanimation.CAEAGLLayer;
+import cava.apple.coregraphics.CGRect;
+import cava.apple.foundation.NSObject;
+import cava.apple.uikit.UIView;
 
 /**
  *
  * @author mustafa
  */
-public class ObjCMessage {
-    
+@Keep
+public class GameView extends UIView {
+
+    @ObjC(value = "layerClass")
+    public static Class getLayerClass() {
+        System.out.println("GetLayerClass");
+        return NSObject.getObjCClass(CAEAGLLayer.class);
+    }
+
+    public GameView(CGRect bounds) {
+        super(bounds);
+    }
 }

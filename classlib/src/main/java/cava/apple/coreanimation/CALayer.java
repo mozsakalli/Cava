@@ -14,33 +14,22 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.apple.coreanimation;
 
+import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.apple.coreanimation.CALayer;
-import cava.apple.coregraphics.CGRect;
+import cava.apple.foundation.NSObject;
 import cava.c.VoidPtr;
-import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
+@Framework("QuartzCore.framework")
+@Include("<QuartzCore/QuartzCore.h>")
 @ObjC
-public class UIView extends UIResponder {
+public class CALayer extends NSObject {
     
-    public UIView(){}
-    public UIView(VoidPtr handle) {
-        $handle = handle;
-    }
-    
-    public UIView(CGRect frame) {
-        $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
-    }
-
-    public CALayer getLayer() {
-        return new CALayer()
-    }
+    public CALayer(VoidPtr handle) { $handle = handle; }
 }

@@ -14,33 +14,18 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package cava.sample;
 
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.apple.coreanimation.CALayer;
-import cava.apple.coregraphics.CGRect;
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+import cava.apple.uikit.UIScreen;
+import cava.apple.uikit.UIViewController;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIView extends UIResponder {
+public class GameViewController extends UIViewController {
     
-    public UIView(){}
-    public UIView(VoidPtr handle) {
-        $handle = handle;
-    }
-    
-    public UIView(CGRect frame) {
-        $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
-    }
-
-    public CALayer getLayer() {
-        return new CALayer()
+    public GameViewController() {
+        setView(new GameView(UIScreen.getMainScreen().getBounds()));
     }
 }

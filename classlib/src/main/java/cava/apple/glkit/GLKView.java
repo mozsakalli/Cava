@@ -35,6 +35,7 @@ import cava.platform.NativeCode;
 public class GLKView extends UIView {
     
     GLKViewDelegate delegate;
+    EAGLContext context;
     
     public GLKView(CGRect frame) {
         this(frame, null);
@@ -43,6 +44,7 @@ public class GLKView extends UIView {
     public GLKView(CGRect frame, EAGLContext context) {
         $handle = NativeCode.VoidPtr("[[GLKView alloc] initWithFrame:%s context:(EAGLContext*)%s]", 
                 frame.getStruct(), context != null ? context.getHandle() : null);
+        this.context = context;
     }
     
     public GLKViewDelegate getDelegate() {
@@ -54,4 +56,9 @@ public class GLKView extends UIView {
         NativeCode.Void("((GLKView*)%s).delegate = %s", getHandle(), ((NSObject)delegate).getHandle());
     }
 
+    public EAGLContext getContext() { return context; }
+    public void setContext(EAGLContext context) {
+        this.context = context;
+        NativeCode.Void("[((GLKView*)%s) setContext:%s]", $handle, context.getHandle());
+    }
 }

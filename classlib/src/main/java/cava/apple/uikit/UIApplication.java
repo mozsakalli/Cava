@@ -42,10 +42,10 @@ public class UIApplication extends UIResponder {
         CharPtrPtr argv = null;
         
         String principalClassName = principalClass != null ? NSObject.getObjectiveCName(principalClass)  : null;
-        Class dc = delegateClass;
+        /*Class dc = delegateClass;
         while(dc != null && dc.getSuperclass() != NSObject.class)
-            dc = dc.getSuperclass();
-        String delegateClassName = dc != null ? NSObject.getObjectiveCName(dc) : null;
+            dc = dc.getSuperclass();*/
+        String delegateClassName = delegateClass != null ? NSObject.getObjectiveCName(delegateClass) : null;
         
         if(args != null && args.length > 0) {
             argv = CharPtrPtr.alloc(args.length);
@@ -55,7 +55,6 @@ public class UIApplication extends UIResponder {
         }
         
         currentDelegate = (UIApplicationDelegate)delegateClass.newInstance();
-        System.out.println("principal: "+principalClassName+"  delegate:"+delegateClassName);
         main(argc, argv, principalClassName, delegateClassName);
     }
     
@@ -71,11 +70,11 @@ public class UIApplication extends UIResponder {
         return currentApplication;
     }
     
-    public boolean getIdleTimerDisabled() {
+    public final boolean getIdleTimerDisabled() {
         return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", $handle);
     }
     
-    public void setIdleTimerDisabled(boolean disabled) {
+    public final void setIdleTimerDisabled(boolean disabled) {
         NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", $handle, disabled);
     }
     

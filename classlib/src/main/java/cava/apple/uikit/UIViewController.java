@@ -56,4 +56,10 @@ public class UIViewController extends UIResponder {
 
     @ObjC("viewDidAppear")
     public native void viewDidAppear(boolean animated);
+    
+    @ObjC("viewDidLayoutSubviews")
+    public native void viewDidLayoutSubviews();
+    
+    @ObjC("shouldAutorotate")
+    public native boolean shouldAutorotate();
 }

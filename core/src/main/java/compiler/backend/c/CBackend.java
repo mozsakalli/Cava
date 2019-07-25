@@ -223,7 +223,7 @@ public class CBackend {
         }
         
         ObjCWriter objc = new ObjCWriter(c);
-        objc.writeInterface(naming, out);
+        objc.writeInterface(naming, cType, out);
         if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
         
         out.ln().println("#endif");
@@ -623,6 +623,13 @@ public class CBackend {
         if(finalize != null && !finalize.body.children.isEmpty()) 
             out.println("&%s;", naming.method(finalize));
         else
+            out.println("jnull;");
+        out.print("cls->objcClass = ");
+        if(c.isObjCImplementation)
+            out.println("@\"%s\";",c.name.replace('/', '_').replace('$', '_')+"_ObjC");
+        else if(A.hasObjC(c))
+            out.println("@\"%s\";",DecompilerUtils.simpleName(c.name));
+        else    
             out.println("jnull;");
         
         out.print("cls->interfaces = ");

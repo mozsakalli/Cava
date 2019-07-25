@@ -152,6 +152,7 @@ public class DecompilerUtils {
         switch(type) {
             case "Z": return "BOOL";
             case "V": return "void";
+            case "java/lang/Class": return "Class";
         }
         Clazz c = CompilerContext.resolve(type);
         if(c != null) {

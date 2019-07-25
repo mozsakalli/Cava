@@ -28,7 +28,7 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 
-@Include("<Foundation/Foundation.h>")
+@Include("<objc/runtime.h> <Foundation/Foundation.h>")
 @ObjC
 @Keep
 public class NSObject extends NativeObject {
@@ -59,5 +59,14 @@ public class NSObject extends NativeObject {
         return cls.getName().replace('.', '_').replace('$', '_') + "_ObjC";
     }
     
+    public Class getObjCClass() {
+        return getObjCClass(getClass());
+    }
+    
+    // return value is not real java class
+    // dont use it!!
+    public static Class getObjCClass(Class cls) {
+        return NativeCode.Class("NSClassFromString((NSString*)((JvmClass*)%s)->objcClass)", cls);
+    }
     
 }

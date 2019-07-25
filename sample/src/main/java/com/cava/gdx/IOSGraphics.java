@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.cava.gdx;
 
 import cava.annotation.Keep;
@@ -26,65 +25,130 @@ import cava.apple.glkit.GLKViewDelegate;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.GLVersion;
+import com.badlogic.gdx.utils.Array;
 
 /**
  *
  * @author mustafa
  */
 public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, GLKViewControllerDelegate {
-    
+
     @Keep
     public static class IOSUIViewController extends GLKViewController {
+
         IOSApplication app;
         IOSGraphics graphics;
-        
+
         public IOSUIViewController(IOSApplication app, IOSGraphics graphics) {
-            //super(NativeCode.VoidPtr("[[com_cava_gdx_IOSGraphics_IOSUIViewController_ObjC alloc] init]"));
-            //NativeCode.Void("((com_cava_gdx_IOSGraphics_IOSUIViewController_ObjC*)%s)->javaPeer = pthis", $handle);
             this.app = app;
             this.graphics = graphics;
         }
 
         @Override
         public void viewWillAppear(boolean animated) {
-            System.out.println("!!!!!!!! Appear !!!!!!!!!!!!");
+            // start GLKViewController even though we may only draw a single frame
+            // (we may be in non-continuous mode)
             setPaused(false);
         }
 
         @Override
         public void viewDidAppear(boolean animated) {
-            System.out.println("!!!!!!!! Did Appear !!!!!!!!!!!!");
+            //todo: if (app.viewControllerListener != null) app.viewControllerListener.viewDidAppear(animated);
         }
-        
+
+        @Override
+        public boolean shouldAutorotate() {
+            return true;
+        }
+
+        @Override
+        public void viewDidLayoutSubviews() {
+            graphics.context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
+            graphics.view.setContext(graphics.context);
+        }
+
         
     }
-    
+
+    GL20 gl20;
+    GL30 gl30;
+    int width;
+    int height;
+    long lastFrameTime;
+    float deltaTime;
+    long framesStart;
+    int frames;
+    int fps;
+
     IOSApplication app;
     EAGLContext context;
     GLKView view;
     IOSUIViewController viewController;
-    
+
+    volatile boolean appPaused;
+    private long frameId = -1;
+    private boolean isContinuous = true;
+    private boolean isFrameRequested = true;
+
     public IOSGraphics(IOSApplication app) {
-        //super(NativeCode.VoidPtr("[[com_cava_gdx_IOSGraphics_ObjC alloc] init]"));
-        //NativeCode.Void("((com_cava_gdx_IOSGraphics_ObjC*)%s)->javaPeer = pthis", $handle);
         this.app = app;
-        
+
         final CGRect bounds = UIScreen.getMainScreen().getBounds();
+        System.out.println("bounds="+bounds.getOrigin().getX()+"x"+bounds.getOrigin().getY()+" - "+
+                bounds.getSize().getWidth()+"x"+bounds.getSize().getHeight());
         context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
+        if (context.getHandle() != null) {
+            System.out.println("OpenGL2.0 detected");
+            gl20 = new IOSGL20();
+        }
         view = new GLKView(bounds, context);
         view.setDelegate(this);
-        
+
         viewController = new IOSUIViewController(app, this);
         viewController.setView(view);
         viewController.setDelegate(this);
+
+        appPaused = false;
     }
-    
+
+    public void resume() {
+        if (!appPaused) {
+            return;
+        }
+        appPaused = false;
+
+        Array<LifecycleListener> listeners = app.lifecycleListeners;
+        synchronized (listeners) {
+            for (LifecycleListener listener : listeners) {
+                listener.resume();
+            }
+        }
+        app.listener.resume();
+    }
+
+    public void pause() {
+        if (appPaused) {
+            return;
+        }
+        appPaused = true;
+
+        Array<LifecycleListener> listeners = app.lifecycleListeners;
+        synchronized (listeners) {
+            for (LifecycleListener listener : listeners) {
+                listener.pause();
+            }
+        }
+        app.listener.pause();
+    }
+
     // Delegate methods
     @Override
     public void draw(GLKView view, CGRect rect) {
@@ -101,32 +165,45 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         System.out.println("!!!!!!!!!!!!!!!!!! Will Pause !!!!!!!!!!!!!!!!");
     }
     // Delegate methods
-    
-    
+
+    void makeCurrent () {
+        EAGLContext.setCurrentContext(context);
+    }   
     
     @Override
     public boolean isGL30Available() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return gl30 != null;
     }
 
     @Override
     public GL20 getGL20() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return gl20;
     }
 
     @Override
     public GL30 getGL30() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return gl30;
     }
 
     @Override
     public void setGL20(GL20 gl20) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gl20 = gl20;
+        if (gl30 == null) {
+            Gdx.gl = gl20;
+            Gdx.gl20 = gl20;
+        }
     }
 
     @Override
     public void setGL30(GL30 gl30) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.gl30 = gl30;
+        if (gl30 != null) {
+            this.gl20 = gl30;
+
+            Gdx.gl = gl20;
+            Gdx.gl20 = gl20;
+            Gdx.gl30 = gl30;
+        }
     }
 
     @Override

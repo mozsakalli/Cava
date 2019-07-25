@@ -18,12 +18,9 @@ package cava.sample;
 
 import cava.annotation.Keep;
 import cava.apple.foundation.NSDictionary;
-import cava.apple.foundation.NSString;
 import cava.apple.uikit.UIApplication;
-import cava.apple.uikit.UIApplicationDelegate;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
 import cava.apple.uikit.UIWindow;
-import cava.c.VoidPtr;
 
 /**
  *
@@ -34,8 +31,11 @@ public class SampleApp extends UIApplicationDelegateAdapter {
 
     @Override
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
-        ((UIApplicationDelegate)this).setWindow(new UIWindow());
         System.out.println("Sample App Started...");
+        UIWindow win = new UIWindow();
+        setWindow(win);
+        win.setRootViewController(new GameViewController());
+        win.makeKeyAndVisible();
         
         return true;
     }

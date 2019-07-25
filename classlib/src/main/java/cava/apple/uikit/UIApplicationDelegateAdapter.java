@@ -18,13 +18,14 @@ package cava.apple.uikit;
 
 import cava.apple.foundation.NSDictionary;
 import cava.apple.foundation.NSObject;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
 public class UIApplicationDelegateAdapter extends NSObject implements UIApplicationDelegate {
-
+    
     private UIWindow window;
     
     @Override
@@ -35,11 +36,28 @@ public class UIApplicationDelegateAdapter extends NSObject implements UIApplicat
     @Override
     public void setWindow(UIWindow window) {
         this.window = window;
+        NativeCode.Void("((cava_apple_uikit_UIApplicationDelegateAdapter_ObjC*)%s).window = %s", $handle, window.getHandle());
     }
 
     @Override
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
         return true;
+    }
+
+    @Override
+    public void didBecomeActive(UIApplication application) {
+    }
+
+    @Override
+    public void willResignActive(UIApplication application) {
+    }
+
+    @Override
+    public void didEnterBackground(UIApplication application) {
+    }
+
+    @Override
+    public void willEnterForeground(UIApplication application) {
     }
 
 }

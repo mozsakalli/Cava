@@ -42,11 +42,12 @@ public class ObjCWriter {
     
     Set<String> protocols = new HashSet();
     Map<String, Method> methods = new HashMap();
+    Map<String,Method> properties = new HashMap();
     
     public ObjCWriter(Clazz c) {
         clazz = c;
         if(c.isInterface) return;
-        if(clazz.name.contains("GLKViewController"))
+        if(clazz.name.contains("GameView"))
             System.out.println("...");
         
         
@@ -69,11 +70,11 @@ public class ObjCWriter {
             sc = CompilerContext.resolve(sc.superName);
         }
 
-        if(!methods.isEmpty()) c.isObjCImplementation = true;
+        if(!methods.isEmpty() || customSuper!=null) c.isObjCImplementation = true;
     }
     
-    public void writeInterface(NameManager naming, SourceWriter out) {
-        if(methods.isEmpty()) return;
+    public void writeInterface(NameManager naming, CType cType, SourceWriter out) {
+        if(methods.isEmpty() && customSuper == null) return;
         //String zuper = customSuper != null ? customSuper.name.replace('/', '_').replace('$', '_')+"_ObjC" : superName;
         out.print("@interface %s_ObjC : %s ", naming.clazz(clazz.name), 
                 clazz.isInterface ? "NSObject" : superName);
@@ -90,7 +91,20 @@ public class ObjCWriter {
            .println("@public")
            .println("jobject javaPeer;")
            .undent().print("}");
-                
+        
+        final Set<String> written = new HashSet();
+        properties.forEach((sel, m) -> {
+            if(!written.contains(sel)) {
+                String type = m.type;
+                if(m.type.equals("V") && m.args.size()>1) {
+                    type = m.args.get(1).type;
+                }
+                if(!type.equals("V")) {
+                    out.println("@property %s %s;",DecompilerUtils.objcType(cType,type),sel);
+                    written.add(sel);
+                }
+            }
+        });
         out.ln().println("@end");
     }
     
@@ -102,23 +116,35 @@ public class ObjCWriter {
     }
     
     void writeMethod(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
-        out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
-        String[] parts = selector.split(":");
-        int start = m.args.size() > parts.length ? 1 : 0;
-        for(int i=0; i<parts.length; i++) {
-            out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+start).type), m.args.get(i+start).name);
+        if(m.name.contains("LayerClass"))
+            System.out.println("...");
+        if(m.isStatic()) {
+            String[] parts = selector.split(":");
+            out.print("+(%s) %s", DecompilerUtils.objcType(cType,m.type), parts[0]);
+            for(int i=1; i<parts.length; i++) {
+                
+            }
+            out.println("{").indent();
+        } else {
+            out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
+            String[] parts = selector.split(":");
+            int start = m.args.size() > parts.length ? 1 : 0;
+            for(int i=0; i<parts.length; i++) {
+                out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+start).type), m.args.get(i+start).name);
+            }
+            out.println("{").indent();
         }
-        out.println("{").indent();
-        
+
         if(m.name.equals("didFinishLaunchingWithOptions")) 
             writeDidFinishLaunchingBody(m, selector, naming, cType, globalRefs, out);
         else
-            writeMethodBody(m, selector, naming, cType, out);
+            writeMethodBody(m, selector, naming, cType, globalRefs, out);
+        
         
         out.undent().println("}");
     }
     
-    void writeMethodBody(Method m, String selector, NameManager naming, CType cType, SourceWriter out) {
+    void writeMethodBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         SourceWriter tmpOut = new SourceWriter();
         Method tm = m;
         if(m.interfaceBaseClass != null) {
@@ -129,11 +155,16 @@ public class ObjCWriter {
             tmpOut.print("virtual_");
         }
 
-        tmpOut.print("%s(javaPeer", naming.method(tm));
-        for(int i=1; i<m.args.size(); i++) {
+        int start = 0;
+        tmpOut.print("%s(", naming.method(tm));
+        if(!m.isStatic()) {
+            tmpOut.print("javaPeer");
+            start++;
+        }
+        for(int i=start; i<m.args.size(); i++) {
             NameAndType arg = m.args.get(i);
-            tmpOut.print(",");
-            printObjCArg(arg, naming, tmpOut);
+            if(i > 0) tmpOut.print(",");
+            printObjCArg(arg, naming, globalRefs, tmpOut);
         }
         tmpOut.print(")");
 
@@ -141,25 +172,36 @@ public class ObjCWriter {
             out.print("return ");
         }
         if(!DecompilerUtils.isPrimitive(m.type)) {
-            printObjCMarshaller(m.type, tmpOut.toString(), naming, out);
+            printObjCMarshaller(m.type, tmpOut.toString(), naming, globalRefs, out, false);
             out.println(";");
         } else out.println("%s;",tmpOut.toString());           
     }
     
-    void writeDidFinishLaunchingBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
+    
+    int getCurrentDelegateIndex(List<NameAndType> globalRefs) {
         NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate field missing");
         int index = globalRefs.indexOf(field);
         if(index == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate not defined as globalRef");
-
-        field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentApplication");
+        return index;
+    }
+    
+    int getCurrentApplicationIndex(List<NameAndType> globalRefs) {
+        NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentApplication");
         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication field missing");
-        int index2 = globalRefs.indexOf(field);
-        if(index2 == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
+        int index = globalRefs.indexOf(field);
+        if(index == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
+        return index;
+    }
+    
+    void writeDidFinishLaunchingBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
+        int index = getCurrentDelegateIndex(globalRefs);
+        int index2 = getCurrentApplicationIndex(globalRefs);
 
         out.println("JvmStartDebugger();");
+        out.println("javaPeer = JVMGLOBALS[%s];", index);
         out.print("JVMGLOBALS[%d] = ", index2);
-        printObjCArg(m.args.get(1), naming, out);
+        printObjCMarshaller(m.args.get(1).type, m.args.get(1).name, naming, globalRefs, out, false);
         out.println(";")
            .println("return ");
         if(m.interfaceBaseClass != null) {
@@ -169,35 +211,48 @@ public class ObjCWriter {
            out.print("%s", naming.method(m));
         }
        out.print("(JVMGLOBALS[%d], JVMGLOBALS[%d], ", index, index2);
-       printObjCArg(m.args.get(2), naming, out);
+       printObjCArg(m.args.get(2), naming, globalRefs, out);
        out.println(");");        
     }
     
-    void printObjCMarshaller(String type, String value, NameManager naming, SourceWriter out) {
-        if(!DecompilerUtils.isPrimitive(type)) {
-            Clazz nsObject = CompilerContext.resolve("cava/apple/foundation/NSObject");
-            Clazz argClass = CompilerContext.resolve(type);
-            
-            Method im = argClass.isStruct() ? 
-                    argClass.findMethod("<init>", "(Lcava/c/Struct;)V") :
-                    nsObject.findMethod("<init>", "(Lcava/c/VoidPtr;)V");
-            if(im == null || !im.usedInProject) throw new RuntimeException("Can't find native bridge <init> method for "+type);
-            out.print("%s(JvmAllocObject(&%s_Class),%s)", naming.method(im), naming.clazz(argClass.name), value);
+    void printObjCMarshaller(String type, String value, NameManager naming, List<NameAndType> globalRefs, SourceWriter out, boolean useGlobalApp) {
+        if(!DecompilerUtils.isPrimitive(type) && !type.equals("java/lang/Class")) {
+            if(useGlobalApp && type.equals("cava/apple/uikit/UIApplication")) {
+                out.print("JVMGLOBALS[%d]", getCurrentApplicationIndex(globalRefs));
+            } else {
+                Clazz nsObject = CompilerContext.resolve("cava/apple/foundation/NSObject");
+                Clazz argClass = CompilerContext.resolve(type);
+
+                Method im = argClass.isStruct() ? 
+                        argClass.findMethod("<init>", "(Lcava/c/Struct;)V") :
+                        nsObject.findMethod("<init>", "(Lcava/c/VoidPtr;)V");
+                if(im == null || !im.usedInProject) throw new RuntimeException("Can't find native bridge <init> method for "+type);
+                out.print("%s(JvmAllocObject(&%s_Class),%s)", naming.method(im), naming.clazz(argClass.name), value);
+            }
         } else out.print("%s", value);
     }
     
-    void printObjCArg(NameAndType arg, NameManager naming, SourceWriter out) {
-        printObjCMarshaller(arg.type, arg.name, naming, out);
+    void printObjCArg(NameAndType arg, NameManager naming, List<NameAndType> globalRefs, SourceWriter out) {
+        printObjCMarshaller(arg.type, arg.name, naming, globalRefs, out, true);
     }
     
     void checkMethod(Method m) {
+        if(m.name.contains("getLayerClass"))
+            System.out.println("...");
+        
         if(m.usedInProject) {
             String selector = null;
-            if(m.virtualBaseClass != null) {
+            boolean isProperty = false;
+            
+            selector = A.objcSelector(m);
+            if(selector != null && selector.isEmpty()) selector = null;
+            
+            if(selector == null && m.virtualBaseClass != null) {
                 Clazz vc = CompilerContext.resolve(m.virtualBaseClass);
                 Method vm = vc.findDeclaredMethod(m.name, m.signature);
                 if(vm != null) {
                     selector = A.objcSelector(vm);
+                    isProperty = A.objcProperty(vm);
                     if(selector != null && selector.isEmpty()) selector = null;
                 }
             }
@@ -211,6 +266,7 @@ public class ObjCWriter {
                         if(selector != null && selector.isEmpty()) selector = null;
                         else {
                             String protocol = A.objcSelector(ic);
+                            isProperty = A.objcProperty(im);
                             if(protocol == null || protocol.isEmpty())
                                 protocol = DecompilerUtils.simpleName(m.interfaceBaseClass);
                             protocols.add(protocol);
@@ -220,7 +276,10 @@ public class ObjCWriter {
             }
             
             if(selector != null) {
-                methods.put(selector, m);
+                if(isProperty)
+                    properties.put(selector, m);
+                else
+                    methods.put(selector, m);
             }
         }
         /*

@@ -30,12 +30,25 @@ public class CharPtr {
         return NativeCode.CharPtr("(char*)malloc(%s*sizeof(char*))", size);
     }
     
+    //Create non heap memory, developer must free
     public static CharPtr allocAsciiZ(String str) {
         CharPtr result = alloc(str.length()+1);
         for(int i=0; i<str.length(); i++)
             result.set(i, str.charAt(i));
         result.set(str.length(), 0);
         return result;
+    }
+    
+    //Uses local char array for immediate operations
+    public static CharPtr asciiZ(String str) {
+        NativeCode.Void("char chars[513];");
+        int len = str.length();
+        if(len > 512) len = 512;
+        for(int i=0; i<len; i++) {
+            NativeCode.Void("chars[%s] = %s", i, str.charAt(i));
+        }
+        NativeCode.Void("chars[%s] = 0", len);
+        return NativeCode.CharPtr("&chars");
     }
     
     public static CharPtr from(Object object) {

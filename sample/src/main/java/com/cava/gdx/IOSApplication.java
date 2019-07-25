@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.cava.gdx;
 
 import cava.apple.foundation.NSDictionary;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
 import cava.apple.uikit.UIScreen;
+import cava.apple.uikit.UIViewController;
 import cava.apple.uikit.UIWindow;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
@@ -32,6 +32,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Clipboard;
 
 /**
@@ -45,13 +46,13 @@ public class IOSApplication implements Application {
         private IOSApplication app;
 
         protected abstract IOSApplication createApplication();
-        
+
         @Override
         public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
             this.app = createApplication();
-            return app.didFinishLaunching(application, launchOptions);
+            return app.didFinishLaunching(application, launchOptions, this);
         }
-        
+
         /*
         @Override
         public boolean didFinishLaunching(UIApplication application, UIApplicationLaunchOptions launchOptions) {
@@ -79,28 +80,53 @@ public class IOSApplication implements Application {
         public void willTerminate(UIApplication application) {
             app.willTerminate(application);
         }*/
-
     }
-    
+
     ApplicationListener listener;
     IOSGraphics graphics;
     UIWindow uiWindow;
-    
+
+    Array<Runnable> runnables = new Array<Runnable>();
+    Array<Runnable> executedRunnables = new Array<Runnable>();
+    Array<LifecycleListener> lifecycleListeners = new Array<LifecycleListener>();
+
     public IOSApplication(ApplicationListener listener) {
         this.listener = listener;
     }
 
-    final boolean didFinishLaunching (UIApplication uiApp, NSDictionary options) {    
+    final boolean didFinishLaunching(UIApplication uiApp, NSDictionary options, Delegate delegate) {
         Gdx.app = this;
         graphics = new IOSGraphics(this);
-        
+        Gdx.gl = Gdx.gl20 = graphics.gl20;
+        Gdx.gl30 = graphics.gl30;
+
         uiWindow = new UIWindow(UIScreen.getMainScreen().getBounds());
+        delegate.setWindow(uiWindow);
         uiWindow.setRootViewController(graphics.viewController);
         uiWindow.makeKeyAndVisible();
-        
+
+        graphics.makeCurrent();
         return true;
     }
-    
+
+    /**
+     * Return the UI view controller of IOSApplication
+     *
+     * @return the view controller of IOSApplication
+     */
+    public UIViewController getUIViewController() {
+        return graphics.viewController;
+    }
+
+    /**
+     * Return the UI Window of IOSApplication
+     *
+     * @return the window
+     */
+    public UIWindow getUIWindow() {
+        return uiWindow;
+    }
+
     @Override
     public ApplicationListener getApplicationListener() {
         return listener;

@@ -37,4 +37,14 @@ public interface UIApplicationDelegate {
     @ObjC("application:didFinishLaunchingWithOptions:")
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions);
     
+    @ObjC("applicationDidBecomeActive:")
+    public void didBecomeActive(UIApplication application);
+    @ObjC("applicationWillResignActive:")
+    public void willResignActive(UIApplication application);    
+    
+    @ObjC("applicationDidEnterBackground:")
+    public void didEnterBackground(UIApplication application);
+    @ObjC("applicationWillEnterForeground:")
+    public void willEnterForeground(UIApplication application);    
+    
 }

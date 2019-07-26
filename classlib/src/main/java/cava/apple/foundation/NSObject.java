@@ -69,4 +69,9 @@ public class NSObject extends NativeObject {
         return NativeCode.Class("NSClassFromString((NSString*)((JvmClass*)%s)->objcClass)", cls);
     }
     
+    public static <T extends NSObject> T alloc(Class<? extends NSObject> cls) {
+        NSObject result = (NSObject)cls.newInstance();
+        result.$handle = NativeCode.VoidPtr("[%s alloc]", getObjCClass(cls));
+        return (T)result;
+    }
 }

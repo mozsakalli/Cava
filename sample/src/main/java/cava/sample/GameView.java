@@ -21,6 +21,8 @@ import cava.annotation.ObjC;
 import cava.apple.coreanimation.CAEAGLLayer;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
+import cava.apple.opengles.EAGLContext;
+import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIView;
 
 /**
@@ -30,6 +32,8 @@ import cava.apple.uikit.UIView;
 @Keep
 public class GameView extends UIView {
 
+    EAGLContext context;
+    
     @ObjC(value = "layerClass")
     public static Class getLayerClass() {
         System.out.println("GetLayerClass");
@@ -38,5 +42,6 @@ public class GameView extends UIView {
 
     public GameView(CGRect bounds) {
         super(bounds);
+        context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
     }
 }

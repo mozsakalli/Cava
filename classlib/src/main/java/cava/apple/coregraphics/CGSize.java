@@ -36,4 +36,9 @@ public class CGSize extends Struct<CGSize> {
     @Native("height") public native double getHeight();
     @Native("height") public native void setHeight(double value);
     
+    @Override
+    public String toString() {
+        return "["+getWidth()+"x"+getHeight()+"]";
+    }
+    
 }

@@ -20,6 +20,7 @@ import cava.annotation.Keep;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
+import cava.apple.uikit.UIScreen;
 import cava.apple.uikit.UIWindow;
 
 /**
@@ -32,7 +33,7 @@ public class SampleApp extends UIApplicationDelegateAdapter {
     @Override
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
         System.out.println("Sample App Started...");
-        UIWindow win = new UIWindow();
+        UIWindow win = new UIWindow(UIScreen.getMainScreen().getBounds());
         setWindow(win);
         win.setRootViewController(new GameViewController());
         win.makeKeyAndVisible();

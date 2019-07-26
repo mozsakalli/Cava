@@ -62,4 +62,7 @@ public class UIViewController extends UIResponder {
     
     @ObjC("shouldAutorotate")
     public native boolean shouldAutorotate();
+    
+    @ObjC("loadView")
+    public native void loadView();
 }

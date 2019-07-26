@@ -40,7 +40,10 @@ public class UIView extends UIResponder {
         $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
     }
 
-    public CALayer getLayer() {
-        return new CALayer()
+    public <T> T getLayer(Class<? extends CALayer> layerClass) {
+        CALayer layer = (CALayer)layerClass.newInstance();
+        layer.setSub(true);
+        layer.setHandle(NativeCode.VoidPtr("((UIView*)%s).layer", getHandle()));
+        return (T)layer;
     }
 }

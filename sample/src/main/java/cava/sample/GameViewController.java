@@ -16,6 +16,7 @@
 
 package cava.sample;
 
+import cava.annotation.Keep;
 import cava.apple.uikit.UIScreen;
 import cava.apple.uikit.UIViewController;
 
@@ -23,9 +24,12 @@ import cava.apple.uikit.UIViewController;
  *
  * @author mustafa
  */
+@Keep
 public class GameViewController extends UIViewController {
     
     public GameViewController() {
         setView(new GameView(UIScreen.getMainScreen().getBounds()));
     }
+
+    
 }

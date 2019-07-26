@@ -29,9 +29,8 @@ import cava.c.VoidPtr;
 @Include("<QuartzCore/QuartzCore.h>")
 @ObjC
 public class CAEAGLLayer extends CALayer {
-
-    public CAEAGLLayer(VoidPtr handle) {
-        super(handle);
-    }
+    
+    public CAEAGLLayer() {}
+    public CAEAGLLayer(VoidPtr handle) { $handle = handle; $sub = true; }
 
 }

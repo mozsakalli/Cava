@@ -116,8 +116,6 @@ public class ObjCWriter {
     }
     
     void writeMethod(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
-        if(m.name.contains("LayerClass"))
-            System.out.println("...");
         if(m.isStatic()) {
             String[] parts = selector.split(":");
             out.print("+(%s) %s", DecompilerUtils.objcType(cType,m.type), parts[0]);

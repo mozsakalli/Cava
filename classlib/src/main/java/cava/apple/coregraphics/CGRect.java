@@ -47,5 +47,11 @@ public class CGRect extends Struct<CGRect> {
         setOrigin(origin);
         setSize(size);
     }
+
+    @Override
+    public String toString() {
+        return getOrigin()+" "+getSize();
+    }
+    
     
 }

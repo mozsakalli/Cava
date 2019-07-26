@@ -30,6 +30,6 @@ import cava.c.VoidPtr;
 @Include("<QuartzCore/QuartzCore.h>")
 @ObjC
 public class CALayer extends NSObject {
-    
-    public CALayer(VoidPtr handle) { $handle = handle; }
+    public CALayer(){}
+    public CALayer(VoidPtr handle) { $handle = handle; $sub = true; }
 }

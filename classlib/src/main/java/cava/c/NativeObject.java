@@ -32,6 +32,15 @@ public abstract class NativeObject {
 
     public VoidPtr getHandle() { return $handle; }
     
+    public void setHandle(VoidPtr handle) {
+        if($handle != null && !$sub) dispose();
+        $handle = handle;
+    }
+    
+    public void setSub(boolean sub) {
+        $sub = sub;
+    }
+    
     @Override
     protected void finalize() throws Throwable {
         super.finalize();

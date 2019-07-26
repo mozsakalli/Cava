@@ -39,6 +39,7 @@ public class UIWindow extends UIView {
     }*/
     
     public UIWindow(CGRect frame) {
+        System.out.println("bounds = "+frame.getOrigin().getX()+"x"+frame.getOrigin().getY()+" - "+frame.getSize().getWidth()+"x"+frame.getSize().getHeight());
         $handle = NativeCode.VoidPtr("[[UIWindow alloc] initWithFrame:%s]", frame.getStruct());
     }
     

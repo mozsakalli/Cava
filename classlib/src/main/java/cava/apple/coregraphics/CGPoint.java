@@ -40,5 +40,11 @@ public class CGPoint extends Struct<CGPoint> {
         setX(x);
         setY(y);
     }
+
+    @Override
+    public String toString() {
+        return "["+getX()+"x"+getY()+"]";
+    }
+    
     
 }

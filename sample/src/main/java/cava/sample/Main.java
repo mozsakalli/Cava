@@ -17,7 +17,6 @@
 package cava.sample;
 
 import cava.apple.foundation.NSAutoreleasePool;
-import cava.apple.uikit.UIApplication;
 
 /**
  *
@@ -27,8 +26,10 @@ public class Main {
 
     public static void main() {
         try (NSAutoreleasePool pool = new NSAutoreleasePool()) {
-            UIApplication.main(new String[0], (Class)null, SampleApp.class);
-            pool.close();
+            while(true) {
+                
+            }
+            //UIApplication.main(new String[0], (Class)null, SampleApp.class);
         }
     }
 }

@@ -304,6 +304,9 @@ public class CBackend {
                     out.println(") {").indent();
 
                     if(c.isInterface) {
+                        if(m.interfaceTableIndex == -1) {
+                           throw new RuntimeException(m+" extended from "+c.superName);
+                        }
                         generateMethodCallWrapper(out, c, m, cType, "itable", m.interfaceTableIndex);// ITableCalculator.getIfaceIndex(m));
                         out.undent().println("}");
                     } else {
@@ -585,6 +588,7 @@ public class CBackend {
             HashSet<Integer> used = new HashSet();
             while(kk != null) {
                 for(Method m : kk.methods) {
+                    if(m.name.equals("hasNext")) System.out.println(m+" : "+m.interfaceTableIndex);
                     if(m.interfaceTableIndex == -1) continue;
                     if(!used.contains(m.interfaceTableIndex)) {
                         if(m.isAbstract())

@@ -116,7 +116,21 @@ public class DependencyAnalyzer {
                     ic.interfaceTableSize = Math.max(ic.interfaceTableSize, im.interfaceTableIndex+1);
                 }
             }
+            
+            if(root.name.contains("hasNext"))
+                System.out.println(root+" -> "+children);
         }
+        /*
+        CompilerContext.classes.values().forEach(ic -> {
+            if(ic.isInterface && ic.superName != null && !ic.superName.equals("java/lang/Object")) {
+                final Clazz sc = CompilerContext.resolve(ic.superName);
+                ic.methods.forEach(im -> {
+                    if(im.usedInProject) {
+                        Method sim = sc.findMethod(im.name, im.signature);
+                    }
+                });
+            }
+        });*/
         
         //correct interface table sizes
         CompilerContext.classes.values().forEach(mc -> {
@@ -205,11 +219,35 @@ public class DependencyAnalyzer {
 
                     //build interface tree
                     for(Clazz ic : interfaceList) {
-                        Method im = ic.findDeclaredMethod(m.name, m.signature);
+                        Method im = findInterfaceRootMethod(ic, m);                    
                         if(im != null) {
                             set = iRoot.computeIfAbsent(im, (k) -> new HashSet());
                             set.add(m);
+                            if(!im.declaringClass.equals(ic.name)) {
+                                //interface was extended from another interface
+                                //add child interface methods to root set
+                                //like interface java.util.List extends java.util.Collection
+                                Clazz iic = ic;
+                                while(iic != null) {
+                                    Method iim = iic.findDeclaredMethod(m.name, m.signature);
+                                    if(iim != null) set.add(iim);
+                                    if(iic.superName == null || iic.superName.equals("java/lang/Object")) break;
+                                    iic = CompilerContext.resolve(iic.superName);
+                                }
+                                System.out.println(ic+" -> "+im);
+                            }
                         }
+                        /*
+                        Method im = ic.findDeclaredMethod(m.name, m.signature);
+                        if(im != null) {
+                            //interface extended from another interface
+                            if(im.declaringClass.equals(ic.name) && ic.superName != null && !ic.superName.equals("java/lang/Object")) {
+                                Clazz sic = CompilerContext.resolve(ic.superName);
+                                Method sim = sic.findDeclaredMethod(m.name, m.signature);
+                            }
+                            set = iRoot.computeIfAbsent(im, (k) -> new HashSet());
+                            set.add(m);
+                        }*/
                     }
                 }
             }
@@ -225,6 +263,20 @@ public class DependencyAnalyzer {
             if(field.usedInProject)
                 dependsClass(field.type);
         });
+    }
+    
+    
+    Method findInterfaceRootMethod(Clazz ic, Method m) {
+        Method im = ic.findDeclaredMethod(m.name, m.signature);
+        if(im != null) {
+            //interface extended from another interface
+            if(ic.superName != null && !ic.superName.equals("java/lang/Object")) {
+                Clazz sic = CompilerContext.resolve(ic.superName);
+                Method sim = sic.findMethod(m.name, m.signature);
+                if(sim != null) return sim;
+            }
+        }
+        return im;
     }
     
     void collectInterfaces(Clazz c, Set<Clazz> set) {

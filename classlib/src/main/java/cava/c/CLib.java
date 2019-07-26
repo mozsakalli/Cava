@@ -29,4 +29,8 @@ public class CLib {
     public static void memcpy(Object dst, Object src, int size) {
         NativeCode.Void("memcpy(%s, %s, %s)", dst, src, size);
     }
+    
+    public static int strlen(Object str) {
+        return NativeCode.Int("strlen(%s)", str);
+    } 
 }

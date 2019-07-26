@@ -96,7 +96,7 @@ public class IOSApplication implements Application {
 
     final boolean didFinishLaunching(UIApplication uiApp, NSDictionary options, Delegate delegate) {
         Gdx.app = this;
-        graphics = new IOSGraphics(this);
+        Gdx.graphics = this.graphics = new IOSGraphics(this);
         Gdx.gl = Gdx.gl20 = graphics.gl20;
         Gdx.gl30 = graphics.gl30;
 
@@ -238,10 +238,29 @@ public class IOSApplication implements Application {
     }
 
     @Override
-    public void postRunnable(Runnable r) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void postRunnable(Runnable runnable) {
+        synchronized (runnables) {
+            runnables.add(runnable);
+            Gdx.graphics.requestRendering();
+        }
     }
 
+    public void processRunnables() {
+        synchronized (runnables) {
+            executedRunnables.clear();
+            executedRunnables.addAll(runnables);
+            runnables.clear();
+        }
+        for (int i = 0; i < executedRunnables.size; i++) {
+            try {
+                executedRunnables.get(i).run();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+    
     @Override
     public void exit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

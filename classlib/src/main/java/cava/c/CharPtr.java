@@ -71,7 +71,22 @@ public class CharPtr {
         NativeCode.Void("((char*)%s)[%s] = (char)%s", this, index, value);
     }
     
+    public byte get(int index) {
+        return NativeCode.Byte("((char*)%s)[%s]", this, index);
+    }
+    
     public CharPtr add(int amount) {
         return NativeCode.CharPtr("(char*)%s + %s", this, amount);
+    }
+    
+    public char[] toCharArray() {
+        int len = CLib.strlen(this);
+        char[] chars = new char[len];
+        for(int i=0; i<len; i++) chars[i] = (char)this.get(i);
+        return chars;
+    }
+    
+    public String toJavaString() {
+        return new String(toCharArray());
     }
 }

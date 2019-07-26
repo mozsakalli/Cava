@@ -77,8 +77,9 @@ public class Clazz implements Serializable {
             return CompilerContext.resolve("java/lang/Object").findDeclaredMethod(name, signature);
         
         for(Method m : methods)
-            if(m.name.equals(name) && m.signature.equals(signature))
+            if(m.name.equals(name) && m.signature.equals(signature)) {
                 return m;
+            }
         
         return null;
     }

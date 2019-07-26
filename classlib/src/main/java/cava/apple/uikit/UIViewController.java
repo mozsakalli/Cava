@@ -19,7 +19,6 @@ package cava.apple.uikit;
 import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -48,6 +47,7 @@ public class UIViewController extends UIResponder {
     */
     public void setView(UIView view) {
         this.view = view;
+        view.setSub(true);
         NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
     }
     

@@ -196,18 +196,6 @@ public class CompilerContext {
     static Clazz patchClass(Clazz clazz) {
         if(clazz.name.equals("java/lang/Object")) {
             clazz.superName = null;
-            /*
-            Method m = new Method();
-            m.name = "getClass";
-            m.signature = "()Ljava/lang/Class;";
-            m.modifiers = Modifier.NATIVE | Modifier.PUBLIC;
-            m.usedInProject = true;
-            m.declaringClass = "java/lang/Object";
-            m.type = "java/lang/Class";
-            Block b = new Block();
-            b.children.add(new Return(new NativeCode("$_self.c")));
-            m.body = b;
-            clazz.methods.add(m);*/
         }
         
         return clazz;

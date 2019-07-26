@@ -18,6 +18,7 @@ package com.cava.gdx;
 import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.Keep;
+import cava.c.CLib;
 import cava.c.CharPtr;
 import cava.platform.NativeCode;
 import com.badlogic.gdx.graphics.GL20;
@@ -32,8 +33,10 @@ import java.nio.IntBuffer;
 @Include("<OpenGLES/ES2/gl.h> <OpenGLES/ES2/glext.h>")
 @Framework("OpenGLES.framework")
 @Keep
-public class IOSGL20 implements GL20 {
+public class IOSGLES20 implements GL20 {
 
+    public static int x,y,width,height;
+    
     @Override
     public void glActiveTexture(int texture) {
         NativeCode.Void("glActiveTexture(%s)", texture);
@@ -377,7 +380,8 @@ public class IOSGL20 implements GL20 {
 
     @Override
     public String glGetString(int name) {
-        return null;
+        CharPtr ascii = NativeCode.CharPtr("glGetString(%s)", name);
+        return ascii == null ? "" : ascii.toJavaString();
     }
 
     @Override

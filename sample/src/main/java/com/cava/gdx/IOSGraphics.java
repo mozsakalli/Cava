@@ -25,6 +25,7 @@ import cava.apple.glkit.GLKViewDelegate;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIScreen;
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.LifecycleListener;
@@ -75,7 +76,6 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
             graphics.view.setContext(graphics.context);
         }
 
-        
     }
 
     GL20 gl20;
@@ -90,6 +90,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     IOSApplication app;
     EAGLContext context;
+    GLVersion glVersion;
     GLKView view;
     IOSUIViewController viewController;
 
@@ -98,16 +99,18 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     private boolean isContinuous = true;
     private boolean isFrameRequested = true;
 
+    boolean created;
+
     public IOSGraphics(IOSApplication app) {
         this.app = app;
 
         final CGRect bounds = UIScreen.getMainScreen().getBounds();
-        System.out.println("bounds="+bounds.getOrigin().getX()+"x"+bounds.getOrigin().getY()+" - "+
-                bounds.getSize().getWidth()+"x"+bounds.getSize().getHeight());
+        System.out.println("bounds=" + bounds.getOrigin().getX() + "x" + bounds.getOrigin().getY() + " - "
+                + bounds.getSize().getWidth() + "x" + bounds.getSize().getHeight());
         context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
         if (context.getHandle() != null) {
             System.out.println("OpenGL2.0 detected");
-            gl20 = new IOSGL20();
+            gl20 = new IOSGLES20();
         }
         view = new GLKView(bounds, context);
         view.setDelegate(this);
@@ -152,12 +155,54 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     // Delegate methods
     @Override
     public void draw(GLKView view, CGRect rect) {
-        System.out.println("draw");
+        makeCurrent();
+        // massive hack, GLKView resets the viewport on each draw call, so IOSGLES20
+        // stores the last known viewport and we reset it here...
+        gl20.glViewport(IOSGLES20.x, IOSGLES20.y, IOSGLES20.width, IOSGLES20.height);
+
+        if (!created) {
+            gl20.glViewport(0, 0, width, height);
+
+            String versionString = gl20.glGetString(GL20.GL_VERSION);
+            String vendorString = gl20.glGetString(GL20.GL_VENDOR);
+            String rendererString = gl20.glGetString(GL20.GL_RENDERER);
+            System.out.println(versionString+"/"+vendorString+"/"+rendererString);
+            glVersion = new GLVersion(Application.ApplicationType.iOS, versionString, vendorString, rendererString);
+
+            app.listener.create();
+            app.listener.resize(width, height);
+            created = true;
+        }
+        if (appPaused) {
+            return;
+        }
+
+        long time = System.nanoTime();
+        deltaTime = (time - lastFrameTime) / 1000000000.0f;
+        lastFrameTime = time;
+
+        frames++;
+        if (time - framesStart >= 1000000000l) {
+            framesStart = time;
+            fps = frames;
+            frames = 0;
+        }
+
+        //todo: input.processEvents();
+        frameId++;
+        app.listener.render();
     }
 
     @Override
     public void update(GLKViewController controller) {
-        System.out.println("update");
+        makeCurrent();
+        app.processRunnables();
+        // pause the GLKViewController render loop if we are no longer continuous
+        // and if we haven't requested a frame in the last loop iteration
+        if (!isContinuous && !isFrameRequested) {
+            viewController.setPaused(true);
+        }
+        isFrameRequested = false;
     }
 
     @Override
@@ -166,10 +211,10 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     }
     // Delegate methods
 
-    void makeCurrent () {
+    void makeCurrent() {
         EAGLContext.setCurrentContext(context);
-    }   
-    
+    }
+
     @Override
     public boolean isGL30Available() {
         return gl30 != null;

@@ -47,8 +47,8 @@ public class UIViewController extends UIResponder {
     */
     public void setView(UIView view) {
         this.view = view;
-        view.setSub(true);
-        NativeCode.Void("((UIViewController*)%s).view = %s", getHandle(), view.getHandle());
+        view.setNoOwner(true);
+        NativeCode.Void("((UIViewController*)%s).view = %s", getNativePeer(), view.getNativePeer());
     }
     
     @ObjC("viewWillAppear")

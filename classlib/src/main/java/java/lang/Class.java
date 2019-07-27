@@ -48,6 +48,12 @@ public final class Class<T> {
     public Method[] methods;
     
     public static java.lang.Class forName(java.lang.String className)  {
+        switch(className) {
+            case "[B": return byte[].class;
+            case "[Z": return boolean[].class;
+            case "[S": return short[].class;
+            case "[C": return char[].class;
+        }
         VoidPtrPtr ptr = NativeCode.VoidPtrPtr("JVMCLASSPATH");
         int index = 0;
         Object value = ptr.get(index);
@@ -79,7 +85,7 @@ public final class Class<T> {
     public Constructor getConstructor(Class[] args) {
         Method result = getMethod("<init>", args);
         if(result != null) {
-            result.$$$$klass = Constructor.class; //hack for ClassCastException
+            result.klass = Constructor.class; //hack for ClassCastException
         }
         return (Constructor)result;
     }

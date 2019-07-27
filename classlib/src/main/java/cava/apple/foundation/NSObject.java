@@ -41,17 +41,17 @@ public class NSObject extends NativeObject {
     
     public NSObject(VoidPtr handle) { this(handle, false); }
     public NSObject(VoidPtr handle, boolean sub) {
-        this.$handle = handle;
-        this.$sub = sub;
+        this.nativePeer = handle;
+        this.noOwner = sub;
         //if(!getClass().getName().contains("NSString"))
         //    System.out.println("-- nsobject-init: "+getClass().getName());
     }
     
     @Override
     public void dispose() {
-        if($handle != null) {
-            NativeCode.Void("[(NSObject*)%s dealloc]", $handle );
-            $handle = null;
+        if(nativePeer != null) {
+            NativeCode.Void("[(NSObject*)%s dealloc]", nativePeer );
+            nativePeer = null;
         }
     }
 
@@ -71,7 +71,7 @@ public class NSObject extends NativeObject {
     
     public static <T extends NSObject> T alloc(Class<? extends NSObject> cls) {
         NSObject result = (NSObject)cls.newInstance();
-        result.$handle = NativeCode.VoidPtr("[%s alloc]", getObjCClass(cls));
+        result.nativePeer = NativeCode.VoidPtr("[%s alloc]", getObjCClass(cls));
         return (T)result;
     }
 }

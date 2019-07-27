@@ -39,6 +39,8 @@ public class ClassInitInserter {
         Set<Method> seen = new HashSet();
         Set<String> depends = new HashSet();
         
+        if(m.declaringClass.contains("VertexBufferObjectWithVAO"))
+            System.out.println("...");
         queue.add(m);
         final Method root = m;
         while(!queue.isEmpty()) {
@@ -61,12 +63,9 @@ public class ClassInitInserter {
                 
                 @Override
                 public void call(Call c) {
-                    //if we call a method inside same class, we may need to initialize another references
-                    if(c.className.equals(root.declaringClass)) {
-                        Method called = CompilerContext.resolve(c.className).findDeclaredMethod(c.methodName, c.signature);
-                        if(!seen.contains(called) && !queue.contains(called))
-                            queue.add(called);
-                    }
+                    Method called = CompilerContext.resolve(c.className).findDeclaredMethod(c.methodName, c.signature);
+                    if(!seen.contains(called) && !queue.contains(called))
+                        queue.add(called);
                 }
 
             });            
@@ -76,4 +75,6 @@ public class ClassInitInserter {
             root.body.children.add(0, new ClassInit(n));
         });
     }
+    
+    
 }

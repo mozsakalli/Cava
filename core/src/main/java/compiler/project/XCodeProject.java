@@ -22,12 +22,14 @@ import compiler.backend.SourceWriter;
 import compiler.backend.c.A;
 import compiler.model.Clazz;
 import compiler.project.xcode.PBXProject;
+import compiler.util.FileUtil;
 import compiler.util.IosDevice;
 import compiler.util.XCodeUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
@@ -66,20 +68,49 @@ public class XCodeProject extends Project {
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86"));
         
         addRequiredFrameworks();
+        pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "bucket.png"));
+        pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "droplet.png"));
+        //pbxProject.addResourceFile("", new File(CompilerContext.platformBuildDir, "assets"));
         
         SourceWriter out = new SourceWriter();
         pbxProject.export(out);
         
         new FileOutputStream(new File(projectDir,"project.pbxproj")).write(out.toString().getBytes());
+        
     }
     
-    void addRequiredFrameworks() {
+    void addRequiredFrameworks() throws Exception {
         Set<String> usedFrameworks = new HashSet();
+        Set<String> usedResources = new HashSet();
+        
         for(Clazz clazz : CompilerContext.classes.values()) {
             String framework = A.framework(clazz);
             if(framework != null && !framework.isEmpty() && !usedFrameworks.contains(framework)) {
                 usedFrameworks.add(framework);
                 pbxProject.addFramework(framework, null);
+            }
+            
+            Map<String, Object> map = A.get(clazz, A.Resource);
+            if(map != null && !map.isEmpty()) {
+                Object[] resources = (Object[])map.get("value");
+                for(Object res : resources) {
+                    String path = res.toString();
+                    if(!path.isEmpty() && !usedResources.contains(path)) {
+                        usedResources.add(path);
+                        if(!path.startsWith("/")) path = "/" + path;
+                        boolean isSourceCode = path.endsWith(".c") || path.endsWith(".cpp")
+                                || path.endsWith(".m") || path.endsWith(".mm")
+                                || path.endsWith(".h") || path.endsWith(".hpp");
+                        if(isSourceCode) {
+                            String p = path;
+                            if(p.startsWith("/")) p = p.substring(1);
+                            File dest = new File(CompilerContext.platformBuildDir, "generated/"+p);
+                            System.out.println("resource: "+path);
+                            FileUtil.copyFile(getClass().getResourceAsStream(path), dest);
+                            pbxProject.addSourceFile(path, dest);
+                        }
+                    }
+                }
             }
         }
             

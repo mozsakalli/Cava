@@ -72,8 +72,13 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
         @Override
         public void viewDidLayoutSubviews() {
-            graphics.context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
-            graphics.view.setContext(graphics.context);
+            CGRect bounds = app.getBounds();
+            graphics.width = (int)bounds.getWidth();
+            graphics.height = (int)bounds.getHeight();
+            graphics.makeCurrent();
+            if (graphics.created) {
+                app.listener.resize(graphics.width, graphics.height);
+            }
         }
 
     }
@@ -89,6 +94,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     int fps;
 
     IOSApplication app;
+    IOSApplicationConfiguration config;
     EAGLContext context;
     GLVersion glVersion;
     GLKView view;
@@ -101,14 +107,18 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     boolean created;
 
-    public IOSGraphics(IOSApplication app) {
+    public IOSGraphics(IOSApplication app, IOSApplicationConfiguration config) {
+        this.config = config;
         this.app = app;
-
-        final CGRect bounds = UIScreen.getMainScreen().getBounds();
+        final CGRect bounds = app.getBounds();
+        // setup view and OpenGL
+        width = (int)bounds.getWidth();
+        height = (int)bounds.getHeight();
         System.out.println("bounds=" + bounds.getOrigin().getX() + "x" + bounds.getOrigin().getY() + " - "
                 + bounds.getSize().getWidth() + "x" + bounds.getSize().getHeight());
+        
         context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
-        if (context.getHandle() != null) {
+        if (context.getNativePeer() != null) {
             System.out.println("OpenGL2.0 detected");
             gl20 = new IOSGLES20();
         }
@@ -253,52 +263,52 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public int getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return width;
     }
 
     @Override
     public int getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return height;
     }
 
     @Override
     public int getBackBufferWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return width;
     }
 
     @Override
     public int getBackBufferHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return height;
     }
 
     @Override
     public long getFrameId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return frameId;
     }
 
     @Override
     public float getDeltaTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return deltaTime;
     }
 
     @Override
     public float getRawDeltaTime() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return deltaTime;
     }
 
     @Override
     public int getFramesPerSecond() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return fps;
     }
 
     @Override
     public GraphicsType getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return GraphicsType.iOSGL;
     }
 
     @Override
     public GLVersion getGLVersion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return glVersion;
     }
 
     @Override
@@ -407,18 +417,26 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     }
 
     @Override
-    public void setContinuousRendering(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setContinuousRendering(boolean isContinuous) {
+        if (isContinuous != this.isContinuous) {
+            this.isContinuous = isContinuous;
+            // start the GLKViewController if we go from non-continuous -> continuous
+            if (isContinuous) viewController.setPaused(false);
+        }
     }
 
     @Override
     public boolean isContinuousRendering() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return isContinuous;
     }
 
+
     @Override
-    public void requestRendering() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void requestRendering () {
+            isFrameRequested = true;
+            // start the GLKViewController if we are in non-continuous mode
+            // (we should already be started in continuous mode)
+            if (!isContinuous) viewController.setPaused(false);
     }
 
     @Override

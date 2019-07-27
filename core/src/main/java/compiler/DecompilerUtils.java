@@ -19,6 +19,7 @@ package compiler;
 import com.strobel.assembler.metadata.GenericParameter;
 import com.strobel.assembler.metadata.TypeReference;
 import com.strobel.assembler.metadata.annotations.AnnotationElement;
+import com.strobel.assembler.metadata.annotations.ArrayAnnotationElement;
 import com.strobel.assembler.metadata.annotations.ConstantAnnotationElement;
 import com.strobel.assembler.metadata.annotations.CustomAnnotation;
 import compiler.backend.c.A;
@@ -126,6 +127,19 @@ public class DecompilerUtils {
         return !isPrimitive(type) && !isArray(type) ? CompilerContext.resolve(type).isStruct() : false;
     }
     
+    static Object parseAnnotationElement(AnnotationElement e) {
+        if(e instanceof ConstantAnnotationElement)
+            return ((ConstantAnnotationElement)e).getConstantValue();
+        if(e instanceof ArrayAnnotationElement) {
+            ArrayAnnotationElement ae = (ArrayAnnotationElement)e;
+            Object[] result = new Object[ae.getElements().length];
+            for(int i=0; i<result.length; i++)
+                result[i] = parseAnnotationElement(ae.getElements()[i]);
+            return result;
+        }
+        throw new RuntimeException("Unknown annotation parameter: "+e);
+    }
+    
     public static Map<String, Map<String,Object>> parseAnnotations(List<CustomAnnotation> list) {
         final Map<String, Map<String,Object>> result = new HashMap();
         if(list != null)
@@ -134,10 +148,7 @@ public class DecompilerUtils {
             final Map<String,Object> params = new HashMap();
             a.getParameters().forEach(ap -> {
                 String name = ap.getMember();
-                AnnotationElement e = ap.getValue();
-                if(e instanceof ConstantAnnotationElement)
-                    params.put(name, ((ConstantAnnotationElement)e).getConstantValue());
-                //else throw new RuntimeException("Unknown annotation parameter: "+e);
+                params.put(name, parseAnnotationElement(ap.getValue()));
             });
             result.put(an, params);
         });

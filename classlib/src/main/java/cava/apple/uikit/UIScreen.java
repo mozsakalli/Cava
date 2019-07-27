@@ -32,8 +32,8 @@ import cava.platform.NativeCode;
 public class UIScreen extends NSObject {
     
     private UIScreen(VoidPtr handle) { 
-        $handle = handle;
-        $sub = true;
+        nativePeer = handle;
+        noOwner = true;
     }
     
     public static UIScreen getMainScreen() {
@@ -41,7 +41,7 @@ public class UIScreen extends NSObject {
     }
     
     public CGRect getBounds() {
-        return new CGRect(NativeCode.Struct("[(UIScreen*)%s bounds]",getHandle())); 
+        return new CGRect(NativeCode.Struct("[(UIScreen*)%s bounds]",getNativePeer())); 
     }
 
 }

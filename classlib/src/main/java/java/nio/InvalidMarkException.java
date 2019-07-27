@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package cava.annotation;
+package java.nio;
 
 /**
  *
  * @author mustafa
  */
-public @interface MethodBody {
-    
-    public String value();
-    
+public class InvalidMarkException extends IllegalStateException {
+
+    private static final long serialVersionUID = 1698329710438510774L;
+
+    /**
+     * Constructs an {@code InvalidMarkException}.
+     */
+    public InvalidMarkException() {
+    }
+
+    /**
+     * Constructs an {@code InvalidMarkException} with the given detail message.
+     * @hide
+     */
+    public InvalidMarkException(String detailMessage) {
+        super(detailMessage);
+    }
 }

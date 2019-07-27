@@ -117,7 +117,7 @@ public class DependencyAnalyzer {
                 }
             }
             
-            if(root.name.contains("hasNext"))
+            if(root.declaringClass.contains("Closeable"))
                 System.out.println(root+" -> "+children);
         }
         /*
@@ -234,20 +234,28 @@ public class DependencyAnalyzer {
                                     if(iic.superName == null || iic.superName.equals("java/lang/Object")) break;
                                     iic = CompilerContext.resolve(iic.superName);
                                 }
-                                System.out.println(ic+" -> "+im);
                             }
                         }
-                        /*
-                        Method im = ic.findDeclaredMethod(m.name, m.signature);
-                        if(im != null) {
-                            //interface extended from another interface
-                            if(im.declaringClass.equals(ic.name) && ic.superName != null && !ic.superName.equals("java/lang/Object")) {
-                                Clazz sic = CompilerContext.resolve(ic.superName);
-                                Method sim = sic.findDeclaredMethod(m.name, m.signature);
-                            }
-                            set = iRoot.computeIfAbsent(im, (k) -> new HashSet());
-                            set.add(m);
-                        }*/
+                    }
+                } else {
+                    //interface method loaded after root interface
+                    //this fixes java.io.Closeable extends java.lang.AutoCloseable interface
+                    //Closeable loaded after AutoCloseable ...
+                    Method rootMethod = findInterfaceRootMethod(c, m);
+                    if(rootMethod != null) {
+                        Set<Method> set = iRoot.computeIfAbsent(rootMethod, (k) -> new HashSet());
+                        set.add(m);
+                        //we have interface extended from another interface
+                        //add all extended interface methods to correct root
+                        if(!rootMethod.declaringClass.equals(m.declaringClass)) {
+                            Clazz iic = c;
+                            while(iic != null) {
+                                Method iim = iic.findDeclaredMethod(m.name, m.signature);
+                                if(iim != null) set.add(iim);
+                                if(iic.superName == null || iic.superName.equals("java/lang/Object")) break;
+                                iic = CompilerContext.resolve(iic.superName);
+                            }                            
+                        }
                     }
                 }
             }

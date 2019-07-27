@@ -20,7 +20,7 @@ package java.io;
  * Applications that need to define a subclass of OutputStream must always provide at least a method that writes one byte of output.
  * Since: JDK1.0, CLDC 1.0 See Also:ByteArrayOutputStream, DataOutputStream, InputStream, write(int)
  */
-public abstract class OutputStream{
+public abstract class OutputStream implements Closeable {
     public OutputStream(){
     }
 

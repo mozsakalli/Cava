@@ -42,8 +42,8 @@ public class GLKView extends UIView {
     }
     
     public GLKView(CGRect frame, EAGLContext context) {
-        $handle = NativeCode.VoidPtr("[[GLKView alloc] initWithFrame:%s context:(EAGLContext*)%s]", 
-                frame.getStruct(), context != null ? context.getHandle() : null);
+        nativePeer = NativeCode.VoidPtr("[[GLKView alloc] initWithFrame:%s context:(EAGLContext*)%s]", 
+                frame.getStruct(), context != null ? context.getNativePeer() : null);
         this.context = context;
     }
     
@@ -53,13 +53,13 @@ public class GLKView extends UIView {
     
     public void setDelegate(GLKViewDelegate delegate) {
         this.delegate = delegate;
-        ((NSObject)delegate).setSub(true);
-        NativeCode.Void("((GLKView*)%s).delegate = %s", getHandle(), ((NSObject)delegate).getHandle());
+        ((NSObject)delegate).setNoOwner(true);
+        NativeCode.Void("((GLKView*)%s).delegate = %s", getNativePeer(), ((NSObject)delegate).getNativePeer());
     }
 
     public EAGLContext getContext() { return context; }
     public void setContext(EAGLContext context) {
         this.context = context;
-        NativeCode.Void("[((GLKView*)%s) setContext:%s]", $handle, context.getHandle());
+        NativeCode.Void("[((GLKView*)%s) setContext:%s]", nativePeer, context.getNativePeer());
     }
 }

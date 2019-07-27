@@ -31,6 +31,6 @@ import cava.c.VoidPtr;
 public class CAEAGLLayer extends CALayer {
     
     public CAEAGLLayer() {}
-    public CAEAGLLayer(VoidPtr handle) { $handle = handle; $sub = true; }
+    public CAEAGLLayer(VoidPtr handle) { nativePeer = handle; noOwner = true; }
 
 }

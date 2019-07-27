@@ -37,7 +37,7 @@ public class ConsolePrintStream extends PrintStream {
     }
 
     private void printImpl(StringBuilder buffer){
-        NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).getHandle());
+        NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).getNativePeer());
     } 
     
     @Override

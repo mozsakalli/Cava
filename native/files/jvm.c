@@ -217,7 +217,7 @@ JvmArray* JvmAllocPrimArray1(JvmClass* klass, jint length) {
     return array;
 }
 JvmArray* JvmAllocObjectArray1(JvmClass* klass, jint length) {
-    JvmArray* array = (JvmArray*)gcAllocAtomic(sizeof(JvmArray) + (sizeof(jobject)) * length);
+    JvmArray* array = (JvmArray*)gcAlloc(sizeof(JvmArray) + (sizeof(jobject)) * length);
     array->klass = klass;
     array->len = length;
     return array;

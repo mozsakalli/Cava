@@ -30,11 +30,11 @@ import cava.platform.NativeCode;
 public class EAGLContext extends NSObject {
     
     public EAGLContext(EAGLRenderingAPI api) {
-        $handle = NativeCode.VoidPtr("[[EAGLContext alloc] initWithAPI:%s]", api.value());
-        System.out.println("EAGLContext: "+NativeCode.Long("(jlong)%s", $handle)+" api="+api.value());
+        nativePeer = NativeCode.VoidPtr("[[EAGLContext alloc] initWithAPI:%s]", api.value());
+        System.out.println("EAGLContext: "+NativeCode.Long("(jlong)%s", nativePeer)+" api="+api.value());
     }
 
     public static void setCurrentContext(EAGLContext context) {
-        NativeCode.Void("[EAGLContext setCurrentContext:%s]", context.getHandle());
+        NativeCode.Void("[EAGLContext setCurrentContext:%s]", context.getNativePeer());
     }
 }

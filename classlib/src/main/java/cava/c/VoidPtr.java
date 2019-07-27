@@ -18,6 +18,7 @@ package cava.c;
 
 import cava.annotation.Native;
 import cava.platform.NativeCode;
+import java.nio.Buffer;
 
 /**
  *
@@ -29,6 +30,23 @@ public class VoidPtr {
     public static VoidPtr from(Object o) {
         return NativeCode.VoidPtr("(void*)%s", o);
     }
+
+    public static VoidPtr from(Object o, int byteOffset) {
+        return NativeCode.VoidPtr("(void*)((char*)%s + %s)", o, byteOffset);
+    }
+    
+    public static VoidPtr from(Buffer buffer) {
+        return buffer.getAddress();
+    }
+
+    public static VoidPtr from(Buffer buffer, int byteOffset) {
+        return NativeCode.VoidPtr("(void*)((char*)%s + %s)", buffer.getAddress(), byteOffset);
+    }
+    
+    public static VoidPtr fromAnyArray(Object array) {
+        return NativeCode.VoidPtr("(void*)JvmArrayData(%s)", array);
+    }
+    
     
     public int toInt() {
         return NativeCode.Int("(jint)%s", this);

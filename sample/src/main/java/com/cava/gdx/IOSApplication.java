@@ -15,6 +15,8 @@
  */
 package com.cava.gdx;
 
+import cava.annotation.Resource;
+import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
@@ -39,6 +41,11 @@ import com.badlogic.gdx.utils.Clipboard;
  *
  * @author mustafa
  */
+@Resource({
+    "com/badlogic/gdx/Matrix4Cava.c",
+    "com/badlogic/gdx/gdx2dCava.c",
+    "com/badlogic/gdx/stb_image.h",
+    "com/badlogic/gdx/ETC1.c",})
 public class IOSApplication implements Application {
 
     public static abstract class Delegate extends UIApplicationDelegateAdapter {
@@ -83,22 +90,36 @@ public class IOSApplication implements Application {
     }
 
     ApplicationListener listener;
+    IOSApplicationConfiguration config;
     IOSGraphics graphics;
+    IOSAudio audio;
+    IOSFiles files;
+    IOSInput input;
+
     UIWindow uiWindow;
 
     Array<Runnable> runnables = new Array<Runnable>();
     Array<Runnable> executedRunnables = new Array<Runnable>();
     Array<LifecycleListener> lifecycleListeners = new Array<LifecycleListener>();
 
-    public IOSApplication(ApplicationListener listener) {
+    public IOSApplication(ApplicationListener listener, IOSApplicationConfiguration config) {
         this.listener = listener;
+        this.config = config;
     }
 
     final boolean didFinishLaunching(UIApplication uiApp, NSDictionary options, Delegate delegate) {
         Gdx.app = this;
-        Gdx.graphics = this.graphics = new IOSGraphics(this);
+        this.graphics = new IOSGraphics(this, config);
+        this.files = new IOSFiles();
+        this.audio = new IOSAudio();
+        this.input = new IOSInput(this);
+
+        Gdx.graphics = this.graphics;
         Gdx.gl = Gdx.gl20 = graphics.gl20;
         Gdx.gl30 = graphics.gl30;
+        Gdx.files = this.files;
+        Gdx.audio = this.audio;
+        Gdx.input = this.input;
 
         uiWindow = new UIWindow(UIScreen.getMainScreen().getBounds());
         delegate.setWindow(uiWindow);
@@ -127,6 +148,57 @@ public class IOSApplication implements Application {
         return uiWindow;
     }
 
+    /**
+     * GL View spans whole screen, that is, even under the status bar. iOS can
+     * also rotate the screen, which is not handled consistently over iOS
+     * versions. This method returns, in pixels, rectangle in which libGDX
+     * draws.
+     *
+     * @return dimensions of space we draw to, adjusted for device orientation
+     */
+    protected CGRect getBounds() {
+        final CGRect screenBounds = UIScreen.getMainScreen().getBounds();
+        /*
+        final CGRect statusBarFrame = uiApp.getStatusBarFrame();
+        final UIInterfaceOrientation statusBarOrientation = uiApp.getStatusBarOrientation();
+
+        double statusBarHeight = Math.min(statusBarFrame.getWidth(), statusBarFrame.getHeight());
+
+        double screenWidth = screenBounds.getWidth();
+        double screenHeight = screenBounds.getHeight();
+
+        // Make sure that the orientation is consistent with ratios. Should be, but may not be on older iOS versions
+        switch (statusBarOrientation) {
+            case LandscapeLeft:
+            case LandscapeRight:
+                if (screenHeight > screenWidth) {
+                    debug("IOSApplication", "Switching reported width and height (w=" + screenWidth + " h=" + screenHeight + ")");
+                    double tmp = screenHeight;
+                    // noinspection SuspiciousNameCombination
+                    screenHeight = screenWidth;
+                    screenWidth = tmp;
+                }
+        }
+
+        // update width/height depending on display scaling selected
+        screenWidth *= displayScaleFactor;
+        screenHeight *= displayScaleFactor;
+
+        if (statusBarHeight != 0.0) {
+            debug("IOSApplication", "Status bar is visible (height = " + statusBarHeight + ")");
+            statusBarHeight *= displayScaleFactor;
+            screenHeight -= statusBarHeight;
+        } else {
+            debug("IOSApplication", "Status bar is not visible");
+        }
+
+        debug("IOSApplication", "Total computed bounds are w=" + screenWidth + " h=" + screenHeight);
+
+        return lastScreenBounds = new CGRect(0.0, statusBarHeight, screenWidth, screenHeight);
+        */
+        return screenBounds;
+    }
+
     @Override
     public ApplicationListener getApplicationListener() {
         return listener;
@@ -134,22 +206,22 @@ public class IOSApplication implements Application {
 
     @Override
     public Graphics getGraphics() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return graphics;
     }
 
     @Override
     public Audio getAudio() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return audio;
     }
 
     @Override
     public Input getInput() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return input;
     }
 
     @Override
     public Files getFiles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return files;
     }
 
     @Override
@@ -260,7 +332,6 @@ public class IOSApplication implements Application {
         }
     }
 
-    
     @Override
     public void exit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

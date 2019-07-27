@@ -305,7 +305,7 @@ public class CBackend {
 
                     if(c.isInterface) {
                         if(m.interfaceTableIndex == -1) {
-                           throw new RuntimeException(m+" extended from "+c.superName);
+                           throw new RuntimeException(m+" doesn't have any implementation which extended from "+c.superName);
                         }
                         generateMethodCallWrapper(out, c, m, cType, "itable", m.interfaceTableIndex);// ITableCalculator.getIfaceIndex(m));
                         out.undent().println("}");
@@ -336,7 +336,7 @@ public class CBackend {
                             String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
                             out.println("/* create objc: %s */", objcName);
                             
-                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_$handle = [[%s alloc] init];", 
+                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_nativePeer = [[%s alloc] init];", 
                                     objcName, objcName)
                                 .println("objcPeer->javaPeer = pthis;");    
                             
@@ -591,9 +591,10 @@ public class CBackend {
                     if(m.name.equals("hasNext")) System.out.println(m+" : "+m.interfaceTableIndex);
                     if(m.interfaceTableIndex == -1) continue;
                     if(!used.contains(m.interfaceTableIndex)) {
-                        if(m.isAbstract())
-                        out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(m));
-                        else
+                        if(m.isAbstract()) {
+                            Method vm = CompilerContext.resolve(m.virtualBaseClass).findDeclaredMethod(m.name, m.signature);
+                            out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(vm));
+                        } else
                         out.println("_iTable[%d] = (void*)&%s;", m.interfaceTableIndex, naming.method(m));
                         used.add(m.interfaceTableIndex);
                     }

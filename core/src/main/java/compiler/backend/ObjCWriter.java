@@ -133,15 +133,65 @@ public class ObjCWriter {
             out.println("{").indent();
         }
 
+        /*
         if(m.name.equals("didFinishLaunchingWithOptions")) 
             writeDidFinishLaunchingBody(m, selector, naming, cType, globalRefs, out);
         else
             writeMethodBody(m, selector, naming, cType, globalRefs, out);
-        
+        */
+        writeMethodBody2(m, selector, naming, cType, globalRefs, out);
         
         out.undent().println("}");
     }
     
+    void writeMethodBody2(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
+        NameAndType klassField = CompilerContext.resolve("java/lang/Object").findField("klass");
+        NameAndType nativePeerField = CompilerContext.resolve("cava/c/NativeObject").findField("nativePeer");
+        
+        //todo: detect better
+        if(m.name.contains("didFinishLaunching")) {
+            int index = getCurrentDelegateIndex(globalRefs);
+            int index2 = getCurrentApplicationIndex(globalRefs);
+
+            out.println("JvmStartDebugger();");
+            out.println("javaPeer = JVMGLOBALS[%s];", index);
+            out.print("JVMGLOBALS[%d] = ", index2);  
+            printObjCMarshaller(m.args.get(1).type, m.args.get(1).name, naming, globalRefs, out, false);
+            out.println(";");
+        }
+        //define java args
+        for(NameAndType arg : m.args) {
+            if(!arg.name.equals("this") && !DecompilerUtils.isPrimitive(arg.type)) {
+                boolean isStruct = CompilerContext.resolve(arg.type).isStruct();
+                out.println("%s arg_%s;", naming.clazz(arg.type), arg.name)
+                   .println("arg_%s.%s = &%s_Class;", arg.name, naming.field(klassField), naming.clazz(arg.type))
+                   .println("arg_%s.%s = %s;", arg.name, 
+                           isStruct ? "$struct" : naming.field(nativePeerField), 
+                           arg.name);
+            }
+        }
+        
+        Method tm = m;
+        if(m.interfaceBaseClass != null) {
+            tm = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
+            out.print("interface_");
+        } else if(m.virtualBaseClass != null) {
+            tm = CompilerContext.resolve(m.virtualBaseClass).findMethod(m.name, m.signature);
+            out.print("virtual_");
+        }
+        out.print("%s(", naming.method(tm));
+        for(int i=0; i<m.args.size(); i++) {
+            if(i > 0) out.print(",");
+            NameAndType arg = m.args.get(i);
+            if(arg.name.equals("this"))
+                out.print("javaPeer");
+            else if(DecompilerUtils.isPrimitive(arg.type))
+                out.print(arg.name);
+            else
+                out.print("&arg_%s", arg.name);
+        }
+        out.println(");");
+    }
     void writeMethodBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         SourceWriter tmpOut = new SourceWriter();
         Method tm = m;

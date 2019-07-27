@@ -51,17 +51,17 @@ public final class System {
      */
     public static void arraycopy(java.lang.Object src, int srcOffset, java.lang.Object dst, int dstOffset, int length) {
         //both must be array
-        if(src.$$$$klass.componentType == null || dst.$$$$klass.componentType == null) return;
-        boolean srcIsPrim = src.$$$$klass.componentType.isPrimitive();
-        boolean dstIsPrim = dst.$$$$klass.componentType.isPrimitive();
+        if(src.klass.componentType == null || dst.klass.componentType == null) return;
+        boolean srcIsPrim = src.klass.componentType.isPrimitive();
+        boolean dstIsPrim = dst.klass.componentType.isPrimitive();
         if(srcIsPrim != dstIsPrim) return;
         int srcLen = Array.getLength(src);
         if(srcOffset + length > srcLen) throw new IndexOutOfBoundsException();
         int dstLen = Array.getLength(dst);
         if(dstOffset + length > dstLen) throw new IndexOutOfBoundsException();
         if(srcIsPrim) {
-            if(src.$$$$klass.componentType.size == dst.$$$$klass.componentType.size) {
-                int size = src.$$$$klass.componentType.size;
+            if(src.klass.componentType.size == dst.klass.componentType.size) {
+                int size = src.klass.componentType.size;
                 CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
                             CharPtr.fromAnyArray(src).add(srcOffset*size),
                             length * size);
@@ -137,4 +137,7 @@ public final class System {
         return x.hashCode(); 
     }
 
+    public static String getenv(String name) {
+        throw new UnsupportedOperationException();
+    }
 }

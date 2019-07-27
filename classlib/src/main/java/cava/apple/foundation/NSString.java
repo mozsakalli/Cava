@@ -36,12 +36,18 @@ public final class NSString extends NSObject {
         initWithCharacters(WCharPtr.from(string), string.length());
     }
     void alloc() {
-        $handle = NativeCode.VoidPtr("[NSString alloc]");
+        nativePeer = NativeCode.VoidPtr("[NSString alloc]");
     }
     
     public final NSString initWithCharacters(WCharPtr chars, int length) {
-        NativeCode.Void("%s=(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", $handle, $handle, chars, length);
+        NativeCode.Void("%s=(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", nativePeer, nativePeer, chars, length);
         return this;
     }
     
+    public static String createJavaString(VoidPtr nativePeer) {
+        int len = NativeCode.Int("[(NSString*)%s length]", nativePeer);
+        char[] chars = new char[len];
+        NativeCode.Void("[(NSString*)%s getCharacters:(unichar*)JvmArrayData(%s)]", nativePeer, chars);
+        return new String(chars);
+    }
 }

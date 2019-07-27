@@ -28,7 +28,7 @@ import cava.platform.NativeCode;
 public class NSDictionary extends NSObject {
     
     public NSDictionary() {
-        $handle = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
+        nativePeer = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
     }
     /*
     public NSDictionary(VoidPtr handle) {

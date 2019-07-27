@@ -17,7 +17,12 @@
                <version>1.0</version> 
               <scope>system</scope>
               <systemPath>/Users/mustafa/Work/CAVA/sample/gdx.jar</systemPath>
-        </dependency>        
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>cava-classlib</artifactId>
+            <version>2019.07.18</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

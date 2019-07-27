@@ -13,10 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cava.sample;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 
 /**
  *
@@ -24,8 +28,19 @@ import com.badlogic.gdx.ApplicationListener;
  */
 public class LibgdxSample implements ApplicationListener {
 
+    private Mesh mesh;
+
     @Override
     public void create() {
+        if (mesh == null) {
+            mesh = new Mesh(true, 3, 3,
+                    new VertexAttribute(Usage.Position, 3, "a_position"));
+
+            mesh.setVertices(new float[]{-0.5f, -0.5f, 0,
+                0.5f, -0.5f, 0,
+                0, 0.5f, 0});
+            mesh.setIndices(new short[]{0, 1, 2});
+        }
     }
 
     @Override
@@ -34,8 +49,7 @@ public class LibgdxSample implements ApplicationListener {
 
     @Override
     public void render() {
-        byte[] bytes = new byte[1024*1024];
-        System.out.println("Not supported render "+bytes.length);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     @Override

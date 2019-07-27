@@ -33,17 +33,17 @@ public class UIView extends UIResponder {
     
     public UIView(){}
     public UIView(VoidPtr handle) {
-        $handle = handle;
+        nativePeer = handle;
     }
     
     public UIView(CGRect frame) {
-        $handle = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
+        nativePeer = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
     }
 
     public <T> T getLayer(Class<? extends CALayer> layerClass) {
         CALayer layer = (CALayer)layerClass.newInstance();
-        layer.setSub(true);
-        layer.setHandle(NativeCode.VoidPtr("((UIView*)%s).layer", getHandle()));
+        layer.setNoOwner(true);
+        layer.setNativePeer(NativeCode.VoidPtr("((UIView*)%s).layer", getNativePeer()));
         return (T)layer;
     }
 }

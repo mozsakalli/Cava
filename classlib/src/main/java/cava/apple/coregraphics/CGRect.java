@@ -20,6 +20,7 @@ import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.Native;
 import cava.c.Struct;
+import cava.platform.NativeCode;
 
 /**
  *
@@ -48,6 +49,16 @@ public class CGRect extends Struct<CGRect> {
         setSize(size);
     }
 
+    public static double getWidth(CGRect rect) {
+        return NativeCode.Double("CGRectGetWidth(%s)", rect.getStruct());
+    }
+    public double getWidth() { return getWidth(this); }
+    
+    public static double getHeight(CGRect rect) {
+        return NativeCode.Double("CGRectGetHeight(%s)",  rect.getStruct());
+    }
+    public double getHeight() { return getHeight(this); }
+    
     @Override
     public String toString() {
         return getOrigin()+" "+getSize();

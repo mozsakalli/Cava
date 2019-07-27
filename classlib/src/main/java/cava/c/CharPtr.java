@@ -40,6 +40,7 @@ public class CharPtr {
     }
     
     //Uses local char array for immediate operations
+    /*
     public static CharPtr asciiZ(String str) {
         NativeCode.Void("char chars[513];");
         int len = str.length();
@@ -49,6 +50,16 @@ public class CharPtr {
         }
         NativeCode.Void("chars[%s] = 0", len);
         return NativeCode.CharPtr("&chars");
+    }
+    */
+    public static CharPtr asciiZ(String str, Object target, int len) {
+        int strlen = str.length();
+        if(strlen > len) strlen = len;
+        for(int i=0; i<strlen; i++) {
+            NativeCode.Void("((char*)%s)[%s] = %s", target, i, str.charAt(i));
+        }
+        NativeCode.Void("((char*)%s)[%s] = 0", target, len);
+        return NativeCode.CharPtr("(char*)%s", target);
     }
     
     public static CharPtr from(Object object) {

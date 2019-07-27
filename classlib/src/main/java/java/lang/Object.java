@@ -25,7 +25,7 @@ import java.lang.reflect.Array;
 @Keep
 public class Object{
     
-    public Class $$$$klass;
+    public Class klass;
             
     public Object(){
     }
@@ -35,7 +35,7 @@ public class Object{
     }
 
     public final Class getClass() {
-        return $$$$klass;
+        return klass;
     }
 
     public int hashCode() {

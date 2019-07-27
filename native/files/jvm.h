@@ -65,6 +65,7 @@ typedef struct JvmClass {
     void** itable;
     void (*finalizeFunction)(jobject);
     jbool (*isChildOf)(struct JvmClass* klass);
+    void* objcClass;
     
 #ifdef JVM_DEBUG
     struct JvmString* sourceFile;

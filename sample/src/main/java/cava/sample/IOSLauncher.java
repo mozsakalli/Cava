@@ -19,6 +19,7 @@ package cava.sample;
 import cava.apple.foundation.NSAutoreleasePool;
 import cava.apple.uikit.UIApplication;
 import com.cava.gdx.IOSApplication;
+import com.cava.gdx.IOSApplicationConfiguration;
 
 /**
  *
@@ -28,8 +29,8 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
     @Override
     protected IOSApplication createApplication() {
-        System.out.println("-- create application --");
-        return new IOSApplication(new LibgdxSample());
+        IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
+        return new IOSApplication(new Drop(), cfg);
     }
 
     public static void main() {

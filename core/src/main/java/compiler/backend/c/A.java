@@ -30,6 +30,7 @@ public class A {
     public final static String Keep = "cava.annotation.Keep";
     public final static String Native = "cava.annotation.Native";
     public final static String Framework = "cava.annotation.Framework";
+    public final static String Resource = "cava.annotation.Resource";
     
     static Map<String, Map<String,Object>> getAnnotationMap(Object o) {
         if(o instanceof NameAndType)

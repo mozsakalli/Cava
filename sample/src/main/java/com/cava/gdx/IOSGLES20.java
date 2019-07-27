@@ -49,7 +49,8 @@ public class IOSGLES20 implements GL20 {
 
     @Override
     public void glBindAttribLocation(int program, int index, String name) {
-        NativeCode.Void("glBindAttribLocation(%s, %s, %s)", program, index, CharPtr.asciiZ(name));
+        NativeCode.Void("char chars[513];");
+        NativeCode.Void("glBindAttribLocation(%s, %s, %s)", program, index, CharPtr.asciiZ(name, NativeCode.VoidPtr("&chars"),512));
     }
 
     @Override

@@ -23,28 +23,28 @@ package cava.c;
 public abstract class NativeObject {
     
     // pointer to native object
-    protected VoidPtr $handle;
+    protected VoidPtr nativePeer;
     
     // this object is sub value of another object
-    protected boolean $sub;
+    protected boolean noOwner;
     
     public abstract void dispose();
 
-    public VoidPtr getHandle() { return $handle; }
+    public VoidPtr getNativePeer() { return nativePeer; }
     
-    public void setHandle(VoidPtr handle) {
-        if($handle != null && !$sub) dispose();
-        $handle = handle;
+    public void setNativePeer(VoidPtr handle) {
+        if(nativePeer != null && !noOwner) dispose();
+        nativePeer = handle;
     }
     
-    public void setSub(boolean sub) {
-        $sub = sub;
+    public void setNoOwner(boolean sub) {
+        noOwner = sub;
     }
     
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        if(!$sub)
+        if(!noOwner)
             dispose();
     }
     

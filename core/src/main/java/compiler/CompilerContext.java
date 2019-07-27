@@ -108,6 +108,8 @@ public class CompilerContext {
     public static Clazz _resolve(String name) throws Exception {
         Clazz clazz = classes.get(name);
         if(clazz != null) return clazz;
+        if(name.contains("Closeable"))
+            System.out.println("load: "+name);
         if(name.startsWith("[")) {
             clazz = new Clazz();
             clazz.name = name;

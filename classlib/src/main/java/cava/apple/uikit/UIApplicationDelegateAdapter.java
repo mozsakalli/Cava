@@ -36,7 +36,7 @@ public class UIApplicationDelegateAdapter extends NSObject implements UIApplicat
     @Override
     public void setWindow(UIWindow window) {
         this.window = window;
-        NativeCode.Void("((cava_apple_uikit_UIApplicationDelegateAdapter_ObjC*)%s).window = %s", $handle, window.getHandle());
+        NativeCode.Void("((cava_apple_uikit_UIApplicationDelegateAdapter_ObjC*)%s).window = %s", nativePeer, window.getNativePeer());
     }
 
     @Override

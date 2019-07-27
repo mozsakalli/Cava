@@ -26,9 +26,9 @@ public class NativeCObject extends NativeObject {
 
     @Override
     public void dispose() {
-        if($handle != null && !$sub) {
-            NativeCode.Void("free(%s)", $handle);
-            $handle = null;
+        if(nativePeer != null && !noOwner) {
+            NativeCode.Void("free(%s)", nativePeer);
+            nativePeer = null;
         }
     }
     

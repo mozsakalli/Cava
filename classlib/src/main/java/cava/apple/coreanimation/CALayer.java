@@ -31,5 +31,5 @@ import cava.c.VoidPtr;
 @ObjC
 public class CALayer extends NSObject {
     public CALayer(){}
-    public CALayer(VoidPtr handle) { $handle = handle; $sub = true; }
+    public CALayer(VoidPtr handle) { nativePeer = handle; noOwner = true; }
 }

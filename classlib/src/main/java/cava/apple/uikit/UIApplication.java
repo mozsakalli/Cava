@@ -62,8 +62,8 @@ public class UIApplication extends UIResponder {
         NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", 
                 argc, 
                 argv, 
-                principal != null ? new NSString(principal).getHandle() : null,
-                delegate != null ? new NSString(delegate).getHandle() : null);
+                principal != null ? new NSString(principal).getNativePeer() : null,
+                delegate != null ? new NSString(delegate).getNativePeer() : null);
     }
     
     public static UIApplication getSharedApplication() {
@@ -71,11 +71,11 @@ public class UIApplication extends UIResponder {
     }
     
     public final boolean getIdleTimerDisabled() {
-        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", $handle);
+        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", nativePeer);
     }
     
     public final void setIdleTimerDisabled(boolean disabled) {
-        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", $handle, disabled);
+        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", nativePeer, disabled);
     }
     
 }

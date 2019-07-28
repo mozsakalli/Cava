@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-package cava.sample;
+package cava.apple.uikit;
 
-import cava.annotation.Keep;
+import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.apple.coreanimation.CAEAGLLayer;
-import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
-import cava.apple.opengles.EAGLContext;
-import cava.apple.opengles.EAGLRenderingAPI;
-import cava.apple.uikit.UIView;
+import cava.apple.foundation.NSString;
+import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Keep
-public class GameView extends UIView {
+@Include("<UIKit/UIKit.h>")
+@ObjC
+public class UIDevice extends NSObject {
 
-    EAGLContext context;
-    
-    @ObjC(value = "layerClass")
-    public static Class getLayerClass() {
-        System.out.println("GetLayerClass");
-        return NSObject.getObjCClass(CAEAGLLayer.class);
+    UIDevice(VoidPtr nativePeer) { super(nativePeer, true); }
+    public static UIDevice getCurrentDevice() {
+        return new UIDevice(NativeCode.VoidPtr("[UIDevice currentDevice]"));
     }
-
-    public GameView(CGRect bounds) {
-        //context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
+    
+    public String getSystemVersion() {
+        return NSString.createJavaString(NativeCode.VoidPtr("((UIDevice*)%s).systemVersion", nativePeer));
     }
 }

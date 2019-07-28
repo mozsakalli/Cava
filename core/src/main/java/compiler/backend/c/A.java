@@ -74,6 +74,9 @@ public class A {
     public static boolean objcProperty(Object o) {
         return bool(o, ObjC, "property");
     }
+    public static boolean objcNoInit(Object o) {
+        return bool(o, ObjC, "noInit");
+    }
     public static boolean hasKeep(Object o) {
         return has(o, Keep);
     }

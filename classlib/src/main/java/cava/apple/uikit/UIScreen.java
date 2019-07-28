@@ -44,4 +44,11 @@ public class UIScreen extends NSObject {
         return new CGRect(NativeCode.Struct("[(UIScreen*)%s bounds]",getNativePeer())); 
     }
 
+    public double getScale() {
+        return NativeCode.Double("((UIScreen*)%s).scale", nativePeer);
+    }
+    
+    public double getNativeScale() {
+        return NativeCode.Double("((UIScreen*)%s).nativeScale", nativePeer);
+    }
 }

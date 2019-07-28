@@ -189,6 +189,12 @@ public class Clazz implements Serializable {
         return list;
     }  
     
+    public boolean isExtendedFrom(String cls) {
+        if(name.equals(cls)) return true;
+        if(superName == null) return false;
+        if(cls.equals(superName)) return true;
+        return CompilerContext.resolve(superName).isExtendedFrom(cls);
+    }
     public boolean isCustomObjCClass() {
         if(isInterface) return false;
         for(Method m : methods) {

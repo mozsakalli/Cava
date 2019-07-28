@@ -19,6 +19,27 @@
               <systemPath>/Users/mustafa/Work/CAVA/sample/gdx.jar</systemPath>
         </dependency>
         <dependency>
+              <groupId>libgdx-1</groupId>  
+               <artifactId>libgdx-1</artifactId>  
+               <version>1.0</version> 
+              <scope>system</scope>
+              <systemPath>/Users/mustafa/Work/CAVA/sample/gdx-backend-lwjgl.jar</systemPath>
+        </dependency>
+        <dependency>
+              <groupId>libgdx-2</groupId>  
+               <artifactId>libgdx-2</artifactId>  
+               <version>1.0</version> 
+              <scope>system</scope>
+              <systemPath>/Users/mustafa/Work/CAVA/sample/gdx-backend-lwjgl-natives.jar</systemPath>
+        </dependency>
+        <dependency>
+              <groupId>libgdx-3</groupId>  
+               <artifactId>libgdx-3</artifactId>  
+               <version>1.0</version> 
+              <scope>system</scope>
+              <systemPath>/Users/mustafa/Work/CAVA/sample/gdx-natives.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>cava-classlib</artifactId>
             <version>2019.07.18</version>
@@ -29,8 +50,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-    <build>
-        <!-- plugins>
+    <!-- build>
+        <plugins>
             <plugin>
                 <groupId>com.cava</groupId>
                 <artifactId>cava-maven</artifactId>
@@ -50,6 +71,6 @@
                     </execution>
                 </executions>                
             </plugin>
-        </plugins -->
-    </build>
+        </plugins>
+    </build -->
 </project>

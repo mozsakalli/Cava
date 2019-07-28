@@ -14,33 +14,18 @@
  * limitations under the License.
  */
 
-package cava.sample;
+package cava.apple.uikit;
 
-import cava.annotation.Keep;
+import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.apple.coreanimation.CAEAGLLayer;
-import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
-import cava.apple.opengles.EAGLContext;
-import cava.apple.opengles.EAGLRenderingAPI;
-import cava.apple.uikit.UIView;
 
 /**
  *
  * @author mustafa
  */
-@Keep
-public class GameView extends UIView {
+@ObjC
+@Include("<UIKit/UIKit.h>")
+public class UIEvent extends NSObject {
 
-    EAGLContext context;
-    
-    @ObjC(value = "layerClass")
-    public static Class getLayerClass() {
-        System.out.println("GetLayerClass");
-        return NSObject.getObjCClass(CAEAGLLayer.class);
-    }
-
-    public GameView(CGRect bounds) {
-        //context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
-    }
 }

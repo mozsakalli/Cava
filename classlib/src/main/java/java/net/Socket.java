@@ -28,7 +28,7 @@ import java.io.OutputStream;
  *
  * @author mustafa
  */
-@Include("<sys/socket.h> <netinet/in.h> <arpa/inet.h> <unistd.h>")
+@Include("<sys/socket.h> <netinet/in.h> <arpa/inet.h> <unistd.h> <netdb.h>")
 public class Socket implements Closeable {
     
     int fd;
@@ -47,7 +47,21 @@ public class Socket implements Closeable {
     
     public void connect(String host, int port) throws IOException {
         if(isConnected) return;
-        //todo
+        NativeCode.Void("struct hostent *host");
+        CharPtr ascii = CharPtr.allocAsciiZ(host);
+        if(NativeCode.Bool("(host = gethostbyname(%s)) != jnull", ascii)) {
+            fd = NativeCode.Int("socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)");
+            NativeCode.Void("struct sockaddr_in sock_addr");
+            NativeCode.Void("memset((char *) &sock_addr, 0, sizeof(sock_addr))");
+            NativeCode.Void("sock_addr.sin_family = AF_INET");
+            NativeCode.Void("sock_addr.sin_port = htons(%s)", port);
+            NativeCode.Void("sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0])");
+            NativeCode.Void("memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero)))");
+            
+            if(!NativeCode.Bool("connect(%s, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) != -1", fd))
+                throw new SocketTimeoutException();
+            isConnected = true;
+        } else throw new SocketException("Unknown host: "+host);
     }
     
     public OutputStream getOutputStream() {
@@ -64,6 +78,8 @@ public class Socket implements Closeable {
     public void close() throws IOException {
         NativeCode.Void("close(%s)", fd);
         fd = 0;
+        input = null;
+        output = null;
     }
     
     class SocketOutputStream extends OutputStream {

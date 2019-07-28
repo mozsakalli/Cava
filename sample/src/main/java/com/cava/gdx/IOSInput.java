@@ -15,6 +15,8 @@
  */
 package com.cava.gdx;
 
+import cava.apple.foundation.NSArray;
+import cava.apple.foundation.NSSet;
 import cava.apple.uikit.UITouchPhase;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
@@ -420,6 +422,12 @@ public class IOSInput implements Input {
         return 0;
     }
 
+    NSArray touchArray;
+    public void onTouch(NSSet touches) {
+        touchArray = touches.getAllObjects(touchArray);
+        int count = touchArray.getCount();
+        System.out.println("touch: "+count);
+    }
     static class TouchEvent {
 
         UITouchPhase phase;

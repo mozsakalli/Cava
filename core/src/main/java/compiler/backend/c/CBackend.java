@@ -331,15 +331,20 @@ public class CBackend {
                         }
                         out.ln();
                         
+                        boolean objcInitializer = 
+                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");
+                        //UIDevice(VoidPtr) doesn't need to create any instance
+                        if(objcInitializer && m.args.size() == 2 && m.args.get(1).type.equals("cava/c/VoidPtr"))
+                            objcInitializer = false;
                         
                         if(c.isObjCImplementation && m.name.equals("<init>")) {
                             String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
                             out.println("/* create objc: %s */", objcName);
-                            
+                            /*
                             out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_nativePeer = [[%s alloc] init];", 
                                     objcName, objcName)
                                 .println("objcPeer->javaPeer = pthis;");    
-                            
+                            */
                         }
                         
                         int reflectIndex = reflectMethods.indexOf(m);
@@ -354,6 +359,29 @@ public class CBackend {
                                .println("if(_initialized) return;")
                                .println("_initialized = 1;");
                         }
+                        
+                        if(objcInitializer) {
+                            NameAndType field = c.findField("nativePeer");
+                            String objcName = c.isObjCImplementation ? 
+                                    c.name.replace('/', '_').replace('$', '_') + "_ObjC" :
+                                    DecompilerUtils.simpleName(c.name);
+                            
+                            out.print("%s* objcPeer =((%s*)pthis)->%s= ", 
+                                    objcName, naming.clazz(c.name),naming.field(field));
+                            if(A.objcNoInit(c)) {
+                                out.println("[%s alloc];", objcName);
+                            } else {
+                                out.println("[[%s alloc] init];", objcName);
+                            }
+                            if(c.isObjCImplementation)
+                                out.println("objcPeer->javaPeer = pthis;");    
+                            /*
+                            out.println("((%s*)pthis)->%s = (void*)[%s alloc];",naming.clazz(c.name), 
+                                    naming.field(field),
+                                    c.isObjCImplementation ? c.name.replace('/', '_').replace('$', '_') + "_ObjC"
+                                            : DecompilerUtils.simpleName(c.name)
+                                    );*/
+                        } 
                         writer.writeChildren(m.body.children);
                         variableLocations.put(m, writer.variableLocations);
                         

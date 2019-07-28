@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package cava.apple.opengles;
+package cava.apple.foundation;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.apple.foundation.NSObject;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Include("<OpenGLES/EAGL.h>")
-@Framework("OpenGLES.framework")
-@ObjC(noInit = true)
-public class EAGLContext extends NSObject {
+public class NSArray extends NSObject {
     
-    public EAGLContext initWithAPI(EAGLRenderingAPI api) {
-        nativePeer = NativeCode.VoidPtr("[(EAGLContext*)%s initWithAPI:%s]", nativePeer, api.value());
-        return this;
+    public NSArray(){}
+    NSArray(VoidPtr nativePeer) {
+        super(nativePeer);
+    }
+    NSArray(VoidPtr nativePeer, boolean noOwner) {
+        super(nativePeer, noOwner);
     }
     
-    public static void setCurrentContext(EAGLContext context) {
-        NativeCode.Void("[EAGLContext setCurrentContext:%s]", context.getNativePeer());
+    public int getCount() {
+        return NativeCode.Int("((NSArray*)%s).count", nativePeer);
     }
 }

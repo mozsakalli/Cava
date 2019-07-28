@@ -67,7 +67,7 @@ public class CWriter extends CodeWriter {
         this.cType = cType;
         this.globalRefs = globalRefs;
         Clazz c = CompilerContext.resolve(method.declaringClass);
-        skipSuperConstructor = c.isObjCImplementation;// || A.hasObjC(c);
+        skipSuperConstructor = method.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// false; //c.isObjCImplementation;// || A.hasObjC(c);
     }
     
     public void requireInclude(String name) {

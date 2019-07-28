@@ -17,6 +17,7 @@ package java.nio;
 
 import cava.c.CLib;
 import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
@@ -339,4 +340,7 @@ public abstract class Buffer {
 
     public VoidPtr getAddress() { return ptr; }
     
+    public VoidPtr getPositionAddress() {
+        return ptr;
+    }
 }

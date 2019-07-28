@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cava.sample;
 
-import cava.annotation.Keep;
-import cava.annotation.ObjC;
-import cava.apple.coreanimation.CAEAGLLayer;
-import cava.apple.coregraphics.CGRect;
-import cava.apple.foundation.NSObject;
-import cava.apple.opengles.EAGLContext;
-import cava.apple.opengles.EAGLRenderingAPI;
-import cava.apple.uikit.UIView;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 /**
  *
  * @author mustafa
  */
-@Keep
-public class GameView extends UIView {
+public class JavaLauncher {
 
-    EAGLContext context;
-    
-    @ObjC(value = "layerClass")
-    public static Class getLayerClass() {
-        System.out.println("GetLayerClass");
-        return NSObject.getObjCClass(CAEAGLLayer.class);
-    }
-
-    public GameView(CGRect bounds) {
-        //context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
+    public static void main(String... args) {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.title = "Drop";
+        config.width = 800;
+        config.height = 480;
+        new LwjglApplication(new Drop(), config);
     }
 }

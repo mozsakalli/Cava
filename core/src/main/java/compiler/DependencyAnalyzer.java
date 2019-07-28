@@ -194,7 +194,7 @@ public class DependencyAnalyzer {
         
         for(Method m : c.methods) {
             m.interfaceTableIndex = -1;
-            if(isClassKeep || m.name.equals("<clinit>") || 
+            if(isClassKeep || m.name.equals("<clinit>") || A.hasKeep(m) ||
                (m.name.equals("<init>") && m.args.isEmpty()) ||
                (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr"))  || //objc      
                (isStruct && A.hasNative(m))     

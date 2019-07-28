@@ -125,6 +125,21 @@ public class ByteBuffer extends Buffer {
         return NativeCode.Byte("((char*)%s)[%s]", ptr, position);
     }
 
+    public final short getShort() {
+        int newPosition = position + CLib.SHORT_SIZE;
+        if (newPosition > limit) {
+            throw new BufferUnderflowException();
+        }
+        short result = NativeCode.Short("*(jshort*)(((char*)%s)+%s)", ptr, position);
+        position = newPosition;
+        return result;
+    }
+
+    public final short getShort(int index) {
+        checkIndex(index, CLib.SHORT_SIZE);
+        return NativeCode.Short("*(jshort*)(((char*)%s)+%s)", ptr, index);
+    }
+    
     public final int getInt() {
         int newPosition = position + CLib.INT_SIZE;
         if (newPosition > limit) {

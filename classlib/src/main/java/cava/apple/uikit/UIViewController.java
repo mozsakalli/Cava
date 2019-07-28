@@ -65,4 +65,10 @@ public class UIViewController extends UIResponder {
     
     @ObjC("loadView")
     public native void loadView();
+    
+    @ObjC("prefersStatusBarHidden")
+    public native boolean prefersStatusBarHidden();
+    
+    @ObjC("prefersHomeIndicatorAutoHidden")
+    public native boolean prefersHomeIndicatorAutoHidden();
 }

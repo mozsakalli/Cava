@@ -37,6 +37,17 @@ public class GLKView extends UIView {
     GLKViewDelegate delegate;
     EAGLContext context;
     
+    public GLKView initWithFrame(CGRect frame) {
+        return initWithFrame(frame, null);
+    }
+    
+    public GLKView initWithFrame(CGRect frame, EAGLContext context) {
+        nativePeer = NativeCode.VoidPtr("[(GLKView*)%s initWithFrame:%s context:(EAGLContext*)%s]", 
+                nativePeer, frame.getStruct(), context != null ? context.getNativePeer() : null);
+        this.context = context;
+        return this;
+    }
+    /*
     public GLKView(CGRect frame) {
         this(frame, null);
     }
@@ -46,7 +57,7 @@ public class GLKView extends UIView {
                 frame.getStruct(), context != null ? context.getNativePeer() : null);
         this.context = context;
     }
-    
+    */
     public GLKViewDelegate getDelegate() {
         return delegate;
     }
@@ -61,5 +72,21 @@ public class GLKView extends UIView {
     public void setContext(EAGLContext context) {
         this.context = context;
         NativeCode.Void("[((GLKView*)%s) setContext:%s]", nativePeer, context.getNativePeer());
+    }
+    
+    public void setDrawableColorFormat(GLKViewDrawableColorFormat colorFormat) {
+        NativeCode.Void("((GLKView*)%s).drawableColorFormat=%s", nativePeer, colorFormat.value());
+    }
+    
+    public void setDrawableDepthFormat(GLKViewDrawableDepthFormat depthFormat) {
+        NativeCode.Void("((GLKView*)%s).drawableDepthFormat=%s", nativePeer, depthFormat.value());
+    }
+    
+    public void setDrawableStencilFormat(GLKViewDrawableStencilFormat stencilFormat) {
+        NativeCode.Void("((GLKView*)%s).drawableStencilFormat=%s", nativePeer, stencilFormat.value());
+    }
+    
+    public void setDrawableMultisample(GLKViewDrawableMultisample multiSample) {
+        NativeCode.Void("((GLKView*)%s).drawableMultisample=%s", nativePeer, multiSample.value());
     }
 }

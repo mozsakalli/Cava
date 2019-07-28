@@ -33,7 +33,7 @@ public class SampleApp extends UIApplicationDelegateAdapter {
     @Override
     public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
         System.out.println("Sample App Started...");
-        UIWindow win = new UIWindow(UIScreen.getMainScreen().getBounds());
+        UIWindow win = new UIWindow().initWithFrame(UIScreen.getMainScreen().getBounds());
         setWindow(win);
         win.setRootViewController(new GameViewController());
         win.makeKeyAndVisible();

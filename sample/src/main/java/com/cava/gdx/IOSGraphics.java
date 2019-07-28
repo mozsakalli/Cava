@@ -16,15 +16,19 @@
 package com.cava.gdx;
 
 import cava.annotation.Keep;
+import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
+import cava.apple.foundation.NSSet;
 import cava.apple.glkit.GLKView;
 import cava.apple.glkit.GLKViewController;
 import cava.apple.glkit.GLKViewControllerDelegate;
 import cava.apple.glkit.GLKViewDelegate;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
+import cava.apple.uikit.UIEvent;
 import cava.apple.uikit.UIScreen;
+import cava.apple.uikit.UITouch;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
@@ -71,10 +75,20 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         }
 
         @Override
+        public boolean prefersStatusBarHidden() {
+            return !app.config.statusBarVisible;
+        }
+
+        @Override
+        public boolean prefersHomeIndicatorAutoHidden() {
+            return app.config.hideHomeIndicator;
+        }
+
+        @Override
         public void viewDidLayoutSubviews() {
             CGRect bounds = app.getBounds();
-            graphics.width = (int)bounds.getWidth();
-            graphics.height = (int)bounds.getHeight();
+            graphics.width = (int)(bounds.getWidth() * app.displayScaleFactor);
+            graphics.height = (int)(bounds.getHeight() * app.displayScaleFactor);
             graphics.makeCurrent();
             if (graphics.created) {
                 app.listener.resize(graphics.width, graphics.height);
@@ -112,21 +126,37 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         this.app = app;
         final CGRect bounds = app.getBounds();
         // setup view and OpenGL
-        width = (int)bounds.getWidth();
-        height = (int)bounds.getHeight();
-        System.out.println("bounds=" + bounds.getOrigin().getX() + "x" + bounds.getOrigin().getY() + " - "
-                + bounds.getSize().getWidth() + "x" + bounds.getSize().getHeight());
+        width = (int)(bounds.getWidth() * app.displayScaleFactor);
+        height = (int)(bounds.getHeight() * app.displayScaleFactor);
         
-        context = new EAGLContext(EAGLRenderingAPI.OpenGLES2);
+        context = new EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
         if (context.getNativePeer() != null) {
             System.out.println("OpenGL2.0 detected");
             gl20 = new IOSGLES20();
         }
-        view = new GLKView(bounds, context);
+        gl30 = null;
+        
+        view = new GLKView() {
+            @Override
+            @ObjC("touchesBegan:withEvent:")
+            @Keep
+            public void touchesBegan(NSSet<UITouch> touches, UIEvent event) {
+                app.input.onTouch(touches);
+            }
+            
+        };
+        view.initWithFrame(bounds, context);
+        
         view.setDelegate(this);
-
+        view.setDrawableColorFormat(config.colorFormat);
+        view.setDrawableDepthFormat(config.depthFormat);
+        view.setDrawableStencilFormat(config.stencilFormat);
+        view.setDrawableMultisample(config.multisample);
+        //view.setMultipleTouchEnabled(true);
+                
         viewController = new IOSUIViewController(app, this);
         viewController.setView(view);
+        viewController.setPreferredFramesPerSecond(config.preferredFramesPerSecond);
         viewController.setDelegate(this);
 
         appPaused = false;
@@ -176,7 +206,6 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
             String versionString = gl20.glGetString(GL20.GL_VERSION);
             String vendorString = gl20.glGetString(GL20.GL_VENDOR);
             String rendererString = gl20.glGetString(GL20.GL_RENDERER);
-            System.out.println(versionString+"/"+vendorString+"/"+rendererString);
             glVersion = new GLVersion(Application.ApplicationType.iOS, versionString, vendorString, rendererString);
 
             app.listener.create();

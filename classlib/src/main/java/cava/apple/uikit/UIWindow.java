@@ -18,8 +18,6 @@ package cava.apple.uikit;
 
 import cava.annotation.Include;
 import cava.annotation.ObjC;
-import cava.apple.coregraphics.CGRect;
-import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
@@ -29,19 +27,6 @@ import cava.platform.NativeCode;
 @Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
 public class UIWindow extends UIView {
-    
-    public UIWindow(){
-        nativePeer = NativeCode.VoidPtr("[[UIWindow alloc] init]");
-    }
-    /*
-    public UIWindow(VoidPtr handle) {
-        super(handle);
-    }*/
-    
-    public UIWindow(CGRect frame) {
-        System.out.println("bounds = "+frame.getOrigin().getX()+"x"+frame.getOrigin().getY()+" - "+frame.getSize().getWidth()+"x"+frame.getSize().getHeight());
-        nativePeer = NativeCode.VoidPtr("[[UIWindow alloc] initWithFrame:%s]", frame.getStruct());
-    }
     
     public void setRootViewController(UIViewController controller) {
         System.out.println("RootController: "+controller.getClass()+" / "+NativeCode.Long("(jlong)%s", controller.getNativePeer()));

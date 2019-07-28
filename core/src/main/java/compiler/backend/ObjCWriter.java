@@ -47,10 +47,7 @@ public class ObjCWriter {
     public ObjCWriter(Clazz c) {
         clazz = c;
         if(c.isInterface) return;
-        if(clazz.name.contains("GameView"))
-            System.out.println("...");
-        
-        
+
         Clazz sc = c;
         
         while(sc != null) {
@@ -147,6 +144,7 @@ public class ObjCWriter {
     void writeMethodBody2(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         NameAndType klassField = CompilerContext.resolve("java/lang/Object").findField("klass");
         NameAndType nativePeerField = CompilerContext.resolve("cava/c/NativeObject").findField("nativePeer");
+        NameAndType noOwnerField = CompilerContext.resolve("cava/c/NativeObject").findField("noOwner");
         
         //todo: detect better
         if(m.name.contains("didFinishLaunching")) {
@@ -168,6 +166,8 @@ public class ObjCWriter {
                    .println("arg_%s.%s = %s;", arg.name, 
                            isStruct ? "$struct" : naming.field(nativePeerField), 
                            arg.name);
+                if(!isStruct)
+                   out.println("arg_%s.%s = jtrue;", arg.name, naming.field(noOwnerField));
             }
         }
         

@@ -58,8 +58,15 @@ public class FloatBuffer extends Buffer {
         if (floatCount > remaining()) {
             throw new BufferOverflowException();
         }
-        CLib.memcpy(ptr, position * CLib.FLOAT_SIZE, VoidPtr.fromAnyArray(array), srcOffset * CLib.FLOAT_SIZE, floatCount * CLib.FLOAT_SIZE);
+        CLib.memcpy(ptr, position * CLib.FLOAT_SIZE, VoidPtr.fromAnyArray(src), srcOffset * CLib.FLOAT_SIZE, floatCount * CLib.FLOAT_SIZE);
         position += floatCount;
         return this;
     }
+
+    @Override
+    public VoidPtr getPositionAddress() {
+        return NativeCode.VoidPtr("((char*)%s) + (%s*sizeof(jfloat))", ptr, position);
+    }
+    
+    
 }

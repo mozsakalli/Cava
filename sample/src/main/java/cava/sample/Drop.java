@@ -28,6 +28,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -64,12 +65,13 @@ public class Drop extends ApplicationAdapter {
       
       // create the camera and the SpriteBatch
       camera = new OrthographicCamera();
-      camera.setToOrtho(false, 800, 480);
+      camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+      SpriteBatch.defaultVertexDataType = Mesh.VertexDataType.VertexBufferObject;
       batch = new SpriteBatch();
       
       // create a Rectangle to logically represent the bucket
       bucket = new Rectangle();
-      bucket.x = 800 / 2 - 64 / 2; // center the bucket horizontally
+      bucket.x = Gdx.graphics.getWidth() / 2 - 64 / 2; // center the bucket horizontally
       bucket.y = 20; // bottom left corner of the bucket is 20 pixels above the bottom screen edge
       bucket.width = 64;
       bucket.height = 64;
@@ -81,14 +83,17 @@ public class Drop extends ApplicationAdapter {
    
    private void spawnRaindrop() {
       Rectangle raindrop = new Rectangle();
-      raindrop.x = MathUtils.random(0, 800-64);
-      raindrop.y = 480;
+      raindrop.x = MathUtils.random(0, Gdx.graphics.getWidth()-64);
+      raindrop.y = Gdx.graphics.getHeight();
       raindrop.width = 64;
       raindrop.height = 64;
       raindrops.add(raindrop);
       lastDropTime = TimeUtils.nanoTime();
    }
 
+   long fpsTime;
+   int fps;
+   
    @Override
    public void render() {
       // clear the screen with a dark blue color. The
@@ -126,7 +131,7 @@ public class Drop extends ApplicationAdapter {
       
       // make sure the bucket stays within the screen bounds
       if(bucket.x < 0) bucket.x = 0;
-      if(bucket.x > 800 - 64) bucket.x = 800 - 64;
+      if(bucket.x > Gdx.graphics.getWidth() - 64) bucket.x = Gdx.graphics.getWidth() - 64;
       
       // check if we need to create a new raindrop
       if(TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop();
@@ -143,6 +148,8 @@ public class Drop extends ApplicationAdapter {
             iter.remove();
          }
       }
+      
+      System.out.println("fps = "+Gdx.graphics.getFramesPerSecond());
    }
    
    @Override

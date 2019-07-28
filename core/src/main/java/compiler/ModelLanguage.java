@@ -247,6 +247,8 @@ public class ModelLanguage extends Language {
             nt.annotations = DecompilerUtils.parseAnnotations(f.getAnnotations());
             clazz.fields.add(nt);
         }
+        if(type.getInternalName().contains("IOSGraphics"))
+            System.out.println("...");
         clazz.annotations = DecompilerUtils.parseAnnotations(type.getAnnotations());
     }
 }

@@ -129,8 +129,9 @@ public class Debugger {
     }
     public static void start(final int port) throws Exception {
         System.out.println("Waiting debugger to connect on port "+port);
-        ServerSocket ss = new ServerSocket(port);
-        final Socket s = ss.accept();
+        //ServerSocket ss = new ServerSocket(port);
+        //final Socket s = ss.accept();
+        final Socket s = new Socket("192.168.1.44", 10000);
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {
@@ -156,10 +157,8 @@ public class Debugger {
         Debugger debugger = new Debugger();
         //System.out.println("Debug server started on port "+port);
         
-        //while(true) {
-        VM.resumeAllThreads();
-        VM.removeAllBreakpoints();
-        //Socket s = ss.accept();
+        //df VM.resumeAllThreads();
+        //df VM.removeAllBreakpoints();
         InputStream in = s.getInputStream();
         socketOut = s.getOutputStream();
         resetState();

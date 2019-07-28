@@ -58,7 +58,7 @@ public class CharPtr {
         for(int i=0; i<strlen; i++) {
             NativeCode.Void("((char*)%s)[%s] = %s", target, i, str.charAt(i));
         }
-        NativeCode.Void("((char*)%s)[%s] = 0", target, len);
+        NativeCode.Void("((char*)%s)[%s] = 0", target, strlen);
         return NativeCode.CharPtr("(char*)%s", target);
     }
     

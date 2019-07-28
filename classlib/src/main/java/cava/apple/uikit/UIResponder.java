@@ -20,7 +20,7 @@ import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
-import cava.c.VoidPtr;
+import cava.apple.foundation.NSSet;
 
 /**
  *
@@ -30,6 +30,15 @@ import cava.c.VoidPtr;
 @Framework("UIKit.framework")
 @ObjC
 public class UIResponder extends NSObject {
+    
+    @ObjC("touchesBegan:withEvent:")
+    public native void touchesBegan(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesMoved:withEvent:")
+    public native void touchesMoved(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesEnded:withEvent:")
+    public native void touchesEnded(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesCancelled:withEvent:")
+    public native void touchesCancelled(NSSet<UITouch> touches, UIEvent event);    
     /*
     public UIResponder(){
         //this(NativeCode.VoidPtr("[[UIResponder alloc] init]"));

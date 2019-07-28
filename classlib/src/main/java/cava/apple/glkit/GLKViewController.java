@@ -56,5 +56,7 @@ public class GLKViewController extends UIViewController {
     public void setPaused(boolean paused) {
         NativeCode.Void("((GLKViewController*)%s).paused = %s", getNativePeer(), paused);
     }
-
+    public void setPreferredFramesPerSecond(int frames) {
+        NativeCode.Void("((GLKViewController*)%s).preferredFramesPerSecond = %s", nativePeer, frames);
+    }
 }

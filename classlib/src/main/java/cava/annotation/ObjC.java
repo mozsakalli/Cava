@@ -25,5 +25,6 @@ public @interface ObjC {
     public String value() default "";
     public boolean property() default false;
     public boolean isStatic() default false;
+    public boolean noInit() default false;
     
 }

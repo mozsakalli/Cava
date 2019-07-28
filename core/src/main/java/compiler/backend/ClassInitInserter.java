@@ -45,9 +45,11 @@ public class ClassInitInserter {
         final Method root = m;
         while(!queue.isEmpty()) {
             m = queue.remove(0);
+            if(m == null) continue;
             seen.add(m);
             
             final Method mm = m;
+            
             m.body.visit(new Visitor() {
                 @Override
                 public void visitClassReference(String className) {
@@ -63,7 +65,7 @@ public class ClassInitInserter {
                 
                 @Override
                 public void call(Call c) {
-                    Method called = CompilerContext.resolve(c.className).findDeclaredMethod(c.methodName, c.signature);
+                    Method called = CompilerContext.resolve(c.className).findMethod(c.methodName, c.signature);
                     if(!seen.contains(called) && !queue.contains(called))
                         queue.add(called);
                 }

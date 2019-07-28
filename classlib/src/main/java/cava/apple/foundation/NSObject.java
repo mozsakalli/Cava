@@ -31,12 +31,15 @@ import cava.platform.NativeCode;
 @Include("<objc/runtime.h> <Foundation/Foundation.h>")
 @ObjC
 @Keep
-public class NSObject extends NativeObject {
+public class NSObject<T> extends NativeObject {
     
     public NSObject(){
-        //if(!getClass().getName().contains("NSString"))
-        //    System.out.println("-- nsobject: "+getClass().getName());
-        //this(NativeCode.VoidPtr("[NSObject alloc]"));
+        nativePeer = NativeCode.VoidPtr("[%s alloc]", getObjCClass(getClass()));
+    }
+    
+    public T init() {
+        NativeCode.Void("[(NSObject*)%s init]", nativePeer);
+        return (T)this;
     }
     
     public NSObject(VoidPtr handle) { this(handle, false); }

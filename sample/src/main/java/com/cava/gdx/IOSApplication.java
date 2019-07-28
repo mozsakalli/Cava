@@ -20,6 +20,7 @@ import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
+import cava.apple.uikit.UIDevice;
 import cava.apple.uikit.UIScreen;
 import cava.apple.uikit.UIViewController;
 import cava.apple.uikit.UIWindow;
@@ -101,7 +102,9 @@ public class IOSApplication implements Application {
     Array<Runnable> runnables = new Array<Runnable>();
     Array<Runnable> executedRunnables = new Array<Runnable>();
     Array<LifecycleListener> lifecycleListeners = new Array<LifecycleListener>();
-
+    
+    float displayScaleFactor;
+    
     public IOSApplication(ApplicationListener listener, IOSApplicationConfiguration config) {
         this.listener = listener;
         this.config = config;
@@ -109,6 +112,9 @@ public class IOSApplication implements Application {
 
     final boolean didFinishLaunching(UIApplication uiApp, NSDictionary options, Delegate delegate) {
         Gdx.app = this;
+        displayScaleFactor = (float)(getIosVersion() >= 8 ? UIScreen.getMainScreen().getNativeScale() : UIScreen.getMainScreen()
+			.getScale());
+        
         this.graphics = new IOSGraphics(this, config);
         this.files = new IOSFiles();
         this.audio = new IOSAudio();
@@ -121,7 +127,9 @@ public class IOSApplication implements Application {
         Gdx.audio = this.audio;
         Gdx.input = this.input;
 
-        uiWindow = new UIWindow(UIScreen.getMainScreen().getBounds());
+        input.setupPeripherals();
+        
+        uiWindow = new UIWindow().initWithFrame(UIScreen.getMainScreen().getBounds());
         delegate.setWindow(uiWindow);
         uiWindow.setRootViewController(graphics.viewController);
         uiWindow.makeKeyAndVisible();
@@ -199,6 +207,12 @@ public class IOSApplication implements Application {
         return screenBounds;
     }
 
+    int getIosVersion () {
+        String systemVersion = UIDevice.getCurrentDevice().getSystemVersion();
+        int version = Integer.parseInt(systemVersion.split("\\.")[0]);
+        return version;
+    }    
+    
     @Override
     public ApplicationListener getApplicationListener() {
         return listener;

@@ -14,38 +14,44 @@
  * limitations under the License.
  */
 
-package java.io;
+package java.net;
+
+import java.io.InterruptedIOException;
+
 /**
- * Signals that an I/O operation has been interrupted. An InterruptedIOException is thrown to indicate that an input or output transfer has been terminated because the thread performing it was terminated. The field bytesTransferred indicates how many bytes were successfully transferred before the interruption occurred.
- * Since: JDK1.0, CLDC 1.0 See Also:InputStream, OutputStream
+ *
+ * @author mustafa
  */
-public class InterruptedIOException extends IOException {
+public class SocketTimeoutException extends InterruptedIOException {
 
-    private static final long serialVersionUID = 4020568460727500567L;
-
-    /**
-     * The number of bytes transferred before the I/O interrupt occurred.
-     */
-    public int bytesTransferred;
+    private static final long serialVersionUID = -8846654841826352300L;
 
     /**
      * Constructs a new instance.
      */
-    public InterruptedIOException() {
+    public SocketTimeoutException() {
     }
 
     /**
      * Constructs a new instance with the given detail message.
      */
-    public InterruptedIOException(String detailMessage) {
+    public SocketTimeoutException(String detailMessage) {
         super(detailMessage);
+    }
+
+    /**
+     * Constructs a new instance with given cause.
+     * @hide internal use only
+     */
+    public SocketTimeoutException(Throwable cause) {
+        super(null, cause);
     }
 
     /**
      * Constructs a new instance with given detail message and cause.
      * @hide internal use only
      */
-    public InterruptedIOException(String detailMessage, Throwable cause) {
+    public SocketTimeoutException(String detailMessage, Throwable cause) {
         super(detailMessage, cause);
     }
 }

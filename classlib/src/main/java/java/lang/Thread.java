@@ -137,4 +137,8 @@ public class Thread implements java.lang.Runnable{
         }
         return null;
     }
+    
+    public void setDaemon(boolean value) {
+        //todo
+    }
 }

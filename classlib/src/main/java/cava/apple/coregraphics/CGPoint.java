@@ -35,6 +35,9 @@ public class CGPoint extends Struct<CGPoint> {
     @Native("y") public native double getY();
     @Native("y") public native void setY(double value);
     
+    public final native Struct getStruct();
+    public final native void setStruct(Struct value);
+    
     public CGPoint() {}
     public CGPoint(double x, double y) {
         setX(x);

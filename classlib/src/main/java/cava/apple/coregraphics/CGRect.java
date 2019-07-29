@@ -48,6 +48,9 @@ public class CGRect extends Struct<CGRect> {
         setOrigin(origin);
         setSize(size);
     }
+    public CGRect(double x, double y, double width, double height) {
+        setStruct(NativeCode.Struct("CGRectMake(%s,%s,%s,%s)", x,y,width,height));
+    }
 
     public static double getWidth(CGRect rect) {
         return NativeCode.Double("CGRectGetWidth(%s)", rect.getStruct());
@@ -59,6 +62,12 @@ public class CGRect extends Struct<CGRect> {
     }
     public double getHeight() { return getHeight(this); }
     
+    public double getMinX() {
+        return NativeCode.Double("CGRectGetMinX(%s)", getStruct());
+    }
+    public double getMinY() {
+        return NativeCode.Double("CGRectGetMinY(%s)", getStruct());
+    }
     @Override
     public String toString() {
         return getOrigin()+" "+getSize();

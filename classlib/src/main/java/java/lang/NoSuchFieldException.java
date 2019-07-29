@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
-package java.lang.reflect;
-
-import cava.annotation.Keep;
-import cava.platform.NativeCode;
+package java.lang;
 
 /**
  *
  * @author mustafa
  */
-@Keep
-public class Constructor extends Method {
-    
-    public Object newInstance(Object ... initargs) {
-        return invoke(NativeCode.Object("JvmAllocObject(%s)",declaringClass), initargs);
+public class NoSuchFieldException extends ReflectiveOperationException {
+
+    private static final long serialVersionUID = -6143714805279938260L;
+
+    /**
+     * Constructs a new {@code NoSuchFieldException} that includes the current
+     * stack trace.
+     */
+    public NoSuchFieldException() {
     }
-    
-    
+
+    /**
+     * Constructs a new {@code NoSuchFieldException} with the current stack
+     * trace and the specified detail message.
+     *
+     * @param detailMessage
+     *            the detail message for this exception.
+     */
+    public NoSuchFieldException(String detailMessage) {
+        super(detailMessage);
+    }
 }

@@ -30,7 +30,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
-        return new IOSApplication(new Drop(), cfg);
+        return new IOSApplication(new BunnyMark(), cfg);
     }
 
     public static void main() {

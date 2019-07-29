@@ -15,14 +15,21 @@
  */
 package com.cava.gdx;
 
+import cava.apple.coregraphics.CGPoint;
+import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSArray;
 import cava.apple.foundation.NSSet;
+import cava.apple.uikit.UITouch;
 import cava.apple.uikit.UITouchPhase;
+import cava.c.VoidPtr;
+import cava.platform.NativeCode;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 
 /**
@@ -422,12 +429,129 @@ public class IOSInput implements Input {
         return 0;
     }
 
+    private int getFreePointer() {
+        for (int i = 0; i < touchDown.length; i++) {
+            if (touchDown[i] == 0) {
+                return i;
+            }
+        }
+        throw new GdxRuntimeException("Couldn't find free pointer id!");
+    }
+
+    private int findPointer(UITouch touch) {
+        long ptr = touch.getNativePeer().toLong();
+        for (int i = 0; i < touchDown.length; i++) {
+            if (touchDown[i] == ptr) {
+                return i;
+            }
+        }
+        // If pointer is not found
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < touchDown.length; i++) {
+            sb.append(i + ":" + touchDown[i] + " ");
+        }
+        Gdx.app.error("IOSInput", "Pointer ID lookup failed: " + ptr + ", " + sb.toString());
+        return POINTER_NOT_FOUND;
+    }
+
     NSArray touchArray;
+    UITouch uiTouch = new UITouch((VoidPtr) null, true);
+
     public void onTouch(NSSet touches) {
         touchArray = touches.getAllObjects(touchArray);
         int count = touchArray.getCount();
-        System.out.println("touch: "+count);
+        final CGRect bounds = app.getCachedBounds();
+        final double minX = bounds.getMinX();
+        final double minY = bounds.getMinY();
+        for (int i = 0; i < count; i++) {
+            touchArray.getObjectAtIndex(i, uiTouch);
+            CGPoint pt = uiTouch.getLocationInWindow();
+            final int locX = (int) (pt.getX() * app.displayScaleFactor - minX);
+            final int locY = (int) (pt.getY() * app.displayScaleFactor - minY);
+
+            float pressure = 1.0f;
+            if (pressureSupported) {
+                //todo: pressure = (float)touch.getForce();
+            }
+            UITouchPhase phase = uiTouch.getPhase();
+            TouchEvent event = touchEventPool.obtain();
+            event.x = locX;
+            event.y = locY;
+            event.phase = phase;
+            event.timestamp = (long) (uiTouch.getTimestamp() * 1000000000);
+            if (phase == UITouchPhase.Began) {
+                event.pointer = getFreePointer();
+                touchDown[event.pointer] = uiTouch.getNativePeer().toLong();
+                touchX[event.pointer] = event.x;
+                touchY[event.pointer] = event.y;
+                deltaX[event.pointer] = 0;
+                deltaY[event.pointer] = 0;
+                pressures[event.pointer] = pressure;
+                numTouched++;
+            } else if (phase == UITouchPhase.Moved || phase == UITouchPhase.Stationary) {
+                event.pointer = findPointer(uiTouch);
+                if (event.pointer != POINTER_NOT_FOUND) {
+                    deltaX[event.pointer] = event.x - touchX[event.pointer];
+                    deltaY[event.pointer] = event.y - touchY[event.pointer];
+                    touchX[event.pointer] = event.x;
+                    touchY[event.pointer] = event.y;
+                    pressures[event.pointer] = pressure;
+                }
+            } else if (phase == UITouchPhase.Cancelled || phase == UITouchPhase.Ended) {
+                event.pointer = findPointer(uiTouch);
+                if (event.pointer != POINTER_NOT_FOUND) {
+                    touchDown[event.pointer] = 0;
+                    touchX[event.pointer] = event.x;
+                    touchY[event.pointer] = event.y;
+                    deltaX[event.pointer] = 0;
+                    deltaY[event.pointer] = 0;
+                    pressures[event.pointer] = 0;
+                    numTouched--;
+                }
+            }
+
+            if (event.pointer != POINTER_NOT_FOUND) {
+                touchEvents.add(event);
+            } else {
+                touchEventPool.free(event);
+            }
+        }
+        Gdx.graphics.requestRendering();
     }
+
+    void processEvents() {
+        //synchronized (touchEvents) {
+            justTouched = false;
+            for (TouchEvent event : touchEvents) {
+                currentEventTimeStamp = event.timestamp;
+                switch (event.phase) {
+                    case Began:
+                        if (inputProcessor != null) {
+                            inputProcessor.touchDown(event.x, event.y, event.pointer, Buttons.LEFT);
+                        }
+                        if (numTouched >= 1) {
+                            justTouched = true;
+                        }
+                        break;
+                    case Cancelled:
+                    case Ended:
+                        if (inputProcessor != null) {
+                            inputProcessor.touchUp(event.x, event.y, event.pointer, Buttons.LEFT);
+                        }
+                        break;
+                    case Moved:
+                    case Stationary:
+                        if (inputProcessor != null) {
+                            inputProcessor.touchDragged(event.x, event.y, event.pointer);
+                        }
+                        break;
+                }
+            }
+            touchEventPool.freeAll(touchEvents);
+            touchEvents.clear();
+        //}
+    }
+
     static class TouchEvent {
 
         UITouchPhase phase;

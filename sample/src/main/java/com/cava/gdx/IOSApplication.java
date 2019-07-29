@@ -102,9 +102,10 @@ public class IOSApplication implements Application {
     Array<Runnable> runnables = new Array<Runnable>();
     Array<Runnable> executedRunnables = new Array<Runnable>();
     Array<LifecycleListener> lifecycleListeners = new Array<LifecycleListener>();
-    
+
     float displayScaleFactor;
-    
+    CGRect lastScreenBounds;
+
     public IOSApplication(ApplicationListener listener, IOSApplicationConfiguration config) {
         this.listener = listener;
         this.config = config;
@@ -112,13 +113,13 @@ public class IOSApplication implements Application {
 
     final boolean didFinishLaunching(UIApplication uiApp, NSDictionary options, Delegate delegate) {
         Gdx.app = this;
-        displayScaleFactor = (float)(getIosVersion() >= 8 ? UIScreen.getMainScreen().getNativeScale() : UIScreen.getMainScreen()
-			.getScale());
-        
+        displayScaleFactor = (float) (getIosVersion() >= 8 ? UIScreen.getMainScreen().getNativeScale() : UIScreen.getMainScreen()
+                .getScale());
+
+        this.input = new IOSInput(this);
         this.graphics = new IOSGraphics(this, config);
         this.files = new IOSFiles();
         this.audio = new IOSAudio();
-        this.input = new IOSInput(this);
 
         Gdx.graphics = this.graphics;
         Gdx.gl = Gdx.gl20 = graphics.gl20;
@@ -128,7 +129,7 @@ public class IOSApplication implements Application {
         Gdx.input = this.input;
 
         input.setupPeripherals();
-        
+
         uiWindow = new UIWindow().initWithFrame(UIScreen.getMainScreen().getBounds());
         delegate.setWindow(uiWindow);
         uiWindow.setRootViewController(graphics.viewController);
@@ -166,6 +167,10 @@ public class IOSApplication implements Application {
      */
     protected CGRect getBounds() {
         final CGRect screenBounds = UIScreen.getMainScreen().getBounds();
+        double screenWidth = screenBounds.getWidth() * displayScaleFactor;
+        double screenHeight = screenBounds.getHeight() * displayScaleFactor;
+
+        return lastScreenBounds = new CGRect(0, 0, screenWidth, screenHeight);
         /*
         final CGRect statusBarFrame = uiApp.getStatusBarFrame();
         final UIInterfaceOrientation statusBarOrientation = uiApp.getStatusBarOrientation();
@@ -203,16 +208,20 @@ public class IOSApplication implements Application {
         debug("IOSApplication", "Total computed bounds are w=" + screenWidth + " h=" + screenHeight);
 
         return lastScreenBounds = new CGRect(0.0, statusBarHeight, screenWidth, screenHeight);
-        */
-        return screenBounds;
+         */
+
     }
 
-    int getIosVersion () {
+    public CGRect getCachedBounds() {
+        return lastScreenBounds == null ? getBounds() : lastScreenBounds;
+    }
+
+    int getIosVersion() {
         String systemVersion = UIDevice.getCurrentDevice().getSystemVersion();
         int version = Integer.parseInt(systemVersion.split("\\.")[0]);
         return version;
-    }    
-    
+    }
+
     @Override
     public ApplicationListener getApplicationListener() {
         return listener;
@@ -295,12 +304,12 @@ public class IOSApplication implements Application {
 
     @Override
     public ApplicationType getType() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ApplicationType.iOS;
     }
 
     @Override
     public int getVersion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Integer.parseInt(UIDevice.getCurrentDevice().getSystemVersion().split("\\.")[0]);
     }
 
     @Override
@@ -352,13 +361,17 @@ public class IOSApplication implements Application {
     }
 
     @Override
-    public void addLifecycleListener(LifecycleListener ll) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addLifecycleListener(LifecycleListener listener) {
+        synchronized (lifecycleListeners) {
+            lifecycleListeners.add(listener);
+        }
     }
 
     @Override
-    public void removeLifecycleListener(LifecycleListener ll) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void removeLifecycleListener(LifecycleListener listener) {
+        synchronized (lifecycleListeners) {
+            lifecycleListeners.removeValue(listener, true);
+        }
     }
 
 }

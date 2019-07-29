@@ -52,6 +52,10 @@ public class VoidPtr {
         return NativeCode.Int("(jint)%s", this);
     }
     
+    public long toLong() {
+        return NativeCode.Long("(jlong)%s", this);
+    }
+    
     public Object toObject() {
         return NativeCode.Object("%s", this);
     }

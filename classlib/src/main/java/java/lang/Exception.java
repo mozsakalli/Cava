@@ -25,6 +25,9 @@ public class Exception extends java.lang.Throwable{
          super(s);
     }
     
+    public Exception(Throwable cause) {
+        super(cause);
+    }
     public Exception(String s, Throwable cause) {
         super(s,cause);
     }

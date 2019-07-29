@@ -16,7 +16,6 @@
 package com.cava.gdx;
 
 import cava.annotation.Keep;
-import cava.annotation.ObjC;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSObject;
 import cava.apple.foundation.NSSet;
@@ -27,7 +26,6 @@ import cava.apple.glkit.GLKViewDelegate;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIEvent;
-import cava.apple.uikit.UIScreen;
 import cava.apple.uikit.UITouch;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -87,8 +85,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         @Override
         public void viewDidLayoutSubviews() {
             CGRect bounds = app.getBounds();
-            graphics.width = (int)(bounds.getWidth() * app.displayScaleFactor);
-            graphics.height = (int)(bounds.getHeight() * app.displayScaleFactor);
+            graphics.width = (int)(bounds.getWidth());
+            graphics.height = (int)(bounds.getHeight());
             graphics.makeCurrent();
             if (graphics.created) {
                 app.listener.resize(graphics.width, graphics.height);
@@ -113,6 +111,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     GLVersion glVersion;
     GLKView view;
     IOSUIViewController viewController;
+    IOSInput input;
 
     volatile boolean appPaused;
     private long frameId = -1;
@@ -124,10 +123,11 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     public IOSGraphics(IOSApplication app, IOSApplicationConfiguration config) {
         this.config = config;
         this.app = app;
+        this.input = app.input;
         final CGRect bounds = app.getBounds();
         // setup view and OpenGL
-        width = (int)(bounds.getWidth() * app.displayScaleFactor);
-        height = (int)(bounds.getHeight() * app.displayScaleFactor);
+        width = (int)(bounds.getWidth());
+        height = (int)(bounds.getHeight());
         
         context = new EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
         if (context.getNativePeer() != null) {
@@ -138,12 +138,28 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         
         view = new GLKView() {
             @Override
-            @ObjC("touchesBegan:withEvent:")
             @Keep
             public void touchesBegan(NSSet<UITouch> touches, UIEvent event) {
                 app.input.onTouch(touches);
             }
-            
+
+            @Override
+            @Keep
+            public void touchesMoved(NSSet<UITouch> touches, UIEvent event) {
+                app.input.onTouch(touches);
+            }
+
+            @Override
+            @Keep
+            public void touchesEnded(NSSet<UITouch> touches, UIEvent event) {
+                app.input.onTouch(touches);
+            }
+
+            @Override
+            @Keep
+            public void touchesCancelled(NSSet<UITouch> touches, UIEvent event) {
+                app.input.onTouch(touches);
+            }
         };
         view.initWithFrame(bounds, context);
         
@@ -227,7 +243,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
             frames = 0;
         }
 
-        //todo: input.processEvents();
+        input.processEvents();
         frameId++;
         app.listener.render();
     }

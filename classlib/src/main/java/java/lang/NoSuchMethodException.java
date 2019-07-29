@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-package cava.apple.foundation;
-
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+package java.lang;
 
 /**
  *
  * @author mustafa
  */
-public class NSArray extends NSObject {
-    
-    public NSArray(){}
-    NSArray(VoidPtr nativePeer) {
-        super(nativePeer);
+public class NoSuchMethodException extends ReflectiveOperationException {
+
+    private static final long serialVersionUID = 5034388446362600923L;
+
+    /**
+     * Constructs a new {@code NoSuchMethodException} that includes the current
+     * stack trace.
+     */
+    public NoSuchMethodException() {
     }
-    NSArray(VoidPtr nativePeer, boolean noOwner) {
-        super(nativePeer, noOwner);
+
+    /**
+     * Constructs a new {@code NoSuchMethodException} with the current stack
+     * trace and the specified detail message.
+     *
+     * @param detailMessage
+     *            the detail message for this exception.
+     */
+    public NoSuchMethodException(String detailMessage) {
+        super(detailMessage);
     }
-    
-    public int getCount() {
-        return NativeCode.Int("((NSArray*)%s).count", nativePeer);
-    }
-    
-    public <T extends NSObject> void getObjectAtIndex(int index, T object) {
-        object.setNativePeer(NativeCode.VoidPtr("[(NSArray*)%s objectAtIndex:%s]", nativePeer, index));
-        object.setNoOwner(true);
-    }
+
 }

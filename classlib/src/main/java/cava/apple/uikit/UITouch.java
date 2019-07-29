@@ -18,7 +18,10 @@ package cava.apple.uikit;
 
 import cava.annotation.Include;
 import cava.annotation.ObjC;
+import cava.apple.coregraphics.CGPoint;
 import cava.apple.foundation.NSObject;
+import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
@@ -27,5 +30,22 @@ import cava.apple.foundation.NSObject;
 @ObjC
 @Include("<UIKit/UIKit.h>")
 public class UITouch extends NSObject {
-
+    
+    final static CGPoint CGPOINT = new CGPoint();
+    public UITouch(VoidPtr nativePeer) { super(nativePeer); }
+    public UITouch(VoidPtr nativePeer, boolean noOwner) { super(nativePeer, noOwner); }
+    
+    public CGPoint getLocationInWindow() {
+        CGPOINT.setStruct(NativeCode.Struct("[((UITouch*)%s) locationInView:((UITouch*)%s).window]", nativePeer, nativePeer));
+        return CGPOINT;
+    }
+    
+    public UITouchPhase getPhase() {
+        return UITouchPhase.valueOf(NativeCode.Long("((UITouch*)%s).phase", nativePeer));
+    }
+    
+    public long getTimestamp() {
+        return NativeCode.Long("((UITouch*)%s).timestamp", nativePeer);
+    }
+    
 }

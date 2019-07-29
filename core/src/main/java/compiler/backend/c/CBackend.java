@@ -334,8 +334,13 @@ public class CBackend {
                         boolean objcInitializer = 
                         m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");
                         //UIDevice(VoidPtr) doesn't need to create any instance
-                        if(objcInitializer && m.args.size() == 2 && m.args.get(1).type.equals("cava/c/VoidPtr"))
-                            objcInitializer = false;
+                        if(objcInitializer) {
+                            for(NameAndType arg : m.args)
+                                if(arg.type.equals("cava/c/VoidPtr")) {
+                                    objcInitializer = false;
+                                    break;
+                                }
+                        }
                         
                         if(c.isObjCImplementation && m.name.equals("<init>")) {
                             String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";

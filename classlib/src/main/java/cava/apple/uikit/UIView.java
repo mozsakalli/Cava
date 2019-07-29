@@ -20,7 +20,6 @@ import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.apple.coreanimation.CALayer;
 import cava.apple.coregraphics.CGRect;
-import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**

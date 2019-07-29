@@ -70,6 +70,8 @@ public class XCodeProject extends Project {
         addRequiredFrameworks();
         pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "bucket.png"));
         pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "droplet.png"));
+        pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "wabbit_alpha.png"));
+        pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "com"));
         //pbxProject.addResourceFile("", new File(CompilerContext.platformBuildDir, "assets"));
         
         SourceWriter out = new SourceWriter();

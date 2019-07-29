@@ -114,20 +114,26 @@ static void _finalizeObject(GC_PTR addr, GC_PTR client_data) {
         object->klass->finalizeFunction(object);
 }
 static void* gcAlloc(int size) {
+    
     void* m = GC_MALLOC(size);
     if(!m) {
         GC_gcollect();
         m = GC_MALLOC(size);
     }
     return m;
+    /*void* m = malloc(size);
+    memset(m, 0, size);
+    return m;*/
 }
 static void* gcAllocAtomic(int size) {
+    
     void* m = GC_MALLOC_ATOMIC(size);
     if(!m) {
         GC_gcollect();
         m = GC_MALLOC_ATOMIC(size);
     }
     return m;
+    return gcAlloc(size);
 }
 
 void JvmAddRoot(void* ptr) {
@@ -303,11 +309,16 @@ typedef struct JvmMonitorMutex {
     pthread_mutex_t mutex;
     void* key;
     jbool created;
+    JvmThread* thread;
+    int count;
 } JvmMonitorMutex;
 #define MAXMONITOR 256
 JvmMonitorMutex JvmMonitorMutexList[MAXMONITOR];
 
 void JvmMonitorEnter(JvmObject* object) {
+    if(object == jnull) {
+        JvmNullPointerException();
+    }
     pthread_mutex_lock(&JvmMonitorListLock);
     int index = -1;
     for(int i=0; i<MAXMONITOR; i++)
@@ -335,8 +346,14 @@ void JvmMonitorEnter(JvmObject* object) {
         mon->created = jtrue;
     }
     pthread_mutex_unlock(&JvmMonitorListLock);
-    
+    JvmThread* thread = JvmCurrentThread();
+    if(mon->thread == thread) {
+        mon->count++;
+        return;
+    }
     pthread_mutex_lock(&mon->mutex);
+    mon->thread = thread;
+    mon->count++;
 }
 
 void JvmMonitorExit(JvmObject* object) {
@@ -349,8 +366,13 @@ void JvmMonitorExit(JvmObject* object) {
         }
     if(!mon) return; //this souldn't happen in general!!
     
-    mon->key = jnull;
+    mon->count--;
+    if(mon->count > 0) return;
+    
     pthread_mutex_unlock(&mon->mutex);
+    mon->thread = jnull;
+    mon->count = 0;
+    mon->key = jnull;
 }
 
 
@@ -365,9 +387,8 @@ void JvmThrow(jobject exception) {
         printf("Exception caught on non jvm thread!!!!!\n");
         return;
     }
-    
+
     thread->exception = exception;
-    
     //fill stack trace
     if(exception) {
         JvmArray* array = JvmAllocObjectArray1(&ArrOf_java_lang_StackTraceElement_Class, thread->framePtr);

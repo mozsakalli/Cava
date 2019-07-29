@@ -149,7 +149,7 @@ public class Drop extends ApplicationAdapter {
          }
       }
       
-      System.out.println("fps = "+Gdx.graphics.getFramesPerSecond());
+      //System.out.println("fps = "+Gdx.graphics.getFramesPerSecond());
    }
    
    @Override

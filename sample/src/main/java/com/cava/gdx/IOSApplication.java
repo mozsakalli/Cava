@@ -136,6 +136,7 @@ public class IOSApplication implements Application {
         uiWindow.makeKeyAndVisible();
 
         graphics.makeCurrent();
+        
         return true;
     }
 

@@ -202,7 +202,7 @@ public class ByteBuffer extends Buffer {
             throw new ReadOnlyBufferException();
         }
         checkPutBounds(1, src.length, srcOffset, byteCount);
-        CLib.memcpy(ptr, position, VoidPtr.fromAnyArray(array), srcOffset, byteCount);
+        CLib.memmove(ptr, position, VoidPtr.fromAnyArray(src), srcOffset, byteCount);
         position += byteCount;
         return this;
     }

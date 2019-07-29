@@ -90,7 +90,7 @@ public class IntBuffer extends Buffer {
         if (intCount > remaining()) {
             throw new BufferOverflowException();
         }
-        CLib.memcpy(ptr, position * CLib.INT_SIZE, VoidPtr.fromAnyArray(src), srcOffset * CLib.INT_SIZE, intCount * CLib.INT_SIZE);
+        CLib.memmove(ptr, position * CLib.INT_SIZE, VoidPtr.fromAnyArray(src), srcOffset * CLib.INT_SIZE, intCount * CLib.INT_SIZE);
         position += intCount;
         return this;
     }

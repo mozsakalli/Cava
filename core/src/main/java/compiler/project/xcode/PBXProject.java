@@ -251,7 +251,7 @@ public class PBXProject extends PBXNode {
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
         .println("OTHER_CFLAGS = \"-fshort-wchar%s\";", CavaOptions.debug() ? " -DJVM_DEBUG -DJVM_DEBUG_PORT="+CavaOptions.debugPort() : "")     
         .println("ENABLE_BITCODE = NO;")
-        .println("GCC_OPTIMIZATION_LEVEL = s;")        
+        .println("GCC_OPTIMIZATION_LEVEL = 0;")        
         .println("COPY_PHASE_STRIP = NO;") 
         .println("DEBUG_INFORMATION_FORMAT = \"dwarf-with-dsym\";") 
         .println("ENABLE_NS_ASSERTIONS = NO;") 

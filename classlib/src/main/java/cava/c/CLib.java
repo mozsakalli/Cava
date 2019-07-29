@@ -42,6 +42,7 @@ public class CLib {
         NativeCode.Void("free(%s)", ptr);
     }
     
+    /*
     public static void memcpy(Object dst, Object src, int sizeInBytes) {
         NativeCode.Void("memcpy(%s, %s, %s)", dst, src, sizeInBytes);
     }
@@ -53,7 +54,7 @@ public class CLib {
     public static void memmove(Object dst, Object src, int sizeInBytes) {
         NativeCode.Void("memmove(%s, %s, %s)", dst, src, sizeInBytes);
     }
-    
+    */
     public static void memmove(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
         NativeCode.Void("memmove(((char*)%s)+%s, ((char*)%s)+%s, %s)", dst, dstOffset, src, srcOffset, sizeInBytes);
     }

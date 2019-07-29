@@ -57,7 +57,7 @@ public class ShortBuffer extends Buffer {
         if (shortCount > remaining()) {
             throw new BufferOverflowException();
         }
-        CLib.memcpy(ptr, position * CLib.SHORT_SIZE, VoidPtr.fromAnyArray(src), srcOffset * CLib.SHORT_SIZE, shortCount * CLib.SHORT_SIZE);
+        CLib.memmove(ptr, position * CLib.SHORT_SIZE, VoidPtr.fromAnyArray(src), srcOffset * CLib.SHORT_SIZE, shortCount * CLib.SHORT_SIZE);
         position += shortCount;
         return this;
     }

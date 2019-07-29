@@ -20,6 +20,7 @@ import cava.apple.foundation.NSAutoreleasePool;
 import cava.apple.uikit.UIApplication;
 import com.cava.gdx.IOSApplication;
 import com.cava.gdx.IOSApplicationConfiguration;
+import java.util.Random;
 
 /**
  *
@@ -30,10 +31,14 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
+        cfg.hideHomeIndicator = true;
+        cfg.statusBarVisible = false;
         return new IOSApplication(new BunnyMark(), cfg);
     }
 
     public static void main() {
+        Random r = new Random();
+        for(int i=0; i<10; i++) System.out.println("r = "+r.nextInt());
         NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main((String[])null, null, IOSLauncher.class);
         pool.close();

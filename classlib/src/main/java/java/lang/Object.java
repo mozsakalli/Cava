@@ -69,7 +69,8 @@ public class Object{
             return result;
         } else {
             Object result = NativeCode.Object("JvmAllocObject(%s)", getClass());
-            CLib.memcpy(result, this, getClass().size);
+            CLib.memmove(result, 0, this, 0, getClass().size);
+            //CLib.memcpy(result, this, getClass().size);
             return result;
         }
     }

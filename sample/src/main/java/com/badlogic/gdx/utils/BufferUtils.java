@@ -19,6 +19,7 @@ package com.badlogic.gdx.utils;
 import cava.c.CLib;
 import cava.c.VoidPtr;
 import java.nio.Buffer;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -64,7 +65,13 @@ public final class BufferUtils {
     
     public static void copy (float[] src, Buffer dst, int numFloats, int offset) {
         int elementSize = getBufferElementSize(dst);
-        CLib.memcpy(VoidPtr.from(dst), dst.position()*elementSize, 
+        if(offset + numFloats > src.length) throw new ArrayIndexOutOfBoundsException(offset);
+        if((dst.remaining() * elementSize) / CLib.FLOAT_SIZE < numFloats) {
+            System.out.println(dst.remaining()+"/"+elementSize+"/"+dst.position()+"/"+dst.capacity()+"/"+dst.limit()+"/"+src.length+"/"+offset+"/"+numFloats+"/"+dst.getClass());
+            throw new BufferOverflowException();
+        }
+        
+        CLib.memmove(VoidPtr.from(dst), dst.position()*elementSize, 
                 VoidPtr.fromAnyArray(src), offset * CLib.FLOAT_SIZE, numFloats * CLib.FLOAT_SIZE);
         dst.limit((numFloats * elementSize) / CLib.FLOAT_SIZE);
         dst.position(0);

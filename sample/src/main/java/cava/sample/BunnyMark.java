@@ -49,7 +49,7 @@ public class BunnyMark extends ApplicationAdapter {
     private static float maxY = 0;
 
     private BitmapFont labelFont;
-    private float labelX = 5;
+    private float labelX = 50;
     private float labelY;
     private String bunnyLabel;
     private String fpsLabel = "";
@@ -69,7 +69,7 @@ public class BunnyMark extends ApplicationAdapter {
         labelFont.setColor(Color.WHITE);
 
         sprite = new Sprite(new Texture("wabbit_alpha.png"));
-
+        System.out.println("resize: "+Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight());
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         moreBunnies(1000);
@@ -125,7 +125,7 @@ public class BunnyMark extends ApplicationAdapter {
         minY = 0;
         maxY = h - sprite.getHeight();
 
-        labelY = h - 5;
+        labelY = h - 50;
     }
 
     private void moreBunnies(int more) {

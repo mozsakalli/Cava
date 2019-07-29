@@ -1011,7 +1011,7 @@ public class CBackend {
             }
             out.println("jobject invoke_%s(jobject m, jobject pthis, jobject pargs) {", sign).indent();
             out.println("JvmMethod* method = (JvmMethod*)m;");
-            out.println("if(method->parameters->len > JvmArrayLen(pargs)) {} //todo");
+            out.println("if(method->parameters->len > (pargs == jnull ? 0 : JvmArrayLen(pargs))) {} //todo");
             out.println("if((method->modifiers & 8) != 0) {").indent();
             if(returnType != 'V') out.print("return ");
             if(returnType != 'V' && returnType != 'O') out.print("JvmBox_"+returnType+"(");

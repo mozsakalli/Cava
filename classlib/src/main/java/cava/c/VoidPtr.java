@@ -34,7 +34,7 @@ public class VoidPtr {
     public static VoidPtr from(Object o, int byteOffset) {
         return NativeCode.VoidPtr("(void*)((char*)%s + %s)", o, byteOffset);
     }
-    
+    /*
     public static VoidPtr from(Buffer buffer) {
         return buffer.getAddress();
     }
@@ -42,7 +42,7 @@ public class VoidPtr {
     public static VoidPtr from(Buffer buffer, int byteOffset) {
         return NativeCode.VoidPtr("(void*)((char*)%s + %s)", buffer.getAddress(), byteOffset);
     }
-    
+    */
     public static VoidPtr fromAnyArray(Object array) {
         return NativeCode.VoidPtr("(void*)JvmArrayData(%s)", array);
     }

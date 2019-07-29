@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cava-classlib" />
+        <module name="cava-compiler" />
+        <module name="cava-maven" />
+        <module name="cava-procyon" />
+        <module name="cava-sample" />
+        <module name="cava-debugger" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cava-classlib" target="1.8" />
+      <module name="cava-compiler" target="1.8" />
+      <module name="cava-debugger" target="1.8" />
+      <module name="cava-maven" target="1.8" />
+      <module name="cava-parent" target="1.5" />
+      <module name="cava-procyon" target="1.8" />
+      <module name="cava-sample" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

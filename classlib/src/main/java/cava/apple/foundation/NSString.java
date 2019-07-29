@@ -25,22 +25,22 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
-@ObjC
+@ObjC(noInit = true)
 public final class NSString extends NSObject {
     /*
     public NSString(VoidPtr handle) {
         super(handle);
     }*/
     public NSString(String string) {
-        alloc();
         initWithCharacters(WCharPtr.from(string), string.length());
     }
-    void alloc() {
-        nativePeer = NativeCode.VoidPtr("[NSString alloc]");
+    public NSString(String string, boolean noOwner) {
+        initWithCharacters(WCharPtr.from(string), string.length());
+        this.noOwner = noOwner;
     }
-    
+
     public final NSString initWithCharacters(WCharPtr chars, int length) {
-        NativeCode.Void("%s=(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", nativePeer, nativePeer, chars, length);
+        nativePeer = NativeCode.VoidPtr("(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", nativePeer, chars, length);
         return this;
     }
     

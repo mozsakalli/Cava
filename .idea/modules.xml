@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/classlib/cava-classlib.iml" filepath="$PROJECT_DIR$/classlib/cava-classlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/cava-compiler.iml" filepath="$PROJECT_DIR$/core/cava-compiler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/debugger/cava-debugger.iml" filepath="$PROJECT_DIR$/debugger/cava-debugger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/maven/cava-maven.iml" filepath="$PROJECT_DIR$/maven/cava-maven.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cava-parent.iml" filepath="$PROJECT_DIR$/cava-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/procyon/cava-procyon.iml" filepath="$PROJECT_DIR$/procyon/cava-procyon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/cava-sample.iml" filepath="$PROJECT_DIR$/sample/cava-sample.iml" />
+    </modules>
+  </component>
+</project>

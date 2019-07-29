@@ -171,6 +171,8 @@ public class ObjCWriter {
             }
         }
         
+        if(!m.type.equals("V"))
+            out.print("return ");
         Method tm = m;
         if(m.interfaceBaseClass != null) {
             tm = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
@@ -190,7 +192,10 @@ public class ObjCWriter {
             else
                 out.print("&arg_%s", arg.name);
         }
-        out.println(");");
+        out.print(")");
+        if(m.type.equals("Z"))
+            out.print(" ? YES : NO");
+        out.println(";");
     }
     void writeMethodBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         SourceWriter tmpOut = new SourceWriter();

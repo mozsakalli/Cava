@@ -61,11 +61,13 @@ public class XCodeProject extends Project {
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.h"));
         
 
-        pbxProject.addStaticLibrary("gc", 
+        for(String lib : new String[]{"gc","bx","bimg","bimg_decode","bgfx"})
+        pbxProject.addStaticLibrary(lib, 
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/arm64"),
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/thumbv7"),
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86_64"),
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/x86"));
+
         
         addRequiredFrameworks();
         pbxProject.addAssetFile("", new File(CompilerContext.platformBuildDir, "bucket.png"));

@@ -1,0 +1,975 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+		/* Begin PBXFileReference section */
+		AB00000010000000000011 /* java_lang_Void.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Void.m"; path = "generated/java_lang_Void.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000013 /* java_lang_StringIndexOutOfBoundsException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringIndexOutOfBoundsException.h"; path = "generated/java_lang_StringIndexOutOfBoundsException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000014 /* java_lang_Iterable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Iterable.m"; path = "generated/java_lang_Iterable.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000016 /* java_lang_Integer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Integer.h"; path = "generated/java_lang_Integer.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000017 /* java_lang_Integer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Integer.m"; path = "generated/java_lang_Integer.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000019 /* java_lang_StringIndexOutOfBoundsException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringIndexOutOfBoundsException.m"; path = "generated/java_lang_StringIndexOutOfBoundsException.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001b /* cava_apple_coregraphics_CGRect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_coregraphics_CGRect.h"; path = "generated/cava_apple_coregraphics_CGRect.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001c /* java_lang_Comparable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Comparable.h"; path = "generated/java_lang_Comparable.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001d /* java_lang_Iterable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Iterable.h"; path = "generated/java_lang_Iterable.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001e /* java_io_PrintStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_PrintStream.h"; path = "generated/java_io_PrintStream.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000001f /* java_lang_StackTraceElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StackTraceElement.h"; path = "generated/java_lang_StackTraceElement.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000020 /* java_lang_Long.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Long.m"; path = "generated/java_lang_Long.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000022 /* java_io_PrintStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_PrintStream.m"; path = "generated/java_io_PrintStream.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000024 /* java_lang_Void.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Void.h"; path = "generated/java_lang_Void.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000025 /* java_lang_StackTraceElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StackTraceElement.m"; path = "generated/java_lang_StackTraceElement.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000027 /* java_lang_Comparable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Comparable.m"; path = "generated/java_lang_Comparable.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000029 /* java_lang_Long.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Long.h"; path = "generated/java_lang_Long.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002a /* java_util_Collection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_Collection.m"; path = "generated/java_util_Collection.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002c /* cava_c_Struct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_Struct.h"; path = "generated/cava_c_Struct.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002d /* java_lang_Short.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Short.h"; path = "generated/java_lang_Short.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000002e /* java_io_File.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_File.m"; path = "generated/java_io_File.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000030 /* java_util_RandomAccess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_RandomAccess.m"; path = "generated/java_util_RandomAccess.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000032 /* cava_apple_foundation_NSDictionary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_foundation_NSDictionary.m"; path = "generated/cava_apple_foundation_NSDictionary.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000034 /* java_io_FileNotFoundException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_FileNotFoundException.m"; path = "generated/java_io_FileNotFoundException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000036 /* java_lang_Boolean.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Boolean.m"; path = "generated/java_lang_Boolean.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000038 /* cava_apple_foundation_NSDictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_foundation_NSDictionary.h"; path = "generated/cava_apple_foundation_NSDictionary.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000039 /* java_util_ArrayList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_ArrayList.h"; path = "generated/java_util_ArrayList.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003a /* cava_c_VoidPtrPtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_VoidPtrPtr.m"; path = "generated/cava_c_VoidPtrPtr.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003c /* java_lang_IncompatibleClassChangeError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_IncompatibleClassChangeError.h"; path = "generated/java_lang_IncompatibleClassChangeError.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003d /* java_util_RandomAccess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_RandomAccess.h"; path = "generated/java_util_RandomAccess.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000003e /* java_lang_IncompatibleClassChangeError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_IncompatibleClassChangeError.m"; path = "generated/java_lang_IncompatibleClassChangeError.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000040 /* java_util_Collection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_Collection.h"; path = "generated/java_util_Collection.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000041 /* java_io_File.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_File.h"; path = "generated/java_io_File.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000042 /* java_lang_StringToReal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringToReal.m"; path = "generated/java_lang_StringToReal.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000044 /* java_lang_System.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_System.h"; path = "generated/java_lang_System.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000045 /* java_lang_StringBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringBuffer.h"; path = "generated/java_lang_StringBuffer.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000046 /* java_util_ArrayList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_ArrayList.m"; path = "generated/java_util_ArrayList.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000048 /* cava_sample_MainKt.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_MainKt.m"; path = "generated/cava_sample_MainKt.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004a /* cava_apple_coregraphics_CGRect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_coregraphics_CGRect.m"; path = "generated/cava_apple_coregraphics_CGRect.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004c /* java_lang_System.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_System.m"; path = "generated/java_lang_System.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004e /* java_lang_Boolean.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Boolean.h"; path = "generated/java_lang_Boolean.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000004f /* java_lang_StringBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringBuffer.m"; path = "generated/java_lang_StringBuffer.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000051 /* java_lang_StringToReal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringToReal.h"; path = "generated/java_lang_StringToReal.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000052 /* cava_apple_uikit_UIWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIWindow.h"; path = "generated/cava_apple_uikit_UIWindow.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000053 /* cava_apple_uikit_UIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIView.m"; path = "generated/cava_apple_uikit_UIView.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000055 /* java_lang_NoSuchFieldError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_NoSuchFieldError.m"; path = "generated/java_lang_NoSuchFieldError.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000057 /* cava_c_VoidPtr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_VoidPtr.h"; path = "generated/cava_c_VoidPtr.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000058 /* cava_apple_uikit_UIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIView.h"; path = "generated/cava_apple_uikit_UIView.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000059 /* java_lang_CharSequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_CharSequence.h"; path = "generated/java_lang_CharSequence.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000005a /* cava_c_VoidPtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_VoidPtr.m"; path = "generated/cava_c_VoidPtr.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000005c /* cava_apple_uikit_UIWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIWindow.m"; path = "generated/cava_apple_uikit_UIWindow.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000005e /* java_lang_CharSequence.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_CharSequence.m"; path = "generated/java_lang_CharSequence.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000060 /* java_util_List.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_List.h"; path = "generated/java_util_List.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000061 /* java_lang_NoSuchFieldError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_NoSuchFieldError.h"; path = "generated/java_lang_NoSuchFieldError.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000062 /* cava_c_VoidPtrPtr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_VoidPtrPtr.h"; path = "generated/cava_c_VoidPtrPtr.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000063 /* java_lang_InterruptedException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_InterruptedException.h"; path = "generated/java_lang_InterruptedException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000064 /* java_lang_ClassNotFoundException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_ClassNotFoundException.h"; path = "generated/java_lang_ClassNotFoundException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000065 /* cava_main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "cava_main.c"; path = "generated/cava_main.c"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000067 /* java_lang_ClassNotFoundException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_ClassNotFoundException.m"; path = "generated/java_lang_ClassNotFoundException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000069 /* java_lang_Short.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Short.m"; path = "generated/java_lang_Short.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000006b /* java_io_Serializable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_Serializable.h"; path = "generated/java_io_Serializable.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000006c /* java_io_Serializable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_Serializable.m"; path = "generated/java_io_Serializable.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000006e /* cava_sample_Graphics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_Graphics.m"; path = "generated/cava_sample_Graphics.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000070 /* cava_sample_Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_Graphics.h"; path = "generated/cava_sample_Graphics.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000071 /* cava_sample_OpenGLGraphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_OpenGLGraphics.h"; path = "generated/cava_sample_OpenGLGraphics.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000072 /* cava_c_CharPtr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_CharPtr.h"; path = "generated/cava_c_CharPtr.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000073 /* java_util_List.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_List.m"; path = "generated/java_util_List.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000075 /* cava_sample_OpenGLGraphics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_OpenGLGraphics.m"; path = "generated/cava_sample_OpenGLGraphics.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000077 /* cava_c_CharPtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_CharPtr.m"; path = "generated/cava_c_CharPtr.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000079 /* java_lang_annotation_Annotation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_annotation_Annotation.h"; path = "generated/java_lang_annotation_Annotation.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000007a /* cava_platform_NativeCode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_platform_NativeCode.m"; path = "generated/cava_platform_NativeCode.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000007c /* cava_apple_uikit_UIApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIApplication.h"; path = "generated/cava_apple_uikit_UIApplication.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000007d /* cava_apple_uikit_UIApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIApplication.m"; path = "generated/cava_apple_uikit_UIApplication.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000007f /* java_lang_annotation_Annotation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_annotation_Annotation.m"; path = "generated/java_lang_annotation_Annotation.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000081 /* cava_platform_NativeCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_platform_NativeCode.h"; path = "generated/cava_platform_NativeCode.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000082 /* java_lang_Exception.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Exception.h"; path = "generated/java_lang_Exception.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000083 /* java_lang_Exception.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Exception.m"; path = "generated/java_lang_Exception.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000085 /* java_io_FilterOutputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_FilterOutputStream.h"; path = "generated/java_io_FilterOutputStream.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000086 /* java_lang_Math.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Math.m"; path = "generated/java_lang_Math.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000088 /* java_io_FilterOutputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_FilterOutputStream.m"; path = "generated/java_io_FilterOutputStream.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000008a /* java_lang_Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Math.h"; path = "generated/java_lang_Math.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000008b /* cava_c_CharPtrPtr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_CharPtrPtr.h"; path = "generated/cava_c_CharPtrPtr.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000008c /* cava_sample_Application.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_Application.h"; path = "generated/cava_sample_Application.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000008d /* java_lang_NoSuchMethodError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_NoSuchMethodError.h"; path = "generated/java_lang_NoSuchMethodError.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000008e /* java_lang_NegativeArraySizeException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_NegativeArraySizeException.m"; path = "generated/java_lang_NegativeArraySizeException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000090 /* cava_sample_Application.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_Application.m"; path = "generated/cava_sample_Application.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000092 /* java_lang_NoSuchMethodError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_NoSuchMethodError.m"; path = "generated/java_lang_NoSuchMethodError.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000094 /* java_util_AbstractCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_AbstractCollection.h"; path = "generated/java_util_AbstractCollection.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000095 /* java_lang_StringToReal_StringExponentPair.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringToReal_StringExponentPair.m"; path = "generated/java_lang_StringToReal_StringExponentPair.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000097 /* java_util_AbstractCollection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_AbstractCollection.m"; path = "generated/java_util_AbstractCollection.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000099 /* java_lang_reflect_Constructor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_reflect_Constructor.h"; path = "generated/java_lang_reflect_Constructor.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000009a /* java_lang_StringToReal_StringExponentPair.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringToReal_StringExponentPair.h"; path = "generated/java_lang_StringToReal_StringExponentPair.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000009b /* java_lang_NegativeArraySizeException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_NegativeArraySizeException.h"; path = "generated/java_lang_NegativeArraySizeException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000009c /* java_lang_NumberFormatException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_NumberFormatException.h"; path = "generated/java_lang_NumberFormatException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000009d /* java_lang_InterruptedException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_InterruptedException.m"; path = "generated/java_lang_InterruptedException.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000009f /* java_lang_NumberFormatException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_NumberFormatException.m"; path = "generated/java_lang_NumberFormatException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a1 /* java_util_ListIterator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_ListIterator.m"; path = "generated/java_util_ListIterator.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a3 /* cava_apple_foundation_NSObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_foundation_NSObject.h"; path = "generated/cava_apple_foundation_NSObject.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a4 /* cava_c_WCharPtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_WCharPtr.m"; path = "generated/cava_c_WCharPtr.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a6 /* cava_sample_IOSView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSView.m"; path = "generated/cava_sample_IOSView.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a8 /* cava_c_WCharPtr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_WCharPtr.h"; path = "generated/cava_c_WCharPtr.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000a9 /* java_util_ListIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_ListIterator.h"; path = "generated/java_util_ListIterator.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000aa /* cava_sample_IOSView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSView.h"; path = "generated/cava_sample_IOSView.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ab /* cava_apple_foundation_NSObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_foundation_NSObject.m"; path = "generated/cava_apple_foundation_NSObject.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ad /* java_lang_IndexOutOfBoundsException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_IndexOutOfBoundsException.h"; path = "generated/java_lang_IndexOutOfBoundsException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ae /* java_lang_IndexOutOfBoundsException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_IndexOutOfBoundsException.m"; path = "generated/java_lang_IndexOutOfBoundsException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b0 /* cava_sample_IOSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSViewController.h"; path = "generated/cava_sample_IOSViewController.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b1 /* cava_sample_IOSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSViewController.m"; path = "generated/cava_sample_IOSViewController.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b3 /* java_lang_NullPointerException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_NullPointerException.m"; path = "generated/java_lang_NullPointerException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b5 /* java_lang_reflect_Modifier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_reflect_Modifier.m"; path = "generated/java_lang_reflect_Modifier.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b7 /* java_lang_NullPointerException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_NullPointerException.h"; path = "generated/java_lang_NullPointerException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b8 /* java_lang_reflect_Modifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_reflect_Modifier.h"; path = "generated/java_lang_reflect_Modifier.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000b9 /* java_io_FileNotFoundException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_FileNotFoundException.h"; path = "generated/java_io_FileNotFoundException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ba /* java_util_NoSuchElementException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_NoSuchElementException.m"; path = "generated/java_util_NoSuchElementException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000bc /* java_lang_UnsupportedOperationException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_UnsupportedOperationException.m"; path = "generated/java_lang_UnsupportedOperationException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000be /* java_util_NoSuchElementException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_NoSuchElementException.h"; path = "generated/java_util_NoSuchElementException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000bf /* java_lang_Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Thread.h"; path = "generated/java_lang_Thread.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c0 /* java_lang_UnsupportedOperationException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_UnsupportedOperationException.h"; path = "generated/java_lang_UnsupportedOperationException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c1 /* java_lang_Number.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Number.m"; path = "generated/java_lang_Number.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c3 /* cava_c_Struct.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_Struct.m"; path = "generated/cava_c_Struct.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c5 /* cava_apple_uikit_UIResponder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIResponder.m"; path = "generated/cava_apple_uikit_UIResponder.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c7 /* java_lang_Thread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Thread.m"; path = "generated/java_lang_Thread.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000c9 /* kotlin_KotlinNullPointerException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "kotlin_KotlinNullPointerException.h"; path = "generated/kotlin_KotlinNullPointerException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ca /* java_lang_Number.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Number.h"; path = "generated/java_lang_Number.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000cb /* cava_apple_uikit_UIResponder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIResponder.h"; path = "generated/cava_apple_uikit_UIResponder.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000cc /* java_lang_Throwable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Throwable.h"; path = "generated/java_lang_Throwable.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000cd /* java_lang_IllegalStateException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_IllegalStateException.h"; path = "generated/java_lang_IllegalStateException.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ce /* java_lang_IllegalStateException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_IllegalStateException.m"; path = "generated/java_lang_IllegalStateException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d0 /* kotlin_KotlinNullPointerException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "kotlin_KotlinNullPointerException.m"; path = "generated/kotlin_KotlinNullPointerException.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d2 /* java_lang_Throwable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Throwable.m"; path = "generated/java_lang_Throwable.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d4 /* java_lang_Error.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Error.h"; path = "generated/java_lang_Error.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d5 /* java_lang_Byte.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Byte.h"; path = "generated/java_lang_Byte.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d6 /* java_lang_Byte.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Byte.m"; path = "generated/java_lang_Byte.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000d8 /* java_lang_StringBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringBuilder.m"; path = "generated/java_lang_StringBuilder.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000da /* java_lang_String.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_String.m"; path = "generated/java_lang_String.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000dc /* java_io_ConsolePrintStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_ConsolePrintStream.m"; path = "generated/java_io_ConsolePrintStream.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000de /* java_io_PrintWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_PrintWriter.h"; path = "generated/java_io_PrintWriter.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000df /* java_lang_String.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_String.h"; path = "generated/java_lang_String.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e0 /* cava_apple_coregraphics_CGSize.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_coregraphics_CGSize.m"; path = "generated/cava_apple_coregraphics_CGSize.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e2 /* java_io_FileInputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_FileInputStream.m"; path = "generated/java_io_FileInputStream.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e4 /* java_io_FileInputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_FileInputStream.h"; path = "generated/java_io_FileInputStream.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e5 /* java_io_ConsolePrintStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_ConsolePrintStream.h"; path = "generated/java_io_ConsolePrintStream.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e6 /* java_util_AbstractList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_AbstractList.h"; path = "generated/java_util_AbstractList.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e7 /* java_lang_StringBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringBuilder.h"; path = "generated/java_lang_StringBuilder.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000e8 /* java_lang_Error.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Error.m"; path = "generated/java_lang_Error.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ea /* cava_c_NativeObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_NativeObject.m"; path = "generated/cava_c_NativeObject.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ec /* cava_c_NativeObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_NativeObject.h"; path = "generated/cava_c_NativeObject.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ed /* cava_sample_IOSApplication_Delegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSApplication_Delegate.h"; path = "generated/cava_sample_IOSApplication_Delegate.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000ee /* java_io_Closeable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_Closeable.m"; path = "generated/java_io_Closeable.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f0 /* cava_sample_IOSApplication_Delegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSApplication_Delegate.m"; path = "generated/cava_sample_IOSApplication_Delegate.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f2 /* java_util_AbstractList.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_AbstractList.m"; path = "generated/java_util_AbstractList.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f4 /* java_util_AbstractList_FullListIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_AbstractList_FullListIterator.h"; path = "generated/java_util_AbstractList_FullListIterator.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f5 /* java_util_AbstractList_FullListIterator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_AbstractList_FullListIterator.m"; path = "generated/java_util_AbstractList_FullListIterator.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f7 /* cava_apple_foundation_NSAutoreleasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_foundation_NSAutoreleasePool.h"; path = "generated/cava_apple_foundation_NSAutoreleasePool.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f8 /* kotlin_jvm_internal_Intrinsics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "kotlin_jvm_internal_Intrinsics.h"; path = "generated/kotlin_jvm_internal_Intrinsics.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000f9 /* kotlin_jvm_internal_Intrinsics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "kotlin_jvm_internal_Intrinsics.m"; path = "generated/kotlin_jvm_internal_Intrinsics.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000fb /* java_io_Closeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_Closeable.h"; path = "generated/java_io_Closeable.h"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000fc /* cava_apple_foundation_NSAutoreleasePool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_foundation_NSAutoreleasePool.m"; path = "generated/cava_apple_foundation_NSAutoreleasePool.m"; sourceTree = SOURCE_ROOT; };
+		AB000000100000000000fe /* java_lang_Object.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Object.m"; path = "generated/java_lang_Object.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000100 /* cava_apple_foundation_NSBundle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_foundation_NSBundle.h"; path = "generated/cava_apple_foundation_NSBundle.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000101 /* java_lang_Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Object.h"; path = "generated/java_lang_Object.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000102 /* cava_apple_foundation_NSBundle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_foundation_NSBundle.m"; path = "generated/cava_apple_foundation_NSBundle.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000104 /* java_lang_ArrayIndexOutOfBoundsException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_ArrayIndexOutOfBoundsException.h"; path = "generated/java_lang_ArrayIndexOutOfBoundsException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000105 /* cava_apple_uikit_UIApplicationDelegateAdapter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIApplicationDelegateAdapter.m"; path = "generated/cava_apple_uikit_UIApplicationDelegateAdapter.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000107 /* java_lang_ClassCastException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_ClassCastException.m"; path = "generated/java_lang_ClassCastException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000109 /* java_io_IOException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_IOException.h"; path = "generated/java_io_IOException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000010a /* java_lang_ClassCastException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_ClassCastException.h"; path = "generated/java_lang_ClassCastException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000010b /* java_util_ConcurrentModificationException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_ConcurrentModificationException.h"; path = "generated/java_util_ConcurrentModificationException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000010c /* java_io_OutputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_OutputStream.h"; path = "generated/java_io_OutputStream.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000010d /* java_io_IOException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_IOException.m"; path = "generated/java_io_IOException.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000010f /* java_lang_reflect_Constructor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_reflect_Constructor.m"; path = "generated/java_lang_reflect_Constructor.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000111 /* java_io_OutputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_OutputStream.m"; path = "generated/java_io_OutputStream.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000113 /* java_util_ConcurrentModificationException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_ConcurrentModificationException.m"; path = "generated/java_util_ConcurrentModificationException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000115 /* java_lang_Float.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Float.h"; path = "generated/java_lang_Float.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000116 /* java_lang_AutoCloseable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_AutoCloseable.m"; path = "generated/java_lang_AutoCloseable.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000118 /* java_io_UnsupportedEncodingException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_UnsupportedEncodingException.m"; path = "generated/java_io_UnsupportedEncodingException.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000011a /* java_lang_reflect_Method.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_reflect_Method.m"; path = "generated/java_lang_reflect_Method.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000011c /* cava_apple_uikit_UIApplicationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIApplicationDelegate.h"; path = "generated/cava_apple_uikit_UIApplicationDelegate.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000011d /* java_lang_Float.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Float.m"; path = "generated/java_lang_Float.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000011f /* cava_apple_uikit_UIViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIViewController.h"; path = "generated/cava_apple_uikit_UIViewController.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000120 /* java_io_UnsupportedEncodingException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_UnsupportedEncodingException.h"; path = "generated/java_io_UnsupportedEncodingException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000121 /* cava_apple_uikit_UIApplicationDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIApplicationDelegate.m"; path = "generated/cava_apple_uikit_UIApplicationDelegate.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000123 /* java_util_AbstractList_1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_AbstractList_1.m"; path = "generated/java_util_AbstractList_1.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000125 /* cava_apple_uikit_UIViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIViewController.m"; path = "generated/cava_apple_uikit_UIViewController.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000127 /* java_lang_AutoCloseable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_AutoCloseable.h"; path = "generated/java_lang_AutoCloseable.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000128 /* cava_c_CharPtrPtr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_CharPtrPtr.m"; path = "generated/cava_c_CharPtrPtr.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000012a /* java_util_Iterator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_Iterator.m"; path = "generated/java_util_Iterator.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000012c /* cava_apple_uikit_UIApplicationDelegateAdapter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIApplicationDelegateAdapter.h"; path = "generated/cava_apple_uikit_UIApplicationDelegateAdapter.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000012d /* java_lang_reflect_Method.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_reflect_Method.h"; path = "generated/java_lang_reflect_Method.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000012e /* java_util_AbstractList_1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_AbstractList_1.h"; path = "generated/java_util_AbstractList_1.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000012f /* java_util_Iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_Iterator.h"; path = "generated/java_util_Iterator.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000130 /* java_io_PrintWriter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_PrintWriter.m"; path = "generated/java_io_PrintWriter.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000132 /* java_lang_LinkageError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_LinkageError.h"; path = "generated/java_lang_LinkageError.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000133 /* java_io_ConsolePrintStream_1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_ConsolePrintStream_1.h"; path = "generated/java_io_ConsolePrintStream_1.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000134 /* java_io_ConsolePrintStream_1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_ConsolePrintStream_1.m"; path = "generated/java_io_ConsolePrintStream_1.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000136 /* java_net_URL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_net_URL.h"; path = "generated/java_net_URL.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000137 /* java_lang_LinkageError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_LinkageError.m"; path = "generated/java_lang_LinkageError.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000139 /* cava_sample_IOSGraphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSGraphics.h"; path = "generated/cava_sample_IOSGraphics.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000013a /* java_lang_Class.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Class.m"; path = "generated/java_lang_Class.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000013c /* java_util_AbstractList_SimpleListIterator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_AbstractList_SimpleListIterator.m"; path = "generated/java_util_AbstractList_SimpleListIterator.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000013e /* invoke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "invoke.c"; path = "generated/invoke.c"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000140 /* cava_sample_IOSGraphics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSGraphics.m"; path = "generated/cava_sample_IOSGraphics.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000142 /* cava_apple_foundation_NSString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_foundation_NSString.m"; path = "generated/cava_apple_foundation_NSString.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000144 /* java_util_Arrays.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_Arrays.h"; path = "generated/java_util_Arrays.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000145 /* java_net_URL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_net_URL.m"; path = "generated/java_net_URL.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000147 /* java_lang_RuntimeException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_RuntimeException.h"; path = "generated/java_lang_RuntimeException.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000148 /* cava_apple_foundation_NSString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_foundation_NSString.h"; path = "generated/cava_apple_foundation_NSString.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000149 /* java_util_Arrays.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_util_Arrays.m"; path = "generated/java_util_Arrays.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000014b /* java_lang_RuntimeException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_RuntimeException.m"; path = "generated/java_lang_RuntimeException.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000014d /* java_util_AbstractList_SimpleListIterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_util_AbstractList_SimpleListIterator.h"; path = "generated/java_util_AbstractList_SimpleListIterator.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000014e /* cava_sample_IOSApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSApplication.m"; path = "generated/cava_sample_IOSApplication.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000150 /* java_lang_reflect_Field.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_reflect_Field.m"; path = "generated/java_lang_reflect_Field.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000152 /* java_lang_reflect_Array.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_reflect_Array.m"; path = "generated/java_lang_reflect_Array.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000154 /* java_lang_ArrayIndexOutOfBoundsException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_ArrayIndexOutOfBoundsException.m"; path = "generated/java_lang_ArrayIndexOutOfBoundsException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000156 /* java_lang_reflect_Array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_reflect_Array.h"; path = "generated/java_lang_reflect_Array.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000157 /* cava_sample_IOSLauncher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_sample_IOSLauncher.m"; path = "generated/cava_sample_IOSLauncher.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000159 /* cava_apple_coregraphics_CGPoint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_coregraphics_CGPoint.m"; path = "generated/cava_apple_coregraphics_CGPoint.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000015b /* cava_sample_IOSLauncher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSLauncher.h"; path = "generated/cava_sample_IOSLauncher.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000015c /* cava_apple_coregraphics_CGPoint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_coregraphics_CGPoint.h"; path = "generated/cava_apple_coregraphics_CGPoint.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000015d /* java_lang_StackOverflowError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StackOverflowError.h"; path = "generated/java_lang_StackOverflowError.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000015e /* java_io_InputStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_InputStream.m"; path = "generated/java_io_InputStream.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000160 /* java_lang_IllegalArgumentException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_IllegalArgumentException.m"; path = "generated/java_lang_IllegalArgumentException.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000162 /* java_lang_Runnable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Runnable.m"; path = "generated/java_lang_Runnable.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000164 /* cava_sample_MainKt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_MainKt.h"; path = "generated/cava_sample_MainKt.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000165 /* cava_c_CLib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_c_CLib.m"; path = "generated/cava_c_CLib.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000167 /* cava_apple_uikit_UIScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_uikit_UIScreen.h"; path = "generated/cava_apple_uikit_UIScreen.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000168 /* java_lang_Character.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Character.m"; path = "generated/java_lang_Character.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000016a /* java_lang_StringToReal_1.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StringToReal_1.m"; path = "generated/java_lang_StringToReal_1.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000016c /* java_io_InputStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_InputStream.h"; path = "generated/java_io_InputStream.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000016d /* java_lang_StringToReal_1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_StringToReal_1.h"; path = "generated/java_lang_StringToReal_1.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000016e /* cava_c_CLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_c_CLib.h"; path = "generated/cava_c_CLib.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000016f /* cava_apple_uikit_UIScreen.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "cava_apple_uikit_UIScreen.m"; path = "generated/cava_apple_uikit_UIScreen.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000171 /* java_lang_Character.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Character.h"; path = "generated/java_lang_Character.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000172 /* java_lang_Runnable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Runnable.h"; path = "generated/java_lang_Runnable.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000173 /* java_lang_Double.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Double.h"; path = "generated/java_lang_Double.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000174 /* cava_sample_IOSApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_sample_IOSApplication.h"; path = "generated/cava_sample_IOSApplication.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000175 /* java_lang_StackOverflowError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_StackOverflowError.m"; path = "generated/java_lang_StackOverflowError.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000177 /* java_lang_Double.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_lang_Double.m"; path = "generated/java_lang_Double.m"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000179 /* java_lang_reflect_Field.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_reflect_Field.h"; path = "generated/java_lang_reflect_Field.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000017a /* java_lang_IllegalArgumentException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_IllegalArgumentException.h"; path = "generated/java_lang_IllegalArgumentException.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000017b /* java_io_Writer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "java_io_Writer.m"; path = "generated/java_io_Writer.m"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000017d /* literals.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "literals.c"; path = "generated/literals.c"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000017f /* java_lang_Class.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_lang_Class.h"; path = "generated/java_lang_Class.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000180 /* cava_apple_coregraphics_CGSize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "cava_apple_coregraphics_CGSize.h"; path = "generated/cava_apple_coregraphics_CGSize.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000181 /* java_io_Writer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "java_io_Writer.h"; path = "generated/java_io_Writer.h"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000183 /* jvm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = "jvm.c"; path = "cava/jvm.c"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000185 /* jvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "jvm.h"; path = "cava/jvm.h"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000000f /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Info.plist"; path = "../../sample/Info.plist"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000018a /* bucket.png */ = {isa = PBXFileReference; name = "bucket.png"; path = "bucket.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000018c /* droplet.png */ = {isa = PBXFileReference; name = "droplet.png"; path = "droplet.png"; sourceTree = SOURCE_ROOT; };
+		AB0000001000000000018e /* wabbit_alpha.png */ = {isa = PBXFileReference; name = "wabbit_alpha.png"; path = "wabbit_alpha.png"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000190 /* com */ = {isa = PBXFileReference; name = "com"; path = "com"; sourceTree = SOURCE_ROOT; };
+		AB00000010000000000186 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "UIKit.framework"; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		AB00000010000000000188 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "CoreGraphics.framework"; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AB0000001000000000000e /* cava.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cava.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		/* End PBXFileReference section */
+
+		/* Begin PBXGroup section */
+		AB00000010000000000001 /* root */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000004 /* Frameworks */,
+				AB00000010000000000005 /* Products */,
+				AB00000010000000000003 /* Resources */,
+				AB00000010000000000002 /* Sources */,
+			);
+			name = "root";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000182 /* cava */,
+				AB00000010000000000010 /* generated */,
+			);
+			name = "Sources";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000010 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000015c /* cava_apple_coregraphics_CGPoint.h */,
+				AB00000010000000000159 /* cava_apple_coregraphics_CGPoint.m */,
+				AB0000001000000000001b /* cava_apple_coregraphics_CGRect.h */,
+				AB0000001000000000004a /* cava_apple_coregraphics_CGRect.m */,
+				AB00000010000000000180 /* cava_apple_coregraphics_CGSize.h */,
+				AB000000100000000000e0 /* cava_apple_coregraphics_CGSize.m */,
+				AB000000100000000000f7 /* cava_apple_foundation_NSAutoreleasePool.h */,
+				AB000000100000000000fc /* cava_apple_foundation_NSAutoreleasePool.m */,
+				AB00000010000000000100 /* cava_apple_foundation_NSBundle.h */,
+				AB00000010000000000102 /* cava_apple_foundation_NSBundle.m */,
+				AB00000010000000000038 /* cava_apple_foundation_NSDictionary.h */,
+				AB00000010000000000032 /* cava_apple_foundation_NSDictionary.m */,
+				AB000000100000000000a3 /* cava_apple_foundation_NSObject.h */,
+				AB000000100000000000ab /* cava_apple_foundation_NSObject.m */,
+				AB00000010000000000148 /* cava_apple_foundation_NSString.h */,
+				AB00000010000000000142 /* cava_apple_foundation_NSString.m */,
+				AB0000001000000000007c /* cava_apple_uikit_UIApplication.h */,
+				AB0000001000000000007d /* cava_apple_uikit_UIApplication.m */,
+				AB0000001000000000011c /* cava_apple_uikit_UIApplicationDelegate.h */,
+				AB00000010000000000121 /* cava_apple_uikit_UIApplicationDelegate.m */,
+				AB0000001000000000012c /* cava_apple_uikit_UIApplicationDelegateAdapter.h */,
+				AB00000010000000000105 /* cava_apple_uikit_UIApplicationDelegateAdapter.m */,
+				AB000000100000000000cb /* cava_apple_uikit_UIResponder.h */,
+				AB000000100000000000c5 /* cava_apple_uikit_UIResponder.m */,
+				AB00000010000000000167 /* cava_apple_uikit_UIScreen.h */,
+				AB0000001000000000016f /* cava_apple_uikit_UIScreen.m */,
+				AB00000010000000000058 /* cava_apple_uikit_UIView.h */,
+				AB00000010000000000053 /* cava_apple_uikit_UIView.m */,
+				AB0000001000000000011f /* cava_apple_uikit_UIViewController.h */,
+				AB00000010000000000125 /* cava_apple_uikit_UIViewController.m */,
+				AB00000010000000000052 /* cava_apple_uikit_UIWindow.h */,
+				AB0000001000000000005c /* cava_apple_uikit_UIWindow.m */,
+				AB0000001000000000016e /* cava_c_CLib.h */,
+				AB00000010000000000165 /* cava_c_CLib.m */,
+				AB00000010000000000072 /* cava_c_CharPtr.h */,
+				AB00000010000000000077 /* cava_c_CharPtr.m */,
+				AB0000001000000000008b /* cava_c_CharPtrPtr.h */,
+				AB00000010000000000128 /* cava_c_CharPtrPtr.m */,
+				AB000000100000000000ec /* cava_c_NativeObject.h */,
+				AB000000100000000000ea /* cava_c_NativeObject.m */,
+				AB0000001000000000002c /* cava_c_Struct.h */,
+				AB000000100000000000c3 /* cava_c_Struct.m */,
+				AB00000010000000000057 /* cava_c_VoidPtr.h */,
+				AB0000001000000000005a /* cava_c_VoidPtr.m */,
+				AB00000010000000000062 /* cava_c_VoidPtrPtr.h */,
+				AB0000001000000000003a /* cava_c_VoidPtrPtr.m */,
+				AB000000100000000000a8 /* cava_c_WCharPtr.h */,
+				AB000000100000000000a4 /* cava_c_WCharPtr.m */,
+				AB00000010000000000065 /* cava_main.c */,
+				AB00000010000000000081 /* cava_platform_NativeCode.h */,
+				AB0000001000000000007a /* cava_platform_NativeCode.m */,
+				AB0000001000000000008c /* cava_sample_Application.h */,
+				AB00000010000000000090 /* cava_sample_Application.m */,
+				AB00000010000000000070 /* cava_sample_Graphics.h */,
+				AB0000001000000000006e /* cava_sample_Graphics.m */,
+				AB00000010000000000174 /* cava_sample_IOSApplication.h */,
+				AB0000001000000000014e /* cava_sample_IOSApplication.m */,
+				AB000000100000000000ed /* cava_sample_IOSApplication_Delegate.h */,
+				AB000000100000000000f0 /* cava_sample_IOSApplication_Delegate.m */,
+				AB00000010000000000139 /* cava_sample_IOSGraphics.h */,
+				AB00000010000000000140 /* cava_sample_IOSGraphics.m */,
+				AB0000001000000000015b /* cava_sample_IOSLauncher.h */,
+				AB00000010000000000157 /* cava_sample_IOSLauncher.m */,
+				AB000000100000000000aa /* cava_sample_IOSView.h */,
+				AB000000100000000000a6 /* cava_sample_IOSView.m */,
+				AB000000100000000000b0 /* cava_sample_IOSViewController.h */,
+				AB000000100000000000b1 /* cava_sample_IOSViewController.m */,
+				AB00000010000000000164 /* cava_sample_MainKt.h */,
+				AB00000010000000000048 /* cava_sample_MainKt.m */,
+				AB00000010000000000071 /* cava_sample_OpenGLGraphics.h */,
+				AB00000010000000000075 /* cava_sample_OpenGLGraphics.m */,
+				AB0000001000000000013e /* invoke.c */,
+				AB000000100000000000fb /* java_io_Closeable.h */,
+				AB000000100000000000ee /* java_io_Closeable.m */,
+				AB000000100000000000e5 /* java_io_ConsolePrintStream.h */,
+				AB000000100000000000dc /* java_io_ConsolePrintStream.m */,
+				AB00000010000000000133 /* java_io_ConsolePrintStream_1.h */,
+				AB00000010000000000134 /* java_io_ConsolePrintStream_1.m */,
+				AB00000010000000000041 /* java_io_File.h */,
+				AB0000001000000000002e /* java_io_File.m */,
+				AB000000100000000000e4 /* java_io_FileInputStream.h */,
+				AB000000100000000000e2 /* java_io_FileInputStream.m */,
+				AB000000100000000000b9 /* java_io_FileNotFoundException.h */,
+				AB00000010000000000034 /* java_io_FileNotFoundException.m */,
+				AB00000010000000000085 /* java_io_FilterOutputStream.h */,
+				AB00000010000000000088 /* java_io_FilterOutputStream.m */,
+				AB00000010000000000109 /* java_io_IOException.h */,
+				AB0000001000000000010d /* java_io_IOException.m */,
+				AB0000001000000000016c /* java_io_InputStream.h */,
+				AB0000001000000000015e /* java_io_InputStream.m */,
+				AB0000001000000000010c /* java_io_OutputStream.h */,
+				AB00000010000000000111 /* java_io_OutputStream.m */,
+				AB0000001000000000001e /* java_io_PrintStream.h */,
+				AB00000010000000000022 /* java_io_PrintStream.m */,
+				AB000000100000000000de /* java_io_PrintWriter.h */,
+				AB00000010000000000130 /* java_io_PrintWriter.m */,
+				AB0000001000000000006b /* java_io_Serializable.h */,
+				AB0000001000000000006c /* java_io_Serializable.m */,
+				AB00000010000000000120 /* java_io_UnsupportedEncodingException.h */,
+				AB00000010000000000118 /* java_io_UnsupportedEncodingException.m */,
+				AB00000010000000000181 /* java_io_Writer.h */,
+				AB0000001000000000017b /* java_io_Writer.m */,
+				AB00000010000000000104 /* java_lang_ArrayIndexOutOfBoundsException.h */,
+				AB00000010000000000154 /* java_lang_ArrayIndexOutOfBoundsException.m */,
+				AB00000010000000000127 /* java_lang_AutoCloseable.h */,
+				AB00000010000000000116 /* java_lang_AutoCloseable.m */,
+				AB0000001000000000004e /* java_lang_Boolean.h */,
+				AB00000010000000000036 /* java_lang_Boolean.m */,
+				AB000000100000000000d5 /* java_lang_Byte.h */,
+				AB000000100000000000d6 /* java_lang_Byte.m */,
+				AB00000010000000000059 /* java_lang_CharSequence.h */,
+				AB0000001000000000005e /* java_lang_CharSequence.m */,
+				AB00000010000000000171 /* java_lang_Character.h */,
+				AB00000010000000000168 /* java_lang_Character.m */,
+				AB0000001000000000017f /* java_lang_Class.h */,
+				AB0000001000000000013a /* java_lang_Class.m */,
+				AB0000001000000000010a /* java_lang_ClassCastException.h */,
+				AB00000010000000000107 /* java_lang_ClassCastException.m */,
+				AB00000010000000000064 /* java_lang_ClassNotFoundException.h */,
+				AB00000010000000000067 /* java_lang_ClassNotFoundException.m */,
+				AB0000001000000000001c /* java_lang_Comparable.h */,
+				AB00000010000000000027 /* java_lang_Comparable.m */,
+				AB00000010000000000173 /* java_lang_Double.h */,
+				AB00000010000000000177 /* java_lang_Double.m */,
+				AB000000100000000000d4 /* java_lang_Error.h */,
+				AB000000100000000000e8 /* java_lang_Error.m */,
+				AB00000010000000000082 /* java_lang_Exception.h */,
+				AB00000010000000000083 /* java_lang_Exception.m */,
+				AB00000010000000000115 /* java_lang_Float.h */,
+				AB0000001000000000011d /* java_lang_Float.m */,
+				AB0000001000000000017a /* java_lang_IllegalArgumentException.h */,
+				AB00000010000000000160 /* java_lang_IllegalArgumentException.m */,
+				AB000000100000000000cd /* java_lang_IllegalStateException.h */,
+				AB000000100000000000ce /* java_lang_IllegalStateException.m */,
+				AB0000001000000000003c /* java_lang_IncompatibleClassChangeError.h */,
+				AB0000001000000000003e /* java_lang_IncompatibleClassChangeError.m */,
+				AB000000100000000000ad /* java_lang_IndexOutOfBoundsException.h */,
+				AB000000100000000000ae /* java_lang_IndexOutOfBoundsException.m */,
+				AB00000010000000000016 /* java_lang_Integer.h */,
+				AB00000010000000000017 /* java_lang_Integer.m */,
+				AB00000010000000000063 /* java_lang_InterruptedException.h */,
+				AB0000001000000000009d /* java_lang_InterruptedException.m */,
+				AB0000001000000000001d /* java_lang_Iterable.h */,
+				AB00000010000000000014 /* java_lang_Iterable.m */,
+				AB00000010000000000132 /* java_lang_LinkageError.h */,
+				AB00000010000000000137 /* java_lang_LinkageError.m */,
+				AB00000010000000000029 /* java_lang_Long.h */,
+				AB00000010000000000020 /* java_lang_Long.m */,
+				AB0000001000000000008a /* java_lang_Math.h */,
+				AB00000010000000000086 /* java_lang_Math.m */,
+				AB0000001000000000009b /* java_lang_NegativeArraySizeException.h */,
+				AB0000001000000000008e /* java_lang_NegativeArraySizeException.m */,
+				AB00000010000000000061 /* java_lang_NoSuchFieldError.h */,
+				AB00000010000000000055 /* java_lang_NoSuchFieldError.m */,
+				AB0000001000000000008d /* java_lang_NoSuchMethodError.h */,
+				AB00000010000000000092 /* java_lang_NoSuchMethodError.m */,
+				AB000000100000000000b7 /* java_lang_NullPointerException.h */,
+				AB000000100000000000b3 /* java_lang_NullPointerException.m */,
+				AB000000100000000000ca /* java_lang_Number.h */,
+				AB000000100000000000c1 /* java_lang_Number.m */,
+				AB0000001000000000009c /* java_lang_NumberFormatException.h */,
+				AB0000001000000000009f /* java_lang_NumberFormatException.m */,
+				AB00000010000000000101 /* java_lang_Object.h */,
+				AB000000100000000000fe /* java_lang_Object.m */,
+				AB00000010000000000172 /* java_lang_Runnable.h */,
+				AB00000010000000000162 /* java_lang_Runnable.m */,
+				AB00000010000000000147 /* java_lang_RuntimeException.h */,
+				AB0000001000000000014b /* java_lang_RuntimeException.m */,
+				AB0000001000000000002d /* java_lang_Short.h */,
+				AB00000010000000000069 /* java_lang_Short.m */,
+				AB0000001000000000015d /* java_lang_StackOverflowError.h */,
+				AB00000010000000000175 /* java_lang_StackOverflowError.m */,
+				AB0000001000000000001f /* java_lang_StackTraceElement.h */,
+				AB00000010000000000025 /* java_lang_StackTraceElement.m */,
+				AB000000100000000000df /* java_lang_String.h */,
+				AB000000100000000000da /* java_lang_String.m */,
+				AB00000010000000000045 /* java_lang_StringBuffer.h */,
+				AB0000001000000000004f /* java_lang_StringBuffer.m */,
+				AB000000100000000000e7 /* java_lang_StringBuilder.h */,
+				AB000000100000000000d8 /* java_lang_StringBuilder.m */,
+				AB00000010000000000013 /* java_lang_StringIndexOutOfBoundsException.h */,
+				AB00000010000000000019 /* java_lang_StringIndexOutOfBoundsException.m */,
+				AB00000010000000000051 /* java_lang_StringToReal.h */,
+				AB00000010000000000042 /* java_lang_StringToReal.m */,
+				AB0000001000000000016d /* java_lang_StringToReal_1.h */,
+				AB0000001000000000016a /* java_lang_StringToReal_1.m */,
+				AB0000001000000000009a /* java_lang_StringToReal_StringExponentPair.h */,
+				AB00000010000000000095 /* java_lang_StringToReal_StringExponentPair.m */,
+				AB00000010000000000044 /* java_lang_System.h */,
+				AB0000001000000000004c /* java_lang_System.m */,
+				AB000000100000000000bf /* java_lang_Thread.h */,
+				AB000000100000000000c7 /* java_lang_Thread.m */,
+				AB000000100000000000cc /* java_lang_Throwable.h */,
+				AB000000100000000000d2 /* java_lang_Throwable.m */,
+				AB000000100000000000c0 /* java_lang_UnsupportedOperationException.h */,
+				AB000000100000000000bc /* java_lang_UnsupportedOperationException.m */,
+				AB00000010000000000024 /* java_lang_Void.h */,
+				AB00000010000000000011 /* java_lang_Void.m */,
+				AB00000010000000000079 /* java_lang_annotation_Annotation.h */,
+				AB0000001000000000007f /* java_lang_annotation_Annotation.m */,
+				AB00000010000000000156 /* java_lang_reflect_Array.h */,
+				AB00000010000000000152 /* java_lang_reflect_Array.m */,
+				AB00000010000000000099 /* java_lang_reflect_Constructor.h */,
+				AB0000001000000000010f /* java_lang_reflect_Constructor.m */,
+				AB00000010000000000179 /* java_lang_reflect_Field.h */,
+				AB00000010000000000150 /* java_lang_reflect_Field.m */,
+				AB0000001000000000012d /* java_lang_reflect_Method.h */,
+				AB0000001000000000011a /* java_lang_reflect_Method.m */,
+				AB000000100000000000b8 /* java_lang_reflect_Modifier.h */,
+				AB000000100000000000b5 /* java_lang_reflect_Modifier.m */,
+				AB00000010000000000136 /* java_net_URL.h */,
+				AB00000010000000000145 /* java_net_URL.m */,
+				AB00000010000000000094 /* java_util_AbstractCollection.h */,
+				AB00000010000000000097 /* java_util_AbstractCollection.m */,
+				AB000000100000000000e6 /* java_util_AbstractList.h */,
+				AB000000100000000000f2 /* java_util_AbstractList.m */,
+				AB0000001000000000012e /* java_util_AbstractList_1.h */,
+				AB00000010000000000123 /* java_util_AbstractList_1.m */,
+				AB000000100000000000f4 /* java_util_AbstractList_FullListIterator.h */,
+				AB000000100000000000f5 /* java_util_AbstractList_FullListIterator.m */,
+				AB0000001000000000014d /* java_util_AbstractList_SimpleListIterator.h */,
+				AB0000001000000000013c /* java_util_AbstractList_SimpleListIterator.m */,
+				AB00000010000000000039 /* java_util_ArrayList.h */,
+				AB00000010000000000046 /* java_util_ArrayList.m */,
+				AB00000010000000000144 /* java_util_Arrays.h */,
+				AB00000010000000000149 /* java_util_Arrays.m */,
+				AB00000010000000000040 /* java_util_Collection.h */,
+				AB0000001000000000002a /* java_util_Collection.m */,
+				AB0000001000000000010b /* java_util_ConcurrentModificationException.h */,
+				AB00000010000000000113 /* java_util_ConcurrentModificationException.m */,
+				AB0000001000000000012f /* java_util_Iterator.h */,
+				AB0000001000000000012a /* java_util_Iterator.m */,
+				AB00000010000000000060 /* java_util_List.h */,
+				AB00000010000000000073 /* java_util_List.m */,
+				AB000000100000000000a9 /* java_util_ListIterator.h */,
+				AB000000100000000000a1 /* java_util_ListIterator.m */,
+				AB000000100000000000be /* java_util_NoSuchElementException.h */,
+				AB000000100000000000ba /* java_util_NoSuchElementException.m */,
+				AB0000001000000000003d /* java_util_RandomAccess.h */,
+				AB00000010000000000030 /* java_util_RandomAccess.m */,
+				AB000000100000000000c9 /* kotlin_KotlinNullPointerException.h */,
+				AB000000100000000000d0 /* kotlin_KotlinNullPointerException.m */,
+				AB000000100000000000f8 /* kotlin_jvm_internal_Intrinsics.h */,
+				AB000000100000000000f9 /* kotlin_jvm_internal_Intrinsics.m */,
+				AB0000001000000000017d /* literals.c */,
+			);
+			name = "generated";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000182 /* cava */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000183 /* jvm.c */,
+				AB00000010000000000185 /* jvm.h */,
+			);
+			name = "cava";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000003 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000000f /* Info.plist */,
+				AB0000001000000000018a /* bucket.png */,
+				AB00000010000000000190 /* com */,
+				AB0000001000000000018c /* droplet.png */,
+				AB0000001000000000018e /* wabbit_alpha.png */,
+			);
+			name = "Resources";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000004 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AB00000010000000000188 /* CoreGraphics.framework */,
+				AB00000010000000000186 /* UIKit.framework */,
+			);
+			name = "Frameworks";
+			sourceTree = "<group>";
+		};
+		AB00000010000000000005 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AB0000001000000000000e /* cava.app */,
+			);
+			name = "Products";
+			sourceTree = "<group>";
+		};
+		/* End PBXGroup section */
+
+		/* Begin PBVariantXGroup section */
+		/* End PBVariantXGroup section */
+
+		/* Begin PBXBuildFile section */
+		AB00000010000000000012 /* java_lang_Void.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000011 /* java_lang_Void.m */; };
+		AB00000010000000000015 /* java_lang_Iterable.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000014 /* java_lang_Iterable.m */; };
+		AB00000010000000000018 /* java_lang_Integer.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000017 /* java_lang_Integer.m */; };
+		AB0000001000000000001a /* java_lang_StringIndexOutOfBoundsException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000019 /* java_lang_StringIndexOutOfBoundsException.m */; };
+		AB00000010000000000021 /* java_lang_Long.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000020 /* java_lang_Long.m */; };
+		AB00000010000000000023 /* java_io_PrintStream.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000022 /* java_io_PrintStream.m */; };
+		AB00000010000000000026 /* java_lang_StackTraceElement.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000025 /* java_lang_StackTraceElement.m */; };
+		AB00000010000000000028 /* java_lang_Comparable.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000027 /* java_lang_Comparable.m */; };
+		AB0000001000000000002b /* java_util_Collection.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000002a /* java_util_Collection.m */; };
+		AB0000001000000000002f /* java_io_File.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000002e /* java_io_File.m */; };
+		AB00000010000000000031 /* java_util_RandomAccess.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000030 /* java_util_RandomAccess.m */; };
+		AB00000010000000000033 /* cava_apple_foundation_NSDictionary.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000032 /* cava_apple_foundation_NSDictionary.m */; };
+		AB00000010000000000035 /* java_io_FileNotFoundException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000034 /* java_io_FileNotFoundException.m */; };
+		AB00000010000000000037 /* java_lang_Boolean.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000036 /* java_lang_Boolean.m */; };
+		AB0000001000000000003b /* cava_c_VoidPtrPtr.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000003a /* cava_c_VoidPtrPtr.m */; };
+		AB0000001000000000003f /* java_lang_IncompatibleClassChangeError.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000003e /* java_lang_IncompatibleClassChangeError.m */; };
+		AB00000010000000000043 /* java_lang_StringToReal.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000042 /* java_lang_StringToReal.m */; };
+		AB00000010000000000047 /* java_util_ArrayList.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000046 /* java_util_ArrayList.m */; };
+		AB00000010000000000049 /* cava_sample_MainKt.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000048 /* cava_sample_MainKt.m */; };
+		AB0000001000000000004b /* cava_apple_coregraphics_CGRect.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000004a /* cava_apple_coregraphics_CGRect.m */; };
+		AB0000001000000000004d /* java_lang_System.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000004c /* java_lang_System.m */; };
+		AB00000010000000000050 /* java_lang_StringBuffer.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000004f /* java_lang_StringBuffer.m */; };
+		AB00000010000000000054 /* cava_apple_uikit_UIView.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000053 /* cava_apple_uikit_UIView.m */; };
+		AB00000010000000000056 /* java_lang_NoSuchFieldError.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000055 /* java_lang_NoSuchFieldError.m */; };
+		AB0000001000000000005b /* cava_c_VoidPtr.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000005a /* cava_c_VoidPtr.m */; };
+		AB0000001000000000005d /* cava_apple_uikit_UIWindow.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000005c /* cava_apple_uikit_UIWindow.m */; };
+		AB0000001000000000005f /* java_lang_CharSequence.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000005e /* java_lang_CharSequence.m */; };
+		AB00000010000000000066 /* cava_main.c */ = {isa = PBXBuildFile; fileRef = AB00000010000000000065 /* cava_main.c */; };
+		AB00000010000000000068 /* java_lang_ClassNotFoundException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000067 /* java_lang_ClassNotFoundException.m */; };
+		AB0000001000000000006a /* java_lang_Short.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000069 /* java_lang_Short.m */; };
+		AB0000001000000000006d /* java_io_Serializable.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000006c /* java_io_Serializable.m */; };
+		AB0000001000000000006f /* cava_sample_Graphics.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000006e /* cava_sample_Graphics.m */; };
+		AB00000010000000000074 /* java_util_List.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000073 /* java_util_List.m */; };
+		AB00000010000000000076 /* cava_sample_OpenGLGraphics.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000075 /* cava_sample_OpenGLGraphics.m */; };
+		AB00000010000000000078 /* cava_c_CharPtr.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000077 /* cava_c_CharPtr.m */; };
+		AB0000001000000000007b /* cava_platform_NativeCode.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000007a /* cava_platform_NativeCode.m */; };
+		AB0000001000000000007e /* cava_apple_uikit_UIApplication.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000007d /* cava_apple_uikit_UIApplication.m */; };
+		AB00000010000000000080 /* java_lang_annotation_Annotation.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000007f /* java_lang_annotation_Annotation.m */; };
+		AB00000010000000000084 /* java_lang_Exception.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000083 /* java_lang_Exception.m */; };
+		AB00000010000000000087 /* java_lang_Math.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000086 /* java_lang_Math.m */; };
+		AB00000010000000000089 /* java_io_FilterOutputStream.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000088 /* java_io_FilterOutputStream.m */; };
+		AB0000001000000000008f /* java_lang_NegativeArraySizeException.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000008e /* java_lang_NegativeArraySizeException.m */; };
+		AB00000010000000000091 /* cava_sample_Application.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000090 /* cava_sample_Application.m */; };
+		AB00000010000000000093 /* java_lang_NoSuchMethodError.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000092 /* java_lang_NoSuchMethodError.m */; };
+		AB00000010000000000096 /* java_lang_StringToReal_StringExponentPair.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000095 /* java_lang_StringToReal_StringExponentPair.m */; };
+		AB00000010000000000098 /* java_util_AbstractCollection.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000097 /* java_util_AbstractCollection.m */; };
+		AB0000001000000000009e /* java_lang_InterruptedException.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000009d /* java_lang_InterruptedException.m */; };
+		AB000000100000000000a0 /* java_lang_NumberFormatException.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000009f /* java_lang_NumberFormatException.m */; };
+		AB000000100000000000a2 /* java_util_ListIterator.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000a1 /* java_util_ListIterator.m */; };
+		AB000000100000000000a5 /* cava_c_WCharPtr.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000a4 /* cava_c_WCharPtr.m */; };
+		AB000000100000000000a7 /* cava_sample_IOSView.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000a6 /* cava_sample_IOSView.m */; };
+		AB000000100000000000ac /* cava_apple_foundation_NSObject.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ab /* cava_apple_foundation_NSObject.m */; };
+		AB000000100000000000af /* java_lang_IndexOutOfBoundsException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ae /* java_lang_IndexOutOfBoundsException.m */; };
+		AB000000100000000000b2 /* cava_sample_IOSViewController.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000b1 /* cava_sample_IOSViewController.m */; };
+		AB000000100000000000b4 /* java_lang_NullPointerException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000b3 /* java_lang_NullPointerException.m */; };
+		AB000000100000000000b6 /* java_lang_reflect_Modifier.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000b5 /* java_lang_reflect_Modifier.m */; };
+		AB000000100000000000bb /* java_util_NoSuchElementException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ba /* java_util_NoSuchElementException.m */; };
+		AB000000100000000000bd /* java_lang_UnsupportedOperationException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000bc /* java_lang_UnsupportedOperationException.m */; };
+		AB000000100000000000c2 /* java_lang_Number.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000c1 /* java_lang_Number.m */; };
+		AB000000100000000000c4 /* cava_c_Struct.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000c3 /* cava_c_Struct.m */; };
+		AB000000100000000000c6 /* cava_apple_uikit_UIResponder.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000c5 /* cava_apple_uikit_UIResponder.m */; };
+		AB000000100000000000c8 /* java_lang_Thread.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000c7 /* java_lang_Thread.m */; };
+		AB000000100000000000cf /* java_lang_IllegalStateException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ce /* java_lang_IllegalStateException.m */; };
+		AB000000100000000000d1 /* kotlin_KotlinNullPointerException.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000d0 /* kotlin_KotlinNullPointerException.m */; };
+		AB000000100000000000d3 /* java_lang_Throwable.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000d2 /* java_lang_Throwable.m */; };
+		AB000000100000000000d7 /* java_lang_Byte.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000d6 /* java_lang_Byte.m */; };
+		AB000000100000000000d9 /* java_lang_StringBuilder.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000d8 /* java_lang_StringBuilder.m */; };
+		AB000000100000000000db /* java_lang_String.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000da /* java_lang_String.m */; };
+		AB000000100000000000dd /* java_io_ConsolePrintStream.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000dc /* java_io_ConsolePrintStream.m */; };
+		AB000000100000000000e1 /* cava_apple_coregraphics_CGSize.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000e0 /* cava_apple_coregraphics_CGSize.m */; };
+		AB000000100000000000e3 /* java_io_FileInputStream.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000e2 /* java_io_FileInputStream.m */; };
+		AB000000100000000000e9 /* java_lang_Error.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000e8 /* java_lang_Error.m */; };
+		AB000000100000000000eb /* cava_c_NativeObject.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ea /* cava_c_NativeObject.m */; };
+		AB000000100000000000ef /* java_io_Closeable.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000ee /* java_io_Closeable.m */; };
+		AB000000100000000000f1 /* cava_sample_IOSApplication_Delegate.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000f0 /* cava_sample_IOSApplication_Delegate.m */; };
+		AB000000100000000000f3 /* java_util_AbstractList.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000f2 /* java_util_AbstractList.m */; };
+		AB000000100000000000f6 /* java_util_AbstractList_FullListIterator.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000f5 /* java_util_AbstractList_FullListIterator.m */; };
+		AB000000100000000000fa /* kotlin_jvm_internal_Intrinsics.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000f9 /* kotlin_jvm_internal_Intrinsics.m */; };
+		AB000000100000000000fd /* cava_apple_foundation_NSAutoreleasePool.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000fc /* cava_apple_foundation_NSAutoreleasePool.m */; };
+		AB000000100000000000ff /* java_lang_Object.m */ = {isa = PBXBuildFile; fileRef = AB000000100000000000fe /* java_lang_Object.m */; };
+		AB00000010000000000103 /* cava_apple_foundation_NSBundle.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000102 /* cava_apple_foundation_NSBundle.m */; };
+		AB00000010000000000106 /* cava_apple_uikit_UIApplicationDelegateAdapter.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000105 /* cava_apple_uikit_UIApplicationDelegateAdapter.m */; };
+		AB00000010000000000108 /* java_lang_ClassCastException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000107 /* java_lang_ClassCastException.m */; };
+		AB0000001000000000010e /* java_io_IOException.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000010d /* java_io_IOException.m */; };
+		AB00000010000000000110 /* java_lang_reflect_Constructor.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000010f /* java_lang_reflect_Constructor.m */; };
+		AB00000010000000000112 /* java_io_OutputStream.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000111 /* java_io_OutputStream.m */; };
+		AB00000010000000000114 /* java_util_ConcurrentModificationException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000113 /* java_util_ConcurrentModificationException.m */; };
+		AB00000010000000000117 /* java_lang_AutoCloseable.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000116 /* java_lang_AutoCloseable.m */; };
+		AB00000010000000000119 /* java_io_UnsupportedEncodingException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000118 /* java_io_UnsupportedEncodingException.m */; };
+		AB0000001000000000011b /* java_lang_reflect_Method.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000011a /* java_lang_reflect_Method.m */; };
+		AB0000001000000000011e /* java_lang_Float.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000011d /* java_lang_Float.m */; };
+		AB00000010000000000122 /* cava_apple_uikit_UIApplicationDelegate.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000121 /* cava_apple_uikit_UIApplicationDelegate.m */; };
+		AB00000010000000000124 /* java_util_AbstractList_1.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000123 /* java_util_AbstractList_1.m */; };
+		AB00000010000000000126 /* cava_apple_uikit_UIViewController.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000125 /* cava_apple_uikit_UIViewController.m */; };
+		AB00000010000000000129 /* cava_c_CharPtrPtr.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000128 /* cava_c_CharPtrPtr.m */; };
+		AB0000001000000000012b /* java_util_Iterator.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000012a /* java_util_Iterator.m */; };
+		AB00000010000000000131 /* java_io_PrintWriter.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000130 /* java_io_PrintWriter.m */; };
+		AB00000010000000000135 /* java_io_ConsolePrintStream_1.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000134 /* java_io_ConsolePrintStream_1.m */; };
+		AB00000010000000000138 /* java_lang_LinkageError.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000137 /* java_lang_LinkageError.m */; };
+		AB0000001000000000013b /* java_lang_Class.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000013a /* java_lang_Class.m */; };
+		AB0000001000000000013d /* java_util_AbstractList_SimpleListIterator.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000013c /* java_util_AbstractList_SimpleListIterator.m */; };
+		AB0000001000000000013f /* invoke.c */ = {isa = PBXBuildFile; fileRef = AB0000001000000000013e /* invoke.c */; };
+		AB00000010000000000141 /* cava_sample_IOSGraphics.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000140 /* cava_sample_IOSGraphics.m */; };
+		AB00000010000000000143 /* cava_apple_foundation_NSString.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000142 /* cava_apple_foundation_NSString.m */; };
+		AB00000010000000000146 /* java_net_URL.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000145 /* java_net_URL.m */; };
+		AB0000001000000000014a /* java_util_Arrays.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000149 /* java_util_Arrays.m */; };
+		AB0000001000000000014c /* java_lang_RuntimeException.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000014b /* java_lang_RuntimeException.m */; };
+		AB0000001000000000014f /* cava_sample_IOSApplication.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000014e /* cava_sample_IOSApplication.m */; };
+		AB00000010000000000151 /* java_lang_reflect_Field.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000150 /* java_lang_reflect_Field.m */; };
+		AB00000010000000000153 /* java_lang_reflect_Array.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000152 /* java_lang_reflect_Array.m */; };
+		AB00000010000000000155 /* java_lang_ArrayIndexOutOfBoundsException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000154 /* java_lang_ArrayIndexOutOfBoundsException.m */; };
+		AB00000010000000000158 /* cava_sample_IOSLauncher.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000157 /* cava_sample_IOSLauncher.m */; };
+		AB0000001000000000015a /* cava_apple_coregraphics_CGPoint.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000159 /* cava_apple_coregraphics_CGPoint.m */; };
+		AB0000001000000000015f /* java_io_InputStream.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000015e /* java_io_InputStream.m */; };
+		AB00000010000000000161 /* java_lang_IllegalArgumentException.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000160 /* java_lang_IllegalArgumentException.m */; };
+		AB00000010000000000163 /* java_lang_Runnable.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000162 /* java_lang_Runnable.m */; };
+		AB00000010000000000166 /* cava_c_CLib.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000165 /* cava_c_CLib.m */; };
+		AB00000010000000000169 /* java_lang_Character.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000168 /* java_lang_Character.m */; };
+		AB0000001000000000016b /* java_lang_StringToReal_1.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000016a /* java_lang_StringToReal_1.m */; };
+		AB00000010000000000170 /* cava_apple_uikit_UIScreen.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000016f /* cava_apple_uikit_UIScreen.m */; };
+		AB00000010000000000176 /* java_lang_StackOverflowError.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000175 /* java_lang_StackOverflowError.m */; };
+		AB00000010000000000178 /* java_lang_Double.m */ = {isa = PBXBuildFile; fileRef = AB00000010000000000177 /* java_lang_Double.m */; };
+		AB0000001000000000017c /* java_io_Writer.m */ = {isa = PBXBuildFile; fileRef = AB0000001000000000017b /* java_io_Writer.m */; };
+		AB0000001000000000017e /* literals.c */ = {isa = PBXBuildFile; fileRef = AB0000001000000000017d /* literals.c */; };
+		AB00000010000000000184 /* jvm.c */ = {isa = PBXBuildFile; fileRef = AB00000010000000000183 /* jvm.c */; };
+		AB00000010000000000187 /* UIKit.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000186 /* UIKit.framework */; };
+		AB00000010000000000189 /* CoreGraphics.framework */ = {isa = PBXBuildFile; fileRef = AB00000010000000000188 /* CoreGraphics.framework */; };
+		AB0000001000000000018b /* bucket.png */ = {isa = PBXBuildFile; fileRef = AB0000001000000000018a /* bucket.png */; };
+		AB0000001000000000018d /* droplet.png */ = {isa = PBXBuildFile; fileRef = AB0000001000000000018c /* droplet.png */; };
+		AB0000001000000000018f /* wabbit_alpha.png */ = {isa = PBXBuildFile; fileRef = AB0000001000000000018e /* wabbit_alpha.png */; };
+		AB00000010000000000191 /* com */ = {isa = PBXBuildFile; fileRef = AB00000010000000000190 /* com */; };
+		/* End PBXBuildFile section */
+
+		/* Begin PBXSourcesBuildPhase section */
+		AB00000010000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB00000010000000000012 /* java_lang_Void.m */,
+				AB00000010000000000015 /* java_lang_Iterable.m */,
+				AB00000010000000000018 /* java_lang_Integer.m */,
+				AB0000001000000000001a /* java_lang_StringIndexOutOfBoundsException.m */,
+				AB00000010000000000021 /* java_lang_Long.m */,
+				AB00000010000000000023 /* java_io_PrintStream.m */,
+				AB00000010000000000026 /* java_lang_StackTraceElement.m */,
+				AB00000010000000000028 /* java_lang_Comparable.m */,
+				AB0000001000000000002b /* java_util_Collection.m */,
+				AB0000001000000000002f /* java_io_File.m */,
+				AB00000010000000000031 /* java_util_RandomAccess.m */,
+				AB00000010000000000033 /* cava_apple_foundation_NSDictionary.m */,
+				AB00000010000000000035 /* java_io_FileNotFoundException.m */,
+				AB00000010000000000037 /* java_lang_Boolean.m */,
+				AB0000001000000000003b /* cava_c_VoidPtrPtr.m */,
+				AB0000001000000000003f /* java_lang_IncompatibleClassChangeError.m */,
+				AB00000010000000000043 /* java_lang_StringToReal.m */,
+				AB00000010000000000047 /* java_util_ArrayList.m */,
+				AB00000010000000000049 /* cava_sample_MainKt.m */,
+				AB0000001000000000004b /* cava_apple_coregraphics_CGRect.m */,
+				AB0000001000000000004d /* java_lang_System.m */,
+				AB00000010000000000050 /* java_lang_StringBuffer.m */,
+				AB00000010000000000054 /* cava_apple_uikit_UIView.m */,
+				AB00000010000000000056 /* java_lang_NoSuchFieldError.m */,
+				AB0000001000000000005b /* cava_c_VoidPtr.m */,
+				AB0000001000000000005d /* cava_apple_uikit_UIWindow.m */,
+				AB0000001000000000005f /* java_lang_CharSequence.m */,
+				AB00000010000000000066 /* cava_main.c */,
+				AB00000010000000000068 /* java_lang_ClassNotFoundException.m */,
+				AB0000001000000000006a /* java_lang_Short.m */,
+				AB0000001000000000006d /* java_io_Serializable.m */,
+				AB0000001000000000006f /* cava_sample_Graphics.m */,
+				AB00000010000000000074 /* java_util_List.m */,
+				AB00000010000000000076 /* cava_sample_OpenGLGraphics.m */,
+				AB00000010000000000078 /* cava_c_CharPtr.m */,
+				AB0000001000000000007b /* cava_platform_NativeCode.m */,
+				AB0000001000000000007e /* cava_apple_uikit_UIApplication.m */,
+				AB00000010000000000080 /* java_lang_annotation_Annotation.m */,
+				AB00000010000000000084 /* java_lang_Exception.m */,
+				AB00000010000000000087 /* java_lang_Math.m */,
+				AB00000010000000000089 /* java_io_FilterOutputStream.m */,
+				AB0000001000000000008f /* java_lang_NegativeArraySizeException.m */,
+				AB00000010000000000091 /* cava_sample_Application.m */,
+				AB00000010000000000093 /* java_lang_NoSuchMethodError.m */,
+				AB00000010000000000096 /* java_lang_StringToReal_StringExponentPair.m */,
+				AB00000010000000000098 /* java_util_AbstractCollection.m */,
+				AB0000001000000000009e /* java_lang_InterruptedException.m */,
+				AB000000100000000000a0 /* java_lang_NumberFormatException.m */,
+				AB000000100000000000a2 /* java_util_ListIterator.m */,
+				AB000000100000000000a5 /* cava_c_WCharPtr.m */,
+				AB000000100000000000a7 /* cava_sample_IOSView.m */,
+				AB000000100000000000ac /* cava_apple_foundation_NSObject.m */,
+				AB000000100000000000af /* java_lang_IndexOutOfBoundsException.m */,
+				AB000000100000000000b2 /* cava_sample_IOSViewController.m */,
+				AB000000100000000000b4 /* java_lang_NullPointerException.m */,
+				AB000000100000000000b6 /* java_lang_reflect_Modifier.m */,
+				AB000000100000000000bb /* java_util_NoSuchElementException.m */,
+				AB000000100000000000bd /* java_lang_UnsupportedOperationException.m */,
+				AB000000100000000000c2 /* java_lang_Number.m */,
+				AB000000100000000000c4 /* cava_c_Struct.m */,
+				AB000000100000000000c6 /* cava_apple_uikit_UIResponder.m */,
+				AB000000100000000000c8 /* java_lang_Thread.m */,
+				AB000000100000000000cf /* java_lang_IllegalStateException.m */,
+				AB000000100000000000d1 /* kotlin_KotlinNullPointerException.m */,
+				AB000000100000000000d3 /* java_lang_Throwable.m */,
+				AB000000100000000000d7 /* java_lang_Byte.m */,
+				AB000000100000000000d9 /* java_lang_StringBuilder.m */,
+				AB000000100000000000db /* java_lang_String.m */,
+				AB000000100000000000dd /* java_io_ConsolePrintStream.m */,
+				AB000000100000000000e1 /* cava_apple_coregraphics_CGSize.m */,
+				AB000000100000000000e3 /* java_io_FileInputStream.m */,
+				AB000000100000000000e9 /* java_lang_Error.m */,
+				AB000000100000000000eb /* cava_c_NativeObject.m */,
+				AB000000100000000000ef /* java_io_Closeable.m */,
+				AB000000100000000000f1 /* cava_sample_IOSApplication_Delegate.m */,
+				AB000000100000000000f3 /* java_util_AbstractList.m */,
+				AB000000100000000000f6 /* java_util_AbstractList_FullListIterator.m */,
+				AB000000100000000000fa /* kotlin_jvm_internal_Intrinsics.m */,
+				AB000000100000000000fd /* cava_apple_foundation_NSAutoreleasePool.m */,
+				AB000000100000000000ff /* java_lang_Object.m */,
+				AB00000010000000000103 /* cava_apple_foundation_NSBundle.m */,
+				AB00000010000000000106 /* cava_apple_uikit_UIApplicationDelegateAdapter.m */,
+				AB00000010000000000108 /* java_lang_ClassCastException.m */,
+				AB0000001000000000010e /* java_io_IOException.m */,
+				AB00000010000000000110 /* java_lang_reflect_Constructor.m */,
+				AB00000010000000000112 /* java_io_OutputStream.m */,
+				AB00000010000000000114 /* java_util_ConcurrentModificationException.m */,
+				AB00000010000000000117 /* java_lang_AutoCloseable.m */,
+				AB00000010000000000119 /* java_io_UnsupportedEncodingException.m */,
+				AB0000001000000000011b /* java_lang_reflect_Method.m */,
+				AB0000001000000000011e /* java_lang_Float.m */,
+				AB00000010000000000122 /* cava_apple_uikit_UIApplicationDelegate.m */,
+				AB00000010000000000124 /* java_util_AbstractList_1.m */,
+				AB00000010000000000126 /* cava_apple_uikit_UIViewController.m */,
+				AB00000010000000000129 /* cava_c_CharPtrPtr.m */,
+				AB0000001000000000012b /* java_util_Iterator.m */,
+				AB00000010000000000131 /* java_io_PrintWriter.m */,
+				AB00000010000000000135 /* java_io_ConsolePrintStream_1.m */,
+				AB00000010000000000138 /* java_lang_LinkageError.m */,
+				AB0000001000000000013b /* java_lang_Class.m */,
+				AB0000001000000000013d /* java_util_AbstractList_SimpleListIterator.m */,
+				AB0000001000000000013f /* invoke.c */,
+				AB00000010000000000141 /* cava_sample_IOSGraphics.m */,
+				AB00000010000000000143 /* cava_apple_foundation_NSString.m */,
+				AB00000010000000000146 /* java_net_URL.m */,
+				AB0000001000000000014a /* java_util_Arrays.m */,
+				AB0000001000000000014c /* java_lang_RuntimeException.m */,
+				AB0000001000000000014f /* cava_sample_IOSApplication.m */,
+				AB00000010000000000151 /* java_lang_reflect_Field.m */,
+				AB00000010000000000153 /* java_lang_reflect_Array.m */,
+				AB00000010000000000155 /* java_lang_ArrayIndexOutOfBoundsException.m */,
+				AB00000010000000000158 /* cava_sample_IOSLauncher.m */,
+				AB0000001000000000015a /* cava_apple_coregraphics_CGPoint.m */,
+				AB0000001000000000015f /* java_io_InputStream.m */,
+				AB00000010000000000161 /* java_lang_IllegalArgumentException.m */,
+				AB00000010000000000163 /* java_lang_Runnable.m */,
+				AB00000010000000000166 /* cava_c_CLib.m */,
+				AB00000010000000000169 /* java_lang_Character.m */,
+				AB0000001000000000016b /* java_lang_StringToReal_1.m */,
+				AB00000010000000000170 /* cava_apple_uikit_UIScreen.m */,
+				AB00000010000000000176 /* java_lang_StackOverflowError.m */,
+				AB00000010000000000178 /* java_lang_Double.m */,
+				AB0000001000000000017c /* java_io_Writer.m */,
+				AB0000001000000000017e /* literals.c */,
+				AB00000010000000000184 /* jvm.c */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		/* End PBXSourcesBuildPhase section */
+
+		/* Begin PBXFrameworksBuildPhase section */
+		AB0000001000000000000a /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB00000010000000000187 /* UIKit.framework */,
+				AB00000010000000000189 /* CoreGraphics.framework */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		/* End PBXFrameworksBuildPhase section */
+
+		/* Begin PBXResourcesBuildPhase section */
+		AB0000001000000000000d /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB0000001000000000018b /* bucket.png */,
+				AB0000001000000000018d /* droplet.png */,
+				AB0000001000000000018f /* wabbit_alpha.png */,
+				AB00000010000000000191 /* com */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		/* End PBXResourcesBuildPhase section */
+
+		/* Begin PBXNativeTarget section */
+		AB0000001000000000000b /* Cava Sample */ = {
+			isa = PBXNativeTarget;
+			buildPhases = (
+				AB00000010000000000009 /* Sources */,
+				AB0000001000000000000a /* Frameworks */,
+				AB0000001000000000000d /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cava Sample";
+			productName = "Cava Sample";
+			productReference = AB0000001000000000000e /* cava.app */;
+			productType = "com.apple.product-type.application";
+		};
+		/* End PBXNativeTarget section */
+
+		/* Begin XCBuildConfiguration section */
+		AB00000010000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				SDKROOT = iphoneos;
+				PRODUCT_NAME = "Cava Sample";
+				WRAPPER_EXTENSION = app;
+				INFOPLIST_FILE = "/Users/mustafa/Work/CAVA/sample/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				OTHER_CFLAGS = "-fshort-wchar";
+				ENABLE_BITCODE = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = arm64;
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"/Users/mustafa/Work/CAVA/build/Ios/cava/lib/ios/arm64",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=armv7]" = (
+					"$(inherited)",
+					"/Users/mustafa/Work/CAVA/build/Ios/cava/lib/ios/thumbv7",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"/Users/mustafa/Work/CAVA/build/Ios/cava/lib/ios/x86_64",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=i386]" = (
+					"$(inherited)",
+					"/Users/mustafa/Work/CAVA/build/Ios/cava/lib/ios/x86",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lbx",
+					"-lbimg_decode",
+					"-lbimg",
+					"-lbgfx",
+					"-lgc",
+				);
+			};
+			name = "Release";
+		};
+		/* End XCBuildConfiguration section */
+
+		/* Begin XCConfigurationList section */
+		AB00000010000000000007 /* Build configuration list for PBXProject */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB00000010000000000008 /* Release */,
+			);
+			defaultConfigurationName = Release;
+		};
+		/* End XCConfigurationList section */
+
+		/* Begin PBXProject section */
+		AB00000010000000000000 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = AB00000010000000000007 /* Build configuration list for PBXProject */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AB00000010000000000001;
+			productRefGroup = AB00000010000000000005 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AB0000001000000000000b /* Cava Sample */,
+			);
+		};
+		/* End PBXProject section */
+
+	};
+	rootObject = AB00000010000000000000 /* Project object */;
+}

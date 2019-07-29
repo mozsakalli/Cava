@@ -35,6 +35,11 @@ public class UIApplication extends UIResponder {
     
     @Keep private static UIApplicationDelegate currentDelegate;
     @Keep private static UIApplication currentApplication;
+
+    public static <D extends NSObject & UIApplicationDelegate> 
+    void main(String[] args, Class<D> delegateClass) {
+        main(args, null, delegateClass);
+    }
     
     public static <P extends UIApplication, D extends NSObject & UIApplicationDelegate> 
     void main(String[] args, Class<P> principalClass, Class<D> delegateClass) {
@@ -62,8 +67,8 @@ public class UIApplication extends UIResponder {
         NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", 
                 argc, 
                 argv, 
-                principal != null ? new NSString(principal).getNativePeer() : null,
-                delegate != null ? new NSString(delegate).getNativePeer() : null);
+                principal != null ? new NSString(principal, true).getNativePeer() : null,
+                delegate != null ? new NSString(delegate, true).getNativePeer() : null);
     }
     
     public static UIApplication getSharedApplication() {

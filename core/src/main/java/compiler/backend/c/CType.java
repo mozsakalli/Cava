@@ -56,14 +56,19 @@ public class CType {
 
     public String getIncludes(NameManager naming, Set<String> exclude) {
         String includes = "";
+        Set<String> used = new HashSet();
         for (String d : dependency) {
-            if(d.startsWith("[")) continue;
+            if(d.startsWith("[")) {
+                d = DecompilerUtils.elementType(d);
+            }
             if (exclude != null && exclude.contains(d)) {
                 continue;
             }
+            if(used.contains(d)) continue;
             if (DecompilerUtils.isPrimitive(d)) {
                 continue;
             }
+            used.add(d);
             if (!includes.isEmpty()) {
                 includes += "\n";
             }

@@ -31,11 +31,16 @@ public class NameManager implements INameManager {
     Map<String, String> names = new HashMap();
     Map<String, String> methodNames = new HashMap();
     Map<String, String> fieldNames = new HashMap();
-    
+
+    String nt(String name) {
+        return name.replace('<','_')
+                .replace('>','_').replace('?','_')
+                .replace('-','_');
+    }
     public String local(NameAndType n) {
         if(n.name.equals("this")) return "pthis";
-        if(n.isParameter) return "p"+n.name;
-        return "l"+n.name;
+        if(n.isParameter) return "p"+nt(n.name);
+        return "l"+nt(n.name);
     }
     
     public String clazz(String name) {
@@ -84,6 +89,6 @@ public class NameManager implements INameManager {
     }
     
     public String arg(NameAndType a) {
-        return "p"+a.name;
+        return "p"+nt(a.name);
     }
 }

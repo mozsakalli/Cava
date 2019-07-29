@@ -664,9 +664,9 @@ public class CBackend {
             out.println("jnull;");
         out.print("cls->objcClass = ");
         if(c.isObjCImplementation)
-            out.println("@\"%s\";",c.name.replace('/', '_').replace('$', '_')+"_ObjC");
+            out.println("[[NSString alloc] initWithString:@\"%s\"];",c.name.replace('/', '_').replace('$', '_')+"_ObjC");
         else if(A.hasObjC(c))
-            out.println("@\"%s\";",DecompilerUtils.simpleName(c.name));
+            out.println("[[NSString alloc] initWithString:@\"%s\"];",DecompilerUtils.simpleName(c.name));
         else    
             out.println("jnull;");
         

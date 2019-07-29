@@ -65,15 +65,16 @@ public final class BufferUtils {
     
     public static void copy (float[] src, Buffer dst, int numFloats, int offset) {
         int elementSize = getBufferElementSize(dst);
-        if(offset + numFloats > src.length) throw new ArrayIndexOutOfBoundsException(offset);
-        if((dst.remaining() * elementSize) / CLib.FLOAT_SIZE < numFloats) {
+        //dst.limit((numFloats * CLib.FLOAT_SIZE) / elementSize);
+        //if(offset + numFloats > src.length) throw new ArrayIndexOutOfBoundsException(offset);
+        /*if((dst.remaining() * elementSize) / CLib.FLOAT_SIZE < numFloats) {
             System.out.println(dst.remaining()+"/"+elementSize+"/"+dst.position()+"/"+dst.capacity()+"/"+dst.limit()+"/"+src.length+"/"+offset+"/"+numFloats+"/"+dst.getClass());
             throw new BufferOverflowException();
-        }
+        }*/
         
         CLib.memmove(VoidPtr.from(dst), dst.position()*elementSize, 
                 VoidPtr.fromAnyArray(src), offset * CLib.FLOAT_SIZE, numFloats * CLib.FLOAT_SIZE);
-        dst.limit((numFloats * elementSize) / CLib.FLOAT_SIZE);
+        dst.limit((numFloats * CLib.FLOAT_SIZE) / elementSize);
         dst.position(0);
     }
 }

@@ -199,8 +199,12 @@ public class BunnyMark extends ApplicationAdapter {
     private float fpsTime = 0;
     private int fpsCount = 0;
 
+    String myStr = "";
     @Override
     public void render() {
+        myStr += Gdx.graphics.getDeltaTime();
+        if(myStr.length() > 2048) myStr = "";
+        
         float dt = Gdx.graphics.getDeltaTime();
 
         fpsTime += dt;
@@ -209,8 +213,9 @@ public class BunnyMark extends ApplicationAdapter {
             fpsLabel = String.valueOf((((float) fpsCount) / fpsTime)).substring(0, 5) + " FPS";
             fpsTime = 0;
             fpsCount = 0;
+            System.out.println(fpsLabel);
         }
-
+        /*
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -223,6 +228,7 @@ public class BunnyMark extends ApplicationAdapter {
         labelFont.draw(batch, bunnyLabel, labelX, labelY);
         labelFont.draw(batch, fpsLabel, labelX, labelY - 15);
 
-        batch.end();
+        batch.end();*/
+        
     }
 }

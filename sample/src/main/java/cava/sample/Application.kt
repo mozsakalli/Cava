@@ -5,6 +5,8 @@
  */
 package cava.sample
 
+import cava.annotation.Framework
+import cava.annotation.Include
 import cava.annotation.Keep
 import cava.apple.coreanimation.CAEAGLLayer
 import cava.apple.coreanimation.CALayer
@@ -13,6 +15,8 @@ import cava.apple.uikit.*;
 import cava.apple.foundation.*;
 import cava.apple.opengles.EAGLContext
 import cava.apple.opengles.EAGLRenderingAPI
+import cava.c.CLib
+import cava.c.CharPtr
 import cava.platform.*;
 
 
@@ -23,14 +27,12 @@ import cava.platform.*;
 */
 open class Application {
     companion object {
+        @JvmStatic var instance:Application? = null;
        @JvmStatic var graphics: Graphics? = null;
     }
 }
 
 class IOSViewController : UIViewController() {
-    override fun touchesBegan(touches: NSSet<UITouch>?, event: UIEvent?) {
-        println("controller-touch")
-    }
 }
 @Keep
 class IOSView : UIView() {
@@ -44,14 +46,37 @@ class IOSView : UIView() {
     }
 }
 
+@Include("<OpenGLES/ES2/gl.h> <OpenGLES/ES2/glext.h>")
+@Framework("OpenGLES.framework")
+@Keep
 public class IOSGraphics : OpenGLGraphics() {
     var context:EAGLContext;
 
     init {
         context = EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
-        if(context.nativePeer != null)
-            println("OpenGLES 2.0 Detected");
     }
+    override fun glGetShaderParameter(shader: Int, paramName: Int): Boolean {
+        NativeCode.Void("int status; glGetShaderiv(%s,%s,&status)", shader, paramName)
+        return NativeCode.Bool("status != 0")
+    }
+
+    override fun glAttachShader(program: Int, shader: Int) {
+        NativeCode.Void("glAttachShader(%s, %s)", program, shader);
+    }
+
+    override fun glLinkProgram(program: Int) {
+        NativeCode.Void("glLinkProgram(%s)", program);
+    }
+
+    override fun glValidateProgram(program: Int) {
+        NativeCode.Void("glValidateProgram(%s)", program)
+    }
+
+    override fun glGetProgramParameter(program: Int, paramName: Int):Boolean {
+        NativeCode.Void("int status; glGetProgramiv(%s, %s, &status)", program, paramName)
+        return NativeCode.Bool("status != 0")
+    }
+
     override fun glCreateProgram(): Int {
         return NativeCode.Int("glCreateProgram()");
     }
@@ -59,6 +84,16 @@ public class IOSGraphics : OpenGLGraphics() {
     override fun glCreateShader(type: Int): Int {
         return NativeCode.Int("glCreateShader(%s)", type);
     }
+    override fun glShaderSource(shader: Int, source: String) {
+        val ascii = CharPtr.allocAsciiZ(source);
+        NativeCode.Void("glShaderSource(%s, 1, &%s, NULL)", shader, ascii)
+        CLib.free(ascii);
+    }
+    override fun glCompileShader(shader: Int) {
+        NativeCode.Void("glCompileShader(%s)", shader)
+    }
+
+
 }
 
 public class IOSApplication : Application() {
@@ -79,7 +114,12 @@ public class IOSApplication : Application() {
     var controller:IOSViewController? = null;
     var view:IOSView? = null;
     var graphics:IOSGraphics? = null;
-    
+    var context:EAGLContext? = null;
+
+    init {
+        Application.instance = this;
+    }
+
     fun didFinishLaunching():Boolean {
         println("Sarted");
 
@@ -92,7 +132,11 @@ public class IOSApplication : Application() {
         controller!!.setView(view);
         
         window!!.setRootViewController(controller);
-        
+        window!!.makeKeyAndVisible();
+
+        context = EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
+        if(context!!.nativePeer != null)
+            println("OpenGLES 2.0 Detected");
         graphics = IOSGraphics();
         Application.graphics = graphics
         return true;

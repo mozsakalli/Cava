@@ -6,6 +6,8 @@
 package cava.sample
 
 import cava.platform.NativeCode;
+import java.lang.RuntimeException
+
 /*
 
   @author mustafa
@@ -30,8 +32,31 @@ abstract class Graphics {
     abstract fun newShader(code:Any):Shader;
 }
 
-open class OpenGLShader(code:Any):Shader(code) {
-    
+open class OpenGLShader(gl:OpenGLGraphics, code:Any):Shader(code) {
+    var handle:Int;
+
+    init {
+        handle = gl.glCreateProgram();
+        var codes = code as Array<String>;
+        var vertex = compileShader(gl, codes[0], GL_VERTEX_SHADER);
+        var fragment = compileShader(gl, codes[1], GL_FRAGMENT_SHADER)
+        gl.glAttachShader(handle, vertex);
+        gl.glAttachShader(handle, fragment);
+        gl.glLinkProgram(handle);
+        gl.glValidateProgram(handle);
+        if(!gl.glGetProgramParameter(handle, GL_LINK_STATUS))
+            throw RuntimeException("Can't compile shaders...");
+    }
+
+    fun compileShader(gl:OpenGLGraphics, code:String, type:Int):Int {
+        var result = gl.glCreateShader(type);
+        gl.glShaderSource(result, code);
+        gl.glCompileShader(result);
+        if(!gl.glGetShaderParameter(result, GL_COMPILE_STATUS)) {
+            throw RuntimeException("Can't compile shader type:$type")
+        }
+        return -1;
+    }
 }
 
 class OpenGLVertexStructure():VertexStructure() {
@@ -55,9 +80,17 @@ class OpenGLVertexBuffer(capacity:Int, structure:VertexStructure) : VertexBuffer
 open abstract class OpenGLGraphics : Graphics() {
     
     override public fun newShader(code:Any):Shader {
-        return OpenGLShader(code);
+        return OpenGLShader(this, code);
     }
     
-    abstract fun glCreateProgram():Int;
-    abstract fun glCreateShader(type:Int):Int;
+    abstract fun glCreateProgram():Int
+    abstract fun glCreateShader(type:Int):Int
+    abstract fun glShaderSource(shader:Int, source:String)
+    abstract fun glCompileShader(shader:Int)
+    abstract fun glGetShaderParameter(shader:Int, paramName:Int):Boolean
+    abstract fun glAttachShader(program:Int, shader:Int)
+    abstract fun glLinkProgram(program:Int)
+    abstract fun glValidateProgram(program: Int)
+    abstract fun glGetProgramParameter(program: Int, paramName: Int):Boolean
+
 }

@@ -938,7 +938,9 @@ public class CBackend {
         
         out.println("void SetupAllClasses() {").indent()
            .println("//Setup classes")     
-           .println("JvmSetup();");
+           .println("JvmSetup();")
+            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size());
+
         for(Clazz c : sortedClasses)
             if(!c.name.startsWith("["))
                 out.println("JvmSetup_%s();", naming.clazz(c.name));
@@ -959,7 +961,6 @@ public class CBackend {
         out.println("extern void %s();", naming.method(mainMethod));
         out.println("extern void InitJvmLiterals();");
         out.println("void cavamain() {").indent()
-           .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size())
            .println("SetupAllClasses();")
            .println("InitJvmLiterals();")
            .println("InitAllClasses();")

@@ -20,16 +20,34 @@ enum class VertexDataType(val value:Int) {
 open class VertexStructure() {
     open public fun add(name:String, type:VertexDataType) {}
 }
-open class VertexBuffer(capacity:Int, structure:VertexStructure) {
-    public var capacity:Int = capacity;
-    public var structure:VertexStructure = structure;
+abstract class VertexBufferData {
+
+}
+abstract class VertexBuffer(capacity:Int, structure:VertexStructure) {
+    var capacity:Int = capacity;
+    var structure:VertexStructure = structure;
+    abstract fun lock():VertexBufferData
+    abstract fun unlock()
+}
+abstract class IndexBuffer(capacity: Int) {
+    var capacity:Int = capacity
 }
 open class Shader(code:Any) {
     public val code:Any = code;
 }
+open class Material {
+    var shader:Shader? = null
+    var depthWrite:Boolean = false
+    var depthTest:Boolean = false
+    var stencilOp:Int = 0
+    var stencilTest:Int = 0
+}
 
 abstract class Graphics {
     abstract fun newShader(code:Any):Shader;
+    abstract fun newVertexBuffer(capacity:Int, vertexStructure: VertexStructure)
+    abstract fun newIndexBuffer(capacity: Int)
+    abstract fun drawIndexed(vertices:VertexBuffer, indices:IndexBuffer, type:Int, count:Int)
 }
 
 open class OpenGLShader(gl:OpenGLGraphics, code:Any):Shader(code) {

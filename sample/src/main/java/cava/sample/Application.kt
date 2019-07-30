@@ -7,6 +7,7 @@ package cava.sample
 
 import cava.annotation.Framework
 import cava.annotation.Include
+import cava.annotation.Inline
 import cava.annotation.Keep
 import cava.apple.coreanimation.CAEAGLLayer
 import cava.apple.coreanimation.CALayer
@@ -55,40 +56,49 @@ public class IOSGraphics : OpenGLGraphics() {
     init {
         context = EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
     }
+    @Inline
     override fun glGetShaderParameter(shader: Int, paramName: Int): Boolean {
         NativeCode.Void("int status; glGetShaderiv(%s,%s,&status)", shader, paramName)
         return NativeCode.Bool("status != 0")
     }
 
+    @Inline
     override fun glAttachShader(program: Int, shader: Int) {
         NativeCode.Void("glAttachShader(%s, %s)", program, shader);
     }
 
+    @Inline
     override fun glLinkProgram(program: Int) {
         NativeCode.Void("glLinkProgram(%s)", program);
     }
 
+    @Inline
     override fun glValidateProgram(program: Int) {
         NativeCode.Void("glValidateProgram(%s)", program)
     }
 
+    @Inline
     override fun glGetProgramParameter(program: Int, paramName: Int):Boolean {
         NativeCode.Void("int status; glGetProgramiv(%s, %s, &status)", program, paramName)
         return NativeCode.Bool("status != 0")
     }
 
+    @Inline
     override fun glCreateProgram(): Int {
         return NativeCode.Int("glCreateProgram()");
     }
 
+    @Inline
     override fun glCreateShader(type: Int): Int {
         return NativeCode.Int("glCreateShader(%s)", type);
     }
+    @Inline
     override fun glShaderSource(shader: Int, source: String) {
         val ascii = CharPtr.allocAsciiZ(source);
         NativeCode.Void("glShaderSource(%s, 1, &%s, NULL)", shader, ascii)
         CLib.free(ascii);
     }
+    @Inline
     override fun glCompileShader(shader: Int) {
         NativeCode.Void("glCompileShader(%s)", shader)
     }

@@ -110,8 +110,9 @@ JvmClass ArrOf_ArrOf_ArrOf_D_Class;
 /////////////////////////////////////////////
 static void _finalizeObject(GC_PTR addr, GC_PTR client_data) {
     JvmObject* object = (JvmObject*)addr;
-    if(object->klass->finalizeFunction)
+    if(object->klass->finalizeFunction) {
         object->klass->finalizeFunction(object);
+    }
 }
 static void* gcAlloc(int size) {
     
@@ -261,11 +262,11 @@ JvmArray* JvmInitObjectArray1(JvmClass* klass, jint length, void* data) {
 //////////////////////////////////////////////
 #define CHECKBOUNDS(array,index) if(index<0 || index>=JvmArrayLen(array)) JvmArrayException(index);
 #define DEFINE_ARRAY_ACCESS(nm, type) \
-type JvmArrayGet_##nm (JvmArray* array, int index) { \
+JVMINLINE type JvmArrayGet_##nm (JvmArray* array, int index) { \
     CHECKBOUNDS(array, index); \
     return ((type*)JvmArrayData(array))[index];\
 } \
-type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
+JVMINLINE type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
     CHECKBOUNDS(array, index); \
     return ((type*)JvmArrayData(array))[index] = value; \
 }
@@ -279,6 +280,14 @@ DEFINE_ARRAY_ACCESS(F, jfloat)
 DEFINE_ARRAY_ACCESS(J, jlong)
 DEFINE_ARRAY_ACCESS(D, jdouble)
 DEFINE_ARRAY_ACCESS(O, jobject)
+
+#define DEFINE_ARRAY_ACCESS_NBC(nm, type) \
+JVMINLINE type JvmArrayGet_##nm_NBC (JvmArray* array, int index) { \
+return ((type*)JvmArrayData(array))[index];\
+} \
+JVMINLINE type JvmArraySet_##nm_NBC (JvmArray* array, int index, type value) { \
+return ((type*)JvmArrayData(array))[index] = value; \
+}
 
 jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
     if(src == jnull || dst == jnull) JvmNullPointerException();

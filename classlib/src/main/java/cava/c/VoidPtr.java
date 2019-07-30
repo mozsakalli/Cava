@@ -16,6 +16,7 @@
 
 package cava.c;
 
+import cava.annotation.Inline;
 import cava.annotation.Native;
 import cava.platform.NativeCode;
 import java.nio.Buffer;
@@ -26,7 +27,8 @@ import java.nio.Buffer;
  */
 @Native("void*")
 public class VoidPtr {
-    
+    /*
+
     public static VoidPtr from(Object o) {
         return NativeCode.VoidPtr("(void*)%s", o);
     }
@@ -34,7 +36,6 @@ public class VoidPtr {
     public static VoidPtr from(Object o, int byteOffset) {
         return NativeCode.VoidPtr("(void*)((char*)%s + %s)", o, byteOffset);
     }
-    /*
     public static VoidPtr from(Buffer buffer) {
         return buffer.getAddress();
     }
@@ -43,20 +44,21 @@ public class VoidPtr {
         return NativeCode.VoidPtr("(void*)((char*)%s + %s)", buffer.getAddress(), byteOffset);
     }
     */
-    public static VoidPtr fromAnyArray(Object array) {
+    @Inline  public static VoidPtr fromObject(Object object) {
+        return NativeCode.VoidPtr("%s", object);
+    }
+    @Inline public static VoidPtr fromAnyArray(Object array) {
         return NativeCode.VoidPtr("(void*)JvmArrayData(%s)", array);
     }
-    
-    
-    public int toInt() {
-        return NativeCode.Int("(jint)%s", this);
+    @Inline public  static VoidPtr fromBuffer(Buffer buffer) {
+        return  NativeCode.VoidPtr("%s", buffer.getAddress());
     }
     
-    public long toLong() {
+    @Inline  public long toLong() {
         return NativeCode.Long("(jlong)%s", this);
     }
     
-    public Object toObject() {
+    @Inline  public Object toObject() {
         return NativeCode.Object("%s", this);
     }
     

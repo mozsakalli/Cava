@@ -131,7 +131,7 @@ public class Debugger {
         System.out.println("Waiting debugger to connect on port "+port);
         //ServerSocket ss = new ServerSocket(port);
         //final Socket s = ss.accept();
-        final Socket s = new Socket("192.168.1.44", 10000);
+        final Socket s = new Socket("192.168.1.48", 10000);
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {

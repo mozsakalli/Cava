@@ -31,7 +31,7 @@ public class ByteBuffer extends Buffer {
     }
 
     public static ByteBuffer allocateDirect(int capacity) {
-        return allocate(capacity);
+        return new ByteBuffer(capacity);
     }
 
     public static ByteBuffer wrap(byte[] array) {
@@ -44,6 +44,10 @@ public class ByteBuffer extends Buffer {
         buf.position = start;
         buf.limit = start + byteCount;
         return buf;
+    }
+
+    ByteBuffer(int capacity) {
+        super(capacity, CLib.malloc(capacity), null, true);
     }
 
     ByteBuffer(byte[] array) {
@@ -118,7 +122,7 @@ public class ByteBuffer extends Buffer {
 
     public final byte get(int index) {
         checkIndex(index);
-        return NativeCode.Byte("((char*)%s)[%s]", ptr, position);
+        return NativeCode.Byte("((char*)%s)[%s]", ptr, index);
     }
 
     public final short getShort() {

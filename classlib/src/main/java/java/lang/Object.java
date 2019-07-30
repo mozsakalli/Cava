@@ -39,7 +39,7 @@ public class Object{
     }
 
     public int hashCode() {
-        return VoidPtr.from(this).toInt();
+        return  (int)VoidPtr.fromObject(this).toLong();
     }
 
     public final void notify() {}

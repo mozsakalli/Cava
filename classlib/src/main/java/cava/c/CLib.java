@@ -17,6 +17,7 @@
 package cava.c;
 
 import cava.annotation.Include;
+import cava.annotation.Inline;
 import cava.platform.NativeCode;
 
 /**
@@ -35,10 +36,10 @@ public class CLib {
     public final static int LONG_SIZE = NativeCode.Int("sizeof(jlong)");
     public final static int DOUBLE_SIZE = NativeCode.Int("sizeof(jdouble)");
     
-    public static VoidPtr malloc(int size) {
+    @Inline public static VoidPtr malloc(int size) {
         return NativeCode.VoidPtr("malloc(%s)", size);
     }
-    public static void free(Object ptr) {
+    @Inline public static void free(Object ptr) {
         NativeCode.Void("free(%s)", ptr);
     }
     
@@ -55,10 +56,13 @@ public class CLib {
         NativeCode.Void("memmove(%s, %s, %s)", dst, src, sizeInBytes);
     }
     */
-    public static void memmove(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
+    @Inline public static void memcpy(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
+        NativeCode.Void("memcpy(((char*)%s)+%s, ((char*)%s)+%s, %s)", dst, dstOffset, src, srcOffset, sizeInBytes);
+    }
+    @Inline public static void memmove(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
         NativeCode.Void("memmove(((char*)%s)+%s, ((char*)%s)+%s, %s)", dst, dstOffset, src, srcOffset, sizeInBytes);
     }
-    public static int strlen(Object str) {
+    @Inline public static int strlen(Object str) {
         return NativeCode.Int("strlen(%s)", str);
     } 
     

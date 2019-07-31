@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
 public final class String implements java.lang.CharSequence, Comparable<String> {
 
     private static ArrayList<String> str = new ArrayList<String>();
-    
+
     @Keep
     public final char[] value;
-
+    
     @Keep
     public final int offset;
 
@@ -37,6 +37,7 @@ public final class String implements java.lang.CharSequence, Comparable<String> 
     @Keep
     private int hashCode = 0;
 
+    
     private static final char[] ZERO_CHAR = new char[0];
 
     /**

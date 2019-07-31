@@ -107,9 +107,8 @@ public final class Class<T> {
     }
 
     public java.io.InputStream getResourceAsStream(java.lang.String name) throws IOException {
-        System.out.println("resource: "+name);
+        //todo: move this to another class
         File file = new File(NSBundle.getMainBundle().getBundlePath(), name.substring(1));
-        System.out.println("res: "+file+" : "+file.exists());
         return new FileInputStream(file);
     }
     

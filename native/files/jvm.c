@@ -115,27 +115,32 @@ static void _finalizeObject(GC_PTR addr, GC_PTR client_data) {
     }
 }
 static void* gcAlloc(int size) {
-    
     void* m = GC_MALLOC(size);
     if(!m) {
         GC_gcollect();
         m = GC_MALLOC(size);
     }
+    if(m) memset(m, 0, size);    
     return m;
-    /*void* m = malloc(size);
-    memset(m, 0, size);
-    return m;*/
 }
 static void* gcAllocAtomic(int size) {
-    
+    void* m = GC_MALLOC_ATOMIC(size);
+    if(!m) {
+        GC_gcollect();
+        m = GC_MALLOC_ATOMIC(size);
+    }
+    if(m) memset(m, 0, size);    
+    return m;
+}
+static void* gcAllocAtomicNoZero(int size) {
     void* m = GC_MALLOC_ATOMIC(size);
     if(!m) {
         GC_gcollect();
         m = GC_MALLOC_ATOMIC(size);
     }
     return m;
-    return gcAlloc(size);
 }
+
 
 void JvmAddRoot(void* ptr) {
     GC_add_roots(ptr, ptr + sizeof(void*));
@@ -246,8 +251,11 @@ JvmArray* JvmAllocObjectArray2(JvmClass* klass, jint length, jint length2) {
 }
 
 JvmArray* JvmInitPrimArray1(JvmClass* klass, jint length, void* data) {
-    JvmArray* array = JvmAllocPrimArray1(klass, length);
-    memcpy(JvmArrayData(array), data, length * klass->componentType->size);
+    int byteSize = klass->componentType->size * length;
+    JvmArray* array = (JvmArray*)gcAllocAtomicNoZero(sizeof(JvmArray) + byteSize);
+    array->klass = klass;
+    array->len = length;
+    memcpy(JvmArrayData(array), data, byteSize);
     return array;
 }
 

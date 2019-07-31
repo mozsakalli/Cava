@@ -242,7 +242,9 @@ public class IOSGLES20 implements GL20 {
     }
 
     @Override
-    public void glDrawArrays(int mode, int first, int count) { System.out.println("DrawArrays(int mode, int first, int count not implemented"); }
+    public void glDrawArrays(int mode, int first, int count) { 
+        NativeCode.Void("glDrawArrays(%s,%s,%s)", mode, first, count);
+    }
 
     @Override
     public void glDrawElements(int mode, int count, int type, Buffer indices) { 

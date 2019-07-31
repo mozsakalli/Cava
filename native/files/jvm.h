@@ -197,24 +197,24 @@ typedef struct JvmThread {
 #endif
 } JvmThread;
 
-extern jobject JvmArrayGet_O(JvmArray* array, int index);
-extern jobject JvmArraySet_O(JvmArray* array, int index, jobject value);
-extern jbyte JvmArrayGet_B(JvmArray* array, int index);
-extern jbyte JvmArraySet_B(JvmArray* array, int index, jbyte value);
-extern jchar JvmArrayGet_C(JvmArray* array, int index);
-extern jchar JvmArraySet_C(JvmArray* array, int index, jchar value);
-extern jbool JvmArrayGet_Z(JvmArray* array, int index);
-extern jbool JvmArraySet_Z(JvmArray* array, int index, jbool value);
-extern jshort JvmArrayGet_S(JvmArray* array, int index);
-extern jshort JvmArraySet_S(JvmArray* array, int index, jshort value);
-extern jint JvmArrayGet_I(JvmArray* array, int index);
-extern jint JvmArraySet_I(JvmArray* array, int index, jint value);
-extern jfloat JvmArrayGet_F(JvmArray* array, int index);
-extern jfloat JvmArraySet_F(JvmArray* array, int index, jfloat value);
-extern jlong JvmArrayGet_J(JvmArray* array, int index);
-extern jlong JvmArraySet_J(JvmArray* array, int index, jlong value);
-extern jdouble JvmArrayGet_D(JvmArray* array, int index);
-extern jdouble JvmArraySet_D(JvmArray* array, int index, jdouble value);
+extern JVMINLINE jobject JvmArrayGet_O(JvmArray* array, int index);
+extern JVMINLINE jobject JvmArraySet_O(JvmArray* array, int index, jobject value);
+extern JVMINLINE jbyte JvmArrayGet_B(JvmArray* array, int index);
+extern JVMINLINE jbyte JvmArraySet_B(JvmArray* array, int index, jbyte value);
+extern JVMINLINE jchar JvmArrayGet_C(JvmArray* array, int index);
+extern JVMINLINE jchar JvmArraySet_C(JvmArray* array, int index, jchar value);
+extern JVMINLINE jbool JvmArrayGet_Z(JvmArray* array, int index);
+extern JVMINLINE jbool JvmArraySet_Z(JvmArray* array, int index, jbool value);
+extern JVMINLINE jshort JvmArrayGet_S(JvmArray* array, int index);
+extern JVMINLINE jshort JvmArraySet_S(JvmArray* array, int index, jshort value);
+extern JVMINLINE jint JvmArrayGet_I(JvmArray* array, int index);
+extern JVMINLINE jint JvmArraySet_I(JvmArray* array, int index, jint value);
+extern JVMINLINE jfloat JvmArrayGet_F(JvmArray* array, int index);
+extern JVMINLINE jfloat JvmArraySet_F(JvmArray* array, int index, jfloat value);
+extern JVMINLINE jlong JvmArrayGet_J(JvmArray* array, int index);
+extern JVMINLINE jlong JvmArraySet_J(JvmArray* array, int index, jlong value);
+extern JVMINLINE jdouble JvmArrayGet_D(JvmArray* array, int index);
+extern JVMINLINE jdouble JvmArraySet_D(JvmArray* array, int index, jdouble value);
 
 extern jobject JvmArrayGet_O_NBC(JvmArray* array, int index);
 extern jobject JvmArraySet_O_NBC(JvmArray* array, int index, jobject value);

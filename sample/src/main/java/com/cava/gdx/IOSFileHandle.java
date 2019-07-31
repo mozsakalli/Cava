@@ -29,12 +29,10 @@ public class IOSFileHandle extends FileHandle {
 
     protected IOSFileHandle(String fileName, FileType type) {
         super(fileName, type);
-        System.out.println("File: "+fileName);
     }
 
     protected IOSFileHandle(File file, FileType type) {
         super(file, type);
-        System.out.println("File: "+file);
     }
 
     @Override

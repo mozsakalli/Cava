@@ -18,11 +18,8 @@ package cava.sample;
 
 import cava.apple.foundation.NSAutoreleasePool;
 import cava.apple.uikit.UIApplication;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.cava.gdx.IOSApplication;
 import com.cava.gdx.IOSApplicationConfiguration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -43,7 +40,7 @@ public class IOSLauncher extends IOSApplication.Delegate {
         IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
         cfg.hideHomeIndicator = true;
         cfg.statusBarVisible = false;
-        return new IOSApplication(new BunnyMark(), cfg);
+        return new IOSApplication(new Sample(), cfg);
         
     }
 

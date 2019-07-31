@@ -23,6 +23,10 @@ import cava.apple.glkit.GLKView;
 import cava.apple.glkit.GLKViewController;
 import cava.apple.glkit.GLKViewControllerDelegate;
 import cava.apple.glkit.GLKViewDelegate;
+import cava.apple.glkit.GLKViewDrawableColorFormat;
+import cava.apple.glkit.GLKViewDrawableDepthFormat;
+import cava.apple.glkit.GLKViewDrawableMultisample;
+import cava.apple.glkit.GLKViewDrawableStencilFormat;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIEvent;
@@ -85,8 +89,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         @Override
         public void viewDidLayoutSubviews() {
             CGRect bounds = app.getBounds();
-            graphics.width = (int)(bounds.getWidth());
-            graphics.height = (int)(bounds.getHeight());
+            graphics.width = (int) (bounds.getWidth());
+            graphics.height = (int) (bounds.getHeight());
             graphics.makeCurrent();
             if (graphics.created) {
                 app.listener.resize(graphics.width, graphics.height);
@@ -104,6 +108,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     long framesStart;
     int frames;
     int fps;
+    BufferFormat bufferFormat;
+    String extensions;
 
     IOSApplication app;
     IOSApplicationConfiguration config;
@@ -126,16 +132,16 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         this.input = app.input;
         final CGRect bounds = app.getBounds();
         // setup view and OpenGL
-        width = (int)(bounds.getWidth());
-        height = (int)(bounds.getHeight());
-        
+        width = (int) (bounds.getWidth());
+        height = (int) (bounds.getHeight());
+
         context = new EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
         if (context.getNativePeer() != null) {
             System.out.println("OpenGL2.0 detected");
             gl20 = new IOSGLES20();
         }
         gl30 = null;
-        
+
         view = new GLKView() {
             @Override
             @Keep
@@ -162,18 +168,42 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
             }
         };
         view.initWithFrame(bounds, context);
-        
+
         view.setDelegate(this);
         view.setDrawableColorFormat(config.colorFormat);
         view.setDrawableDepthFormat(config.depthFormat);
         view.setDrawableStencilFormat(config.stencilFormat);
         view.setDrawableMultisample(config.multisample);
         //view.setMultipleTouchEnabled(true);
-                
+
         viewController = new IOSUIViewController(app, this);
         viewController.setView(view);
         viewController.setPreferredFramesPerSecond(config.preferredFramesPerSecond);
         viewController.setDelegate(this);
+
+        int r = 0, g = 0, b = 0, a = 0, depth = 0, stencil = 0, samples = 0;
+        if (config.colorFormat == GLKViewDrawableColorFormat.RGB565) {
+            r = 5;
+            g = 6;
+            b = 5;
+            a = 0;
+        } else {
+            r = g = b = a = 8;
+        }
+        if (config.depthFormat == GLKViewDrawableDepthFormat._16) {
+            depth = 16;
+        } else if (config.depthFormat == GLKViewDrawableDepthFormat._24) {
+            depth = 24;
+        } else {
+            depth = 0;
+        }
+        if (config.stencilFormat == GLKViewDrawableStencilFormat._8) {
+            stencil = 8;
+        }
+        if (config.multisample == GLKViewDrawableMultisample._4X) {
+            samples = 4;
+        }
+        bufferFormat = new BufferFormat(r, g, b, a, depth, stencil, samples, false);
 
         appPaused = false;
     }
@@ -388,22 +418,22 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public Monitor getPrimaryMonitor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new IOSMonitor(0, 0, "Primary Monitor");
     }
 
     @Override
     public Monitor getMonitor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getPrimaryMonitor();
     }
 
     @Override
     public Monitor[] getMonitors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new Monitor[] { getPrimaryMonitor() };
     }
 
     @Override
     public DisplayMode[] getDisplayModes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new DisplayMode[] {getDisplayMode()};
     }
 
     @Override
@@ -413,7 +443,8 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public DisplayMode getDisplayMode() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new IOSDisplayMode(getWidth(), getHeight(), config.preferredFramesPerSecond, bufferFormat.r + bufferFormat.g
+                + bufferFormat.b + bufferFormat.a);
     }
 
     @Override
@@ -450,12 +481,15 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public BufferFormat getBufferFormat() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bufferFormat;
     }
 
     @Override
-    public boolean supportsExtension(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean supportsExtension(String extension) {
+        if (extensions == null) {
+            extensions = Gdx.gl.glGetString(GL20.GL_EXTENSIONS);
+        }
+        return extensions.contains(extension);
     }
 
     @Override
@@ -463,7 +497,9 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         if (isContinuous != this.isContinuous) {
             this.isContinuous = isContinuous;
             // start the GLKViewController if we go from non-continuous -> continuous
-            if (isContinuous) viewController.setPaused(false);
+            if (isContinuous) {
+                viewController.setPaused(false);
+            }
         }
     }
 
@@ -472,13 +508,14 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
         return isContinuous;
     }
 
-
     @Override
-    public void requestRendering () {
-            isFrameRequested = true;
-            // start the GLKViewController if we are in non-continuous mode
-            // (we should already be started in continuous mode)
-            if (!isContinuous) viewController.setPaused(false);
+    public void requestRendering() {
+        isFrameRequested = true;
+        // start the GLKViewController if we are in non-continuous mode
+        // (we should already be started in continuous mode)
+        if (!isContinuous) {
+            viewController.setPaused(false);
+        }
     }
 
     @Override
@@ -488,7 +525,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public Cursor newCursor(Pixmap pixmap, int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
@@ -499,4 +536,15 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
     public void setSystemCursor(Cursor.SystemCursor sc) {
     }
 
+    private class IOSDisplayMode extends DisplayMode {
+            protected IOSDisplayMode (int width, int height, int refreshRate, int bitsPerPixel) {
+                    super(width, height, refreshRate, bitsPerPixel);
+            }
+    }
+
+    private class IOSMonitor extends Monitor {
+            protected IOSMonitor(int virtualX, int virtualY, String name) {
+                    super(virtualX, virtualY, name);
+            }
+    }    
 }

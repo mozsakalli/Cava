@@ -298,6 +298,7 @@ return ((type*)JvmArrayData(array))[index] = value; \
 }
 
 jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
+    if(src == dst) return jtrue;
     if(src == jnull || dst == jnull) JvmNullPointerException();
     
     if(src->componentType) {
@@ -305,7 +306,7 @@ jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
         return JvmIsAssignableFrom(src->componentType, dst->componentType);
     }
     
-    return dst->isChildOf(src);
+    return dst->isChildOf ? dst->isChildOf(src) : jfalse;
 }
 
 jbool JvmInstanceOf(jobject object, jobject klass) {
@@ -315,6 +316,7 @@ jbool JvmInstanceOf(jobject object, jobject klass) {
 
 jobject JvmCheckCast(jobject object, jobject klass) {
     if(object == jnull || klass == jnull) return object;
+
     if(!JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass)) {
         JvmClassCastException();
     }

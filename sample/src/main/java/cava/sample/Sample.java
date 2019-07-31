@@ -17,6 +17,12 @@
 package cava.sample;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -24,4 +30,41 @@ import com.badlogic.gdx.ApplicationAdapter;
  */
 public class Sample extends ApplicationAdapter {
 
+    SpriteBatch batch;
+    Texture texture;
+    float[] verts;
+    ShapeRenderer shape;
+    
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        texture = new Texture("wabbit_alpha.png");
+        try {
+            Field f = SpriteBatch.class.getDeclaredField("vertices");
+            f.setAccessible(true);
+            verts = (float[])f.get(batch);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        shape = new ShapeRenderer();
+    }
+
+    @Override
+    public void render() {
+        batch.begin();
+        batch.draw(texture, 200, 200, 200,200);
+        batch.end();
+        
+        shape.begin(ShapeRenderer.ShapeType.Filled);
+        shape.setColor(Color.RED);
+        shape.box(10, 10, 0, 300, 300, 0);
+        shape.end();
+        if(Gdx.graphics.getFrameId()%100 == 0) {
+            for(int i=0; i<20; i++)
+                System.out.println(verts[i]);
+            System.out.println("-----------------------");
+        }
+    }
+    
+    
 }

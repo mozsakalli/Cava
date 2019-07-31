@@ -247,7 +247,7 @@ JvmArray* JvmAllocObjectArray2(JvmClass* klass, jint length, jint length2) {
 
 JvmArray* JvmInitPrimArray1(JvmClass* klass, jint length, void* data) {
     JvmArray* array = JvmAllocPrimArray1(klass, length);
-    memcpy(JvmArrayData(array), data, length * sizeof(klass->componentType->size));
+    memcpy(JvmArrayData(array), data, length * klass->componentType->size);
     return array;
 }
 

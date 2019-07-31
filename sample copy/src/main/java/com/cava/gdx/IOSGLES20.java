@@ -41,7 +41,7 @@ public class IOSGLES20 implements GL20 {
     public static int x,y,width,height;
     
     static VoidPtr getBufferAddress(Buffer buffer) {
-        VoidPtr ptr = VoidPtr.from(buffer);
+        VoidPtr ptr = VoidPtr.fromBuffer(buffer);
         Class cls = buffer.getClass();
         if(cls == ByteBuffer.class)
             return NativeCode.VoidPtr("((char*)%s) + (%s)", ptr, buffer.position());

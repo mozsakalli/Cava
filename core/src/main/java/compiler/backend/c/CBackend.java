@@ -616,19 +616,23 @@ public class CBackend {
         //generate interface method table
         out.print("void** _iTable = ");
         if(!c.isInterface && c.interfaceTableSize > 0) {
-            out.println("(void**)malloc(%d * sizeof(void*));", c.interfaceTableSize);
             Clazz kk = c;
             HashSet<Integer> used = new HashSet();
+            List<Method> iMethods = new ArrayList();
+            int tableSize = 0;
             while(kk != null) {
                 for(Method m : kk.methods) {
-                    if(m.name.equals("hasNext")) System.out.println(m+" : "+m.interfaceTableIndex);
                     if(m.interfaceTableIndex == -1) continue;
                     if(!used.contains(m.interfaceTableIndex)) {
+                        /*
                         if(m.isAbstract()) {
                             Method vm = CompilerContext.resolve(m.virtualBaseClass).findDeclaredMethod(m.name, m.signature);
                             out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(vm));
                         } else
                         out.println("_iTable[%d] = (void*)&%s;", m.interfaceTableIndex, naming.method(m));
+                        */
+                        iMethods.add(m);
+                        tableSize = Math.max(tableSize, m.interfaceTableIndex+1);
                         used.add(m.interfaceTableIndex);
                     }
                 }
@@ -636,7 +640,15 @@ public class CBackend {
                     kk = CompilerContext.resolve(kk.superName);
                 else kk = null;
             }
-            
+            out.println("(void**)malloc(%d * sizeof(void*));", tableSize);
+            for(Method m : iMethods) {
+                if(m.interfaceTableIndex >= tableSize) throw new RuntimeException("Invalid interface table index: "+m+" "+m.interfaceTableIndex+"/"+tableSize);
+                if(m.isAbstract()) {
+                    Method vm = CompilerContext.resolve(m.virtualBaseClass).findDeclaredMethod(m.name, m.signature);
+                    out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(vm));
+                } else
+                out.println("_iTable[%d] = (void*)&%s;", m.interfaceTableIndex, naming.method(m));                
+            }
         } else out.println("jnull;");
         
         Method finalize = c.findMethod("finalize", "()V");

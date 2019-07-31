@@ -193,7 +193,6 @@ public class ByteBuffer extends Buffer {
         CLib.memmove(dstObject, dstOffset, srcObject, srcOffset, srcByteCount);
         src.position(src.limit());
         dst.position(dst.position() + srcByteCount);
-
         return this;
     }
 

@@ -32,14 +32,19 @@ public class IOSLauncher extends IOSApplication.Delegate {
 
     @Override
     protected IOSApplication createApplication() {
+        /*
+        while(true) {
         Matcher m = Pattern.compile(".*file=\"?([^\"]+)\"?").matcher("page id=0 file=\"arial-15.png\"");
         boolean r = m.find();
         System.out.println("matcher: "+r);
-        
+        try {Thread.sleep(100);}catch(Exception e){}
+        }
+        */
         IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
         cfg.hideHomeIndicator = true;
         cfg.statusBarVisible = false;
         return new IOSApplication(new BunnyMark(), cfg);
+        
     }
 
     public static void main() {

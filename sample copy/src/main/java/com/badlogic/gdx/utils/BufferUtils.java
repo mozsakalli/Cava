@@ -72,9 +72,12 @@ public final class BufferUtils {
             throw new BufferOverflowException();
         }*/
         
-        CLib.memmove(VoidPtr.from(dst), dst.position()*elementSize, 
+        if(dst instanceof ByteBuffer)
+            dst.limit(numFloats << 2);
+        else if(dst instanceof FloatBuffer)
+            dst.limit(numFloats);
+        CLib.memcpy(VoidPtr.fromBuffer(dst), 0, 
                 VoidPtr.fromAnyArray(src), offset * CLib.FLOAT_SIZE, numFloats * CLib.FLOAT_SIZE);
-        dst.limit((numFloats * CLib.FLOAT_SIZE) / elementSize);
         dst.position(0);
     }
 }

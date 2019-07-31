@@ -68,10 +68,11 @@ public final class BufferUtils {
     }
     
     public static void copy (float[] src, Buffer dst, int numFloats, int offset) {
-        int elementSize = getBufferElementSize(dst);
+        if (dst instanceof ByteBuffer)
+                dst.limit(numFloats << 2);
+        else if (dst instanceof FloatBuffer) dst.limit(numFloats);        
         CLib.memcpy(VoidPtr.fromBuffer(dst), 0,
                 VoidPtr.fromAnyArray(src), offset * CLib.FLOAT_SIZE, numFloats * CLib.FLOAT_SIZE);
-        dst.limit((numFloats * CLib.FLOAT_SIZE) / elementSize);
         dst.position(0);
     }
 }

@@ -47,9 +47,9 @@ public class UIApplication extends UIResponder {
         CharPtrPtr argv = null;
         
         String principalClassName = principalClass != null ? NSObject.getObjectiveCName(principalClass)  : null;
-        /*Class dc = delegateClass;
+        Class dc = delegateClass;
         while(dc != null && dc.getSuperclass() != NSObject.class)
-            dc = dc.getSuperclass();*/
+            dc = dc.getSuperclass();
         String delegateClassName = delegateClass != null ? NSObject.getObjectiveCName(delegateClass) : null;
         
         if(args != null && args.length > 0) {
@@ -58,7 +58,6 @@ public class UIApplication extends UIResponder {
                 argv.set(i, CharPtr.allocAsciiZ(args[i]));
             }
         }
-        
         currentDelegate = (UIApplicationDelegate)delegateClass.newInstance();
         main(argc, argv, principalClassName, delegateClassName);
     }

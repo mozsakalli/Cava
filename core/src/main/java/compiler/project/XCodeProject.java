@@ -61,7 +61,7 @@ public class XCodeProject extends Project {
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.h"));
         
 
-        for(String lib : new String[]{"gc","bx","bimg","bimg_decode","bgfx"})
+        for(String lib : new String[]{"gc"})
         pbxProject.addStaticLibrary(lib, 
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/arm64"),
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/thumbv7"),

@@ -62,7 +62,6 @@ public class BunnyMark extends ApplicationAdapter {
 
     @Override
     public void create() {
-        SpriteBatch.defaultVertexDataType = Mesh.VertexDataType.VertexBufferObject;
         batch = new SpriteBatch(5400);
 
         labelFont = new BitmapFont();
@@ -213,7 +212,7 @@ public class BunnyMark extends ApplicationAdapter {
             fpsLabel = String.valueOf((((float) fpsCount) / fpsTime)).substring(0, 5) + " FPS";
             fpsTime = 0;
             fpsCount = 0;
-            System.out.println(fpsLabel+"/"+bunnies.size);
+            //System.out.println(fpsLabel+"/"+bunnies.size);
         }
         
         Gdx.gl.glClearColor(0, 0, 0, 1);

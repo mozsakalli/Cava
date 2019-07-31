@@ -383,7 +383,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public boolean supportsDisplayModeChange() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return false;
     }
 
     @Override
@@ -423,17 +423,15 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public boolean setFullscreenMode(DisplayMode dm) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public boolean setWindowedMode(int i, int i1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setTitle(String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -443,12 +441,10 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public void setResizable(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setVSync(boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -486,7 +482,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public boolean isFullscreen() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
@@ -496,12 +492,10 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public void setCursor(Cursor cursor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void setSystemCursor(Cursor.SystemCursor sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

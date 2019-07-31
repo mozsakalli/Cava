@@ -321,75 +321,107 @@ jobject JvmCheckCast(jobject object, jobject klass) {
     return object;
 }
 
-pthread_mutex_t JvmMonitorListLock;
-typedef struct JvmMonitorMutex {
+typedef struct JvmMonitor {
     pthread_mutex_t mutex;
     void* key;
     jbool created;
     JvmThread* thread;
     int count;
-} JvmMonitorMutex;
-#define MAXMONITOR 256
-JvmMonitorMutex JvmMonitorMutexList[MAXMONITOR];
+    struct JvmMonitor* next;
+} JvmMonitor;
+pthread_mutex_t JvmMonitorListLock;
+JvmMonitor* JvmActiveMonitors = jnull;
+JvmMonitor* JvmFreeMonitors = jnull;
 
 void JvmMonitorEnter(JvmObject* object) {
     if(object == jnull) {
         JvmNullPointerException();
     }
     pthread_mutex_lock(&JvmMonitorListLock);
-    int index = -1;
-    for(int i=0; i<MAXMONITOR; i++)
-        if(JvmMonitorMutexList[i].key == (void*)object) {
-            index = i;
-            break;
-        }
-    
-    if(index == -1) {
-        for(int i=0; i<MAXMONITOR; i++)
-            if(JvmMonitorMutexList[i].key == jnull) {
-                index = i;
+    JvmMonitor* mon = jnull;
+    if(JvmActiveMonitors != jnull) {
+        JvmMonitor* ptr = JvmActiveMonitors;
+        while(ptr != jnull) {
+            if(ptr->key == (void*)object) {
+                mon = ptr;
                 break;
             }
-    }
-    if(index < 0 || index >= MAXMONITOR) {
-        pthread_mutex_unlock(&JvmMonitorListLock);
-        return; //!!
+            ptr = ptr->next;
+        }
     }
     
-    JvmMonitorMutex* mon = &JvmMonitorMutexList[index];
-    mon->key = (void*)object;
+    if(!mon) {
+        if(JvmFreeMonitors) {
+            mon = JvmFreeMonitors;
+            JvmFreeMonitors = JvmFreeMonitors->next;
+        } else {
+            mon = malloc(sizeof(JvmMonitor));
+            memset(mon, 0, sizeof(JvmMonitor));
+        }
+        mon->key = (void*)object;
+        mon->next = JvmActiveMonitors;
+        JvmActiveMonitors = mon;
+    }
+    
     if(!mon->created) {
         pthread_mutex_init(&mon->mutex, jnull);
         mon->created = jtrue;
     }
-    pthread_mutex_unlock(&JvmMonitorListLock);
+    
     JvmThread* thread = JvmCurrentThread();
-    if(mon->thread == thread) {
+    if(mon->thread == thread || mon->thread == jnull) {
+        mon->thread = thread;
         mon->count++;
+        pthread_mutex_unlock(&JvmMonitorListLock);
         return;
     }
-    pthread_mutex_lock(&mon->mutex);
+    //safe to release list lock
+    pthread_mutex_unlock(&JvmMonitorListLock);
+
+    while(jtrue) {
+        if(pthread_mutex_trylock(&mon->mutex) == 0) break;
+        usleep(1);
+    }
+    
+    //we got the lock!!
     mon->thread = thread;
     mon->count++;
 }
 
 void JvmMonitorExit(JvmObject* object) {
-    //we already locked dont need to lock list while searching...
-    JvmMonitorMutex* mon = jnull;
-    for(int i=0; i<MAXMONITOR; i++)
-        if(JvmMonitorMutexList[i].key == (void*)object) {
-            mon = &JvmMonitorMutexList[i];
-            break;
-        }
-    if(!mon) return; //this souldn't happen in general!!
+    pthread_mutex_lock(&JvmMonitorListLock);
+    JvmMonitor* mon = JvmActiveMonitors;
+    JvmMonitor* pre = jnull;
     
+    while(mon) {
+        if(mon->key == (void*)object) break;
+        pre = mon;
+        mon = mon->next;
+    }
+    
+    if(mon == jnull) {
+        //panic!!
+        printf("Can't find active monitor!!");
+        pthread_mutex_unlock(&JvmMonitorListLock);
+        return;
+    }
     mon->count--;
-    if(mon->count > 0) return;
+    if(mon->count <= 0) {
+        if(!pre)
+            JvmActiveMonitors = JvmActiveMonitors->next;
+        else {
+            pre->next = mon->next;
+        }
+        mon->next = JvmFreeMonitors;
+        JvmFreeMonitors = mon;
+        mon->count = 0;
+        mon->thread = jnull;
+        mon->next = jnull;
+        mon->key = jnull;
+    }
     
     pthread_mutex_unlock(&mon->mutex);
-    mon->thread = jnull;
-    mon->count = 0;
-    mon->key = jnull;
+    pthread_mutex_unlock(&JvmMonitorListLock);
 }
 
 
@@ -485,7 +517,7 @@ void JvmExit() {
 /////////////////////////////////////////////
 void JvmSetup() {
     pthread_mutex_init(&JvmMonitorListLock, jnull);
-    memset(&JvmMonitorMutexList, 0, sizeof(JvmMonitorMutexList));
+    JvmFreeMonitors = JvmActiveMonitors = jnull;
     
     //Initialize GC
     GC_set_no_dls(1);

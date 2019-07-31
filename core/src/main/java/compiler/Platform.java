@@ -22,7 +22,7 @@ package compiler;
  */
 public enum Platform {
     
-    Ios,
+    iOS,
     Mac,
     Android,
     Linux,

@@ -18,6 +18,7 @@ package com.cava.gdx;
 import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.Keep;
+import cava.annotation.Unsafe;
 import cava.c.CLib;
 import cava.c.CharPtr;
 import cava.c.VoidPtr;
@@ -36,6 +37,7 @@ import java.nio.ShortBuffer;
 @Include("<OpenGLES/ES2/gl.h> <OpenGLES/ES2/glext.h>")
 @Framework("OpenGLES.framework")
 @Keep
+@Unsafe
 public class IOSGLES20 implements GL20 {
 
     public static int x,y,width,height;

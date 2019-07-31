@@ -297,7 +297,7 @@ public class CBackend {
             if(((m.name.equals("<clinit>") || m.usedInProject) && !m.isNative())) {
                 if(!isAbstract) {
                     if(c.isInterface) 
-                        out.print("%s interface_%s(",cType.toC(m.type), naming.method(m));
+                        out.print("JVMINLINE %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else
                         out.print("%s %s(",cType.toC(m.type), naming.method(m));
                     printArgs(m, cType, out);
@@ -314,12 +314,14 @@ public class CBackend {
                             out.println("JvmRegisterCurrentThread(pthis);");
                         }
                         
-                        out.println("JvmThread* thread = JvmCurrentThread();");
-                        out.println("jint entryFramePtr = thread->framePtr++;");
-                        out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
-                        
-                        out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
-                        if(m.isObjCImplementation) out.println("/* ObjC */");
+                        boolean isUnsafe = A.hasUnsafe(m) || A.hasUnsafe(c);
+                        if(!isUnsafe) {
+                            out.println("JvmThread* thread = JvmCurrentThread();");
+                            out.println("jint entryFramePtr = thread->framePtr++;");
+                            out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
+
+                            out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
+                        }
                         int index = 0;
                         for(NameAndType a : m.args) {
                             if(!a.type.equals("cava/c/Struct"))
@@ -327,7 +329,6 @@ public class CBackend {
                         }
                         for(NameAndType l : m.locals) {
                             out.println("DEFLOCAL(%s,%s,%d);", naming.local(l), cType.toC(l.type), index++);
-                            //out.println("%s %s;", cType.toC(l.type), naming.local(l));
                         }
                         out.ln();
                         
@@ -342,21 +343,13 @@ public class CBackend {
                                 }
                         }
                         
-                        if(c.isObjCImplementation && m.name.equals("<init>")) {
-                            String objcName = c.name.replace('/', '_').replace('$', '_')+"_ObjC";
-                            out.println("/* create objc: %s */", objcName);
-                            /*
-                            out.println("%s* objcPeer =((cava_c_NativeObject*)pthis)->fcava_c_NativeObject_nativePeer = [[%s alloc] init];", 
-                                    objcName, objcName)
-                                .println("objcPeer->javaPeer = pthis;");    
-                            */
+                        if(!isUnsafe) {
+                            int reflectIndex = reflectMethods.indexOf(m);
+                            if(reflectIndex == -1)
+                                out.println("frame->method = jnull;");
+                            else
+                                out.println("JVMMETHOD(%s_Class,%d);",naming.clazz(c.name),reflectIndex);
                         }
-                        
-                        int reflectIndex = reflectMethods.indexOf(m);
-                        if(reflectIndex == -1)
-                            out.println("frame->method = jnull;");
-                        else
-                            out.println("JVMMETHOD(%s_Class,%d);",naming.clazz(c.name),reflectIndex);
                         CWriter writer = new CWriter(m, out, naming, cType, globalRefs);
                         if(m.name.equals("<clinit>")) {
                             new ClassInitInserter().process(m);
@@ -389,8 +382,8 @@ public class CBackend {
                         } 
                         writer.writeChildren(m.body.children);
                         variableLocations.put(m, writer.variableLocations);
-                        
-                        out.println("thread->framePtr = entryFramePtr;");
+                        if(!isUnsafe)
+                            out.println("thread->framePtr = entryFramePtr;");
                         //make compiler happy for methods without return
                         if(!m.type.equals("V") && m.body.children.size() > 0 && 
                             (m.body.children.get(m.body.children.size()-1) instanceof Throw || 
@@ -409,117 +402,17 @@ public class CBackend {
         if(!c.isInterface) {
             for(Method vm : c.methods) {
                 if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
-                    out.print("%s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+                    out.print("JVMINLINE %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
                     printArgs(vm, cType, out);
                     out.println(") {").indent();
                     generateMethodCallWrapper(out, c, vm, cType, "vtable", vm.virtualTableIndex);
                     out.undent().println("}");
                 }
-                //if(vm.usedInProject && !vm.isStatic() && !vm.name.equals("<init>"))
             }
         }
-        
-        /*
-        if(virtualMethods != null) {
-            for(int i=0; i<virtualMethods.size(); i++) {
-                Method vm = virtualMethods.get(i);
-                if(vm.virtualBaseClass.equals(c.name)) {
-                    out.print("%s virtual_%s(",cType.toC(vm.type), naming.method(vm));
-                    printArgs(vm, cType, out);
-                    out.println(") {").indent();
-                    generateMethodCallWrapper(out, c, vm, cType, "vtable", i);
-                    out.undent().println("}");
-                }
-            }
-        }*/
         
         objc.writeImplementation(naming, cType, globalRefs, out);
-        /*
-        if(isObjC) {
-            out.println("@implementation %s_ObjC", naming.clazz(c.name));
-            for(Method m : objcMethods) {
-                String objcDesc =  m.annotations.get("cava.annotation.ObjC") != null ?
-                                  m.annotations.get("cava.annotation.ObjC").get("value").toString() : null;
-                if(objcDesc == null) {
-                    System.out.println(m.declaringClass+":"+m.name+" doesn't have ObjC description");
-                    continue;
-                }
-                if(m.boolAnnotation("cava.annotation.ObjC", "property")) {
-                    
-                } else {
-                    int argCount = m.args.size();
-                    if(!m.isStatic()) argCount--;
-                    out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
-                    System.out.println(m+" -> "+objcDesc);
-                    String[] parts = objcDesc.split(":");
-                    for(int i=0; i<parts.length; i++) {
-                        out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+1).type), m.args.get(i+1).name);
-                    }
-                    out.println("{").indent();
-                    
-                    if(m.name.equals("didFinishLaunchingWithOptions")) {
-                         NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
-                         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate field missing");
-                         int index = globalRefs.indexOf(field);
-                         if(index == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentDelegate not defined as globalRef");
-                         
-                         field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentApplication");
-                         if(field == null || !field.usedInProject) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication field missing");
-                         int index2 = globalRefs.indexOf(field);
-                         if(index2 == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
-                         
-                         out.println("JvmStartDebugger();");
-                         out.print("JVMGLOBALS[%d] = ", index2);
-                         printObjCArg(m.args.get(1), out);
-                         out.println(";")
-                            .println("return ");
-                         if(m.interfaceBaseClass != null) {
-                            Method im = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
-                            out.print("interface_%s", naming.method(im));
-                         } else {
-                            out.print("%s", naming.method(m));
-                         }
-                        out.print("(JVMGLOBALS[%d], JVMGLOBALS[%d], ", index, index2);
-                        printObjCArg(m.args.get(2), out);
-                        out.println(");");
-                    } else {
-                        SourceWriter tmpOut = new SourceWriter();
-                        Method tm = m;
-                        if(m.interfaceBaseClass != null) {
-                            tm = CompilerContext.resolve(m.interfaceBaseClass).findMethod(m.name, m.signature);
-                            tmpOut.print("interface_");
-                        } else if(m.virtualBaseClass != null) {
-                            tm = CompilerContext.resolve(m.virtualBaseClass).findMethod(m.name, m.signature);
-                            tmpOut.print("virtual_");
-                        }
-                            
-                        tmpOut.print("%s(javaPeer", naming.method(tm));
-                        for(int i=1; i<m.args.size(); i++) {
-                            NameAndType arg = m.args.get(i);
-                            tmpOut.print(",");
-                            printObjCArg(arg, tmpOut);
-                        }
-                        tmpOut.print(")");
-                        
-                        if(!DecompilerUtils.isVoid(m.type)) {
-                            out.print("return ");
-                        }
-                        if(!DecompilerUtils.isPrimitive(m.type)) {
-                            printObjCMarshaller(m.type, tmpOut.toString(), out);
-                            out.println(";");
-                        } else out.println("%s;",tmpOut.toString());
-                    }
-                    
-                    //CWriter writer = new CWriter(m, out, naming, cType);
-                    //writer.writeChildren(m.body.children);
-                    out.undent().println("}").ln();
-                    //usedLiterals.addAll(writer.usedListerals);
-                    
-                }
-            }
-            out.println("@end");
-        }
-        */
+
         out.println("JvmClass %s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_%s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_ArrOf_%s_Class;", naming.clazz(c.name))     

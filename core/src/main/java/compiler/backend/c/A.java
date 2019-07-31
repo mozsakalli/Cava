@@ -32,6 +32,7 @@ public class A {
     public final static String Framework = "cava.annotation.Framework";
     public final static String Resource = "cava.annotation.Resource";
     public final static String Inline = "cava.annotation.Inline";
+    public final static String Unsafe = "cava.annotation.Unsafe";
     
     static Map<String, Map<String,Object>> getAnnotationMap(Object o) {
         if(o instanceof NameAndType)
@@ -83,6 +84,9 @@ public class A {
     }
     public static boolean hasInline(Object o) {
         return has(o, Inline);
+    }
+    public static boolean hasUnsafe(Object o) {
+        return has(o, Unsafe);
     }
     public static String framework(Object o) {
         return string(o, Framework, "value");

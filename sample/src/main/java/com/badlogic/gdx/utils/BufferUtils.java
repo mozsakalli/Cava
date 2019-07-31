@@ -19,7 +19,6 @@ package com.badlogic.gdx.utils;
 import cava.c.CLib;
 import cava.c.VoidPtr;
 import java.nio.Buffer;
-import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -34,23 +33,19 @@ import java.nio.ShortBuffer;
 public final class BufferUtils {
     
     public static ByteBuffer newByteBuffer(int capacity) {
-        System.out.println("newbb: "+capacity);
         return ByteBuffer.allocateDirect(capacity);
     }
     public static ByteBuffer newUnsafeByteBuffer(int capacity) {
-        System.out.println("newbb: "+capacity);
         return ByteBuffer.allocateDirect(capacity);
     }
     //garbage collector will handle this
     public static void disposeUnsafeByteBuffer(ByteBuffer buffer) {}
     
     public static IntBuffer newIntBuffer(int capacity) {
-        System.out.println("newib: "+capacity);
         return ByteBuffer.allocateDirect(capacity * CLib.INT_SIZE).asIntBuffer();
     }
     
     public static FloatBuffer newFloatBuffer(int capacity) {
-        System.out.println("newfb: "+capacity);
         return ByteBuffer.allocateDirect(capacity * CLib.FLOAT_SIZE).asFloatBuffer();
     }
     

@@ -61,6 +61,7 @@ public class CWriter extends CodeWriter {
     Stack<Integer> returnExceptionId = new Stack();
     List<NameAndType> globalRefs;
     boolean skipSuperConstructor;
+    boolean isUnsafe;
     
     public CWriter(Method method, SourceWriter out, INameManager naming, CType cType, List<NameAndType> globalRefs) {
         super(method, out, naming);
@@ -68,6 +69,7 @@ public class CWriter extends CodeWriter {
         this.globalRefs = globalRefs;
         Clazz c = CompilerContext.resolve(method.declaringClass);
         skipSuperConstructor = method.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// false; //c.isObjCImplementation;// || A.hasObjC(c);
+        isUnsafe = A.hasUnsafe(method) || A.hasUnsafe(c);
     }
     
     public void requireInclude(String name) {
@@ -380,6 +382,7 @@ public class CWriter extends CodeWriter {
 
     @Override
     public void write(TryCatch t) {
+        if(isUnsafe) throw new RuntimeException("Unsafe methods can't contain try-catch block! method:"+method);
         out.println("/* try */");
         out.println("jint exception%d = thread->exceptionCount++;", t.index);
         out.println("thread->exceptions[exception%d].framePtr = thread->framePtr;", t.index);
@@ -421,26 +424,34 @@ public class CWriter extends CodeWriter {
     @Override
     public void write(Return r) {
         if(r.value == null) {
-            out.print("{ thread->framePtr = entryFramePtr; ");
-            if(!returnExceptionId.isEmpty()) {
-                out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
-            }
-            out.print("return; }");
+            if(!isUnsafe) {
+                out.print("{ thread->framePtr = entryFramePtr; ");
+                if(!returnExceptionId.isEmpty()) {
+                    out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+                }
+                out.print("return; }");
+            } else out.print("return");
         } else {
-            //todo: dont use local variable for constant returns
-            out.print("{ %s $$ret = ", cType.toC(method.type));
-            write(r.value);
-            out.print("; thread->framePtr = entryFramePtr; ");
-            if(!returnExceptionId.isEmpty()) {
-                out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+            if(!isUnsafe) {
+                //todo: dont use local variable for constant returns
+                out.print("{ %s $$ret = ", cType.toC(method.type));
+                write(r.value);
+                out.print("; thread->framePtr = entryFramePtr; ");
+                if(!returnExceptionId.isEmpty()) {
+                    out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+                }
+                out.print("return $$ret; }");
+            } else {
+                out.print("return ");
+                write(r.value);
             }
-            out.print("return $$ret; }");
         }
     }
     
     
     @Override
     public void writeLineNumber(int line) {
+        if(isUnsafe) out.print("// ");
         out.println("JVMLINE(%d)", line);
     }
 

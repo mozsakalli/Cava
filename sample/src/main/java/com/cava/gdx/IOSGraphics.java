@@ -428,6 +428,7 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public boolean setWindowedMode(int i, int i1) {
+        return false;
     }
 
     @Override

@@ -127,11 +127,13 @@ public class Debugger {
             outputQueue.add(data);
         }
     }
-    public static void start(final int port) throws Exception {
+    public static void start(final String host, final int port) throws Exception {
+        if(host == null || host.isEmpty()) throw new Exception("Debugger host parameter missing");
+        
         System.out.println("Waiting debugger to connect on port "+port);
         //ServerSocket ss = new ServerSocket(port);
         //final Socket s = ss.accept();
-        final Socket s = new Socket("192.168.1.48", 10000);
+        final Socket s = new Socket(host, 10000);
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {

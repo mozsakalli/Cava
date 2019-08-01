@@ -101,6 +101,12 @@ public class CavaOptions {
     public static int debugPort() {
         return getInt("debugPort", 10000);
     }
+    public static String debugHost() {
+        return getStr("debugHost", null);
+    }
+    public static void debugHost(String host) {
+        set("debugHost", host);
+    }
     public static void debugPort(int port) {
         set("debugPort", port);
     }

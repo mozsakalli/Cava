@@ -13,28 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package cava.apple.uikit;
-
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+package com.cava.graphics;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIWindow extends UIView {
-    
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getNativePeer(), controller.getNativePeer());
-    }
-    
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getNativePeer());
-    }
+public enum ShaderStages {
 
+    None(0),
+    Vertex(1 << 0),
+    Geometry(1 << 1),
+    TessellationControl(1 << 2),
+    TessellationEvaluation(1 << 3),
+    Fragment(1 << 4),
+    Compute(1 << 5);
+    int value;
+
+    ShaderStages(int value) {
+        this.value = value;
+    }
+    
+    public boolean has(ShaderStages stage) {
+        return (value & stage.value) != 0;
+    }
     
 }

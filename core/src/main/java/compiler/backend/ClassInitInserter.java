@@ -39,8 +39,6 @@ public class ClassInitInserter {
         Set<Method> seen = new HashSet();
         Set<String> depends = new HashSet();
         
-        if(m.declaringClass.contains("VertexBufferObjectWithVAO"))
-            System.out.println("...");
         queue.add(m);
         final Method root = m;
         while(!queue.isEmpty()) {

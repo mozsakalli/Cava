@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
-
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+package com.cava.graphics;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIWindow extends UIView {
+public class BufferDescription {
     
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getNativePeer(), controller.getNativePeer());
-    }
+    // The desired capacity, in bytes, of the DeviceBuffer
+    public int sizeInBytes;
     
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getNativePeer());
-    }
-
+    // Indicates how the DeviceBuffer will be used.
+    public BufferUsage usage;
     
+    // For structured buffers, this value indicates the size in bytes of a single structure element, and must be non-zero.
+    // For all other buffer types, this value must be zero.    
+    public int structureByteStride;
 }

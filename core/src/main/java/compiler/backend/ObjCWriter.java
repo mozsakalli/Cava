@@ -290,9 +290,6 @@ public class ObjCWriter {
     }
     
     void checkMethod(Method m) {
-        if(m.name.contains("getLayerClass"))
-            System.out.println("...");
-        
         if(m.usedInProject) {
             String selector = null;
             boolean isProperty = false;

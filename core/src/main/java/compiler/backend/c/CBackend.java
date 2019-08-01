@@ -16,6 +16,7 @@
 
 package compiler.backend.c;
 
+import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
 import compiler.DependencyOrderSet;
@@ -314,7 +315,7 @@ public class CBackend {
                             out.println("JvmRegisterCurrentThread(pthis);");
                         }
                         
-                        boolean isUnsafe = A.hasUnsafe(m) || A.hasUnsafe(c);
+                        boolean isUnsafe = !CavaOptions.debug() && (A.hasUnsafe(m) || A.hasUnsafe(c));
                         if(!isUnsafe) {
                             out.println("JvmThread* thread = JvmCurrentThread();");
                             out.println("jint entryFramePtr = thread->framePtr++;");

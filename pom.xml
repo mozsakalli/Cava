@@ -12,5 +12,7 @@
         <module>classlib</module>
         <module>maven</module>
         <module>sample</module>
+        <module>libgdx</module>
+        <module>graphics</module>
     </modules>
 </project>

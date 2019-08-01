@@ -29,15 +29,6 @@ import cava.platform.NativeCode;
 @Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
 public class UIView extends UIResponder {
-    /*
-    public UIView(){}
-    public UIView(VoidPtr handle) {
-        nativePeer = handle;
-    }
-    
-    public UIView(CGRect frame) {
-        nativePeer = NativeCode.VoidPtr("[[UIView alloc] initWithFrame:%s]", frame.getStruct());
-    }*/
 
     public <T extends UIView> T initWithFrame(CGRect frame) {
         nativePeer = NativeCode.VoidPtr("[(UIView*)%s initWithFrame:%s]", nativePeer, frame.getStruct());

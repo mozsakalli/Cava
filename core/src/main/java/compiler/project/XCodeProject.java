@@ -109,7 +109,6 @@ public class XCodeProject extends Project {
                             String p = path;
                             if(p.startsWith("/")) p = p.substring(1);
                             File dest = new File(CompilerContext.platformBuildDir, "generated/"+p);
-                            System.out.println("resource: "+path);
                             FileUtil.copyFile(getClass().getResourceAsStream(path), dest);
                             pbxProject.addSourceFile(path, dest);
                         }

@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
-
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+package com.cava.graphics;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIWindow extends UIView {
+public class ResourceLayoutElementDescription {
     
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getNativePeer(), controller.getNativePeer());
-    }
-    
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getNativePeer());
-    }
-
+    public ResourceKind kind;
+    public ShaderStages stages;
+    public ResourceLayoutElementOptions options;
     
 }

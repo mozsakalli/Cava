@@ -12,7 +12,6 @@ import java.io.File;
 public class Main {
     
     public static void main(String...args) throws Exception {
-        System.out.println(File.pathSeparator+"   -    ");
         boolean isMac = true;
         String p = isMac ? "/Users/mustafa/Work/experimental/cava/compiler/" :
                 "c:/Work/experimental/cava/compiler/";

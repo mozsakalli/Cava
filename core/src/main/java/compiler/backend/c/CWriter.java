@@ -16,6 +16,7 @@
 
 package compiler.backend.c;
 
+import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
 import compiler.backend.CodeWriter;
@@ -69,7 +70,7 @@ public class CWriter extends CodeWriter {
         this.globalRefs = globalRefs;
         Clazz c = CompilerContext.resolve(method.declaringClass);
         skipSuperConstructor = method.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// false; //c.isObjCImplementation;// || A.hasObjC(c);
-        isUnsafe = A.hasUnsafe(method) || A.hasUnsafe(c);
+        isUnsafe = !CavaOptions.debug() && (A.hasUnsafe(method) || A.hasUnsafe(c));
     }
     
     public void requireInclude(String name) {

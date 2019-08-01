@@ -133,9 +133,6 @@ public class ModelLanguage extends Language {
          currentMethod.signature = DecompilerUtils.getSignature(method.getErasedSignature());
          currentMethod.annotations = DecompilerUtils.parseAnnotations(method.getAnnotations());
 
-         if(method.getName().contains("viewWillAppear"))
-             System.out.println("...");
-         
          for(ParameterDefinition p : method.getParameters()) {
              String type = DecompilerUtils.getTypeName(p.getParameterType());
              
@@ -247,8 +244,6 @@ public class ModelLanguage extends Language {
             nt.annotations = DecompilerUtils.parseAnnotations(f.getAnnotations());
             clazz.fields.add(nt);
         }
-        if(type.getInternalName().contains("IOSGraphics"))
-            System.out.println("...");
         clazz.annotations = DecompilerUtils.parseAnnotations(type.getAnnotations());
     }
 }

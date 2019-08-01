@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
+package com.cava.graphics.opengl;
 
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+import com.cava.graphics.IndexBuffer;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIWindow extends UIView {
+public class OpenGLIndexBuffer extends IndexBuffer {
     
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getNativePeer(), controller.getNativePeer());
+    short[] buffer;
+    int handle = -1;
+    
+    protected OpenGLIndexBuffer(int capacity) {
+        buffer = new short[capacity];
     }
-    
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getNativePeer());
-    }
-
-    
 }

@@ -39,15 +39,4 @@ public class UIResponder extends NSObject {
     public native void touchesEnded(NSSet<UITouch> touches, UIEvent event);
     @ObjC("touchesCancelled:withEvent:")
     public native void touchesCancelled(NSSet<UITouch> touches, UIEvent event);    
-    /*
-    public UIResponder(){
-        //this(NativeCode.VoidPtr("[[UIResponder alloc] init]"));
-    }
-    public UIResponder(VoidPtr handle) {
-        this(handle, false);
-    }
-    public UIResponder(VoidPtr handle, boolean sub) {
-        super(handle, sub);
-    }
-    */
 }

@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package cava.apple.uikit;
-
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+package com.cava.graphics;
 
 /**
  *
  * @author mustafa
  */
-@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
-@ObjC
-public class UIWindow extends UIView {
-    
-    public void setRootViewController(UIViewController controller) {
-        NativeCode.Void("((UIWindow*)%s).rootViewController = %s", getNativePeer(), controller.getNativePeer());
+public class VertexStructure {
+
+    public static enum Type {
+        FLOAT1, FLOAT2, FLOAT3, FLOAT4, RGBA
     }
     
-    public void makeKeyAndVisible() {
-        NativeCode.Void("[(UIWindow*)%s makeKeyAndVisible]", getNativePeer());
+    public static class Element {
+        public String name;
+        public Type type;
+        public Element(){}
+        public Element(String name, Type type){
+            this.name = name;
+            this.type = type;
+        }
     }
 
+    Element[] elements;
     
+    public VertexStructure(Element...elements) {
+        setElements(elements);
+    }
+    
+    public void setElements(Element...elements) {
+        this.elements = elements;
+    }
 }

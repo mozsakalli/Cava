@@ -108,8 +108,9 @@ public final class Class<T> {
 
     public java.io.InputStream getResourceAsStream(java.lang.String name) throws IOException {
         //todo: move this to another class
-        File file = new File(NSBundle.getMainBundle().getBundlePath(), name.substring(1));
-        return new FileInputStream(file);
+        //File file = new File(NSBundle.getMainBundle().getBundlePath(), name.substring(1));
+        //return new FileInputStream(file);
+        return null;
     }
     
     public URL getResource(String name) {

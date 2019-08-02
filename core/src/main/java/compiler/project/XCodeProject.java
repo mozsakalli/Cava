@@ -46,6 +46,7 @@ public class XCodeProject extends Project {
     
     final static String GROUP_GENERATED = "generated";
     
+    @Override
     public void generate() throws Exception {
         projectDir = new File(CompilerContext.platformBuildDir,"project.xcodeproj");
         projectDir.mkdirs();
@@ -55,7 +56,7 @@ public class XCodeProject extends Project {
             pbxProject.addSourceFile(GROUP_GENERATED, file);
         }
         
-        copyCavaFiles();
+        copyCavaFiles(new File(CompilerContext.platformBuildDir, "cava"));
         
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.c"));
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.h"));
@@ -127,31 +128,6 @@ public class XCodeProject extends Project {
         return CavaOptions.getStr("ios-sdk", "8.0");
     }
     
-    void copyCavaFiles() throws Exception {
-        File root = new File(CompilerContext.platformBuildDir, "cava");
-        if(!root.exists()) {
-            ZipInputStream zip = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.zip"));
-            ZipEntry entry = zip.getNextEntry();
-            byte[] buffer = new byte[8192];
-            while(entry != null) {
-                if(!entry.isDirectory()) {
-                    File dest = new File(root, entry.getName());
-                    dest.getParentFile().mkdirs();
-                    FileOutputStream out = new FileOutputStream(dest);
-                    int len = (int)entry.getSize();
-                    int ptr = 0;
-                    while(ptr < len) {
-                        int readed = zip.read(buffer, 0, Math.min(len - ptr, buffer.length));
-                        out.write(buffer, 0, readed);
-                        ptr += readed;
-                    }
-                    out.close();
-                }
-                entry = zip.getNextEntry();
-            }
-        }
-    }
- 
     public void build() throws Exception {
         generate();
         XCodeUtil.build(projectDir, CavaOptions.applicationName(), CavaOptions.simulator());

@@ -16,10 +16,43 @@
 
 package compiler.project;
 
+import compiler.CompilerContext;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 /**
  *
  * @author mustafa
  */
-public class Project {
+public abstract class Project {
     
+    public abstract void generate() throws Exception;
+    
+    void copyCavaFiles(File target) throws Exception {
+        File root = target;
+        if(!root.exists()) {
+            ZipInputStream zip = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.zip"));
+            ZipEntry entry = zip.getNextEntry();
+            byte[] buffer = new byte[8192];
+            while(entry != null) {
+                if(!entry.isDirectory()) {
+                    File dest = new File(root, entry.getName());
+                    dest.getParentFile().mkdirs();
+                    FileOutputStream out = new FileOutputStream(dest);
+                    int len = (int)entry.getSize();
+                    int ptr = 0;
+                    while(ptr < len) {
+                        int readed = zip.read(buffer, 0, Math.min(len - ptr, buffer.length));
+                        out.write(buffer, 0, readed);
+                        ptr += readed;
+                    }
+                    out.close();
+                }
+                entry = zip.getNextEntry();
+            }
+        }
+    }    
 }

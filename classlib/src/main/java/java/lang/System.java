@@ -63,20 +63,12 @@ public final class System {
             if(src.klass.componentType.size == dst.klass.componentType.size) {
                 if(src.klass.componentType.size < 0 || src.klass.componentType.size > 8) throw new RuntimeException("ınvalid componet size");
                 int size = src.klass.componentType.size;
-                CLib.memmove(CharPtr.fromAnyArray(dst), dstOffset*size, CharPtr.fromAnyArray(src), srcOffset * size, length * size);
-                /*CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
-                            CharPtr.fromAnyArray(src).add(srcOffset*size),
-                            length * size);*/
+                CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
             }
         } else {
             //todo: check if classes are compatible
             int size = NativeCode.Int("sizeof(jobject)");
-            CLib.memmove(CharPtr.fromAnyArray(dst), dstOffset*size, CharPtr.fromAnyArray(src), srcOffset * size, length * size);
-            /*
-            CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
-                        CharPtr.fromAnyArray(src).add(srcOffset*size),
-                        length * size);
-            */
+            CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
         }
     }
 

@@ -16,6 +16,10 @@
 
 package compiler;
 
+import compiler.project.AndroidProject;
+import compiler.project.Project;
+import compiler.project.XCodeProject;
+
 /**
  *
  * @author mustafa
@@ -23,9 +27,30 @@ package compiler;
 public enum Platform {
     
     iOS,
-    Mac,
+    OsX,
     Android,
     Linux,
-    Windows
+    Windows;
     
+    public String codeExtension() {
+        return this == iOS || this == OsX ? ".m" : ".c";
+    }
+    
+    public boolean isObjC() {
+        return this == iOS || this == OsX;
+    }
+    
+    public Project createProject() {
+        switch(this) {
+            case iOS:
+            case OsX:
+                return new XCodeProject();
+                
+            case Android:
+                return new AndroidProject();
+                
+            default:
+                throw new RuntimeException("Project implementation can't find for "+this+" platform");
+        }
+    }
 }

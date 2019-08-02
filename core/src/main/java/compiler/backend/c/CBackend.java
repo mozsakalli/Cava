@@ -374,12 +374,6 @@ public class CBackend {
                             }
                             if(c.isObjCImplementation)
                                 out.println("objcPeer->javaPeer = pthis;");    
-                            /*
-                            out.println("((%s*)pthis)->%s = (void*)[%s alloc];",naming.clazz(c.name), 
-                                    naming.field(field),
-                                    c.isObjCImplementation ? c.name.replace('/', '_').replace('$', '_') + "_ObjC"
-                                            : DecompilerUtils.simpleName(c.name)
-                                    );*/
                         } 
                         writer.writeChildren(m.body.children);
                         variableLocations.put(m, writer.variableLocations);
@@ -431,7 +425,7 @@ public class CBackend {
         }
         code = code.replaceAll("\\_\\_includes", java.util.regex.Matcher.quoteReplacement(includes));
         
-        saveCode(c, ".m", code);
+        saveCode(c, CavaOptions.targetPlatform().codeExtension(), code);
     }
     
     void collectInheritedClasses(Clazz c, List<Clazz> list) {

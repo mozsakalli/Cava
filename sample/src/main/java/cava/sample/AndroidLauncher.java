@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cava.graphics;
+
+package cava.sample;
 
 /**
  *
  * @author mustafa
  */
-public enum ResourceLayoutElementOptions {
+public class AndroidLauncher {
 
-    None(0),
-    DynamicBinding(1 << 0);
-
-    int value;
-
-    private ResourceLayoutElementOptions(int value) {
-        this.value = value;
-    }
-
-    public boolean has(ResourceLayoutElementOptions option) {
-        return (value & option.value) != 0;
+    public static void main() {
+        System.out.println("Hello Android!");
     }
 }

@@ -30,7 +30,7 @@ public class CharPtr {
         return NativeCode.CharPtr("(char*)malloc(%s*sizeof(char*))", size);
     }
     
-    //Create non heap memory, developer must free
+    //Create non heap memory, caller must free memory
     public static CharPtr allocAsciiZ(String str) {
         CharPtr result = alloc(str.length()+1);
         for(int i=0; i<str.length(); i++)
@@ -39,19 +39,6 @@ public class CharPtr {
         return result;
     }
     
-    //Uses local char array for immediate operations
-    /*
-    public static CharPtr asciiZ(String str) {
-        NativeCode.Void("char chars[513];");
-        int len = str.length();
-        if(len > 512) len = 512;
-        for(int i=0; i<len; i++) {
-            NativeCode.Void("chars[%s] = %s", i, str.charAt(i));
-        }
-        NativeCode.Void("chars[%s] = 0", len);
-        return NativeCode.CharPtr("&chars");
-    }
-    */
     public static CharPtr asciiZ(String str, Object target, int len) {
         int strlen = str.length();
         if(strlen > len) strlen = len;
@@ -70,11 +57,7 @@ public class CharPtr {
         return NativeCode.CharPtr("(char*)%s", object);
     }
     
-    public static CharPtr from(byte[] bytes) {
-        return fromAnyArray(bytes);
-    }
-    
-    public static CharPtr fromAnyArray(Object array) {
+    public static CharPtr fromArray(Object array) {
         return NativeCode.CharPtr("(char*)JvmArrayData(%s)", array);
     }
     

@@ -20,10 +20,11 @@ import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 import compiler.backend.StringCollector;
+import compiler.backend.c.A;
 import compiler.backend.c.CBackend;
 import compiler.model.Clazz;
 import compiler.model.Method;
-import compiler.project.XCodeProject;
+import compiler.project.Project;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,11 +96,15 @@ public class CompilerContext {
     
     static HashSet<String> loadingClasses = new HashSet();
     public static Clazz resolve(String name) {
+        Clazz clazz = null;
         try {
-            return _resolve(name);
+            clazz =  _resolve(name);
         } catch(Exception e){
             throw new RuntimeException(e);
         }
+        if(A.hasObjC(clazz) && !CavaOptions.targetPlatform().isObjC())
+            throw new RuntimeException(CavaOptions.targetPlatform()+" does not support Objective-C class: "+name);
+        return clazz;
     }
     
     static long ioTime;
@@ -186,7 +191,8 @@ public class CompilerContext {
             });
         });
         
-        XCodeProject project = new XCodeProject();
+        Project project = CavaOptions.targetPlatform().createProject();
+        //XCodeProject project = new XCodeProject();
         project.generate();
         
         System.out.println(stat[0]+" methods "+stat[1]+" virtual "+stat[2]+" devirtualized");

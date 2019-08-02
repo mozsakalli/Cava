@@ -349,7 +349,7 @@ public final class Double extends Number implements Comparable<Double> {
     final static byte[] toStringBuffer = new byte[21];
 
     public static String toString(double d) {
-        CharPtr buffer = CharPtr.from(toStringBuffer);
+        CharPtr buffer = CharPtr.fromArray(toStringBuffer);
         int length = NativeCode.Int("snprintf(%s,20,\"%%g\",%s);", buffer, d);
         return new String(toStringBuffer, 0, length);
     }

@@ -20,6 +20,7 @@ import com.strobel.assembler.metadata.GenericParameter;
 import com.strobel.assembler.metadata.TypeReference;
 import com.strobel.assembler.metadata.annotations.AnnotationElement;
 import com.strobel.assembler.metadata.annotations.ArrayAnnotationElement;
+import com.strobel.assembler.metadata.annotations.ClassAnnotationElement;
 import com.strobel.assembler.metadata.annotations.ConstantAnnotationElement;
 import com.strobel.assembler.metadata.annotations.CustomAnnotation;
 import compiler.backend.c.A;
@@ -136,6 +137,10 @@ public class DecompilerUtils {
             for(int i=0; i<result.length; i++)
                 result[i] = parseAnnotationElement(ae.getElements()[i]);
             return result;
+        }
+        if(e instanceof ClassAnnotationElement) {
+            ClassAnnotationElement ce = (ClassAnnotationElement)e;
+            return ce.getClassType().getInternalName();
         }
         throw new RuntimeException("Unknown annotation parameter: "+e);
     }

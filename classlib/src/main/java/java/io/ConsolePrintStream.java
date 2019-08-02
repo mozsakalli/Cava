@@ -16,13 +16,17 @@
 
 package java.io;
 
-import cava.apple.foundation.NSString;
-import cava.platform.NativeCode;
+import cava.annotation.Modify;
 
 /**
  *
  * @author mustafa
  */
+@Modify(
+    iOS = ConsolePrintStreamDarwin.class,
+    OsX = ConsolePrintStreamDarwin.class,
+    Android = ConsolePrintStreamAndroid.class
+)
 public class ConsolePrintStream extends PrintStream {
     
     StringBuilder buffer = new StringBuilder();
@@ -36,9 +40,7 @@ public class ConsolePrintStream extends PrintStream {
         super(EMPTYSTREAM);
     }
 
-    private void printImpl(StringBuilder buffer){
-        //NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).getNativePeer());
-    } 
+    private native void printImpl(StringBuilder buffer);
     
     @Override
     public void print(String str) {

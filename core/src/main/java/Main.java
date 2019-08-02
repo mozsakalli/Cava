@@ -36,8 +36,8 @@ public class Main {
         //CompilerContext.mainName = "main";
         //CompilerContext.mainSignature = "()Ldebugger/Debugger;";
 
-        CavaOptions.mainClass("cava.sample.AndroidLauncher");
-        CavaOptions.targetPlatform("Android");
+        CavaOptions.mainClass("cava.sample.IOSLauncher");
+        CavaOptions.targetPlatform("iOS");
         CavaOptions.infoPList(new File("/Users/mustafa/Work/CAVA/sample/Info.plist"));
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);

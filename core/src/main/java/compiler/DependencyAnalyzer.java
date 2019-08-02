@@ -154,6 +154,30 @@ public class DependencyAnalyzer {
     }
     
     private void analyzeClass(Clazz c) {
+        /*
+        String modifyClass = A.modify(c, CavaOptions.targetPlatform());
+        if(modifyClass != null) {
+            Clazz modifier = CompilerContext.resolve(modifyClass);
+            modifier.replaceClassName(c.name);
+            boolean found = false;
+            for(Method m : modifier.methods) {
+                for(int i=0; i<c.methods.size(); i++) {
+                    Method om = c.methods.get(i);
+                    if(om.name.equals(m.name) && om.signature.equals(m.signature)) {
+                        c.methods.set(i, m);
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) c.methods.add(m);
+                if(analyzedMethods.contains(m)) {
+                    analyzedMethods.remove(m);
+                    dependsMethod(m);
+                }
+                
+            }
+        }
+        */
         boolean isStruct = c.isStruct();
         final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
         boolean isClassKeep = A.hasKeep(c) || isObjCInterface;
@@ -291,7 +315,9 @@ public class DependencyAnalyzer {
                 Clazz tc = CompilerContext.resolve(c.className);
                 dependsClass(tc);
                 Method tm = tc.findMethod(c.methodName, c.signature);
-                if(tm == null) throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
+                if(tm == null) {
+                    throw new RuntimeException("Can't find method: "+c.className+"."+c.methodName+c.signature);
+                }
                 dependsMethod(tm);
             }
 

@@ -43,9 +43,11 @@ public abstract class NativeObject {
     
     @Override
     protected void finalize() throws Throwable {
-        super.finalize();
-        if(!noOwner)
+        if(!noOwner && nativePeer != null) {
             dispose();
+            nativePeer = null;
+        }
+        super.finalize();
     }
     
 }

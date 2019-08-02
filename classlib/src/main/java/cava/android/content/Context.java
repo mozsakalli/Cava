@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package cava.sample;
+package cava.android.content;
 
-import cava.android.app.Activity;
-import cava.android.os.Bundle;
+import cava.jni.JavaObject;
 
 /**
  *
  * @author mustafa
  */
-public class AndroidLauncher extends Activity {
+public class Context extends JavaObject {
 
-    @Override
-    public void onCreate(Bundle savedInstance) {
-        System.out.println("Android App Created!");
-    }
-
-    @Override
-    public void onStart() {
-    }
-
-    
-    public static void main() {}
 }

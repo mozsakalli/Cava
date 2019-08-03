@@ -20,11 +20,13 @@ import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
 import compiler.DependencyOrderSet;
+import compiler.Platform;
 import compiler.backend.BootstrapSorter;
 import compiler.backend.ClassInitInserter;
 import compiler.backend.SourceWriter;
 import compiler.backend.ConstructorFixer;
 import compiler.backend.InstanceOfBuilder;
+import compiler.backend.JNIWriter;
 import compiler.backend.ObjCWriter;
 import compiler.model.Clazz;
 import compiler.model.Method;
@@ -105,7 +107,6 @@ public class CBackend {
         CompilerContext.saveCode("literals.c", out.toString());
         generateInvokes();
         generateBootstrap(sortedClasses, globalRefs);
-        
         /*
         for(File f : new File("c").listFiles()) {
             if(!generatedFiles.contains(f))
@@ -184,10 +185,6 @@ public class CBackend {
         .println("extern void JvmSetup_%s();", naming.clazz(c.name))
         .ln();
         
-        List<Method> objcMethods = new ArrayList();
-        Set<Method> objcPropertyMethods = new HashSet();
-        
-        
         for(Method m : c.methods) {
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
@@ -195,12 +192,6 @@ public class CBackend {
                     if(c.isInterface)
                     out.print("extern %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else {
-                        //
-                        if(objcPropertyMethods.contains(m)) {
-                            out.print("extern %s %s$Property(",cType.toC(m.type), naming.method(m));
-                            printArgs(m, cType, out);
-                            out.println(");");
-                        }
                         if(isStruct && m.isNative() && m.name.equals("getStruct"))
                             out.print("extern %s %s(",nativeClassName, naming.method(m));
                         else
@@ -223,9 +214,17 @@ public class CBackend {
             }
         }
         
-        ObjCWriter objc = new ObjCWriter(c);
-        objc.writeInterface(naming, cType, out);
-        if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
+        ObjCWriter objc = null;
+        JNIWriter jni = null;
+        
+        if(CavaOptions.targetPlatform() == Platform.iOS || CavaOptions.targetPlatform() == Platform.OsX) {
+            objc = new ObjCWriter(c);
+            objc.writeInterface(naming, cType, out);
+            if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
+        } else if(CavaOptions.targetPlatform() == Platform.Android) {
+            jni = new JNIWriter(c);
+            //jni.writeHeader(naming, cType, out);
+        }
         
         out.ln().println("#endif");
         
@@ -406,7 +405,8 @@ public class CBackend {
             }
         }
         
-        objc.writeImplementation(naming, cType, globalRefs, out);
+        if(CavaOptions.targetPlatform() == Platform.iOS || CavaOptions.targetPlatform() == Platform.OsX) 
+            objc.writeImplementation(naming, cType, globalRefs, out);
 
         out.println("JvmClass %s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_%s_Class;", naming.clazz(c.name))

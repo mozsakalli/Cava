@@ -123,6 +123,11 @@ public class DecompilerUtils {
         String[] parts = name.split("/");
         return parts[parts.length - 1];
     }
+    public static String packageName(String name) {
+        int p = name.lastIndexOf("/");
+        if(p == -1) return "";
+        return name.substring(0, p);
+    }
   
     public static boolean isStruct(String type) {
         return !isPrimitive(type) && !isArray(type) ? CompilerContext.resolve(type).isStruct() : false;

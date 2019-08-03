@@ -23,6 +23,6 @@ package cava.annotation;
 public @interface JNI {
     
     public String value() default "";
-    public boolean property() default false;
+    public boolean field() default false;
     
 }

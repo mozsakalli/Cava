@@ -210,7 +210,11 @@ public class CompilerContext {
     
     public static HashSet<File> generatedSourceFiles = new HashSet();
     public static void saveCode(String fileName, String code) throws Exception {
-        File f = new File(platformBuildDir, "generated/"+fileName);
+        saveCode(fileName, "generated", code);
+    }
+
+    public static void saveCode(String fileName, String path, String code) throws Exception {
+        File f = new File(new File(platformBuildDir, path), fileName);
         generatedSourceFiles.add(f);
         byte[] newBytes = code.getBytes();
         if(f.exists()) {

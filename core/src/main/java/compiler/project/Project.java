@@ -16,7 +16,7 @@
 
 package compiler.project;
 
-import compiler.CompilerContext;
+import compiler.util.FileUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.jar.JarInputStream;
@@ -32,6 +32,8 @@ public abstract class Project {
     public abstract void generate() throws Exception;
     
     void copyCavaFiles(File target) throws Exception {
+        FileUtil.extractZip(target, getClass().getResourceAsStream("/com/cava/native.zip"));
+        /*
         File root = target;
         if(!root.exists()) {
             ZipInputStream zip = new JarInputStream(getClass().getResourceAsStream("/com/cava/native.zip"));
@@ -53,6 +55,6 @@ public abstract class Project {
                 }
                 entry = zip.getNextEntry();
             }
-        }
+        }*/
     }    
 }

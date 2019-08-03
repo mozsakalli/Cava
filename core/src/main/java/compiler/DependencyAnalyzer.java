@@ -47,12 +47,16 @@ public class DependencyAnalyzer {
     
     public void analyze(String mainClass) throws Exception {
         Clazz c = CompilerContext.resolve(mainClass);
-        Method m = c.findDeclaredMethod("main", "()V");
-        if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
-        if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
-        
         dependsClass(c);
-        dependsMethod(m);
+        if(CavaOptions.targetPlatform() == Platform.Android) {
+            if(c.superName == null || !c.superName.equals("cava/android/app/Activity"))
+                throw new RuntimeException(mainClass+" must extend cava.android.app.Activity for Android target");
+        } else {
+            Method m = c.findDeclaredMethod("main", "()V");
+            if(m == null) throw new Exception("Can't find main method "+mainClass+".main()V");
+            if(!m.isStatic() || !m.type.equals("V") || !m.args.isEmpty()) throw new Exception("Main method must be a static void method without parameters");
+            dependsMethod(m);
+        }
         addRequiredClasses();
         
         while(!classQueue.isEmpty() || !methodQueue.isEmpty()) {
@@ -63,7 +67,7 @@ public class DependencyAnalyzer {
             }
             
             while(!methodQueue.isEmpty()) {
-                m = methodQueue.remove(0);
+                Method m = methodQueue.remove(0);
                 analyzedMethods.add(m);
                 analyzeMethod(m);
             }

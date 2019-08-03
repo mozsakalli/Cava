@@ -62,6 +62,7 @@ public class Clazz implements Serializable {
     
     public transient int interfaceTableSize = -1;
     public transient boolean isObjCImplementation;    
+    public transient boolean isJNIImplementation;
     
     public String getSimpleName() {
         return DecompilerUtils.simpleName(name);
@@ -199,6 +200,14 @@ public class Clazz implements Serializable {
         if(isInterface) return false;
         for(Method m : methods) {
             String selector = A.objcSelector(m);
+            if(selector != null && !selector.isEmpty()) return true;
+        }
+        return false;
+    }
+    public boolean isCustomJNIClass() {
+        if(isInterface) return false;
+        for(Method m : methods) {
+            String selector = A.jniName(m);
             if(selector != null && !selector.isEmpty()) return true;
         }
         return false;

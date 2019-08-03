@@ -35,6 +35,7 @@ public class A {
     public final static String Inline = "cava.annotation.Inline";
     public final static String Unsafe = "cava.annotation.Unsafe";
     public final static String Modify = "cava.annotation.Modify";
+    public final static String JNI = "cava.annotation.JNI";
     
     static Map<String, Map<String,Object>> getAnnotationMap(Object o) {
         if(o instanceof NameAndType)
@@ -96,5 +97,14 @@ public class A {
     public static String modify(Object o, Platform platform) {
         String result = string(o, Modify, platform.toString());
         return result != null && !result.equals("java/lang/Object") && !result.isEmpty() ? result : null;
+    }
+    public static boolean hasJNI(Object o) {
+        return has(o, JNI);
+    }
+    public static String jniName(Object o) {
+        return string(o, JNI,"value");
+    }
+    public static boolean jniField(Object o) {
+        return bool(o, JNI, "field");
     }
 }

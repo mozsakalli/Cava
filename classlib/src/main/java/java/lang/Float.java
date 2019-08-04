@@ -209,8 +209,8 @@ public final class Float extends Number implements Comparable<Float> {
         int result = 0;
         NativeCode.Void(
                 "union Float {\n"
-                + "    jint bits;\n"
-                + "    jfloat d;\n"
+                + "    JINT bits;\n"
+                + "    JFLOAT d;\n"
                 + "} Float;\n"
                 + "union Float d;\n"
                 + "d.d = %s;\n"
@@ -233,8 +233,8 @@ public final class Float extends Number implements Comparable<Float> {
         int result = 0;
         NativeCode.Void(
                 "union Float {\n"
-                + "    jint bits;\n"
-                + "    jfloat d;\n"
+                + "    JINT bits;\n"
+                + "    JFLOAT d;\n"
                 + "} Float;\n"
                 + "union Float d;\n"
                 + "d.d = %s;\n"
@@ -266,8 +266,8 @@ public final class Float extends Number implements Comparable<Float> {
         float result = 0;
         NativeCode.Void(
                 "union Float {\n"
-                + "    jint bits;\n"
-                + "    jfloat d;\n"
+                + "    JINT bits;\n"
+                + "    JFLOAT d;\n"
                 + "} Float;\n"
                 + "union Float d;\n"
                 + "d.bits = %s;\n"

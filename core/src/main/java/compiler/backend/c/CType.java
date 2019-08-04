@@ -31,26 +31,26 @@ public class CType {
     public String toC(String type) {
         switch (type) {
             case "B":
-                return "jbyte";
+                return "JBYTE";
             case "Z":
-                return "jbool";
+                return "JBOOL";
             case "C":
-                return "jchar";
+                return "JCHAR";
             case "S":
-                return "jshort";
+                return "JSHORT";
             case "I":
-                return "jint";
+                return "JINT";
             case "F":
-                return "jfloat";
+                return "JFLOAT";
             case "J":
-                return "jlong";
+                return "JLONG";
             case "D":
-                return "jdouble";
+                return "JDOUBLE";
             case "V":
                 return "void";
             default:
                 dependency.add(type);
-                return "jobject";
+                return "JOBJECT";
         }
     }
 

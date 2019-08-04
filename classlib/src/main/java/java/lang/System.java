@@ -61,13 +61,13 @@ public final class System {
         if(dstOffset + length > dstLen) throw new IndexOutOfBoundsException();
         if(srcIsPrim) {
             if(src.klass.componentType.size == dst.klass.componentType.size) {
-                if(src.klass.componentType.size < 0 || src.klass.componentType.size > 8) throw new RuntimeException("ınvalid componet size");
+                if(src.klass.componentType.size < 0 || src.klass.componentType.size > 8) throw new RuntimeException("Invalid componet size");
                 int size = src.klass.componentType.size;
                 CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
             }
         } else {
             //todo: check if classes are compatible
-            int size = NativeCode.Int("sizeof(jobject)");
+            int size = NativeCode.Int("sizeof(JOBJECT)");
             CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
         }
     }
@@ -90,7 +90,7 @@ public final class System {
         "    uint64_t t = mach_absolute_time();\n"+
         "    t *= info.numer;\n"+
         "    t /= info.denom;\n"+
-        "    %s = (jlong) t;\n"+
+        "    %s = (JLONG) t;\n"+
         "#else\n"+
         "    struct timespec now;\n"+
         "    clock_gettime(CLOCK_MONOTONIC, &now);\n"+

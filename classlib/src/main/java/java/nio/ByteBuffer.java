@@ -130,14 +130,14 @@ public class ByteBuffer extends Buffer {
         if (newPosition > limit) {
             throw new BufferUnderflowException();
         }
-        short result = NativeCode.Short("*(jshort*)(((char*)%s)+%s)", ptr, position);
+        short result = NativeCode.Short("*(JSHORT*)(((char*)%s)+%s)", ptr, position);
         position = newPosition;
         return result;
     }
 
     public final short getShort(int index) {
         checkIndex(index, CLib.SHORT_SIZE);
-        return NativeCode.Short("*(jshort*)(((char*)%s)+%s)", ptr, index);
+        return NativeCode.Short("*(JSHORT*)(((char*)%s)+%s)", ptr, index);
     }
     
     public final int getInt() {
@@ -145,14 +145,14 @@ public class ByteBuffer extends Buffer {
         if (newPosition > limit) {
             throw new BufferUnderflowException();
         }
-        int result = NativeCode.Int("*(jint*)(((char*)%s)+%s)", ptr, position);
+        int result = NativeCode.Int("*(JINT*)(((char*)%s)+%s)", ptr, position);
         position = newPosition;
         return result;
     }
 
     public final int getInt(int index) {
         checkIndex(index, CLib.INT_SIZE);
-        return NativeCode.Int("*(jint*)(((char*)%s)+%s)", ptr, index);
+        return NativeCode.Int("*(JINT*)(((char*)%s)+%s)", ptr, index);
     }
 
     public final float getFloat() {
@@ -160,14 +160,14 @@ public class ByteBuffer extends Buffer {
         if (newPosition > limit) {
             throw new BufferUnderflowException();
         }
-        float result = NativeCode.Float("*(jfloat*)(((char*)%s)+%s)", ptr, position);
+        float result = NativeCode.Float("*(JFLOAT*)(((char*)%s)+%s)", ptr, position);
         position = newPosition;
         return result;
     }
 
     public final float getFloat(int index) {
         checkIndex(index, CLib.FLOAT_SIZE);
-        return NativeCode.Int("*(jfloat*)(((char*)%s)+%s)", ptr, index);
+        return NativeCode.Int("*(JFLOAT*)(((char*)%s)+%s)", ptr, index);
     }
 
     public ByteBuffer put(ByteBuffer src) {

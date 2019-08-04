@@ -993,13 +993,13 @@ void gdx2d_draw_pixmap(const gdx2d_pixmap* src_pixmap, const gdx2d_pixmap* dst_p
 
 
 //Cava bindings
-void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_free__J_V(jlong pp0) {
+void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_free__J_V(JLONG pp0) {
     gdx2d_free((gdx2d_pixmap*)pp0);
 }
-void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_clear__JI_V(jlong pixmap, jint color) {
+void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_clear__JI_V(JLONG pixmap, JINT color) {
     gdx2d_clear((gdx2d_pixmap*)pixmap, color);
 }
-jobject mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_load___J_BII_Ljava_nio_ByteBuffer_(jobject nativeData, jobject buffer, jint offset, jint len) {
+JOBJECT mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_load___J_BII_Ljava_nio_ByteBuffer_(JOBJECT nativeData, JOBJECT buffer, JINT offset, JINT len) {
     
     const unsigned char* p_buffer = (const unsigned char*)JvmArrayData(buffer);
     gdx2d_pixmap* pixmap = gdx2d_load(p_buffer + offset, len);
@@ -1013,15 +1013,15 @@ jobject mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_load___J_BII_Ljava_nio_ByteBu
     pixel_buffer->fjava_nio_Buffer_ownsMemory = jfalse;
     pixel_buffer->fjava_nio_Buffer_ptr = (void*)pixmap->pixels;
 
-    jlong* p_native_data = JvmArrayData(nativeData);
-    p_native_data[0] = (jlong)pixmap;
+    JLONG* p_native_data = JvmArrayData(nativeData);
+    p_native_data[0] = (JLONG)pixmap;
     p_native_data[1] = pixmap->width;
     p_native_data[2] = pixmap->height;
     p_native_data[3] = pixmap->format;
     
     return pixel_buffer;
 }
-jobject mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_newPixmap___JIII_Ljava_nio_ByteBuffer_(jobject nativeData, jint width, jint height, jint format) {
+JOBJECT mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_newPixmap___JIII_Ljava_nio_ByteBuffer_(JOBJECT nativeData, JINT width, JINT height, JINT format) {
     
     gdx2d_pixmap* pixmap = gdx2d_new(width, height, format);
     if(pixmap==0)
@@ -1032,20 +1032,20 @@ jobject mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_newPixmap___JIII_Ljava_nio_By
     pixmap->width * pixmap->height * gdx2d_bytes_per_pixel(pixmap->format);
     pixel_buffer->fjava_nio_Buffer_ownsMemory = jfalse;
     pixel_buffer->fjava_nio_Buffer_ptr = (void*)pixmap->pixels;
-    jlong* p_native_data = (jlong*)JvmArrayData(nativeData);
-    p_native_data[0] = (jlong)pixmap;
+    JLONG* p_native_data = (JLONG*)JvmArrayData(nativeData);
+    p_native_data[0] = (JLONG)pixmap;
     p_native_data[1] = pixmap->width;
     p_native_data[2] = pixmap->height;
     p_native_data[3] = pixmap->format;
     
     return pixel_buffer;
 }
-void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_setBlend__JI_V(jlong pp0, jint pp1) {
+void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_setBlend__JI_V(JLONG pp0, JINT pp1) {
     gdx2d_set_blend((gdx2d_pixmap*)pp0, pp1);
 }
-void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_drawPixmap__JJIIIIIIII_V(jlong src, jlong dst, jint srcX, jint srcY, jint srcWidth, jint srcHeight, jint dstX, jint dstY, jint dstWidth, jint dstHeight) {
+void mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_drawPixmap__JJIIIIIIII_V(JLONG src, JLONG dst, JINT srcX, JINT srcY, JINT srcWidth, JINT srcHeight, JINT dstX, JINT dstY, JINT dstWidth, JINT dstHeight) {
     gdx2d_draw_pixmap((gdx2d_pixmap*)src, (gdx2d_pixmap*)dst, srcX, srcY, srcWidth, srcHeight, dstX, dstY, dstWidth, dstHeight);
 }
-jobject mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_getFailureReason___Ljava_lang_String_() {
+JOBJECT mcom_badlogic_gdx_graphics_g2d_Gdx2DPixmap_getFailureReason___Ljava_lang_String_() {
     return jnull; //todo
 }

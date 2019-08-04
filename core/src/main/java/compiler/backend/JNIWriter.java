@@ -17,7 +17,10 @@
 package compiler.backend;
 
 import compiler.CompilerContext;
+import compiler.DecompilerUtils;
 import compiler.backend.c.A;
+import compiler.backend.c.CType;
+import compiler.backend.c.NameManager;
 import compiler.model.Clazz;
 import compiler.model.Method;
 import java.util.HashMap;
@@ -109,5 +112,12 @@ public class JNIWriter {
             }
         }
 
-    }    
+    } 
+    
+    void writeJNIExports(NameManager naming, CType cType, SourceWriter out) {
+        if(!clazz.isJNIImplementation) return;
+        methods.forEach((k,m) -> {
+            //out.print("JNIEXPORT %s ", DecompilerUtils.objcType(cType, k))
+        });
+    }
 }

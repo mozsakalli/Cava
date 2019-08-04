@@ -15,22 +15,22 @@
 #   include <mach/mach_time.h>
 #endif
 
-typedef wchar_t jchar;
-typedef char jbyte;
-typedef char jbool;
-typedef short jshort;
-typedef int jint;
-typedef float jfloat;
-typedef double jdouble;
-typedef long long jlong;
-typedef void* jobject;
+typedef wchar_t JCHAR;
+typedef char JBYTE;
+typedef char JBOOL;
+typedef short JSHORT;
+typedef int JINT;
+typedef float JFLOAT;
+typedef double JDOUBLE;
+typedef long long JLONG;
+typedef void* JOBJECT;
 
-typedef unsigned short u_jchar;
-typedef unsigned char u_jbyte;
-typedef unsigned char u_jbool;
-typedef unsigned short u_jshort;
-typedef unsigned int u_jint;
-typedef unsigned long long u_jlong;
+typedef unsigned short u_JCHAR;
+typedef unsigned char u_JBYTE;
+typedef unsigned char u_JBOOL;
+typedef unsigned short u_JSHORT;
+typedef unsigned int u_JINT;
+typedef unsigned long long u_JLONG;
 
 #define jtrue 1
 #define jfalse 0
@@ -50,11 +50,11 @@ struct JvmString;
 typedef struct JvmClass {
     //java/lang/Class
     JvmObjectHeader;
-    jint size;
+    JINT size;
     struct JvmString* name;
     struct JvmClass* superClass;
     struct JvmClass* componentType;
-    jint modifiers;
+    JINT modifiers;
     struct JvmArray* fields;
     struct JvmArray* interfaces;
     struct JvmArray* methods;
@@ -62,8 +62,8 @@ typedef struct JvmClass {
     //internal
     void** vtable;
     void** itable;
-    void (*finalizeFunction)(jobject);
-    jbool (*isChildOf)(struct JvmClass* klass);
+    void (*finalizeFunction)(JOBJECT);
+    JBOOL (*isChildOf)(struct JvmClass* klass);
     void* objcClass;
 #ifdef JVM_DEBUG
     struct JvmString* sourceFile;
@@ -83,16 +83,16 @@ typedef struct JvmArray {
 typedef struct JvmString {
     JvmObjectHeader;
     struct JvmArray* value;
-    jint offset;
-    jint count;
-    jint hashCode;
+    JINT offset;
+    JINT count;
+    JINT hashCode;
 } JvmString;
 
 #ifdef JVM_DEBUG
 typedef struct JvmLocalVariableInfo {
     JvmString* name;
-    jint startLine;
-    jint endLine;
+    JINT startLine;
+    JINT endLine;
     JvmClass* type;
 } JvmLocalVariableInfo;
 #endif
@@ -102,15 +102,15 @@ typedef struct JvmMethod {
     JvmClass* declaringClass;
     JvmString* name;
     JvmClass* type;
-    jint modifiers;
+    JINT modifiers;
     JvmArray* parameters;
     void* address;
-   jobject* (*invoke)(jobject,jobject,jobject);   //checks and translates parameters on runtime
+   JOBJECT* (*invoke)(JOBJECT,JOBJECT,JOBJECT);   //checks and translates parameters on runtime
 #ifdef JVM_DEBUG
-    jint minLine;
-    jint maxLine;
-    jint argCount;
-    jint localCount;
+    JINT minLine;
+    JINT maxLine;
+    JINT argCount;
+    JINT localCount;
     JvmLocalVariableInfo* locals;
 #endif
 } JvmMethod;
@@ -120,7 +120,7 @@ typedef struct JvmField {
     JvmClass* declaringClass;
     JvmString* name;
     JvmClass* type;
-    jint modifiers;
+    JINT modifiers;
     void* address;
 } JvmField;
 
@@ -134,7 +134,7 @@ typedef struct JvmThrowable {
 typedef struct JvmStackTraceElement {
     JvmObjectHeader;
     JvmString* fileName;
-    jint lineNumber;
+    JINT lineNumber;
     JvmString* declaringClass;
     JvmString* methodName;
 } JvmStackTraceElement;
@@ -146,27 +146,27 @@ typedef struct JvmStackTraceElement {
 #define JVM_MAX_EXCEPTION_HANDLER   256
 
 typedef struct JvmExceptionPoint {
-    jint framePtr;
+    JINT framePtr;
     jmp_buf jmp;
 } JvmExceptionPoint;
 
 #ifdef JVM_DEBUG
 union JvmLocalVariable {
-    jbyte vjbyte;
-    jbool vjbool;
-    jchar vjchar;
-    jshort vjshort;
-    jint vjint;
-    jfloat vjfloat;
-    jlong vjlong;
-    jdouble vjdouble;
-    jobject vjobject;
+    JBYTE vJBYTE;
+    JBOOL vJBOOL;
+    JCHAR vJCHAR;
+    JSHORT vJSHORT;
+    JINT vJINT;
+    JFLOAT vJFLOAT;
+    JLONG vJLONG;
+    JDOUBLE vJDOUBLE;
+    JOBJECT vJOBJECT;
 } ;
 #endif
 
 typedef struct JvmFrame {
     JvmMethod* method;
-    jint line;
+    JINT line;
 #ifdef JVM_DEBUG
     union JvmLocalVariable locals[128];
 #endif
@@ -177,95 +177,95 @@ typedef struct JvmThread {
     
     //same with java/lang/Thread
     void* target;
-    jbool alive;
+    JBOOL alive;
     JvmString* name;
-    jint priority;
+    JINT priority;
     pthread_t handle;
     
-    jobject exception;
+    JOBJECT exception;
     
-    jint exceptionCount;
+    JINT exceptionCount;
     JvmExceptionPoint exceptions[JVM_MAX_EXCEPTION_HANDLER];
     
-    jint framePtr;
+    JINT framePtr;
     JvmFrame frames[JVM_MAX_STACK];
     
 #ifdef JVM_DEBUG
-    jint suspendCount;
-    jint targetFramePtr;
-    jbool skipBreakpointCheck;
+    JINT suspendCount;
+    JINT targetFramePtr;
+    JBOOL skipBreakpointCheck;
 #endif
 } JvmThread;
 
-extern JVMINLINE jobject JvmArrayGet_O(JvmArray* array, int index);
-extern JVMINLINE jobject JvmArraySet_O(JvmArray* array, int index, jobject value);
-extern JVMINLINE jbyte JvmArrayGet_B(JvmArray* array, int index);
-extern JVMINLINE jbyte JvmArraySet_B(JvmArray* array, int index, jbyte value);
-extern JVMINLINE jchar JvmArrayGet_C(JvmArray* array, int index);
-extern JVMINLINE jchar JvmArraySet_C(JvmArray* array, int index, jchar value);
-extern JVMINLINE jbool JvmArrayGet_Z(JvmArray* array, int index);
-extern JVMINLINE jbool JvmArraySet_Z(JvmArray* array, int index, jbool value);
-extern JVMINLINE jshort JvmArrayGet_S(JvmArray* array, int index);
-extern JVMINLINE jshort JvmArraySet_S(JvmArray* array, int index, jshort value);
-extern JVMINLINE jint JvmArrayGet_I(JvmArray* array, int index);
-extern JVMINLINE jint JvmArraySet_I(JvmArray* array, int index, jint value);
-extern JVMINLINE jfloat JvmArrayGet_F(JvmArray* array, int index);
-extern JVMINLINE jfloat JvmArraySet_F(JvmArray* array, int index, jfloat value);
-extern JVMINLINE jlong JvmArrayGet_J(JvmArray* array, int index);
-extern JVMINLINE jlong JvmArraySet_J(JvmArray* array, int index, jlong value);
-extern JVMINLINE jdouble JvmArrayGet_D(JvmArray* array, int index);
-extern JVMINLINE jdouble JvmArraySet_D(JvmArray* array, int index, jdouble value);
+extern JVMINLINE JOBJECT JvmArrayGet_O(JvmArray* array, int index);
+extern JVMINLINE JOBJECT JvmArraySet_O(JvmArray* array, int index, JOBJECT value);
+extern JVMINLINE JBYTE JvmArrayGet_B(JvmArray* array, int index);
+extern JVMINLINE JBYTE JvmArraySet_B(JvmArray* array, int index, JBYTE value);
+extern JVMINLINE JCHAR JvmArrayGet_C(JvmArray* array, int index);
+extern JVMINLINE JCHAR JvmArraySet_C(JvmArray* array, int index, JCHAR value);
+extern JVMINLINE JBOOL JvmArrayGet_Z(JvmArray* array, int index);
+extern JVMINLINE JBOOL JvmArraySet_Z(JvmArray* array, int index, JBOOL value);
+extern JVMINLINE JSHORT JvmArrayGet_S(JvmArray* array, int index);
+extern JVMINLINE JSHORT JvmArraySet_S(JvmArray* array, int index, JSHORT value);
+extern JVMINLINE JINT JvmArrayGet_I(JvmArray* array, int index);
+extern JVMINLINE JINT JvmArraySet_I(JvmArray* array, int index, JINT value);
+extern JVMINLINE JFLOAT JvmArrayGet_F(JvmArray* array, int index);
+extern JVMINLINE JFLOAT JvmArraySet_F(JvmArray* array, int index, JFLOAT value);
+extern JVMINLINE JLONG JvmArrayGet_J(JvmArray* array, int index);
+extern JVMINLINE JLONG JvmArraySet_J(JvmArray* array, int index, JLONG value);
+extern JVMINLINE JDOUBLE JvmArrayGet_D(JvmArray* array, int index);
+extern JVMINLINE JDOUBLE JvmArraySet_D(JvmArray* array, int index, JDOUBLE value);
 
-extern jobject JvmArrayGet_O_NBC(JvmArray* array, int index);
-extern jobject JvmArraySet_O_NBC(JvmArray* array, int index, jobject value);
-extern jbyte JvmArrayGet_B_NBC(JvmArray* array, int index);
-extern jbyte JvmArraySet_B_NBC(JvmArray* array, int index, jbyte value);
-extern jchar JvmArrayGet_C_NBC(JvmArray* array, int index);
-extern jchar JvmArraySet_C_NBC(JvmArray* array, int index, jchar value);
-extern jbool JvmArrayGet_Z_NBC(JvmArray* array, int index);
-extern jbool JvmArraySet_Z_NBC(JvmArray* array, int index, jbool value);
-extern jshort JvmArrayGet_S_NBC(JvmArray* array, int index);
-extern jshort JvmArraySet_S_NBC(JvmArray* array, int index, jshort value);
-extern jint JvmArrayGet_I_NBC(JvmArray* array, int index);
-extern jint JvmArraySet_I_NBC(JvmArray* array, int index, jint value);
-extern jfloat JvmArrayGet_F_NBC(JvmArray* array, int index);
-extern jfloat JvmArraySet_F_NBC(JvmArray* array, int index, jfloat value);
-extern jlong JvmArrayGet_J_NBC(JvmArray* array, int index);
-extern jlong JvmArraySet_J_NBC(JvmArray* array, int index, jlong value);
-extern jdouble JvmArrayGet_D_NBC(JvmArray* array, int index);
-extern jdouble JvmArraySet_D_NBC(JvmArray* array, int index, jdouble value);
+extern JOBJECT JvmArrayGet_O_NBC(JvmArray* array, int index);
+extern JOBJECT JvmArraySet_O_NBC(JvmArray* array, int index, JOBJECT value);
+extern JBYTE JvmArrayGet_B_NBC(JvmArray* array, int index);
+extern JBYTE JvmArraySet_B_NBC(JvmArray* array, int index, JBYTE value);
+extern JCHAR JvmArrayGet_C_NBC(JvmArray* array, int index);
+extern JCHAR JvmArraySet_C_NBC(JvmArray* array, int index, JCHAR value);
+extern JBOOL JvmArrayGet_Z_NBC(JvmArray* array, int index);
+extern JBOOL JvmArraySet_Z_NBC(JvmArray* array, int index, JBOOL value);
+extern JSHORT JvmArrayGet_S_NBC(JvmArray* array, int index);
+extern JSHORT JvmArraySet_S_NBC(JvmArray* array, int index, JSHORT value);
+extern JINT JvmArrayGet_I_NBC(JvmArray* array, int index);
+extern JINT JvmArraySet_I_NBC(JvmArray* array, int index, JINT value);
+extern JFLOAT JvmArrayGet_F_NBC(JvmArray* array, int index);
+extern JFLOAT JvmArraySet_F_NBC(JvmArray* array, int index, JFLOAT value);
+extern JLONG JvmArrayGet_J_NBC(JvmArray* array, int index);
+extern JLONG JvmArraySet_J_NBC(JvmArray* array, int index, JLONG value);
+extern JDOUBLE JvmArrayGet_D_NBC(JvmArray* array, int index);
+extern JDOUBLE JvmArraySet_D_NBC(JvmArray* array, int index, JDOUBLE value);
 
 //Alloc
 extern JvmObject* JvmAllocObject(JvmClass* klass);
-extern JvmString* JvmAllocString(jchar* chars, jint length);
+extern JvmString* JvmAllocString(JCHAR* chars, JINT length);
 //creates non Gc'd string
-extern JvmString* JvmMakeString(jchar* chars, jint length);
+extern JvmString* JvmMakeString(JCHAR* chars, JINT length);
 //created non Gc'd object array
-extern JvmArray* JvmMakeObjectArray(JvmClass* klass, jint length, void* data);
-extern JvmMethod* JvmMakeMethod(JvmClass* klass, JvmString* name, JvmClass* type, jint modifiers, JvmArray* parameters, void* methodAddress, void* dynamicWrapper
+extern JvmArray* JvmMakeObjectArray(JvmClass* klass, JINT length, void* data);
+extern JvmMethod* JvmMakeMethod(JvmClass* klass, JvmString* name, JvmClass* type, JINT modifiers, JvmArray* parameters, void* methodAddress, void* dynamicWrapper
 #ifdef JVM_DEBUG
-    ,jint minLine, jint maxLine, jint argCount, jint localCount, JvmLocalVariableInfo* locals
+    ,JINT minLine, JINT maxLine, JINT argCount, JINT localCount, JvmLocalVariableInfo* locals
 #endif
 );
-extern JvmField* JvmMakeField(JvmClass* klass, JvmString* name, JvmClass* type, jint modifiers, void* fieldAddress);
+extern JvmField* JvmMakeField(JvmClass* klass, JvmString* name, JvmClass* type, JINT modifiers, void* fieldAddress);
 
-extern JvmArray* JvmAllocPrimArray1(JvmClass* klass, jint length);
-extern JvmArray* JvmAllocObjectArray1(JvmClass* klass, jint length);
-extern JvmArray* JvmAllocPrimArray2(JvmClass* klass, jint length, jint length2);
-extern JvmArray* JvmAllocObjectArray2(JvmClass* klass, jint length, jint length2);
+extern JvmArray* JvmAllocPrimArray1(JvmClass* klass, JINT length);
+extern JvmArray* JvmAllocObjectArray1(JvmClass* klass, JINT length);
+extern JvmArray* JvmAllocPrimArray2(JvmClass* klass, JINT length, JINT length2);
+extern JvmArray* JvmAllocObjectArray2(JvmClass* klass, JINT length, JINT length2);
 
-extern JvmArray* JvmInitPrimArray1(JvmClass* klass, jint length, void* data);
-extern JvmArray* JvmInitObjectArray1(JvmClass* klass, jint length, void* data);
+extern JvmArray* JvmInitPrimArray1(JvmClass* klass, JINT length, void* data);
+extern JvmArray* JvmInitObjectArray1(JvmClass* klass, JINT length, void* data);
 
 extern void gcRegisterCurrentThread();
 extern void gcUnregisterCurrentThread();
 
-extern void JvmThrow(jobject exception);
+extern void JvmThrow(JOBJECT exception);
 extern void JvmStackOverflow();
 
-extern jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst);
-extern jbool JvmInstanceOf(jobject object, jobject klass);
-extern jobject JvmCheckCast(jobject object, jobject klass);
+extern JBOOL JvmIsAssignableFrom(JvmClass* src, JvmClass* dst);
+extern JBOOL JvmInstanceOf(JOBJECT object, JOBJECT klass);
+extern JOBJECT JvmCheckCast(JOBJECT object, JOBJECT klass);
 
 extern JvmThread* JvmCurrentThread();
 extern void JvmRegisterCurrentThread(JvmThread* thread);
@@ -274,22 +274,22 @@ extern void JvmMonitorEnter(JvmObject* object);
 extern void JvmMonitorExit(JvmObject* object);
 
 // Boxing methods
-extern jbyte JvmUnbox_B(jobject object);
-extern jbool JvmUnbox_Z(jobject object);
-extern jchar JvmUnbox_C(jobject object);
-extern jshort JvmUnbox_S(jobject object);
-extern jint JvmUnbox_I(jobject object);
-extern jfloat JvmUnbox_F(jobject object);
-extern jlong JvmUnbox_J(jobject object);
-extern jdouble JvmUnbox_D(jobject object);
-extern jobject JvmBox_B(jbyte value);
-extern jobject JvmBox_Z(jbool value);
-extern jobject JvmBox_C(jchar value);
-extern jobject JvmBox_S(jshort value);
-extern jobject JvmBox_I(jint value);
-extern jobject JvmBox_F(jfloat value);
-extern jobject JvmBox_J(jlong value);
-extern jobject JvmBox_D(jdouble value);
+extern JBYTE JvmUnbox_B(JOBJECT object);
+extern JBOOL JvmUnbox_Z(JOBJECT object);
+extern JCHAR JvmUnbox_C(JOBJECT object);
+extern JSHORT JvmUnbox_S(JOBJECT object);
+extern JINT JvmUnbox_I(JOBJECT object);
+extern JFLOAT JvmUnbox_F(JOBJECT object);
+extern JLONG JvmUnbox_J(JOBJECT object);
+extern JDOUBLE JvmUnbox_D(JOBJECT object);
+extern JOBJECT JvmBox_B(JBYTE value);
+extern JOBJECT JvmBox_Z(JBOOL value);
+extern JOBJECT JvmBox_C(JCHAR value);
+extern JOBJECT JvmBox_S(JSHORT value);
+extern JOBJECT JvmBox_I(JINT value);
+extern JOBJECT JvmBox_F(JFLOAT value);
+extern JOBJECT JvmBox_J(JLONG value);
+extern JOBJECT JvmBox_D(JDOUBLE value);
 
 extern JvmClass Z_Class;
 extern JvmClass B_Class;
@@ -339,20 +339,20 @@ extern JvmClass ArrOf_java_lang_reflect_Field_Class;
 extern JvmClass ArrOf_java_lang_StackTraceElement_Class;
 
 //All static fields
-extern jobject** JVMGLOBALS;
+extern JOBJECT** JVMGLOBALS;
 extern void** JVMCLASSPATH;
 
 #define JVMMETHOD(cls, ndx) frame->method = ((JvmMethod**)JvmArrayData(cls.methods))[ndx];
 
 #ifdef JVM_DEBUG
     extern void JvmInitDebug();
-    extern jbool JvmAddBreakpoint(jlong method, jint line, jint requestId);
-    extern void JvmRemoveBreakpoint(jlong method, jint line);
-    extern void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line);
+    extern JBOOL JvmAddBreakpoint(JLONG method, JINT line, JINT requestId);
+    extern void JvmRemoveBreakpoint(JLONG method, JINT line);
+    extern void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, JINT line);
     extern void JvmRemoveAllBreakpoints();
     extern void JvmStartDebugger();
     #define JVMLINE(lineNo) frame->line = lineNo; JvmCheckBreakpoint(thread, frame->method, frame->line);
-    #define DEFLOCAL(n,t,i) union JvmLocalVariable* dbg_##n = &frame->locals[i]; LOCAL(n,jlong) = 0;
+    #define DEFLOCAL(n,t,i) union JvmLocalVariable* dbg_##n = &frame->locals[i]; LOCAL(n,JLONG) = 0;
     #define DEFARG(n,t,i) union JvmLocalVariable* dbg_##n = &frame->locals[i]; LOCAL(n,t) = n;
     #define LOCAL(n,t) dbg_##n->v##t
 

@@ -48,11 +48,11 @@ public class IOSGLES20 implements GL20 {
         if(cls == ByteBuffer.class)
             return NativeCode.VoidPtr("((char*)%s) + (%s)", ptr, buffer.position());
         if(cls == ShortBuffer.class)
-            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(jshort))", ptr, buffer.position());
+            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(JSHORT))", ptr, buffer.position());
         if(cls == FloatBuffer.class)
-            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(jfloat))", ptr, buffer.position());
+            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(JFLOAT))", ptr, buffer.position());
         if(cls == IntBuffer.class)
-            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(jint))", ptr, buffer.position());
+            return NativeCode.VoidPtr("((char*)%s) + (%s * sizeof(JINT))", ptr, buffer.position());
         
         throw new RuntimeException("Unknown buffer class: "+cls);
     }

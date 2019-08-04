@@ -55,12 +55,12 @@ public class IntBuffer extends Buffer {
         if (position == limit) {
             throw new BufferUnderflowException();
         }
-        return NativeCode.Int("((jint*)%s)[%s]", ptr, position++);
+        return NativeCode.Int("((JINT*)%s)[%s]", ptr, position++);
     }
 
     public final int get(int index) {
         checkIndex(index);
-        return NativeCode.Int("((jint*)%s)[%s]", ptr, index);
+        return NativeCode.Int("((JINT*)%s)[%s]", ptr, index);
     }
 
     public IntBuffer put(int c) {
@@ -70,7 +70,7 @@ public class IntBuffer extends Buffer {
         if (position == limit) {
             throw new BufferOverflowException();
         }
-        NativeCode.Void("((jint*)%s)[%s] = %s", ptr, position++, c);
+        NativeCode.Void("((JINT*)%s)[%s] = %s", ptr, position++, c);
         return this;
     }
 
@@ -79,7 +79,7 @@ public class IntBuffer extends Buffer {
             throw new ReadOnlyBufferException();
         }
         checkIndex(index);
-        NativeCode.Void("((jint*)%s)[%s] = %s", ptr, index, c);
+        NativeCode.Void("((JINT*)%s)[%s] = %s", ptr, index, c);
         return this;
     }
 

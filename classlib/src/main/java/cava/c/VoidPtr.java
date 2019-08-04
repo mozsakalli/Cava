@@ -55,7 +55,7 @@ public class VoidPtr {
     }
     
     @Inline  public long toLong() {
-        return NativeCode.Long("(jlong)%s", this);
+        return NativeCode.Long("(JLONG)%s", this);
     }
     
     @Inline  public Object toObject() {

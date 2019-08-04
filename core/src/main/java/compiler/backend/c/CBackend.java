@@ -90,11 +90,11 @@ public class CBackend {
         out.println("#include \"jvm.h\"");
         List<String> literals = CompilerContext.stringCollector.strings();
         for(int i=0; i<literals.size(); i++) {
-            out.println("jobject %s;", naming.literal(i));
+            out.println("JOBJECT %s;", naming.literal(i));
         }
         out.println("void InitJvmLiterals() {").indent();
         for(int i=0; i<literals.size(); i++) {
-            out.print("%s = JvmMakeString((jchar[]){", naming.literal(i));
+            out.print("%s = JvmMakeString((JCHAR[]){", naming.literal(i));
             String lit = literals.get(i);
             for(int k=0; k<lit.length(); k++) {
                 if(k>0) out.print(",");
@@ -265,23 +265,23 @@ public class CBackend {
                 if(!m.name.equals("getStruct") && !m.name.equals("setStruct") && 
                     (field == null || field.isEmpty())) throw new RuntimeException("Struct method must have @Native annotation "+m);
                 if(m.name.equals("getStruct")) {
-                    out.println("%s %s(jobject thiz) { return ((%s*)thiz)->$struct; }",
+                    out.println("%s %s(JOBJECT thiz) { return ((%s*)thiz)->$struct; }",
                             nativeClassName, naming.method(m), naming.clazz(c.name));
                 }
                 else if(m.name.equals("setStruct")) {
-                    out.println("%s %s(jobject thiz, %s value) { ((%s*)thiz)->$struct = value; }",
+                    out.println("%s %s(JOBJECT thiz, %s value) { ((%s*)thiz)->$struct = value; }",
                             cType.toC(m.type), naming.method(m), nativeClassName, naming.clazz(c.name));
                 }
                 else if(m.args.size() == 1) { //getter
                     if(m.type.equals("V")) throw new RuntimeException("Struct getter must return value "+m);
-                    out.println("%s %s(jobject thiz) {", cType.toC(m.type), naming.method(m)).indent();
+                    out.println("%s %s(JOBJECT thiz) {", cType.toC(m.type), naming.method(m)).indent();
                     if(DecompilerUtils.isPrimitive(m.type))
                         out.println("return ((%s*)thiz)->$struct.%s;", naming.clazz(c.name), field);
                     out.undent().println("}");
                 } else if(m.args.size() == 2) { //setter
                     if(!m.type.equals("V")) throw new RuntimeException("Struct setter must be void "+m);
                     NameAndType arg = m.args.get(1);
-                    out.println("%s %s(jobject thiz, %s value) {", cType.toC(m.type), naming.method(m), cType.toC(arg.type)).indent();
+                    out.println("%s %s(JOBJECT thiz, %s value) {", cType.toC(m.type), naming.method(m), cType.toC(arg.type)).indent();
                     if(DecompilerUtils.isPrimitive(arg.type))
                         out.println("((%s*)thiz)->$struct.%s = value;", naming.clazz(c.name), field);
                     else
@@ -317,7 +317,7 @@ public class CBackend {
                         boolean isUnsafe = !CavaOptions.debug() && (A.hasUnsafe(m) || A.hasUnsafe(c));
                         if(!isUnsafe) {
                             out.println("JvmThread* thread = JvmCurrentThread();");
-                            out.println("jint entryFramePtr = thread->framePtr++;");
+                            out.println("JINT entryFramePtr = thread->framePtr++;");
                             out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
 
                             out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
@@ -421,7 +421,7 @@ public class CBackend {
         includes = cType.getIncludes(naming, includedHeaders);
         includes += "\n";
         for(String literal : usedLiterals) {
-            includes += "extern jobject "+literal+";\n";
+            includes += "extern JOBJECT "+literal+";\n";
         }
         code = code.replaceAll("\\_\\_includes", java.util.regex.Matcher.quoteReplacement(includes));
         
@@ -440,7 +440,7 @@ public class CBackend {
     
     void generateJvmSetup(Clazz c, SourceWriter out, List<NameAndType> globalRefs, CType cType) {
         
-        out.println("jbool %s_isChildOf(JvmClass* klass) {", naming.clazz(c.name)).indent()
+        out.println("JBOOL %s_isChildOf(JvmClass* klass) {", naming.clazz(c.name)).indent()
            .print("return ");
         List<Clazz> inheritedClasses = new ArrayList();
         collectInheritedClasses(c, inheritedClasses);
@@ -452,7 +452,7 @@ public class CBackend {
         out.undent().println("}").ln();
         
         for(String sign : invokeTypes)
-            out.println("extern jobject invoke_%s(jobject,jobject,jobject);", sign);
+            out.println("extern JOBJECT invoke_%s(JOBJECT,JOBJECT,JOBJECT);", sign);
         
         out.println("void JvmSetup_%s() {", naming.clazz(c.name)).indent();
         out.println("static int initialized = 0;")
@@ -588,7 +588,7 @@ public class CBackend {
     }
     
     void generateReflectionInvoke(Method m, CType cType, SourceWriter out) {
-        out.println("jobject %s_Invoke(jobject pthis, jobject pargs) {", naming.method(m)).indent();
+        out.println("JOBJECT %s_Invoke(JOBJECT pthis, JOBJECT pargs) {", naming.method(m)).indent();
         out.println("if(JvmArrayLen(pargs) < %d) return jnull;", m.args.size() - (!m.isStatic() ? 1 : 0));
         boolean isVoid = m.type.equals("V");
         if(!isVoid) {
@@ -839,7 +839,7 @@ public class CBackend {
         out.println("void SetupAllClasses() {").indent()
            .println("//Setup classes")     
            .println("JvmSetup();")
-            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size());
+            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(JOBJECT)*%d);", globalRefs.size());
 
         for(Clazz c : sortedClasses)
             if(!c.name.startsWith("["))
@@ -855,7 +855,7 @@ public class CBackend {
             out.println("%s();", naming.method(m));
         out.undent().println("}").ln();
         
-        out.println("jobject** JVMGLOBALS;").ln();
+        out.println("JOBJECT** JVMGLOBALS;").ln();
 
         Method mainMethod = CompilerContext.getMainMethod();
         out.println("extern void %s();", naming.method(mainMethod));
@@ -877,15 +877,15 @@ public class CBackend {
     
     String signatureToCType(char sign) {
         switch(sign) {
-            case 'O': return "jobject";
-            case 'B': return "jbyte";
-            case 'C': return "jchar";
-            case 'Z': return "jbool";
-            case 'S': return "jshort";
-            case 'I': return "jint";
-            case 'F': return "jfloat";
-            case 'J': return "jlong";
-            case 'D': return "jdouble";
+            case 'O': return "JOBJECT";
+            case 'B': return "JBYTE";
+            case 'C': return "JCHAR";
+            case 'Z': return "JBOOL";
+            case 'S': return "JSHORT";
+            case 'I': return "JINT";
+            case 'F': return "JFLOAT";
+            case 'J': return "JLONG";
+            case 'D': return "JDOUBLE";
             case 'V': return "void";
         }
         return null;
@@ -910,7 +910,7 @@ public class CBackend {
                 else
                     argValues += "JvmUnbox_"+t+"(JvmArrayGet_O(pargs,"+i+"))";
             }
-            out.println("jobject invoke_%s(jobject m, jobject pthis, jobject pargs) {", sign).indent();
+            out.println("JOBJECT invoke_%s(JOBJECT m, JOBJECT pthis, JOBJECT pargs) {", sign).indent();
             out.println("JvmMethod* method = (JvmMethod*)m;");
             out.println("if(method->parameters->len > (pargs == jnull ? 0 : JvmArrayLen(pargs))) {} //todo");
             out.println("if((method->modifiers & 8) != 0) {").indent();
@@ -922,10 +922,10 @@ public class CBackend {
             if(returnType != 'V') out.print("return ");
             if(returnType != 'V' && returnType != 'O') out.print("JvmBox_"+returnType+"(");
             if(sign.length() > 1) {
-                argTypes = "jobject,"+argTypes;
+                argTypes = "JOBJECT,"+argTypes;
                 argValues = "JvmCheckCast(pthis,method->declaringClass),"+argValues;
             } else {
-                argTypes = "jobject";
+                argTypes = "JOBJECT";
                 argValues = "JvmCheckCast(pthis,method->declaringClass)";
             }
             out.print("((%s (*)(%s))method->address)(%s)", signatureToCType(returnType), argTypes, argValues);

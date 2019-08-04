@@ -20,7 +20,7 @@
 	#define M32 11
 	#define M33 15
 	
-	void mcom_badlogic_gdx_math_Matrix4_mul___F_F_V(jobject pp0, jobject pp1) {
+	void mcom_badlogic_gdx_math_Matrix4_mul___F_F_V(JOBJECT pp0, JOBJECT pp1) {
         float* mata = (float*)JvmArrayData(pp0);
         float* matb = (float*)JvmArrayData(pp1);
         
@@ -56,7 +56,7 @@
 				* val[M33] - val[M10] * val[M01] * val[M22] * val[M33] + val[M00] * val[M11] * val[M22] * val[M33];
 	}
 	
-	jbool mcom_badlogic_gdx_math_Matrix4_inv___F_Z(jobject object) {
+	JBOOL mcom_badlogic_gdx_math_Matrix4_inv___F_Z(JOBJECT object) {
         float* val = (float*)JvmArrayData(object);
 		float tmp[16];
 		float l_det = matrix4_det(val);
@@ -142,7 +142,7 @@
 		vec[2] = z;
 	}
 
-void mcom_badlogic_gdx_math_Matrix4_prj___F_FIII_V(jobject obj_mat, jobject obj_vecs, jint offset, jint numVecs, jint stride) {
+void mcom_badlogic_gdx_math_Matrix4_prj___F_FIII_V(JOBJECT obj_mat, JOBJECT obj_vecs, JINT offset, JINT numVecs, JINT stride) {
 
     float* mat = (float*)JvmArrayData(obj_mat);
     float* vecs = (float*)JvmArrayData(obj_vecs);

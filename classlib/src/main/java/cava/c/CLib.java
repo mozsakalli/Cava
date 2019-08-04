@@ -27,14 +27,14 @@ import cava.platform.NativeCode;
 @Include("<stdlib.h> <stdio.h> <string.h>")
 public class CLib {
     
-    public final static int BYTE_SIZE = NativeCode.Int("sizeof(jbyte)");
-    public final static int CHAR_SIZE = NativeCode.Int("sizeof(jchar)");
-    public final static int SHORT_SIZE = NativeCode.Int("sizeof(jshort)");
-    public final static int BOOL_SIZE = NativeCode.Int("sizeof(jbool)");
-    public final static int INT_SIZE = NativeCode.Int("sizeof(jint)");
-    public final static int FLOAT_SIZE = NativeCode.Int("sizeof(jfloat)");
-    public final static int LONG_SIZE = NativeCode.Int("sizeof(jlong)");
-    public final static int DOUBLE_SIZE = NativeCode.Int("sizeof(jdouble)");
+    public final static int BYTE_SIZE = NativeCode.Int("sizeof(JBYTE)");
+    public final static int CHAR_SIZE = NativeCode.Int("sizeof(JCHAR)");
+    public final static int SHORT_SIZE = NativeCode.Int("sizeof(JSHORT)");
+    public final static int BOOL_SIZE = NativeCode.Int("sizeof(JBOOL)");
+    public final static int INT_SIZE = NativeCode.Int("sizeof(JINT)");
+    public final static int FLOAT_SIZE = NativeCode.Int("sizeof(JFLOAT)");
+    public final static int LONG_SIZE = NativeCode.Int("sizeof(JLONG)");
+    public final static int DOUBLE_SIZE = NativeCode.Int("sizeof(JDOUBLE)");
     
     @Inline public static VoidPtr malloc(int size) {
         return NativeCode.VoidPtr("malloc(%s)", size);

@@ -385,7 +385,7 @@ public class CWriter extends CodeWriter {
     public void write(TryCatch t) {
         if(isUnsafe) throw new RuntimeException("Unsafe methods can't contain try-catch block! method:"+method);
         out.println("/* try */");
-        out.println("jint exception%d = thread->exceptionCount++;", t.index);
+        out.println("JINT exception%d = thread->exceptionCount++;", t.index);
         out.println("thread->exceptions[exception%d].framePtr = thread->framePtr;", t.index);
         out.println("if(setjmp(thread->exceptions[exception%d].jmp) == 0) {", t.index).indent();
         returnExceptionId.push(t.index);

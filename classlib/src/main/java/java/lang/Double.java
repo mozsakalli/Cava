@@ -178,8 +178,8 @@ public final class Double extends Number implements Comparable<Double> {
         long result = 0;
         NativeCode.Void(
                 "union Double {\n"
-                + "    jlong bits;\n"
-                + "    jdouble d;\n"
+                + "    JLONG bits;\n"
+                + "    JDOUBLE d;\n"
                 + "} Double;\n"
                 + "union Double d;\n"
                 + "d.d = %s;\n"
@@ -197,8 +197,8 @@ public final class Double extends Number implements Comparable<Double> {
         long result = 0;
         NativeCode.Void(
                 "union Double {\n"
-                + "    jlong bits;\n"
-                + "    jdouble d;\n"
+                + "    JLONG bits;\n"
+                + "    JDOUBLE d;\n"
                 + "} Double;\n"
                 + "union Double d;\n"
                 + "d.d = %s;\n"
@@ -303,8 +303,8 @@ public final class Double extends Number implements Comparable<Double> {
         double result = 0;
         NativeCode.Void(
                 "union Double {\n"
-                + "    jlong bits;\n"
-                + "    jdouble d;\n"
+                + "    JLONG bits;\n"
+                + "    JDOUBLE d;\n"
                 + "} Double;\n"
                 + "union Double d;\n"
                 + "d.bits = %s;\n"

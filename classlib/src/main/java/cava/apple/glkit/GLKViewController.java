@@ -47,7 +47,6 @@ public class GLKViewController extends UIViewController {
     public void setDelegate(GLKViewControllerDelegate delegate) {
         this.delegate = delegate;
         NativeCode.Void("((GLKViewController*)%s).delegate = %s;", getNativePeer(), ((NSObject)delegate).getNativePeer());
-        System.out.println("GLKDelegate = "+delegate.getClass()+" / "+NativeCode.Long("(jlong)%s", ((NSObject)delegate).getNativePeer()));
     }
     
     public boolean isPaused() {

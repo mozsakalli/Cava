@@ -54,61 +54,61 @@ public class Field {
     private long getSafeLong(Object base) {
         VoidPtr ptr = Modifier.isStatic(modifiers) ?
                 address :
-                NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
+                NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
             
         if(type == byte.class) 
-            return NativeCode.Long("(((jbyte*)%s)[0])", ptr);
+            return NativeCode.Long("(((JBYTE*)%s)[0])", ptr);
         if(type == boolean.class)
-            return NativeCode.Long("(((jbool*)%s)[0])", ptr);
+            return NativeCode.Long("(((JBOOL*)%s)[0])", ptr);
         if(type == char.class)
-            return NativeCode.Long("(((jchar*)%s)[0])", ptr);
+            return NativeCode.Long("(((JCHAR*)%s)[0])", ptr);
         if(type == short.class)
-            return NativeCode.Long("(((jshort*)%s)[0])", ptr);
+            return NativeCode.Long("(((JSHORT*)%s)[0])", ptr);
         if(type == int.class)
-            return NativeCode.Long("(((jint*)%s)[0])", ptr);
+            return NativeCode.Long("(((JINT*)%s)[0])", ptr);
         if(type == long.class)
-            return NativeCode.Long("(((jlong*)%s)[0])", ptr);
+            return NativeCode.Long("(((JLONG*)%s)[0])", ptr);
         return 0;
     }
     
     private void setSafeLong(Object base, long value) {
         VoidPtr ptr = Modifier.isStatic(modifiers) ?
                 address :
-                NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
+                NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
         if(type == byte.class) 
-            NativeCode.Void("((jbyte*)%s)[0] = (jbyte)%s", ptr, value);
+            NativeCode.Void("((JBYTE*)%s)[0] = (JBYTE)%s", ptr, value);
         if(type == boolean.class)
-            NativeCode.Void("((jbool*)%s)[0] = (jbool)%s", ptr, value);
+            NativeCode.Void("((JBOOL*)%s)[0] = (JBOOL)%s", ptr, value);
         if(type == char.class)
-            NativeCode.Void("((jchar*)%s)[0] = (jchar)%s", ptr, value);
+            NativeCode.Void("((JCHAR*)%s)[0] = (JCHAR)%s", ptr, value);
         if(type == short.class)
-            NativeCode.Void("((jshort*)%s)[0] = (jshort)%s", ptr, value);
+            NativeCode.Void("((JSHORT*)%s)[0] = (JSHORT)%s", ptr, value);
         if(type == int.class)
-            NativeCode.Void("((jint*)%s)[0] = (jint)%s", ptr, value);
+            NativeCode.Void("((JINT*)%s)[0] = (JINT)%s", ptr, value);
         if(type == long.class)
-            NativeCode.Void("((jlong*)%s)[0] = (jlong)%s", ptr, value);
+            NativeCode.Void("((JLONG*)%s)[0] = (JLONG)%s", ptr, value);
     } 
 
     private double getSafeDouble(Object base) {
         VoidPtr ptr = Modifier.isStatic(modifiers) ?
                 address :
-                NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
+                NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
             
         if(type == double.class) 
-            return NativeCode.Double("(((jdouble*)%s)[0])", ptr);
+            return NativeCode.Double("(((JDOUBLE*)%s)[0])", ptr);
         if(type == float.class)
-            return NativeCode.Float("(((jfloat*)%s)[0])", ptr);
+            return NativeCode.Float("(((JFLOAT*)%s)[0])", ptr);
         return 0;
     }
     
     private void setSafeDouble(Object base, double value) {
         VoidPtr ptr = Modifier.isStatic(modifiers) ?
                 address :
-                NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
+                NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
         if(type == double.class) 
-            NativeCode.Void("((jdouble*)%s)[0] = (jdouble)%s", ptr, value);
+            NativeCode.Void("((JDOUBLE*)%s)[0] = (JDOUBLE)%s", ptr, value);
         if(type == float.class)
-            NativeCode.Void("((jfloat*)%s)[0] = (jfloat)%s", ptr, value);
+            NativeCode.Void("((JFLOAT*)%s)[0] = (JFLOAT)%s", ptr, value);
     } 
     
     public Object get(Object base) {
@@ -131,9 +131,9 @@ public class Field {
         
         VoidPtr ptr = Modifier.isStatic(modifiers) ?
                 address :
-                NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
+                NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
                 
-        return NativeCode.Object("((jobject*)%s)[0]", ptr);
+        return NativeCode.Object("((JOBJECT*)%s)[0]", ptr);
     }
     
     public void set(Object base, Object value) {
@@ -159,8 +159,8 @@ public class Field {
                 throw new ClassCastException("Can't assign "+value.getClass().getName()+" to "+type.getName());
             VoidPtr ptr = Modifier.isStatic(modifiers) ?
                     address :
-                    NativeCode.VoidPtr("(void*)((char*)%s + (jint)%s)", base, address);
-            NativeCode.Void("((jobject*)%s)[0] = (jobject)%s", ptr, value);
+                    NativeCode.VoidPtr("(void*)((char*)%s + (JINT)%s)", base, address);
+            NativeCode.Void("((JOBJECT*)%s)[0] = (JOBJECT)%s", ptr, value);
         }
     }
     

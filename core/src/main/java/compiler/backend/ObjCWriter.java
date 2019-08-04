@@ -86,7 +86,7 @@ public class ObjCWriter {
         }
         out.println(" {").indent()
            .println("@public")
-           .println("jobject javaPeer;")
+           .println("JOBJECT javaPeer;")
            .undent().print("}");
         
         final Set<String> written = new HashSet();

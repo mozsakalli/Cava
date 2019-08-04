@@ -191,21 +191,13 @@ public class DecompilerUtils {
 
     public static String jniType(CType cType, String type) {
         switch(type) {
-            case "Z": return "BOOL";
+            case "Z": return "jboolean";
             case "V": return "void";
-            case "java/lang/Class": return "Class";
+            case "I": return "jint";
+            case "J": return "jlong";
+            case "java/lang/Class": return "jclass";
         }
-        Clazz c = CompilerContext.resolve(type);
-        if(c != null) {
-            if(c.isStruct()) {
-                String name = A.nativeValue(c);
-                if(name == null || name.isEmpty()) throw new RuntimeException(c+" must have @Native annotation");
-                return name;
-            }
-            String ret = c.isObjC() ? simpleName(c.name) : cType.toC(type);
-            return ret;
-        }
-        throw new RuntimeException("Unknown ObjC Type : "+type);
+        return "jobject";
     }
     
 }

@@ -23,6 +23,7 @@ import compiler.backend.c.CType;
 import compiler.backend.c.NameManager;
 import compiler.model.Clazz;
 import compiler.model.Method;
+import compiler.model.NameAndType;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,9 +43,12 @@ public class JNIWriter {
     Map<String,Method> properties = new HashMap();
     
     public JNIWriter(Clazz c) {
+        if(c.name.contains("AndroidLauncher"))
+            System.out.println("...");
         clazz = c;
         if(c.isInterface) return;
-        
+        c.methods.forEach(m -> checkMethod(m));
+        /*
         Clazz sc = c;
         
         while(sc != null) {
@@ -63,7 +67,7 @@ public class JNIWriter {
             if(sc.superName == null) break;
             sc = CompilerContext.resolve(sc.superName);
         }
-
+        */
         if(!methods.isEmpty() || customSuper!=null) c.isJNIImplementation = true;
         
     }
@@ -114,10 +118,34 @@ public class JNIWriter {
 
     } 
     
-    void writeJNIExports(NameManager naming, CType cType, SourceWriter out) {
+    String jniExportName(Method m) {
+        return "Java_"+m.declaringClass.replace('/', '_')+"_"+m.name;
+    }
+    public void writeJNIExports(NameManager naming, CType cType, SourceWriter out) {
         if(!clazz.isJNIImplementation) return;
+        final NameAndType klassField = CompilerContext.resolve("java/lang/Object").findField("klass");
+        final NameAndType nativePeerField = CompilerContext.resolve("cava/c/NativeObject").findField("nativePeer");
+        final NameAndType noOwnerField = CompilerContext.resolve("cava/c/NativeObject").findField("noOwner");
+        
         methods.forEach((k,m) -> {
-            //out.print("JNIEXPORT %s ", DecompilerUtils.objcType(cType, k))
+            out.print("JNIEXPORT %s %s(JNIEnv * env", DecompilerUtils.jniType(cType, m.type), jniExportName(m));
+            if(m.isStatic()) out.print(",jobject pthis");
+            m.args.forEach(a -> {
+                out.print(",%s %s", DecompilerUtils.jniType(cType, a.type), naming.arg(a));
+            });
+            out.println(") {").indent();
+            m.args.forEach(arg -> {
+                if(!DecompilerUtils.isPrimitive(arg.type)) {
+                out.println("%s arg_%s;", naming.clazz(arg.type), arg.name)
+                   .println("arg_%s.%s = &%s_Class;", arg.name, naming.field(klassField), naming.clazz(arg.type))
+                   .println("arg_%s.%s = %s;", arg.name, naming.field(nativePeerField), 
+                           naming.arg(arg))
+                   .println("arg_%s.%s = jtrue;", arg.name, naming.field(noOwnerField));
+                }
+            });
+            if(!m.type.equals("V")) out.print("return ");
+            if(!m.type.equals("V")) out.println("0;");
+            out.undent().println("}");
         });
     }
 }

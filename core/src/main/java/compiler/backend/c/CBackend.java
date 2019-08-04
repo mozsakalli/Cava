@@ -223,7 +223,6 @@ public class CBackend {
             if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
         } else if(CavaOptions.targetPlatform() == Platform.Android) {
             jni = new JNIWriter(c);
-            //jni.writeHeader(naming, cType, out);
         }
         
         out.ln().println("#endif");
@@ -407,7 +406,9 @@ public class CBackend {
         
         if(CavaOptions.targetPlatform() == Platform.iOS || CavaOptions.targetPlatform() == Platform.OsX) 
             objc.writeImplementation(naming, cType, globalRefs, out);
-
+        else if(CavaOptions.targetPlatform() == Platform.Android)
+            jni.writeJNIExports(naming, cType, out);
+        
         out.println("JvmClass %s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_%s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_ArrOf_%s_Class;", naming.clazz(c.name))     

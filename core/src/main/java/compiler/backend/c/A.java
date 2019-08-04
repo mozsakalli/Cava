@@ -18,6 +18,7 @@ package compiler.backend.c;
 
 import compiler.Platform;
 import compiler.model.Clazz;
+import compiler.model.Method;
 import compiler.model.NameAndType;
 import java.util.Map;
 
@@ -102,7 +103,15 @@ public class A {
         return has(o, JNI);
     }
     public static String jniName(Object o) {
-        return string(o, JNI,"value");
+        if(hasJNI(o)) {
+            String name = string(o, JNI,"value");
+            if((name == null || name.isEmpty())) {
+                if(o instanceof NameAndType) {
+                    return ((NameAndType)o).name;
+                }
+            }
+        }
+        return null;
     }
     public static boolean jniField(Object o) {
         return bool(o, JNI, "field");

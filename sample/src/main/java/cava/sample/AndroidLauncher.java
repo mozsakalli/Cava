@@ -18,11 +18,13 @@ package cava.sample;
 
 import cava.android.app.Activity;
 import cava.android.os.Bundle;
+import cava.annotation.Keep;
 
 /**
  *
  * @author mustafa
  */
+@Keep
 public class AndroidLauncher extends Activity {
 
     @Override
@@ -33,7 +35,4 @@ public class AndroidLauncher extends Activity {
     @Override
     public void onStart() {
     }
-
-    
-    public static void main() {}
 }

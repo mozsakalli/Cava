@@ -824,12 +824,6 @@ public class CBackend {
             out.print("&%s_Class,&ArrOf_%s_Class",naming.clazz(c.name), naming.clazz(c.name));
         }
         out.println(",jnull};");
-        /*
-        out.println("extern jobject fjava_lang_Class_CLASSPATH;")
-           .println("void InitClasspath() {").indent()
-           .println("fjava_lang_Class_CLASSPATH = &CLASSPATH;")
-           .undent().println("}").ln();
-        */
         
         out.ln().ln().println("extern void JvmSetup();").println("extern void JvmSetup2();");
         for(Clazz c : sortedClasses)
@@ -858,20 +852,33 @@ public class CBackend {
         out.println("JOBJECT** JVMGLOBALS;").ln();
 
         Method mainMethod = CompilerContext.getMainMethod();
-        out.println("extern void %s();", naming.method(mainMethod));
+        if(CavaOptions.targetPlatform() != Platform.Android) 
+            out.println("extern void %s();", naming.method(mainMethod));
+        else    
+            out.println("JavaVM* JNIJavaVM;");
+        
         out.println("extern void InitJvmLiterals();");
         out.println("void cavamain() {").indent()
            .println("SetupAllClasses();")
            .println("InitJvmLiterals();")
-           .println("InitAllClasses();")
-           .println("%s();", naming.method(mainMethod))
-           .undent()
+           .println("InitAllClasses();");
+        if(CavaOptions.targetPlatform() != Platform.Android) 
+            out.println("%s();", naming.method(mainMethod));
+        out.undent()
            .println("}");
         
-        out.println("int main(int argc, char * argv[]) {").indent()
+        if(CavaOptions.targetPlatform() != Platform.Android) {
+            out.println("int main(int argc, char * argv[]) {").indent()
+               .println("cavamain();")
+               .println("return 0;")
+               .undent().println("}");
+        } else {
+           out.println("JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {").indent()
+           .println("JNIJavaVM = vm;")
            .println("cavamain();")
-           .println("return 0;")
+           .println(" return  JNI_VERSION_1_4;")
            .undent().println("}");
+        }
         CompilerContext.saveCode("cava_main.c", out.toString());
     }
     

@@ -70,7 +70,9 @@ public class CompilerContext {
     
     public static Method getMainMethod() {
         //todo: 
-        return classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
+        return CavaOptions.targetPlatform() == Platform.Android ?
+                classes.get(CavaOptions.mainClass()).findDeclaredMethod("onCreate", "(Lcava/android/os/Bundle;)V") :
+                classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
     }
     
     static Clazz load(String name) {

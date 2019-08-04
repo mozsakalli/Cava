@@ -158,13 +158,13 @@ public class DependencyAnalyzer {
     }
     
     private void analyzeClass(Clazz c) {
-        /*
         String modifyClass = A.modify(c, CavaOptions.targetPlatform());
         if(modifyClass != null) {
             Clazz modifier = CompilerContext.resolve(modifyClass);
             modifier.replaceClassName(c.name);
             boolean found = false;
             for(Method m : modifier.methods) {
+                if(m.name.equals("<init>") || m.name.equals("<clinit>")) continue;
                 for(int i=0; i<c.methods.size(); i++) {
                     Method om = c.methods.get(i);
                     if(om.name.equals(m.name) && om.signature.equals(m.signature)) {
@@ -180,8 +180,11 @@ public class DependencyAnalyzer {
                 }
                 
             }
+            //this class is only for overriding existing classes
+            //dont generate
+            CompilerContext.classes.remove(modifyClass);
         }
-        */
+        
         boolean isStruct = c.isStruct();
         final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
         boolean isClassKeep = A.hasKeep(c) || isObjCInterface;

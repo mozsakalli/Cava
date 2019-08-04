@@ -22,5 +22,8 @@ package java.io;
  */
 public class ConsolePrintStreamAndroid {
     
+    private void printImpl(StringBuilder buffer){
+        
+    }
     
 }

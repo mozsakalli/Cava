@@ -12,7 +12,11 @@
 #include "gc.h"
 
 #ifdef __APPLE__
-#   include <mach/mach_time.h>
+#include <mach/mach_time.h>
+#endif
+
+#ifdef __ANDROID__
+#include <jni.h>
 #endif
 
 typedef wchar_t JCHAR;

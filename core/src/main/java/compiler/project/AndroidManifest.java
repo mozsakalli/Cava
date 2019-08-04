@@ -39,7 +39,7 @@ public class AndroidManifest {
     "</manifest>";    
     public static void generate() throws Exception {
         String fullName = CavaOptions.mainClass().replace(".", "/");
-        String pkg = DecompilerUtils.packageName(fullName);
+        String pkg = DecompilerUtils.packageName(fullName).replace('/', '.');
         String name = DecompilerUtils.simpleName(fullName);
         
         String root = ROOT.replaceAll("__PACKAGE__", pkg)

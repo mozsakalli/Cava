@@ -20,6 +20,7 @@ import com.cava.graphics.Graphics;
 import com.cava.graphics.IndexBuffer;
 import com.cava.graphics.ShaderProgram;
 import com.cava.graphics.VertexBuffer;
+import com.cava.graphics.VertexStructure;
 
 /**
  *
@@ -34,13 +35,17 @@ public class OpenGLGraphics extends Graphics {
     }
 
     @Override
-    public VertexBuffer createVertexBuffer(int capacity) {
-        return new OpenGLVertexBuffer(capacity);
+    public VertexBuffer createVertexBuffer(int capacity,VertexStructure structure) {
+        return new OpenGLVertexBuffer(capacity, structure);
     }
 
     @Override
     public IndexBuffer createIndexBuffer(int capacity) {
         return new OpenGLIndexBuffer(capacity);
+    }
+
+    @Override
+    public void draw(VertexBuffer vertexBuffer, IndexBuffer indexBuffer) {
     }
 
 }

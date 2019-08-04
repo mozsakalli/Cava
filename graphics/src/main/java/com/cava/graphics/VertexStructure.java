@@ -23,7 +23,14 @@ package com.cava.graphics;
 public class VertexStructure {
 
     public static enum Type {
-        FLOAT1, FLOAT2, FLOAT3, FLOAT4, RGBA
+        FLOAT1(1), FLOAT2(2), FLOAT3(3), FLOAT4(4), RGBA(5);
+        int size;
+        Type(int size) {
+            this.size = size;
+        }
+        public int getSize() {
+            return size;
+        }
     }
     
     public static class Element {
@@ -38,11 +45,16 @@ public class VertexStructure {
 
     Element[] elements;
     
+    public VertexStructure(){}
     public VertexStructure(Element...elements) {
         setElements(elements);
     }
     
     public void setElements(Element...elements) {
         this.elements = elements;
+    }
+    
+    public Element[] getElements() {
+        return elements;
     }
 }

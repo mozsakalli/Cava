@@ -23,7 +23,8 @@ package com.cava.graphics;
 public abstract class Graphics {
     
     public abstract ShaderProgram createShaderProgram(Object code);
-    public abstract VertexBuffer createVertexBuffer(int capacity);
+    public abstract VertexBuffer createVertexBuffer(int capacity, VertexStructure structure);
     public abstract IndexBuffer createIndexBuffer(int capacity);
+    public abstract void draw(VertexBuffer vertexBuffer, IndexBuffer indexBuffer);
     
 }

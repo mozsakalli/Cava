@@ -22,13 +22,10 @@ package com.cava.graphics;
  */
 public abstract class VertexBuffer {
     
-    int lockStart;
-    int lockSize;
-    
     public abstract int capacity();
+    public abstract void x(int offset, float x);
+    public abstract void xy(int offset, float x, float y);
+    public abstract void xyz(int offset, float x, float y, float z);
+    public abstract void xyzw(int offset, float x, float y, float z, float w);
     
-    public void lock(int start, int size) {
-        
-    }
-            
 }

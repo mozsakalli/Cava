@@ -23,9 +23,10 @@ package com.cava.graphics;
 public abstract class VertexBuffer {
     
     public abstract int capacity();
-    public abstract void x(int offset, float x);
-    public abstract void xy(int offset, float x, float y);
-    public abstract void xyz(int offset, float x, float y, float z);
-    public abstract void xyzw(int offset, float x, float y, float z, float w);
+    public abstract void set(int offset, float x);
+    public abstract void set(int offset, int x);
+    public abstract void set(int offset, float x, float y);
+    public abstract void set(int offset, float x, float y, float z);
+    public abstract void set(int offset, float x, float y, float z, float w);
     
 }

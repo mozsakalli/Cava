@@ -20,6 +20,9 @@ package com.cava.graphics;
  *
  * @author mustafa
  */
-public class IndexBuffer {
-
+public abstract class IndexBuffer {
+    
+    public abstract void set(int offset, int x);
+    public abstract void set(int offset, int x, int y);
+    public abstract void set(int offset, int x, int y, int z);
 }

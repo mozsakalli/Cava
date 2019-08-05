@@ -26,8 +26,43 @@ public class OpenGLShaderProgram extends ShaderProgram {
     
     int vertexHandle=-1, fragmentHandle=-1, programHandle=-1;
 
-    public OpenGLShaderProgram(String vertex, String fragment) {
+    public OpenGLShaderProgram(String vertexCode, String fragmentCode) {
+        vertexHandle = compileShader(GL.GL_VERTEX_SHADER, vertexCode);
+        fragmentHandle = compileShader(GL.GL_FRAGMENT_SHADER, 
+              "#ifdef GL_ES\n"
+            + "precision mediump float;\n"
+            + "#endif\n"+
+                fragmentCode);
+        programHandle = GL.glCreateProgram();
+        GL.glAttachShader(programHandle, vertexHandle);
+        GL.glAttachShader(programHandle, fragmentHandle);
+
+        GL.glLinkProgram(programHandle);
+        
+        int[] status = new int[1];
+        GL.glGetProgramiv(programHandle, GL.GL_LINK_STATUS, status);
+        if (status[0] == GL.GL_FALSE) {
+            throw new RuntimeException("Cant compile shaderprogram");
+        }
+        
     }
     
+    public static int compileShader(int type, String source) {
+        int shader = GL.glCreateShader(type);
+        if (shader == 0) {
+            throw new RuntimeException(
+                    "could not create shader object; check ShaderProgram.isSupported()");
+        }
+        GL.glShaderSource(shader, source);
+        GL.glCompileShader(shader);
+
+        int[] status = new int[1];
+        GL.glGetShaderiv(shader, GL.GL_COMPILE_STATUS, status);
+        if (status[0] == GL.GL_FALSE) {
+            GL.glDeleteShader(shader);
+            throw new RuntimeException("Can't compile shader: "+source);
+        }
+        return shader;
+    }
     
 }

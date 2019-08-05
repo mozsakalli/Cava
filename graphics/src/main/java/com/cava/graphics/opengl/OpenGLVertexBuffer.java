@@ -16,9 +16,10 @@
 
 package com.cava.graphics.opengl;
 
+import cava.platform.NativeCode;
+import com.cava.graphics.BufferUsage;
 import com.cava.graphics.VertexBuffer;
 import com.cava.graphics.VertexStructure;
-import com.cava.graphics.VertexStructure.Element;
 
 /**
  *
@@ -29,12 +30,11 @@ public class OpenGLVertexBuffer extends VertexBuffer {
     float[] buffer;
     int handle = -1;
     int stride;
+    BufferUsage usage;
     
-    OpenGLVertexBuffer(int capacity,VertexStructure structure) {
+    OpenGLVertexBuffer(int capacity,VertexStructure structure, BufferUsage usage) {
+        this.usage = usage;
         buffer = new float[capacity];
-        for(Element e : structure.getElements()) {
-            int floatSize = e.type.getSize();
-        }
     }
 
     @Override
@@ -43,25 +43,30 @@ public class OpenGLVertexBuffer extends VertexBuffer {
     }
 
     @Override
-    public void x(int offset, float x) {
+    public void set(int offset, float x) {
         buffer[offset] = x;
     }
 
     @Override
-    public void xy(int offset, float x, float y) {
+    public void set(int offset, int x) {
+        NativeCode.Void("((JINT*)JvmArrayData(%s))[%s] = %s", buffer, offset, x);
+    }
+    
+    @Override
+    public void set(int offset, float x, float y) {
         buffer[offset] = x;
         buffer[offset+1] = y;
     }
 
     @Override
-    public void xyz(int offset, float x, float y, float z) {
+    public void set(int offset, float x, float y, float z) {
         buffer[offset] = x;
         buffer[offset+1] = y;
         buffer[offset+2] = z;
     }
 
     @Override
-    public void xyzw(int offset, float x, float y, float z, float w) {
+    public void set(int offset, float x, float y, float z, float w) {
         buffer[offset] = x;
         buffer[offset+1] = y;
         buffer[offset+2] = z;

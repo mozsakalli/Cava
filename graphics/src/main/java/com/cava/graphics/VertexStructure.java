@@ -36,6 +36,9 @@ public class VertexStructure {
     public static class Element {
         public String name;
         public Type type;
+        public int offset;
+        public int intDeviceLocation;
+        
         public Element(){}
         public Element(String name, Type type){
             this.name = name;
@@ -44,6 +47,7 @@ public class VertexStructure {
     }
 
     Element[] elements;
+    int stride;
     
     public VertexStructure(){}
     public VertexStructure(Element...elements) {
@@ -52,6 +56,12 @@ public class VertexStructure {
     
     public void setElements(Element...elements) {
         this.elements = elements;
+        int offset = 0;
+        for(Element e : elements) {
+            e.offset = offset;
+            offset += e.type.size;
+        }
+        stride = offset;
     }
     
     public Element[] getElements() {

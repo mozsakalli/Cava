@@ -20,15 +20,24 @@ package com.cava.graphics;
  *
  * @author mustafa
  */
-public abstract class Graphics {
+public enum BlendFunc {
     
-    public abstract ShaderProgram createShaderProgram(Object code);
-    public abstract VertexBuffer createVertexBuffer(int capacity, VertexStructure structure, BufferUsage usage);
-    public abstract IndexBuffer createIndexBuffer(int capacity, BufferUsage usage);
-    public abstract void compile(ShaderProgram program, VertexStructure structure);
+    ZERO(0),
+    ONE(1),
+    SRC_COLOR(0x0300),
+    ONE_MINUS_SRC_COLOR(0x0301),
+    SRC_ALPHA(0x0302),
+    ONE_MINUS_SRC_ALPHA(0x0303),
+    DST_ALPHA(0x0304),
+    ONE_MINUS_DST_ALPHA(0x0305),
+    DST_COLOR(0x0306),
+    ONE_MINUS_DST_COLOR(0x0307),
+    SRC_ALPHA_SATURATE(0x0308);
+
+    final int gl;
+    BlendFunc(int gl) {
+        this.gl = gl;
+    }
     
-    public abstract void setBlending(BlendFunc src, BlendFunc dst);
-    
-    public abstract void draw(VertexBuffer vertexBuffer, IndexBuffer indexBuffer);
-    
+    public int gl(){ return gl; }
 }

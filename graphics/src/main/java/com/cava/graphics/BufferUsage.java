@@ -20,15 +20,7 @@ package com.cava.graphics;
  *
  * @author mustafa
  */
-public abstract class Graphics {
+public enum BufferUsage {
     
-    public abstract ShaderProgram createShaderProgram(Object code);
-    public abstract VertexBuffer createVertexBuffer(int capacity, VertexStructure structure, BufferUsage usage);
-    public abstract IndexBuffer createIndexBuffer(int capacity, BufferUsage usage);
-    public abstract void compile(ShaderProgram program, VertexStructure structure);
-    
-    public abstract void setBlending(BlendFunc src, BlendFunc dst);
-    
-    public abstract void draw(VertexBuffer vertexBuffer, IndexBuffer indexBuffer);
-    
+    Static, Dynamic
 }

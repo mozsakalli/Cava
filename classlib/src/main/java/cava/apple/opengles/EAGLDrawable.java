@@ -14,26 +14,12 @@
  * limitations under the License.
  */
 
-package cava.apple.foundation;
-
-import cava.annotation.ObjC;
-import cava.platform.NativeCode;
+package cava.apple.opengles;
 
 /**
  *
  * @author mustafa
  */
-@ObjC
-public class NSDictionary extends NSObject {
-    
-    public NSDictionary() {
-        nativePeer = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
-    }
-    
-    public void setValue(NSString key, NSObject value) {
-        NativeCode.Void("[(NSDictionary*)%s setValue:(id)%s forKey:(NSString*)%s]", nativePeer, 
-                value == null ? null : value.getNativePeer(),
-                key.getNativePeer());
-    }
+public interface EAGLDrawable {
 
 }

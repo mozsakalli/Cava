@@ -27,10 +27,13 @@ import cava.platform.NativeCode;
  */
 @ObjC(noInit = true)
 public final class NSString extends NSObject {
-    /*
+    
     public NSString(VoidPtr handle) {
         super(handle);
-    }*/
+    }
+    public NSString(VoidPtr handle, boolean noOwner) {
+        super(handle, noOwner);
+    }
     public NSString(String string) {
         initWithCharacters(WCharPtr.from(string), string.length());
     }

@@ -114,7 +114,8 @@ public class ObjCWriter {
     void writeMethod(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         if(selector.contains("layoutSub"))
             System.out.println(m);
-        if(m.isNative() || m.isAbstract()) return;
+        Method realMethod = clazz.findMethod(m.name, m.signature);
+        if(realMethod.isNative() || realMethod.isAbstract()) return;
         if(m.isStatic()) {
             String[] parts = selector.split(":");
             out.print("+(%s) %s", DecompilerUtils.objcType(cType,m.type), parts[0]);

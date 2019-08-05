@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package cava.apple.foundation;
+package cava.apple.opengles;
 
-import cava.annotation.ObjC;
+import cava.apple.foundation.NSString;
+import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@ObjC
-public class NSDictionary extends NSObject {
+public enum EAGLDrawableProperty {
+    RetainedBacking(NativeCode.VoidPtr("kEAGLDrawablePropertyRetainedBacking")),
+    ColorFormat(NativeCode.VoidPtr("kEAGLDrawablePropertyColorFormat"))
+    ;
+
+    VoidPtr value;
+    EAGLDrawableProperty(VoidPtr value) { this.value = value; }
     
-    public NSDictionary() {
-        nativePeer = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
-    }
-    
-    public void setValue(NSString key, NSObject value) {
-        NativeCode.Void("[(NSDictionary*)%s setValue:(id)%s forKey:(NSString*)%s]", nativePeer, 
-                value == null ? null : value.getNativePeer(),
-                key.getNativePeer());
+    public NSString value() {
+        return new NSString(value, true);
     }
 
 }

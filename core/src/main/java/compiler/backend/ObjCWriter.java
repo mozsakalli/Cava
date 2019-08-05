@@ -112,6 +112,9 @@ public class ObjCWriter {
     }
     
     void writeMethod(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
+        if(selector.contains("layoutSub"))
+            System.out.println(m);
+        if(m.isNative() || m.isAbstract()) return;
         if(m.isStatic()) {
             String[] parts = selector.split(":");
             out.print("+(%s) %s", DecompilerUtils.objcType(cType,m.type), parts[0]);
@@ -121,10 +124,13 @@ public class ObjCWriter {
             out.println("{").indent();
         } else {
             out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
+            if(selector.endsWith(":")) selector += " ";
             String[] parts = selector.split(":");
-            int start = m.args.size() > parts.length ? 1 : 0;
             for(int i=0; i<parts.length; i++) {
-                out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+start).type), m.args.get(i+start).name);
+                if(i > 0)
+                    out.print(" :(%s) %s ", DecompilerUtils.objcType(cType,m.args.get(i).type), m.args.get(i).name);
+                
+                out.print(parts[i]);
             }
             out.println("{").indent();
         }
@@ -203,6 +209,7 @@ public class ObjCWriter {
             out.print(" ? YES : NO");
         out.println(";");
     }
+    /*
     void writeMethodBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         SourceWriter tmpOut = new SourceWriter();
         Method tm = m;
@@ -235,7 +242,7 @@ public class ObjCWriter {
             out.println(";");
         } else out.println("%s;",tmpOut.toString());           
     }
-    
+    */
     
     int getCurrentDelegateIndex(List<NameAndType> globalRefs) {
         NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
@@ -252,7 +259,7 @@ public class ObjCWriter {
         if(index == -1) throw new RuntimeException("cava/apple/uikit/UIApplication.currentApplication not defined as globalRef");
         return index;
     }
-    
+    /*
     void writeDidFinishLaunchingBody(Method m, String selector, NameManager naming, CType cType, List<NameAndType> globalRefs, SourceWriter out) {
         int index = getCurrentDelegateIndex(globalRefs);
         int index2 = getCurrentApplicationIndex(globalRefs);
@@ -273,7 +280,7 @@ public class ObjCWriter {
        printObjCArg(m.args.get(2), naming, globalRefs, out);
        out.println(");");        
     }
-    
+    */
     void printObjCMarshaller(String type, String value, NameManager naming, List<NameAndType> globalRefs, SourceWriter out, boolean useGlobalApp) {
         if(!DecompilerUtils.isPrimitive(type) && !type.equals("java/lang/Class")) {
             if(useGlobalApp && type.equals("cava/apple/uikit/UIApplication")) {

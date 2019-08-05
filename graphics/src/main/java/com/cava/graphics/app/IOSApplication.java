@@ -22,7 +22,6 @@ import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.foundation.NSObject;
 import cava.apple.opengles.EAGLContext;
-import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
 import cava.apple.uikit.UIScreen;

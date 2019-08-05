@@ -72,7 +72,6 @@ public class ObjCWriter {
     
     public void writeInterface(NameManager naming, CType cType, SourceWriter out) {
         if(methods.isEmpty() && customSuper == null) return;
-        //String zuper = customSuper != null ? customSuper.name.replace('/', '_').replace('$', '_')+"_ObjC" : superName;
         out.print("@interface %s_ObjC : %s ", naming.clazz(clazz.name), 
                 clazz.isInterface ? "NSObject" : superName);
         if(!protocols.isEmpty()) {
@@ -131,10 +130,17 @@ public class ObjCWriter {
         }
 
         /*
-        if(m.name.equals("didFinishLaunchingWithOptions")) 
-            writeDidFinishLaunchingBody(m, selector, naming, cType, globalRefs, out);
-        else
-            writeMethodBody(m, selector, naming, cType, globalRefs, out);
+            out.print("%s(%s)", m.isStatic() ? "+" : "-", DecompilerUtils.objcType(cType,m.type));
+            String[] parts = selector.split(":");
+            int start = m.args.size() - parts.length;
+            if(m.isStatic()) start = 0; else if(parts.length == m.args.size()) start++;
+            for(int i=0; i<parts.length; i++) {
+                out.print(parts[i]);
+                if(i+start < m.args.size()) {
+                    out.print(":(%s) %s ",DecompilerUtils.objcType(cType,m.args.get(i+start).type), m.args.get(i+start).name);
+                }
+            }
+        
         */
         writeMethodBody2(m, selector, naming, cType, globalRefs, out);
         

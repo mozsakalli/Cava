@@ -41,4 +41,7 @@ public class UIView extends UIResponder {
         layer.setNativePeer(NativeCode.VoidPtr("((UIView*)%s).layer", getNativePeer()));
         return (T)layer;
     }
+    
+    @ObjC("layoutSubviews")
+    public native void layoutSubviews();
 }

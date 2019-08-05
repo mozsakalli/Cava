@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-package cava.apple.coreanimation;
-
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.annotation.ObjC;
-import cava.c.VoidPtr;
-import cava.platform.NativeCode;
+package com.cava.graphics.app;
 
 /**
  *
  * @author mustafa
  */
-@Framework("QuartzCore.framework")
-@Include("<QuartzCore/QuartzCore.h>")
-@ObjC
-public class CAEAGLLayer extends CALayer {
-    
-    public CAEAGLLayer() {}
-    public CAEAGLLayer(VoidPtr handle) { nativePeer = handle; noOwner = true; }
+public interface Application {
 
-    public void setOpaque(boolean value) {
-        NativeCode.Void("((CAEAGLLayer*)%s).opaque = %s", nativePeer, value);
-    }
 }

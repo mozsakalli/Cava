@@ -19,6 +19,7 @@ public class Main {
             new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             //new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/target/classes"),
+            new File("/Users/mustafa/Work/CAVA/graphics/target/classes"),
             new File("/Users/mustafa/Work/CAVA/debugger/target/cava-debugger-2019.07.18.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/gdx.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/kotlin-stdlib-1.3.41.jar")
@@ -36,8 +37,8 @@ public class Main {
         //CompilerContext.mainName = "main";
         //CompilerContext.mainSignature = "()Ldebugger/Debugger;";
 
-        CavaOptions.mainClass("cava.sample.AndroidLauncher");
-        CavaOptions.targetPlatform("Android");
+        CavaOptions.mainClass("cava.sample.IOSLauncher");
+        CavaOptions.targetPlatform("iOS");
         CavaOptions.infoPList(new File("/Users/mustafa/Work/CAVA/sample/Info.plist"));
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);

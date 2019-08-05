@@ -18,8 +18,7 @@ package cava.sample;
 
 import cava.apple.foundation.NSAutoreleasePool;
 import cava.apple.uikit.UIApplication;
-import com.cava.gdx.IOSApplication;
-import com.cava.gdx.IOSApplicationConfiguration;
+import com.cava.graphics.app.IOSApplication;
 
 /**
  *
@@ -28,30 +27,14 @@ import com.cava.gdx.IOSApplicationConfiguration;
 public class IOSLauncher extends IOSApplication.Delegate {
 
     @Override
-    protected IOSApplication createApplication() {
-        /*
-        while(true) {
-        Matcher m = Pattern.compile(".*file=\"?([^\"]+)\"?").matcher("page id=0 file=\"arial-15.png\"");
-        boolean r = m.find();
-        System.out.println("matcher: "+r);
-        try {Thread.sleep(100);}catch(Exception e){}
-        }
-        */
-        IOSApplicationConfiguration cfg = new IOSApplicationConfiguration();
-        cfg.hideHomeIndicator = true;
-        cfg.statusBarVisible = false;
-        return new IOSApplication(new Sample(), cfg);
-        
+    public IOSApplication createApplication() {
+        return new IOSApplication();
     }
-
+    
     public static void main() {
         NSAutoreleasePool pool = new NSAutoreleasePool();
         UIApplication.main((String[])null, null, IOSLauncher.class);
         pool.close();
-        /*
-        NSAutoreleasePool pool = new NSAutoreleasePool();
-        BitmapFont bmp = new BitmapFont();
-        pool.close();
-        */
     }
+
 }

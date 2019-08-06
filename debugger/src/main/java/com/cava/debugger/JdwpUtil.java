@@ -100,7 +100,7 @@ public class JdwpUtil {
                 out.writeByte(JdwpConsts.Tag.STRING);
             else
                 out.writeByte(type.isArray() ? '[' : 'L');
-            out.writeLong(NativeCode.Long("(jlong)%s", value));
+            out.writeLong(NativeCode.Long("(JLONG)%s", value));
         }
     }
 }

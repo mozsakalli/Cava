@@ -47,28 +47,28 @@ public class StackFrameGetValuesHandler extends StackFrameHandler {
                 switch(tag) {
                     case 'L':
                     case '[':
-                        long ref = NativeCode.Long("(jlong)locals[%s].vjobject",index);
+                        long ref = NativeCode.Long("(JLONG)locals[%s].vJOBJECT",index);
                         out.writeLong(ref);
                         break;
                     case 'B':
                     case 'Z':
-                        out.writeByte(NativeCode.Byte("locals[%s].vjbyte",index));
+                        out.writeByte(NativeCode.Byte("locals[%s].vJBYTE",index));
                         break;
                     case 'C':
                     case 'S':
-                        out.writeShort(NativeCode.Byte("locals[%s].vjshort",index));
+                        out.writeShort(NativeCode.Byte("locals[%s].vJSHORT",index));
                         break;
                     case 'I':
-                        out.writeInt(NativeCode.Int("locals[%s].vjint",index));
+                        out.writeInt(NativeCode.Int("locals[%s].vJINT",index));
                         break;
                     case 'F':
-                        out.writeFloat(NativeCode.Byte("locals[%s].vjfloat",index));
+                        out.writeFloat(NativeCode.Byte("locals[%s].vJFLOAT",index));
                         break;
                     case 'J':
-                        out.writeLong(NativeCode.Byte("locals[%s].vjlong",index));
+                        out.writeLong(NativeCode.Byte("locals[%s].vJLONG",index));
                         break;
                     case 'D':
-                        out.writeDouble(NativeCode.Byte("locals[%s].vjdouble",index));
+                        out.writeDouble(NativeCode.Byte("locals[%s].vJDOUBLE",index));
                         break;
                         
                     default:

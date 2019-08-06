@@ -34,7 +34,7 @@ public class ArrayGetValuesHandler extends ArrayHandler {
         int firstIndex = packet.readInt();
         int length = packet.readInt();
         try {
-            Object array = NativeCode.Object("(jobject)%s", arrayId);
+            Object array = NativeCode.Object("(JOBJECT)%s", arrayId);
             Class elementType = array.getClass().getComponentType();
             byte simpleType = JdwpUtil.jdwpSimpleType(elementType); 
             out.writeByte(simpleType);

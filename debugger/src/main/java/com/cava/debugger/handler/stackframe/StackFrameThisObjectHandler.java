@@ -40,13 +40,13 @@ public class StackFrameThisObjectHandler extends StackFrameHandler {
             for(int i=0; i<localInfoCount; i++) {
                 String name = NativeCode.String("localInfos[%s].name", i);
                 if(name != null && name.equals("this")) {
-                    thiz = NativeCode.Object("locals[%s].vjobject", i);
+                    thiz = NativeCode.Object("locals[%s].vJOBJECT", i);
                     System.out.println("!!!this found!!! "+thiz);
                     break;
                 }
             }
             out.writeByte('L');
-            out.writeLong(NativeCode.Long("(jlong)%s", thiz));
+            out.writeLong(NativeCode.Long("(JLONG)%s", thiz));
             return JdwpConsts.Error.NONE;
         } catch(Exception e){}
         return JdwpConsts.Error.INVALID_OBJECT;

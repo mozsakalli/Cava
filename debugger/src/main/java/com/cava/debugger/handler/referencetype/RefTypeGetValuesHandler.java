@@ -42,7 +42,7 @@ public class RefTypeGetValuesHandler extends RefTypeHandler {
             int count = packet.readInt();
             out.writeInt(count);
             for(int i=0; i<count; i++) {
-                Field field = (Field)NativeCode.Object("(jobject)%s", packet.readLong());
+                Field field = (Field)NativeCode.Object("(JOBJECT)%s", packet.readLong());
                 JdwpUtil.writeValue(out, field.get(null), field.getType());
             }
         } catch(Exception e){}

@@ -16,6 +16,8 @@
 
 package com.cava.graphics.opengl;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.annotation.Unsafe;
 import cava.c.CLib;
 import cava.c.CharPtr;
@@ -29,6 +31,8 @@ import java.nio.IntBuffer;
  *
  * @author mustafa
  */
+@Include("<OpenGLES/ES2/gl.h> <OpenGLES/ES2/glext.h>")
+@Framework("OpenGLES.framework")
 public class GL {
     public static final int GL_ES_VERSION_2_0 = 1;
     public static final int GL_DEPTH_BUFFER_BIT = 0x00000100;
@@ -409,8 +413,7 @@ public class GL {
 
     @Unsafe
     public static int glCheckFramebufferStatus(int target) {
-        System.out.println("glCheckFramebufferStatus not implemented");
-        return 0;
+        return NativeCode.Int("glCheckFramebufferStatus(%s)", target);
     }
 
     @Unsafe
@@ -554,7 +557,9 @@ public class GL {
     public static void glFlush() { System.out.println("Flush( not implemented"); }
 
     @Unsafe
-    public static void glFramebufferRenderbuffer(int target, int attachment, int renderbuffertarget, int renderbuffer) { System.out.println("FramebufferRenderbuffer(int target, int attachment, int renderbuffertarget, int renderbuffer not implemented"); }
+    public static void glFramebufferRenderbuffer(int target, int attachment, int renderbuffertarget, int renderbuffer) { 
+        NativeCode.Void("glFramebufferRenderbuffer(%s,%s,%s,%s)", target, attachment, renderbuffertarget, renderbuffer);
+    }
 
     @Unsafe
     public static void glFramebufferTexture2D(int target, int attachment, int textarget, int texture, int level) { System.out.println("FramebufferTexture2D(int target, int attachment, int textarget, int texture, int level not implemented"); }
@@ -580,8 +585,9 @@ public class GL {
 
     @Unsafe
     public static int glGenFramebuffer() {
-        System.out.println("glGenFrameBuffer not implemented");
-        return 0;
+        int buffer = -1;
+        NativeCode.Void("glGenFramebuffers(1, (GLuint*)&%s)", buffer);
+        return buffer;
     }
 
     @Unsafe
@@ -589,8 +595,9 @@ public class GL {
 
     @Unsafe
     public static int glGenRenderbuffer() {
-        System.out.println("glGenRenderBuffer not implemented");
-        return 0;
+        int buffer = -1;
+        NativeCode.Void("glGenRenderbuffers(1, (GLuint*)&%s)", buffer);
+        return buffer;
     }
 
     @Unsafe
@@ -786,7 +793,9 @@ public class GL {
     public static void glReleaseShaderCompiler() { System.out.println("ReleaseShaderCompiler( not implemented"); }
 
     @Unsafe
-    public static void glRenderbufferStorage(int target, int internalformat, int width, int height) { System.out.println("RenderbufferStorage(int target, int internalformat, int width, int height not implemented"); }
+    public static void glRenderbufferStorage(int target, int internalformat, int width, int height) { 
+        NativeCode.Void("glRenderbufferStorage(%s,%s,%s,%s)", target, internalformat, width, height);
+    }
 
     @Unsafe
     public static void glSampleCoverage(float value, boolean invert) { System.out.println("SampleCoverage(float value, boolean invert not implemented"); }

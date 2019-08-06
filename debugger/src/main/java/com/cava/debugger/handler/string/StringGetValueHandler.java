@@ -31,7 +31,7 @@ public class StringGetValueHandler implements JdwpHandler {
     @Override
     public int handle(Packet packet, OutBuffer out) {
         try {
-            String value = NativeCode.String("(jobject)%s", packet.readLong());
+            String value = NativeCode.String("(JOBJECT)%s", packet.readLong());
             out.writeString(value);
         } catch(Exception e){
             

@@ -53,4 +53,11 @@ public final class NSString extends NSObject {
         NativeCode.Void("[(NSString*)%s getCharacters:(unichar*)JvmArrayData(%s)]", nativePeer, chars);
         return new String(chars);
     }
+
+    @Override
+    public String toString() {
+        return createJavaString(nativePeer);
+    }
+    
+    
 }

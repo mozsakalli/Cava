@@ -36,7 +36,7 @@ import java.util.Map;
 public class VM  {
 
     public static long getObjectReference(Object c) {
-        return NativeCode.Long("(jlong)%s", c);
+        return NativeCode.Long("(JLONG)%s", c);
     }
     
     public static Class getClassByName(String name) {
@@ -52,7 +52,7 @@ public class VM  {
     }
 
     public static long getClassReference(Class c) {
-        return NativeCode.Long("(jlong)%s", c);
+        return NativeCode.Long("(JLONG)%s", c);
     }
 
     public static Method[] getMethodsByClass(Class c) {
@@ -63,7 +63,7 @@ public class VM  {
     }
 
     public static long getMethodReference(Method m) {
-        return NativeCode.Long("(jlong)%s", m);
+        return NativeCode.Long("(JLONG)%s", m);
     }
 
     public static Method getMethodByReference(long refId) {
@@ -175,12 +175,12 @@ public class VM  {
         EventLocationPredicate location = e.predicateByKind(EventLocationPredicate.class);
         if(location != null) {
             long methodId = location.methodId();
-            Method m = (Method)NativeCode.Object("(jobject)%s", methodId);
+            Method m = (Method)NativeCode.Object("(JOBJECT)%s", methodId);
             System.out.println(m.getDeclaringClass().getName()+":"+m.getName());
             if(isSet)
-                NativeCode.Void("JvmAddBreakpoint(%s,(jint)%s, %s)", methodId, location.index(), requestId);
+                NativeCode.Void("JvmAddBreakpoint(%s,(JINT)%s, %s)", methodId, location.index(), requestId);
             else
-                NativeCode.Void("JvmRemoveBreakpoint(%s,(jint)%s)", methodId, location.index());
+                NativeCode.Void("JvmRemoveBreakpoint(%s,(JINT)%s)", methodId, location.index());
         }
     }
     

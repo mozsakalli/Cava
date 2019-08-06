@@ -38,7 +38,7 @@ public class RefTypeFieldsHandler extends RefTypeHandler {
             Field[] fields = cls.getDeclaredFields();
             out.writeInt(fields.length);
             for (Field field : fields) {
-                out.writeLong(NativeCode.Long("(jlong)%s", field));
+                out.writeLong(NativeCode.Long("(JLONG)%s", field));
                 out.writeString(field.getName());
                 out.writeString(JdwpUtil.toSignature(field.getType()));
                 String signatureWithGeneric = getGenericSignature();

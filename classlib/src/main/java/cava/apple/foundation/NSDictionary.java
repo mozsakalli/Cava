@@ -26,11 +26,8 @@ import cava.platform.NativeCode;
 @ObjC
 public class NSDictionary extends NSObject {
     
-    public NSDictionary() {
-        nativePeer = NativeCode.VoidPtr("[[NSDictionary alloc] init]");
-    }
-    
     public void setValue(NSString key, NSObject value) {
+        System.out.println("dict-key: "+key);
         NativeCode.Void("[(NSDictionary*)%s setValue:(id)%s forKey:(NSString*)%s]", nativePeer, 
                 value == null ? null : value.getNativePeer(),
                 key.getNativePeer());

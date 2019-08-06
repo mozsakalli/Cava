@@ -392,8 +392,8 @@ public class DependencyAnalyzer {
         }
         if(CavaOptions.debug()) {
             Clazz c = CompilerContext.resolve("com/cava/debugger/Debugger");
-            Method m = c.findDeclaredMethod("start", "(I)V");
-            if(m == null) throw new RuntimeException("Can't find com.cava.debugger.Debugger.start(I)V method");
+            Method m = c.findDeclaredMethod("start", "(Ljava/lang/String;I)V");
+            if(m == null) throw new RuntimeException("Can't find com.cava.debugger.Debugger.start(String,int) method");
             dependsClass(c);
             dependsMethod(m);
         }

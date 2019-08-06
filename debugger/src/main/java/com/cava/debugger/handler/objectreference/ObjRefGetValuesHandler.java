@@ -33,15 +33,15 @@ public class ObjRefGetValuesHandler extends ObjectReferenceHandler {
     public int handle(Packet packet, OutBuffer out) {
         try {
             long ref = packet.readLong();
-            Object obj = NativeCode.Object("(jobject)%s", ref);
+            Object obj = NativeCode.Object("(JOBJECT)%s", ref);
             
             Class cls = obj.getClass();
             int count = packet.readInt();
             out.writeInt(count);
             for(int i=0; i<count; i++) {
-                Field field = (Field)NativeCode.Object("(jobject)%s", packet.readLong());
+                Field field = (Field)NativeCode.Object("(JOBJECT)%s", packet.readLong());
                 Object value = field.get(obj);
-                long vaddr = NativeCode.Long("(jlong)%s", value);
+                long vaddr = NativeCode.Long("(JLONG)%s", value);
                 JdwpUtil.writeValue(out, field.get(obj), field.getType());
             }
         } catch(Exception e){}

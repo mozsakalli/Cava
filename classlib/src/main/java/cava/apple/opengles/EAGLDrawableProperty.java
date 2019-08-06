@@ -16,6 +16,8 @@
 
 package cava.apple.opengles;
 
+import cava.annotation.Framework;
+import cava.annotation.Include;
 import cava.apple.foundation.NSString;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
@@ -24,6 +26,8 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
+@Include("<OpenGLES/EAGLDrawable.h>")
+@Framework("OpenGLES.framework")
 public enum EAGLDrawableProperty {
     RetainedBacking(NativeCode.VoidPtr("kEAGLDrawablePropertyRetainedBacking")),
     ColorFormat(NativeCode.VoidPtr("kEAGLDrawablePropertyColorFormat"))

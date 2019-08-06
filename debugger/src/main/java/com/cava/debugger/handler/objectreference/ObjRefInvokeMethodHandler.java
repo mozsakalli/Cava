@@ -40,10 +40,10 @@ public class ObjRefInvokeMethodHandler extends ObjectReferenceHandler {
         Object[] args = new Object[argCount];
         readTaggedArguments(tags, args, packet);
         try {
-            Object object = NativeCode.Object("(jobject)%s", objectId);
-            Thread thread = NativeCode.Thread("(jobject)%s", threadId);
-            Class cls = NativeCode.Class("(jobject)%s", classId);
-            Method method = (Method)NativeCode.Object("(jobject)%s", methodId);
+            Object object = NativeCode.Object("(JOBJECT)%s", objectId);
+            Thread thread = NativeCode.Thread("(JOBJECT)%s", threadId);
+            Class cls = NativeCode.Class("(JOBJECT)%s", classId);
+            Method method = (Method)NativeCode.Object("(JOBJECT)%s", methodId);
             //todo: call on correct thread
             Object result = method.invoke(object, args);
             System.out.println("--- invoke: "+cls.getName()+"."+method.getName()+" ["+method.getDeclaringClass()+"] -> "+result);
@@ -81,7 +81,7 @@ public class ObjRefInvokeMethodHandler extends ObjectReferenceHandler {
                 case JdwpConsts.Tag.THREAD_GROUP:
                 case JdwpConsts.Tag.CLASS_LOADER:
                 case JdwpConsts.Tag.CLASS_OBJECT:
-                    v = NativeCode.Object("(jobject)%s",payload.readLong());
+                    v = NativeCode.Object("(JOBJECT)%s",payload.readLong());
                     break;
                 default:
                     throw new RuntimeException("Invalid tag");

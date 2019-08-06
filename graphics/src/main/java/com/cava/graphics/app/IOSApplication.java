@@ -20,8 +20,13 @@ import cava.annotation.ObjC;
 import cava.apple.coreanimation.CAEAGLLayer;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSDictionary;
+import cava.apple.foundation.NSMutableDictionary;
+import cava.apple.foundation.NSNumber;
 import cava.apple.foundation.NSObject;
+import cava.apple.opengles.EAGLColorFormat;
 import cava.apple.opengles.EAGLContext;
+import cava.apple.opengles.EAGLDrawableProperty;
+import cava.apple.opengles.EAGLRenderingAPI;
 import cava.apple.uikit.UIApplication;
 import cava.apple.uikit.UIApplicationDelegateAdapter;
 import cava.apple.uikit.UIScreen;
@@ -29,6 +34,7 @@ import cava.apple.uikit.UIView;
 import cava.apple.uikit.UIViewController;
 import cava.apple.uikit.UIWindow;
 import com.cava.graphics.Graphics;
+import com.cava.graphics.opengl.GL;
 import com.cava.graphics.opengl.OpenGLGraphics;
 
 /**
@@ -38,8 +44,25 @@ import com.cava.graphics.opengl.OpenGLGraphics;
 public class IOSApplication implements Application {
 
     @Keep
-    static class IOSGraphicsView extends UIView {
-
+    static class IOSOpenGLView extends UIView {
+        EAGLContext context;
+        int _framebuffer, _colorbuffer, _depthbuffer;
+        int screenWidth, screenHeight;
+        
+        public IOSOpenGLView() {
+            CAEAGLLayer layer = getLayer(CAEAGLLayer.class);
+            layer.setOpaque(true);
+            NSMutableDictionary props = new NSMutableDictionary();
+            props.setObject(EAGLDrawableProperty.RetainedBacking.value(), NSNumber.valueOf(false));
+            props.setObject(EAGLDrawableProperty.ColorFormat.value(), EAGLColorFormat.RGBA8.value());
+            layer.setDrawableProperties(props);
+            context = new EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
+        }
+        
+        public void makeCurrent() {
+            EAGLContext.setCurrentContext(context);
+        }
+        
         @ObjC("layerClass")
         public final static Class getLayerClass() {
             return NSObject.getObjCClass(CAEAGLLayer.class);
@@ -48,8 +71,47 @@ public class IOSApplication implements Application {
         @Override
         public void layoutSubviews() {
             System.out.println("Did-Layout");
+            if(_framebuffer == 0)
+                CreateFramebuffer();
         }
 
+        void CreateFramebuffer() {
+            makeCurrent();
+            
+            //screenHeight = (int)System.Math.Round(Layer.Bounds.Size.Height * Layer.ContentsScale);
+            //screenWidth = (int)System.Math.Round(Layer.Bounds.Size.Width * Layer.ContentsScale);
+            _framebuffer = GL.glGenFramebuffer();
+            GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, _framebuffer);
+
+            // Create our Depth buffer. Color buffer must be the last one bound
+            _depthbuffer = GL.glGenRenderbuffer();
+            GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, _depthbuffer);
+            int Depth24Stencil8Oes = 35056;
+            GL.glRenderbufferStorage(GL.GL_RENDERBUFFER, Depth24Stencil8Oes, screenWidth, screenHeight);
+            GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, _depthbuffer);
+            GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_STENCIL_ATTACHMENT,  GL.GL_RENDERBUFFER, _depthbuffer);
+
+            _colorbuffer = GL.glGenRenderbuffer();
+            GL.glBindBuffer(GL.GL_RENDERBUFFER, _colorbuffer);
+
+            // TODO: EAGLContext.RenderBufferStorage returns false
+            //       on all but the first call.  Nevertheless, it
+            //       works.  Still, it would be nice to know why it
+            //       claims to have failed.
+            context.renderbufferStorage(GL.GL_RENDERBUFFER, getLayer(CAEAGLLayer.class));
+
+            GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, _colorbuffer);
+            int status = GL.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER);
+            
+            if (status != GL.GL_FRAMEBUFFER_COMPLETE)
+                throw new RuntimeException(
+                    "Framebuffer was not created correctly: " + status);
+
+            //GL.Viewport(0, 0, viewportWidth, viewportHeight);
+            //GL.Scissor(0, 0, viewportWidth, viewportHeight);
+            //if (Threading.BackgroundContext == null)
+            //    Threading.BackgroundContext = new OpenGLES.EAGLContext(ctx.Context.API, ctx.Context.ShareGroup);
+        }        
     }
 
     static class IOSGraphicsViewController extends UIViewController {
@@ -68,22 +130,19 @@ public class IOSApplication implements Application {
 
     }
 
-    IOSGraphicsView view;
+    IOSOpenGLView view;
     IOSGraphicsViewController controller;
     UIWindow window;
     OpenGLGraphics graphics;
-    EAGLContext eaglContext;
     
     public IOSApplication() {
         
         CGRect bounds = UIScreen.getMainScreen().getBounds();
         window = new UIWindow().initWithFrame(bounds);
 
-        view = new IOSGraphicsView();
+        view = new IOSOpenGLView();
         view.initWithFrame(bounds);
         
-        CAEAGLLayer layer = view.getLayer(CAEAGLLayer.class);
-        layer.setOpaque(true);
         
         controller = new IOSGraphicsViewController();
         controller.setView(view);

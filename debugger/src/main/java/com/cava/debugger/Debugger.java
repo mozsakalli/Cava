@@ -71,6 +71,7 @@ public class Debugger {
             payload = 14;
             packetReaded();
             handsShaken = true;
+            System.out.println("handshake");
             return outBuffer;
         }
         
@@ -83,7 +84,7 @@ public class Debugger {
         if(length < payload) return null;
         packet.start(buffer, readPtr);
         
-        //System.out.println(packet);
+        System.out.println(packet);
         
         JdwpHandler handler = JdwpHandlers.get(packet);
         if(handler != null) {
@@ -130,7 +131,7 @@ public class Debugger {
     public static void start(final String host, final int port) throws Exception {
         if(host == null || host.isEmpty()) throw new Exception("Debugger host parameter missing");
         
-        System.out.println("Waiting debugger to connect on port "+port);
+        System.out.println("Waiting debugger to connect "+host+":"+port);
         //ServerSocket ss = new ServerSocket(port);
         //final Socket s = ss.accept();
         final Socket s = new Socket(host, 10000);

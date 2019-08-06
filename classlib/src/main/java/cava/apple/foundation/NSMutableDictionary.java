@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-package cava.apple.opengles;
+package cava.apple.foundation;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
-import cava.apple.foundation.NSString;
-import cava.c.VoidPtr;
+import cava.annotation.ObjC;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Include("<OpenGLES/EAGLDrawable.h>")
-@Framework("OpenGLES.framework")
-public enum EAGLColorFormat {
-    RGBA8(NativeCode.VoidPtr("kEAGLColorFormatRGBA8")),
-    RGB565(NativeCode.VoidPtr("kEAGLColorFormatRGB565"))
-    ;
+@ObjC
+public class NSMutableDictionary extends NSDictionary {
 
-    VoidPtr value;
-    EAGLColorFormat(VoidPtr value) { this.value = value; }
-    
-    public NSString value() {
-        return new NSString(value, true);
+    public void setObject(NSString key, NSObject value) {
+        NativeCode.Void("[(NSMutableDictionary*)%s setValue:(id)%s forKey:(NSString*)%s]", nativePeer, 
+                value == null ? null : value.getNativePeer(),
+                key.getNativePeer());
     }
+    
 }

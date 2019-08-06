@@ -249,7 +249,9 @@ public class PBXProject extends PBXNode {
         .println("INFOPLIST_FILE = \"%s\";", CavaOptions.infoPList().getAbsolutePath())
         .println("IPHONEOS_DEPLOYMENT_TARGET = %s;", xcodeProject.getIosSdk())
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
-        .println("OTHER_CFLAGS = \"-fshort-wchar%s\";", CavaOptions.debug() ? " -DJVM_DEBUG -DJVM_DEBUG_PORT="+CavaOptions.debugPort() : "")     
+        .println("OTHER_CFLAGS = \"-fshort-wchar%s\";", 
+                CavaOptions.debug() ? " -DJVM_DEBUG -DJVM_DEBUG_PORT="+CavaOptions.debugPort()//+" -DJVM_DEBUG_HOST=\""+CavaOptions.debugHost()+"\""
+                        : "")     
         .println("ENABLE_BITCODE = NO;")
         .println("GCC_OPTIMIZATION_LEVEL = s;")        
         .println("COPY_PHASE_STRIP = NO;") 

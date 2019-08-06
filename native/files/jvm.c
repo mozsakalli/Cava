@@ -757,12 +757,12 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, JINT line) {
     }
 }
 
-extern void mcom_cava_debugger_Debugger_start__I_V(JINT pport);
+extern void mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JOBJECT phost, JINT port);
 #ifndef JVM_DEBUG_PORT
     #define JVM_DEBUG_POR 10000
 #endif
 void JvmStartDebugger() {
-    mcom_cava_debugger_Debugger_start__I_V(JVM_DEBUG_PORT);
+    mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JvmMakeString(L"192.168.0.118",13), JVM_DEBUG_PORT);
 }
 
 #endif

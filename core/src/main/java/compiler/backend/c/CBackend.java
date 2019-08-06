@@ -511,6 +511,8 @@ public class CBackend {
             int tableSize = 0;
             while(kk != null) {
                 for(Method m : kk.methods) {
+                if(c.name.contains("ArrayList") && m.name.contains("iterator")) 
+                    System.out.println("...");
                     if(m.interfaceTableIndex == -1) continue;
                     if(!used.contains(m.interfaceTableIndex)) {
                         /*

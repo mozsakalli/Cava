@@ -142,15 +142,18 @@ public class VM  {
     
         switch(eventKind) {
             case JdwpConsts.EventKind.BREAKPOINT:
+                System.out.println("set breakpoint");
                 handleBreakpoint(e,id,true);
                 break;
             
             case JdwpConsts.EventKind.SINGLE_STEP:
+                System.out.println("single step");
                 handleSingleStep(e,id);
                 break;
                 
             default:
                 System.out.println("Unknown Set eventKind = "+eventKind);
+                for(EventPredicate p : predicates) System.out.println(p.modifierKind()+":"+p.getClass());
         }
         return id;
     }

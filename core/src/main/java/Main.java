@@ -20,7 +20,7 @@ public class Main {
             //new File("/Users/mustafa/Work/CAVA/classlib/target/cava-classlib-2019.07.18.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/target/classes"),
             new File("/Users/mustafa/Work/CAVA/graphics/target/classes"),
-            new File("/Users/mustafa/Work/CAVA/debugger/target/cava-debugger-2019.07.18.jar"),
+            new File("/Users/mustafa/Work/CAVA/debugger/target/classes"),
             new File("/Users/mustafa/Work/CAVA/sample/gdx.jar"),
             new File("/Users/mustafa/Work/CAVA/sample/kotlin-stdlib-1.3.41.jar")
             //new File(p+"light-classlib/target/classes"),
@@ -44,7 +44,7 @@ public class Main {
         CavaOptions.simulator(true);
         CavaOptions.applicationId("com.cava.sample");
         CavaOptions.debug(true);
-        CavaOptions.debugHost("192.168.1.52");
+        CavaOptions.debugHost("92.168.0.118");
         //CavaOptions.debugPort(9999);
         CompilerContext.transpile();
 

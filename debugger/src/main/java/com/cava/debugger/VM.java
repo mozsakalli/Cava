@@ -153,7 +153,8 @@ public class VM  {
                 
             default:
                 System.out.println("Unknown Set eventKind = "+eventKind);
-                for(EventPredicate p : predicates) System.out.println(p.modifierKind()+":"+p.getClass());
+                if(predicates != null)
+                    for(EventPredicate p : predicates) System.out.println(p.modifierKind()+":"+p.getClass());
         }
         return id;
     }

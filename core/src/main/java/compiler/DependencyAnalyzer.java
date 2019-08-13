@@ -73,6 +73,7 @@ public class DependencyAnalyzer {
             }
             
             collectUsedMethods();
+            linkClasses();
         }
         
         List<Map.Entry<Method,Set<Method>>> tmp = new ArrayList();
@@ -134,6 +135,46 @@ public class DependencyAnalyzer {
         
     }
 
+    private void linkClasses() {
+        List<Clazz> tmp = new ArrayList();
+        tmp.addAll(CompilerContext.classes.values());
+        tmp.forEach(c -> {
+            if(!c.isInterface) {
+                c.methods.forEach(m -> {
+                    if(!m.isStatic() && !m.name.equals("<init>")) {
+                        Map.Entry<Method,Set<Method>> entry =
+                        vRoot.entrySet().stream()
+                        .filter(e -> 
+                                e.getKey().name.equals(m.name) && 
+                                e.getKey().signature.equals(m.signature) &&
+                                c.extendsClass(e.getKey().declaringClass)
+                            )
+                            .findFirst().orElse(null);
+                        
+                        if(entry != null && !entry.getKey().declaringClass.equals(m.declaringClass)){
+                            entry.getValue().add(m);
+                            dependsMethod(m);
+                        }
+
+                        entry = 
+                        iRoot.entrySet().stream()
+                        .filter(e -> 
+                                e.getKey().name.equals(m.name) && 
+                                e.getKey().signature.equals(m.signature) &&
+                                c.implementsInterface(e.getKey().declaringClass)
+                            )
+                            .findFirst().orElse(null);
+                        
+                        if(entry != null && !entry.getKey().declaringClass.equals(m.declaringClass)){
+                            entry.getValue().add(m);
+                            dependsMethod(m);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
     private void collectUsedMethods() {
         collectRoot(vRoot);
         collectRoot(iRoot);
@@ -156,7 +197,7 @@ public class DependencyAnalyzer {
             }
         });
     }
-    
+
     private void analyzeClass(Clazz c) {
         String modifyClass = A.modify(c, CavaOptions.targetPlatform());
         if(modifyClass != null) {
@@ -185,137 +226,61 @@ public class DependencyAnalyzer {
             CompilerContext.classes.remove(modifyClass);
         }
         
+        if(c.superName != null) dependsClass(c.superName);
+        c.interfaces.forEach(i -> dependsClass(i));
+        
         boolean isStruct = c.isStruct();
         final boolean isObjCInterface = c.isInterface && A.hasObjC(c);
         boolean isClassKeep = A.hasKeep(c) || isObjCInterface;
         
-        if(!isStruct) {
-        List<Clazz> superList = new LinkedList();
-        if(c.superName != null) {
-            Clazz sc = CompilerContext.resolve(c.superName);
-            while(sc != null) {
-                dependsClass(sc);
-                superList.add(sc);
-                if(sc.superName == null) break;
-                sc = CompilerContext.resolve(sc.superName);
-            }
-        }
-        
-        Set<Clazz> interfaceList = new HashSet();
-        collectInterfaces(c, interfaceList);
-        for(Clazz sc : superList)
-            collectInterfaces(sc, interfaceList);
-        
-        for(Method m : c.methods) {
-            m.interfaceTableIndex = -1;
-            if(isClassKeep || m.name.equals("<clinit>") || A.hasKeep(m) ||
-               (m.name.equals("<init>") && m.args.isEmpty()) ||
-               (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr"))  || //objc      
-               (isStruct && A.hasNative(m))     
-            )
-                dependsMethod(m);
-            
-            if(!m.isStatic() && !m.name.equals("<init>")) {
-                if(!c.isInterface) {
-                    //build virtual tree
-                    List<Method> list = new ArrayList();
-                    list.add(m);
-                    for(Clazz sc : superList) {
-                        Method rm = sc.findDeclaredMethod(m.name, m.signature);
-                        if(rm != null) list.add(rm);
-                    }
-
-                    Method root = list.get(list.size() - 1);
-                    Set<Method> set = vRoot.computeIfAbsent(root, (k) -> new HashSet());
-                    for(int i=0; i<list.size()-1; i++)
-                        set.add(list.get(i));
-
-
-                    //build interface tree
-                    for(Clazz ic : interfaceList) {
-                        Method im = findInterfaceRootMethod(ic, m);                    
-                        if(im != null) {
-                            set = iRoot.computeIfAbsent(im, (k) -> new HashSet());
-                            set.add(m);
-                            if(!im.declaringClass.equals(ic.name)) {
-                                //interface was extended from another interface
-                                //add child interface methods to root set
-                                //like interface java.util.List extends java.util.Collection
-                                Clazz iic = ic;
-                                while(iic != null) {
-                                    Method iim = iic.findDeclaredMethod(m.name, m.signature);
-                                    if(iim != null) set.add(iim);
-                                    if(iic.superName == null || iic.superName.equals("java/lang/Object")) break;
-                                    iic = CompilerContext.resolve(iic.superName);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    //interface method loaded after root interface
-                    //this fixes java.io.Closeable extends java.lang.AutoCloseable interface
-                    //Closeable loaded after AutoCloseable ...
-                    Method rootMethod = findInterfaceRootMethod(c, m);
-                    if(rootMethod != null) {
-                        Set<Method> set = iRoot.computeIfAbsent(rootMethod, (k) -> new HashSet());
-                        set.add(m);
-                        //we have interface extended from another interface
-                        //add all extended interface methods to correct root
-                        if(!rootMethod.declaringClass.equals(m.declaringClass)) {
-                            Clazz iic = c;
-                            while(iic != null) {
-                                Method iim = iic.findDeclaredMethod(m.name, m.signature);
-                                if(iim != null) set.add(iim);
-                                if(iic.superName == null || iic.superName.equals("java/lang/Object")) break;
-                                iic = CompilerContext.resolve(iic.superName);
-                            }                            
-                        }
-                    }
-                }
-            }
-        }
-        } else {
-            for(Method m : c.methods) 
-                dependsMethod(m);
-        }
-
+        //include required fields
         c.fields.forEach(field -> {
             if(!field.usedInProject)
                 field.usedInProject = isClassKeep || isStruct || A.hasKeep(field);
             if(field.usedInProject)
                 dependsClass(field.type);
         });
-    }
-    
-    
-    Method findInterfaceRootMethod(Clazz ic, Method m) {
-        Method im = ic.findDeclaredMethod(m.name, m.signature);
-        if(im != null) {
-            //interface extended from another interface
-            if(ic.superName != null && !ic.superName.equals("java/lang/Object")) {
-                Clazz sic = CompilerContext.resolve(ic.superName);
-                Method sim = sic.findMethod(m.name, m.signature);
-                if(sim != null) return sim;
-            }
-        }
-        return im;
-    }
-    
-    void collectInterfaces(Clazz c, Set<Clazz> set) {
-        for(String iName : c.interfaces) {
-            Clazz ic = CompilerContext.resolve(iName);
-            while(ic != null) {
-                set.add(ic);
-                dependsClass(ic);
-                if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
-                ic = CompilerContext.resolve(ic.superName);
+        for(Method m : c.methods) {
+            m.interfaceTableIndex = -1;
+            if(isClassKeep || m.name.equals("<clinit>") || A.hasKeep(m) ||
+               (m.name.equals("<init>") && m.args.isEmpty()) ||
+               (m.name.equals("<init>") && m.args.size() == 1 && m.args.get(0).type.equals("cava/c/VoidPtr"))  || //objc      
+               (isStruct && A.hasNative(m)) ||
+               (m.name.equals("finalize") && m.signature.equals("()V"))     
+            ) {
+                m.usedInProject = true;    
+                dependsMethod(m);
             }
         }
     }
+    
     private void analyzeMethod(Method m) {
         m.usedInProject = true;
+        m.interfaceTableIndex = m.virtualTableIndex = -1;
         dependsClass(m.type);
         m.args.forEach(arg -> dependsClass(arg.type));
+        dependsClass(m.declaringClass);
+        if(!m.isStatic() && !m.name.equals("<init>")) {
+            List<Method> chain = new ArrayList();
+            Clazz c = CompilerContext.resolve(m.declaringClass);
+            while(c != null) {
+                dependsClass(c);
+                Method cm = c.findMethod(m.name, m.signature);
+                if(cm != null) chain.add(cm);
+                if(c.superName == null || (c.isInterface && c.superName.equals("java/lang/Object"))) break;
+                c = CompilerContext.resolve(c.superName);
+            }
+
+            Method root = chain.get(chain.size() - 1);
+            dependsMethod(root);
+            Map<Method,Set<Method>> map = c.isInterface ? iRoot : vRoot;
+            Set<Method> set = map.computeIfAbsent(root, (k) -> new HashSet());
+            for(int i=0; i<chain.size() - 1; i++) {
+                set.add(chain.get(i));
+                dependsMethod(chain.get(i));
+            }
+        }
+        
         m.body.visit(new Visitor() {
             @Override
             public void call(Call c) {
@@ -344,9 +309,13 @@ public class DependencyAnalyzer {
                 dependsClass(className);
             }
         });
+        
     }
     
+    
     private void dependsClass(Clazz c) {
+        if(c.name.contains("LinkedList"))
+            System.out.println("...");
         if(!analyzedClasses.contains(c) && !classQueue.contains(c))
             classQueue.add(c);
     }

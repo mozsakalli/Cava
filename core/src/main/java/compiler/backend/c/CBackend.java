@@ -534,6 +534,7 @@ public class CBackend {
             out.println("(void**)malloc(%d * sizeof(void*));", tableSize);
             for(Method m : iMethods) {
                 if(m.interfaceTableIndex >= tableSize) throw new RuntimeException("Invalid interface table index: "+m+" "+m.interfaceTableIndex+"/"+tableSize);
+                out.println("// %s - %s", m.interfaceBaseClass, m.name);
                 if(m.isAbstract()) {
                     Method vm = CompilerContext.resolve(m.virtualBaseClass).findDeclaredMethod(m.name, m.signature);
                     out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(vm));

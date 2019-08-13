@@ -161,6 +161,14 @@ public class Clazz implements Serializable {
         if(superName != null) return CompilerContext.resolve(superName).implementsInterface(name);
         return false;
     }
+    
+    public boolean extendsClass(String name) {
+        if(this.name.equals(name)) return true;
+        if(superName != null)
+            return CompilerContext.resolve(superName).extendsClass(name);
+        return false;
+    }
+    
     public Set<Clazz> getAllInterfaces(Set<Clazz> list) {
         boolean addSelf = true;
         if(list == null) {

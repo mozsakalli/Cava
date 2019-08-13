@@ -20,13 +20,15 @@ public class Enum<E extends Enum<E>> implements Comparable<E> {
         throw new CloneNotSupportedException();
     }
 
+    /*
     protected static final void setEnumValues(final Object[] values, final Class c) {
     }
 
     protected static final <T> T[] getEnumValues(final Class<T> class_) {
         return null;
     }
-
+    */
+    
     public native static <T extends Enum<T>> T valueOf(final Class<T> enumType, final String name);
     
     public final boolean equals(final Object other) {
@@ -53,7 +55,9 @@ public class Enum<E extends Enum<E>> implements Comparable<E> {
         return ordinal;
     }
 
+    /*
     public final Class<E> getDeclaringClass() {
         return null;
     }
+    */
 }

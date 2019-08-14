@@ -71,9 +71,6 @@ public class Debugger {
             payload = 14;
             packetReaded();
             handsShaken = true;
-            System.out.print("handshake: ");
-            for(int i=0; i<14; i++) System.out.print(buffer[i]+" ");
-            System.out.println(" handshake");
             return outBuffer;
         }
         
@@ -86,7 +83,7 @@ public class Debugger {
         if(length < payload) return null;
         packet.start(buffer, readPtr);
         
-        System.out.println(packet);
+        //System.out.println(packet);
         
         JdwpHandler handler = JdwpHandlers.get(packet);
         if(handler != null) {

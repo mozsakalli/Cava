@@ -75,14 +75,15 @@ public class EventRequestSetHandler extends EventRequestHandler {
                     String matchPattern = packet.readString();
                     System.out.println("---class only: "+matchPattern);
                     eventPredicates.add(new EventClassNameMatchPredicate(modKind, matchPattern, false));
-                    break;                    
+                    break;   
+                    
                 default:
                     handled = false;
             }
 
             if(!handled) {
                 System.out.println("Unknown modifier = "+modKind);
-                break;
+                //break;
             }
         }
         

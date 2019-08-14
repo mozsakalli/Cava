@@ -64,16 +64,18 @@ public class FileUtil {
             while(entry != null) {
                 if(!entry.isDirectory()) {
                     File dest = new File(root, entry.getName());
-                    dest.getParentFile().mkdirs();
-                    FileOutputStream out = new FileOutputStream(dest);
-                    int len = (int)entry.getSize();
-                    int ptr = 0;
-                    while(ptr < len) {
-                        int readed = zip.read(buffer, 0, Math.min(len - ptr, buffer.length));
-                        out.write(buffer, 0, readed);
-                        ptr += readed;
+                    if(!dest.exists()) {
+                        dest.getParentFile().mkdirs();
+                        FileOutputStream out = new FileOutputStream(dest);
+                        int len = (int)entry.getSize();
+                        int ptr = 0;
+                        while(ptr < len) {
+                            int readed = zip.read(buffer, 0, Math.min(len - ptr, buffer.length));
+                            out.write(buffer, 0, readed);
+                            ptr += readed;
+                        }
+                        out.close();
                     }
-                    out.close();
                 }
                 entry = zip.getNextEntry();
             }

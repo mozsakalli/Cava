@@ -151,6 +151,10 @@ public class VM  {
                 handleSingleStep(e,id);
                 break;
                 
+            case JdwpConsts.EventKind.CLASS_PREPARE:
+                handleClassPrepare(e,id);
+                break;
+                
             default:
                 System.out.println("Unknown Set eventKind = "+eventKind);
                 if(predicates != null)
@@ -225,5 +229,7 @@ public class VM  {
         System.out.println(Thread.currentThread().getName()+" paused on line "+line);
     }
     
-    
+    static void handleClassPrepare(Event e, int id) {
+        
+    }
 }

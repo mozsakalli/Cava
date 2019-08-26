@@ -22,7 +22,7 @@ import com.cava.debugger.OutBuffer;
  *
  * @author mustafa
  */
-public abstract class EventData {
+public class EventData {
     private int eventKind;
     private Thread thread;
     int requestId;

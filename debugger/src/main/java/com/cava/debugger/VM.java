@@ -17,13 +17,18 @@
 package com.cava.debugger;
 
 import cava.annotation.Keep;
+import cava.c.VoidPtrPtr;
 import cava.platform.NativeCode;
+import com.cava.debugger.handler.eventrequest.events.ClassLoadedEventData;
+import com.cava.debugger.handler.eventrequest.events.EventData;
 import com.cava.debugger.handler.eventrequest.events.ThreadStoppedEventData;
+import com.cava.debugger.handler.eventrequest.events.predicates.EventClassNameMatchPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventLocationPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventStepModPredicate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,6 +99,22 @@ public class VM  {
         return null;
     }
     
+    static Class[] allClasses;
+    public static Class[] getAllClasses() {
+        if(allClasses != null) return allClasses;
+        VoidPtrPtr ptr = NativeCode.VoidPtrPtr("JVMCLASSPATH");
+        int index = 0;
+        Object value = ptr.get(index);
+        List<Class> tmp = new ArrayList();
+        while(value != null) {
+            Class cls = (Class)value;
+            tmp.add(cls);
+            value = ptr.get(index++);
+        }
+        allClasses = tmp.toArray(new Class[tmp.size()]);
+        return allClasses;
+    }
+    
     public static void resumeThread(long threadId) {
         NativeCode.Void("((JvmThread*)%s)->suspendCount = 0;" , threadId);
     }
@@ -149,6 +170,10 @@ public class VM  {
             case JdwpConsts.EventKind.SINGLE_STEP:
                 System.out.println("single step");
                 handleSingleStep(e,id);
+                break;
+                
+            case JdwpConsts.EventKind.THREAD_START:
+                Debugger.sendEventData(new EventData(eventKind, getAllThreads()[0], id));
                 break;
                 
             case JdwpConsts.EventKind.CLASS_PREPARE:
@@ -230,6 +255,18 @@ public class VM  {
     }
     
     static void handleClassPrepare(Event e, int id) {
-        
+        if(e.predicates != null) {
+            for(EventPredicate p : e.predicates) {
+                if(p instanceof EventClassNameMatchPredicate) {
+                    EventClassNameMatchPredicate m = (EventClassNameMatchPredicate)p;
+                    Class[] list = getAllClasses();
+                    for(Class cls : list) {
+                        if(m.test(cls.getName())) {
+                            //Debugger.sendEventData(new ClassLoadedEventData(JdwpConsts.EventKind.CLASS_LOAD, getAllThreads()[0], id, cls));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -50,6 +50,11 @@ public class EventClassNameMatchPredicate extends EventPredicate {
         return negative ? !result : result;
     }
 
+    public boolean test(String name) {
+        boolean result = matchPattern(pattern, name);
+        return negative ? !result : result;
+    }
+    
     public static boolean matchPattern(String pattern, String str) {
         if (pattern.startsWith("*")) {
             return str.regionMatches(str.length() - (pattern.length() - 1), pattern, 1, pattern.length() - 1);

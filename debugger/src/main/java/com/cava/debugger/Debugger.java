@@ -20,7 +20,6 @@ import cava.annotation.Keep;
 import com.cava.debugger.handler.eventrequest.events.EventData;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class Debugger {
     static OutBuffer outBuffer = new OutBuffer();
     static OutputStream socketOut;
     
-    static List<EventData> outputQueue = new ArrayList();
+    final static List<EventData> outputQueue = new ArrayList();
     
     public static Thread loopThread;
     public static Thread processThread;
@@ -131,8 +130,6 @@ public class Debugger {
         if(host == null || host.isEmpty()) throw new Exception("Debugger host parameter missing");
         
         System.out.println("Waiting debugger to connect "+host+":"+port);
-        //ServerSocket ss = new ServerSocket(port);
-        //final Socket s = ss.accept();
         final Socket s = new Socket(host, 10000);
         Debugger.sendEventData(new EventData(JdwpConsts.EventKind.VM_START, null, 0));
         loopThread = new Thread(new Runnable(){
@@ -146,7 +143,10 @@ public class Debugger {
             }
         }, "Debugger Thread");
         loopThread.start();
-        Thread.sleep(1000);
+        System.out.println("App started in paused state");
+        while(true) {
+            Thread.sleep(1000);
+        }
     }
     
     public static boolean isDebuggerThread(Thread thread) {

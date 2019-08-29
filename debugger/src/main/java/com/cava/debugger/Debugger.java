@@ -87,7 +87,7 @@ public class Debugger {
         
         JdwpHandler handler = JdwpHandlers.get(packet);
         if(handler != null) {
-            //System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
+            System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
             outBuffer.reset();
             int errorCode = handler.handle(packet, outBuffer);
             outBuffer.complete(packet.id, errorCode);
@@ -134,6 +134,7 @@ public class Debugger {
         //ServerSocket ss = new ServerSocket(port);
         //final Socket s = ss.accept();
         final Socket s = new Socket(host, 10000);
+        Debugger.sendEventData(new EventData(JdwpConsts.EventKind.VM_START, null, 0));
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {

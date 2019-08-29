@@ -38,6 +38,7 @@ public class ThreadSuspendCountHandler extends ThreadHandler {
             out.writeInt(suspendCount);
             return JdwpConsts.Error.NONE;
         }catch(Exception e){
+            e.printStackTrace();
         }
         return JdwpConsts.Error.INVALID_THREAD;
     }

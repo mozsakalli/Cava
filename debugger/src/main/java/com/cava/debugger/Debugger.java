@@ -128,25 +128,17 @@ public class Debugger {
     }
     public static void start(final String host, final int port) throws Exception {
         if(host == null || host.isEmpty()) throw new Exception("Debugger host parameter missing");
-        
-        System.out.println("Waiting debugger to connect "+host+":"+port);
-        final Socket s = new Socket(host, 10000);
-        Debugger.sendEventData(new EventData(JdwpConsts.EventKind.VM_START, null, 0));
         loopThread = new Thread(new Runnable(){
             @Override
             public void run() {
                 try {
-                    debuggerLoop(s);
+                    debuggerLoop(host, port);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
             }
         }, "Debugger Thread");
         loopThread.start();
-        System.out.println("App started in paused state");
-        while(true) {
-            Thread.sleep(1000);
-        }
     }
     
     public static boolean isDebuggerThread(Thread thread) {
@@ -155,13 +147,12 @@ public class Debugger {
     
     static boolean debugSessionActive;
     
-    static void debuggerLoop(Socket s) throws Exception {
+    static void debuggerLoop(String host, int port) throws Exception {
+        System.out.println("Waiting debugger to connect "+host+":"+port);
+        final Socket s = new Socket(host, 10000);
+        
         byte[] bytes = new byte[1024*16];
         Debugger debugger = new Debugger();
-        //System.out.println("Debug server started on port "+port);
-        
-        //df VM.resumeAllThreads();
-        //df VM.removeAllBreakpoints();
         InputStream in = s.getInputStream();
         socketOut = s.getOutputStream();
         resetState();
@@ -176,6 +167,7 @@ public class Debugger {
         processThread.start();
 
         try {
+            boolean startSent = false;
             while(true) {
                 int readed = in.read(bytes);
                 if(readed > 0) {
@@ -184,6 +176,11 @@ public class Debugger {
                     while(output != null) {
                         write(output.getBuffer(), 0, output.getSize());
                         output = debugger.process();
+                    }
+                    
+                    if(!startSent && handsShaken) {
+                        Debugger.sendEventData(new EventData(JdwpConsts.EventKind.VM_START, null, 0));
+                        startSent = true;
                     }
                 }   
             }    
@@ -205,16 +202,18 @@ public class Debugger {
                 synchronized(outputQueue) {
                     data = outputQueue.remove(0);
                 }
-                buffer.reset();
-                buffer.writeByte(JdwpConsts.SuspendPolicy.ALL);
-                buffer.writeInt(1); //event count
-                data.dump(buffer);
-                buffer.completeEvent();
-                try {
-                    write(buffer.getBuffer(), 0, buffer.getSize());
-                }catch(Exception e) {
-                    System.out.println("process thread exited");
-                    break;
+                if(data != null) {
+                    buffer.reset();
+                    buffer.writeByte(JdwpConsts.SuspendPolicy.ALL);
+                    buffer.writeInt(1); //event count
+                    data.dump(buffer);
+                    buffer.completeEvent();
+                    try {
+                        write(buffer.getBuffer(), 0, buffer.getSize());
+                    }catch(Exception e) {
+                        System.out.println("process thread exited");
+                        break;
+                    }
                 }
             }
         }

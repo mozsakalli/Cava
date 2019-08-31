@@ -37,7 +37,7 @@ public class ClassLoadedEventData extends EventData {
     public void dumpCustomData(OutBuffer packet) {
         packet.writeByte(JdwpUtil.jdwpTypeTag(cls));
         packet.writeLong(VM.getClassReference(cls));
-        packet.writeString(cls.getName());
+        packet.writeString(JdwpUtil.toSignature(cls));
         packet.writeInt(JdwpConsts.ClassStatus.VERIFIED | JdwpConsts.ClassStatus.PREPARED | JdwpConsts.ClassStatus.INITIALIZED);
     }
 

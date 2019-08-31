@@ -19,6 +19,7 @@ package cava.apple.foundation;
 import cava.annotation.Include;
 import cava.annotation.Keep;
 import cava.annotation.ObjC;
+import cava.c.CharPtr;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;

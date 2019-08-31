@@ -42,7 +42,8 @@ public class ThreadStatusHandler extends ThreadHandler {
                     return JdwpConsts.Error.NONE;
                 }
         }
-                
+           
+        System.out.println("!!Thread not found - StatusHandler !!!");
         return JdwpConsts.Error.INVALID_THREAD;
     }
 

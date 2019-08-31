@@ -130,12 +130,15 @@ public class IOSApplication implements Application {
 
     }
 
+    static IOSApplication app;
+    
     IOSOpenGLView view;
     IOSGraphicsViewController controller;
     UIWindow window;
     OpenGLGraphics graphics;
     
     public IOSApplication() {
+        app = this;
         
         CGRect bounds = UIScreen.getMainScreen().getBounds();
         window = new UIWindow().initWithFrame(bounds);

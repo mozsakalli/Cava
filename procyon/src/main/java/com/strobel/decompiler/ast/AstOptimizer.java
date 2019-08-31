@@ -192,13 +192,15 @@ public final class AstOptimizer {
                 modified |= new Inlining(context, method, true).inlineAllInBlock(block);
                 modified |= runOptimization(block, new TransformArrayInitializersOptimization(context, method));
 
+                /* cava
                 if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.IntroducePostIncrement)) {
                     done = true;
                     break;
                 }
 
                 modified |= runOptimization(block, new IntroducePostIncrementOptimization(context, method));
-
+                */
+                
                 if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.InlineConditionalAssignments)) {
                     done = true;
                     break;

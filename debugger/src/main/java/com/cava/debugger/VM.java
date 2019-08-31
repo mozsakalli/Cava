@@ -20,8 +20,8 @@ import cava.annotation.Keep;
 import cava.c.VoidPtrPtr;
 import cava.platform.NativeCode;
 import com.cava.debugger.handler.eventrequest.events.ClassLoadedEventData;
-import com.cava.debugger.handler.eventrequest.events.EventData;
 import com.cava.debugger.handler.eventrequest.events.ThreadStoppedEventData;
+import com.cava.debugger.handler.eventrequest.events.predicates.EventClassNameMatchPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventLocationPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventPredicate;
 import com.cava.debugger.handler.eventrequest.events.predicates.EventStepModPredicate;
@@ -158,9 +158,9 @@ public class VM  {
                 handleClassPrepare(e,id);
                 break;
                 
-            case JdwpConsts.EventKind.THREAD_START:
-                Debugger.sendEventData(new EventData(JdwpConsts.EventKind.THREAD_START, getAllThreads()[0], id));
-                break;
+            //case JdwpConsts.EventKind.THREAD_START:
+            //    Debugger.sendEventData(new EventData(JdwpConsts.EventKind.THREAD_START, getAllThreads()[0], id));
+            //    break;
                 
             default:
                 System.out.println("Unknown Set eventKind = "+eventKind);
@@ -237,18 +237,24 @@ public class VM  {
     }
     
     static void handleClassPrepare(Event e, int id) {
-        Thread thread = getAllThreads()[0];
-        VoidPtrPtr ptr = NativeCode.VoidPtrPtr("JVMCLASSPATH");
-        int index = 0;
-        Object value = ptr.get(index);
-        while(value != null) {
-            Class cls = (Class)value;
-            Debugger.sendEventData(new ClassLoadedEventData(JdwpConsts.EventKind.CLASS_PREPARE, thread, id, cls));
-            value = ptr.get(index++);
-        }
         System.out.println("-- class prepare");
-        if(e.predicates != null)
-            for(EventPredicate p : e.predicates) System.out.println(p.modifierKind()+":"+p.getClass());
-        
+        if(e.predicates != null) {
+            for(EventPredicate p : e.predicates) {
+                if(p instanceof EventClassNameMatchPredicate) {
+                    EventClassNameMatchPredicate ep = (EventClassNameMatchPredicate)p;
+                    VoidPtrPtr ptr = NativeCode.VoidPtrPtr("JVMCLASSPATH");
+                    int index = 0;
+                    Object value = ptr.get(index);
+                    while(value != null) {
+                        Class cls = (Class)value;
+                        if(ep.test(cls.getName())) {
+                            Debugger.sendEventData(new ClassLoadedEventData(JdwpConsts.EventKind.CLASS_PREPARE, null, id, cls));
+                            System.out.println("class-prepare-match: "+cls.getName());
+                        }
+                        value = ptr.get(index++);
+                    }
+                }
+            }
+        }
     }
 }

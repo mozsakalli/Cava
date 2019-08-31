@@ -27,6 +27,7 @@ public class NSNumber extends NSValue {
     public static NSNumber valueOf(boolean value) {
         NSNumber result = new NSNumber();
         result.nativePeer = NativeCode.VoidPtr("[NSNumber numberWithBool:%s]", value);
+        result.noOwner = true;
         return result;
     }
 }

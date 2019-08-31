@@ -30,6 +30,10 @@ import cava.platform.NativeCode;
 @ObjC
 public class UIView extends UIResponder {
 
+    public UIView(){}
+    public UIView(CGRect bounds) {
+        initWithFrame(bounds);
+    }
     public <T extends UIView> T initWithFrame(CGRect frame) {
         nativePeer = NativeCode.VoidPtr("[(UIView*)%s initWithFrame:%s]", nativePeer, frame.getStruct());
         return (T)this;

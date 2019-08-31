@@ -51,7 +51,8 @@ public class IOSApplication implements Application {
         int _framebuffer, _colorbuffer, _depthbuffer;
         int screenWidth, screenHeight;
 
-        public IOSOpenGLView() {
+        public IOSOpenGLView(CGRect bounds) {
+            initWithFrame(bounds);
             CAEAGLLayer layer = getLayer(CAEAGLLayer.class);
             layer.setOpaque(true);
             NSMutableDictionary props = new NSMutableDictionary();
@@ -127,8 +128,15 @@ public class IOSApplication implements Application {
         }
     }
 
+    @Keep
     static class IOSGraphicsViewController extends UIViewController {
+        @Override
+        public void loadView() {
+            setView(new IOSOpenGLView(UIScreen.getMainScreen().getBounds()));
 
+        }
+        
+        
     }
 
     public static abstract class Delegate extends UIApplicationDelegateAdapter {
@@ -145,7 +153,6 @@ public class IOSApplication implements Application {
 
     static IOSApplication app;
 
-    IOSOpenGLView view;
     IOSGraphicsViewController controller;
     UIWindow window;
     OpenGLGraphics graphics;
@@ -156,11 +163,7 @@ public class IOSApplication implements Application {
         CGRect bounds = UIScreen.getMainScreen().getBounds();
         window = new UIWindow().initWithFrame(bounds);
 
-        view = new IOSOpenGLView();
-        view.initWithFrame(bounds);
-
         controller = new IOSGraphicsViewController();
-        controller.setView(view);
         window.setRootViewController(controller);
         window.makeKeyAndVisible();
 

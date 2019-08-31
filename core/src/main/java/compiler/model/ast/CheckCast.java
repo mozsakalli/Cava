@@ -33,6 +33,10 @@ public class CheckCast extends Code {
         this.className = DecompilerUtils.getTypeName(type);// CompilerContext.realClassName(className);
         this.value = value;
     }
+    public CheckCast(String className, Code value) {
+        this.className = className;
+        this.value = value;
+    }
 
     @Override
     public void visit(Visitor v) {

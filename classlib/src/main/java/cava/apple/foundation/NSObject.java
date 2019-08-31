@@ -19,7 +19,6 @@ package cava.apple.foundation;
 import cava.annotation.Include;
 import cava.annotation.Keep;
 import cava.annotation.ObjC;
-import cava.c.CharPtr;
 import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
@@ -49,6 +48,10 @@ public class NSObject<T> extends NativeObject {
         this.noOwner = sub;
         //if(!getClass().getName().contains("NSString"))
         //    System.out.println("-- nsobject-init: "+getClass().getName());
+    }
+    
+    public boolean respondsToSelector(Selector selector) {
+        return NativeCode.Bool("[(NSObject*)%s respondsToSelector:*((SEL*)%s)]", nativePeer, selector.nativePeer);
     }
     
     @Override

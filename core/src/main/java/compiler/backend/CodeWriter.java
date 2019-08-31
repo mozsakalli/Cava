@@ -53,6 +53,7 @@ import compiler.model.ast.CaughtException;
 import compiler.model.ast.CheckCast;
 import compiler.model.ast.ClassInit;
 import compiler.model.ast.ClassRef;
+import compiler.model.ast.Cmp;
 import compiler.model.ast.Code;
 import compiler.model.ast.Const;
 import compiler.model.ast.Continue;
@@ -153,6 +154,7 @@ public class CodeWriter {
         else if(code instanceof Monitor) write((Monitor)code);
         else if(code instanceof CaughtException) write((CaughtException)code);
         else if(code instanceof DynamicCall) write((DynamicCall)code);
+        else if(code instanceof Cmp) write((Cmp)code);
         else out.print(code);
     }
     
@@ -214,6 +216,7 @@ public class CodeWriter {
     public void write(Assign a) {
         write(a.left);
         out.print("=");
+        //out.print("/* "+a.right+" */");
         write(a.right);
     }
     
@@ -418,5 +421,9 @@ public class CodeWriter {
     
     public void write(DynamicCall d) {
         write(d.code);
+    }
+    
+    public void write(Cmp c) {
+        write(c);
     }
 }

@@ -13,11 +13,7 @@
 
 package com.strobel.compilerservices;
 
-import com.strobel.core.VerifyArgument;
 import com.strobel.util.ContractUtils;
-import sun.misc.Unsafe;
-
-import java.lang.reflect.Field;
 
 /**
  * @author strobelm
@@ -28,13 +24,14 @@ public final class RuntimeHelpers {
     }
 
     public static void ensureClassInitialized(final Class<?> clazz) {
-        getUnsafeInstance().ensureClassInitialized(VerifyArgument.notNull(clazz, "clazz"));
+        //cava getUnsafeInstance().ensureClassInitialized(VerifyArgument.notNull(clazz, "clazz"));
     }
 
     // <editor-fold defaultstate="collapsed" desc="Unsafe Access">
 
-    private static Unsafe _unsafe;
+    //private static Unsafe _unsafe;
 
+    /* cava
     private static Unsafe getUnsafeInstance() {
         if (_unsafe != null) {
             return _unsafe;
@@ -60,8 +57,8 @@ public final class RuntimeHelpers {
             );
         }
 
-        return _unsafe;
+        return _unsafe; 
     }
-
+    */
     // </editor-fold>
 }

@@ -76,12 +76,15 @@ public class CompilerContext {
     }
     
     static Clazz load(String name) {
+        
         System.out.println("Decompiling "+name);
         PlainTextOutput po = new PlainTextOutput();
         DecompilerSettings settings = getDecompilerSettings();
         Decompiler.decompile(name.replace('.', '/'), po, settings);
         Clazz clazz = ((ModelLanguage)settings.getLanguage()).clazz;
         return clazz;
+        
+        //return SootDecompiler.decompile(name);
     }
     
     
@@ -138,7 +141,7 @@ public class CompilerContext {
             decompileTime += System.currentTimeMillis() - time;
 
             classes.put(name, clazz);
-            LambdaGenerator.process();
+            //soot LambdaGenerator.process();
 
             time = System.currentTimeMillis();
             path.getParentFile().mkdirs();

@@ -33,6 +33,10 @@ public class InstanceOf extends Code {
         this.className = DecompilerUtils.getTypeName(type);// CompilerContext.realClassName(className);
         this.value = value;
     }
+    public InstanceOf(String className, Code value) {
+        this.className = className;
+        this.value = value;
+    }
 
     @Override
     public void replaceClassName(String src, String dest) {

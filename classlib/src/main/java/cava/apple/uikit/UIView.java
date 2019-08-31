@@ -44,4 +44,14 @@ public class UIView extends UIResponder {
     
     @ObjC("layoutSubviews")
     public native void layoutSubviews();
+    
+    public double getContentScaleFactor() {
+        return NativeCode.Double("[(UIView*)%s contentScaleFactor]", nativePeer);
+    }
+    
+    public CGRect getBounds() {
+        CGRect result = new CGRect();
+        result.setStruct(NativeCode.Struct("[(UIView*)%s bounds]", nativePeer));
+        return result;
+    }
 }

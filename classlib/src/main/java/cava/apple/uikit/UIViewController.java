@@ -45,6 +45,9 @@ public class UIViewController extends UIResponder {
     
     @ObjC("viewDidLayoutSubviews")
     public native void viewDidLayoutSubviews();
+
+    @ObjC("viewDidLoad")
+    public native void viewDidLoad();
     
     @ObjC("shouldAutorotate")
     public native boolean shouldAutorotate();

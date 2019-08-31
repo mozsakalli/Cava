@@ -37,6 +37,7 @@ import compiler.model.ast.CaughtException;
 import compiler.model.ast.CheckCast;
 import compiler.model.ast.ClassInit;
 import compiler.model.ast.ClassRef;
+import compiler.model.ast.Cmp;
 import compiler.model.ast.Code;
 import compiler.model.ast.Const;
 import compiler.model.ast.Field;
@@ -186,9 +187,6 @@ public class CWriter extends CodeWriter {
                 this.out = tmp;
                 for(int i=0; i<args.length; i++) {
                     Code code = verifyBoxingForNative(ia.elements.get(i));
-                    /*
-                    if(code instanceof Call)
-                        code = ((Call)code).args.get(0);*/
                     this.write(code);
                     args[i] = tmp.toString();
                     tmp.clear();
@@ -203,6 +201,7 @@ public class CWriter extends CodeWriter {
             out.print(pattern);
             return;
         }
+
         Clazz c = CompilerContext.resolve(call.className);
         if(call.callType == Call.CallType.Special && call.args.size() == 1 && skipSuperConstructor) {
                 //call.methodName.equals("<init>") && (c.isObjCImplementation || A.hasObjC(c))) {
@@ -470,5 +469,41 @@ public class CWriter extends CodeWriter {
         }
         
     }
+
+    @Override
+    public void write(Cmp c) {
+        SourceWriter tmp = this.out;
+        this.out = new SourceWriter();
+        write(c.left);
+        String l = out.toString();
+        out.clear();
+        write(c.right);
+        String r = out.toString();
+        out = tmp;
+        
+        switch(c.op) {
+            case Cmpl:
+                out.print("(%s != %s || %s != %s) ? -1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r);
+                break;
+            case Cmpg:
+                out.print("(%s != %s || %s != %s) ? 1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r);
+                break;
+            case Cmp:
+                out.print("%s < %s ? -1 : (%s > %s ? 1 : 0)", l,r,l,r);
+                break;
+                /*
+                write(c.left); out.print("<"); write(c.right);
+                out.print(" ? -1 : (");
+                write(c.left); out.print(">"); write(c.right);
+                out.print(" ? 1 : 0)");
+                */
+
+                
+            //default:
+            //    out.print(c.left.getClass()+" "+c.op+" "+c.right.getClass());
+                
+        }
+    }
+    
     
 }

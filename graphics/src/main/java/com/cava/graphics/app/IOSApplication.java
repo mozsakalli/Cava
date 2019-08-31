@@ -23,6 +23,7 @@ import cava.apple.foundation.NSDictionary;
 import cava.apple.foundation.NSMutableDictionary;
 import cava.apple.foundation.NSNumber;
 import cava.apple.foundation.NSObject;
+import cava.apple.foundation.Selector;
 import cava.apple.opengles.EAGLColorFormat;
 import cava.apple.opengles.EAGLContext;
 import cava.apple.opengles.EAGLDrawableProperty;
@@ -45,10 +46,11 @@ public class IOSApplication implements Application {
 
     @Keep
     static class IOSOpenGLView extends UIView {
+
         EAGLContext context;
         int _framebuffer, _colorbuffer, _depthbuffer;
         int screenWidth, screenHeight;
-        
+
         public IOSOpenGLView() {
             CAEAGLLayer layer = getLayer(CAEAGLLayer.class);
             layer.setOpaque(true);
@@ -58,26 +60,36 @@ public class IOSApplication implements Application {
             layer.setDrawableProperties(props);
             context = new EAGLContext().initWithAPI(EAGLRenderingAPI.OpenGLES2);
         }
-        
+
         public void makeCurrent() {
             EAGLContext.setCurrentContext(context);
         }
-        
+
         @ObjC("layerClass")
         public final static Class getLayerClass() {
             return NSObject.getObjCClass(CAEAGLLayer.class);
         }
-        
+
         @Override
         public void layoutSubviews() {
             System.out.println("Did-Layout");
-            if(_framebuffer == 0)
+            if (_framebuffer == 0) {
                 CreateFramebuffer();
+            }
         }
 
         void CreateFramebuffer() {
             makeCurrent();
-            
+            double scaleFactor = 1;
+            if (this.respondsToSelector(Selector.fromString("contentsScaleFactor"))) {
+                scaleFactor = this.getContentScaleFactor();
+            }
+
+            CAEAGLLayer layer = getLayer(CAEAGLLayer.class);
+
+            CGRect bounds = getBounds();
+            screenHeight = (int) Math.round(bounds.getHeight() * scaleFactor);
+            screenWidth = (int) Math.round(bounds.getWidth() * scaleFactor);
             //screenHeight = (int)System.Math.Round(Layer.Bounds.Size.Height * Layer.ContentsScale);
             //screenWidth = (int)System.Math.Round(Layer.Bounds.Size.Width * Layer.ContentsScale);
             _framebuffer = GL.glGenFramebuffer();
@@ -89,7 +101,7 @@ public class IOSApplication implements Application {
             int Depth24Stencil8Oes = 35056;
             GL.glRenderbufferStorage(GL.GL_RENDERBUFFER, Depth24Stencil8Oes, screenWidth, screenHeight);
             GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_RENDERBUFFER, _depthbuffer);
-            GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_STENCIL_ATTACHMENT,  GL.GL_RENDERBUFFER, _depthbuffer);
+            GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_STENCIL_ATTACHMENT, GL.GL_RENDERBUFFER, _depthbuffer);
 
             _colorbuffer = GL.glGenRenderbuffer();
             GL.glBindBuffer(GL.GL_RENDERBUFFER, _colorbuffer);
@@ -98,20 +110,21 @@ public class IOSApplication implements Application {
             //       on all but the first call.  Nevertheless, it
             //       works.  Still, it would be nice to know why it
             //       claims to have failed.
-            context.renderbufferStorage(GL.GL_RENDERBUFFER, getLayer(CAEAGLLayer.class));
+            context.setRenderbufferStorage(GL.GL_RENDERBUFFER, getLayer(CAEAGLLayer.class));
 
             GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_RENDERBUFFER, _colorbuffer);
             int status = GL.glCheckFramebufferStatus(GL.GL_FRAMEBUFFER);
-            
-            if (status != GL.GL_FRAMEBUFFER_COMPLETE)
+
+            if (status != GL.GL_FRAMEBUFFER_COMPLETE) {
                 throw new RuntimeException(
-                    "Framebuffer was not created correctly: " + status);
+                        "Framebuffer was not created correctly: " + status);
+            }
 
             //GL.Viewport(0, 0, viewportWidth, viewportHeight);
             //GL.Scissor(0, 0, viewportWidth, viewportHeight);
             //if (Threading.BackgroundContext == null)
             //    Threading.BackgroundContext = new OpenGLES.EAGLContext(ctx.Context.API, ctx.Context.ShareGroup);
-        }        
+        }
     }
 
     static class IOSGraphicsViewController extends UIViewController {
@@ -121,40 +134,39 @@ public class IOSApplication implements Application {
     public static abstract class Delegate extends UIApplicationDelegateAdapter {
 
         public abstract IOSApplication createApplication();
-        
+
         @Override
         public boolean didFinishLaunchingWithOptions(UIApplication application, NSDictionary launchOptions) {
-            createApplication();            
+            createApplication();
             return true;
         }
 
     }
 
     static IOSApplication app;
-    
+
     IOSOpenGLView view;
     IOSGraphicsViewController controller;
     UIWindow window;
     OpenGLGraphics graphics;
-    
+
     public IOSApplication() {
         app = this;
-        
+
         CGRect bounds = UIScreen.getMainScreen().getBounds();
         window = new UIWindow().initWithFrame(bounds);
 
         view = new IOSOpenGLView();
         view.initWithFrame(bounds);
-        
-        
+
         controller = new IOSGraphicsViewController();
         controller.setView(view);
         window.setRootViewController(controller);
         window.makeKeyAndVisible();
-        
+
         System.out.println("started");
     }
-    
+
     public Graphics getGraphics() {
         return null;
     }

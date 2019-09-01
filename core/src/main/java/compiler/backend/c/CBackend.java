@@ -332,8 +332,8 @@ public class CBackend {
                         out.ln();
                         
                         boolean objcInitializer = 
-                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject") &&
-                        !c.name.equals("cava/apple/foundation/Selector");
+                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// &&
+                        //!c.name.equals("cava/apple/foundation/Selector");
                         
                         //UIDevice(VoidPtr) doesn't need to create any instance
                         if(objcInitializer) {
@@ -359,7 +359,7 @@ public class CBackend {
                                .println("_initialized = 1;");
                         }
                         
-                        if(objcInitializer) {
+                        if(objcInitializer && !A.objcNoAlloc(c)) {
                             NameAndType field = c.findField("nativePeer");
                             String objcName = c.isObjCImplementation ? 
                                     c.name.replace('/', '_').replace('$', '_') + "_ObjC" :

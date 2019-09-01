@@ -37,6 +37,10 @@ public class UIViewController extends UIResponder {
         NativeCode.Void("((UIViewController*)%s).view = %s", getNativePeer(), view.getNativePeer());
     }
     
+    public UIView getView() {
+        return view;
+    }
+    
     @ObjC("viewWillAppear")
     public native void viewWillAppear(boolean animated);
 

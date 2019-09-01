@@ -83,6 +83,9 @@ public class A {
     public static boolean objcNoInit(Object o) {
         return bool(o, ObjC, "noInit");
     }
+    public static boolean objcNoAlloc(Object o) {
+        return bool(o, ObjC, "noAlloc");
+    }
     public static boolean hasKeep(Object o) {
         return has(o, Keep);
     }

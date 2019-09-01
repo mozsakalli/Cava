@@ -16,14 +16,14 @@
 
 package cava.apple.foundation;
 
-import cava.annotation.Native;
+import cava.annotation.ObjC;
 import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-@Native("SEL")
+@ObjC(value="SEL", noAlloc = true)
 public class Selector extends NSObject {
     
     public static Selector fromString(String name) {

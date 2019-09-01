@@ -40,6 +40,11 @@ public class EAGLContext extends NSObject {
         return NativeCode.Bool("[(EAGLContext*)%s renderbufferStorage:(NSUInteger)%s fromDrawable:%s]", 
                 nativePeer, target, ((NSObject)drawable).getNativePeer());
     }
+    
+    public boolean presentRenderbuffer(int buffer) {
+        return NativeCode.Bool("[(EAGLContext*)%s presentRenderbuffer:%s]", nativePeer, buffer);
+    } 
+    
     public static void setCurrentContext(EAGLContext context) {
         NativeCode.Void("[EAGLContext setCurrentContext:%s]", context.getNativePeer());
     }

@@ -51,7 +51,11 @@ public class NSObject<T> extends NativeObject {
     }
     
     public boolean respondsToSelector(Selector selector) {
-        return NativeCode.Bool("[(NSObject*)%s respondsToSelector:*((SEL*)%s)]", nativePeer, selector.nativePeer);
+        return NativeCode.Bool("[(NSObject*)%s respondsToSelector:%s]", nativePeer, selector.nativePeer);
+    }
+    
+    public void performSelector(Selector selector) {
+        NativeCode.Void("[(NSObject*)%s performSelector:%s]", nativePeer, selector.nativePeer);
     }
     
     @Override

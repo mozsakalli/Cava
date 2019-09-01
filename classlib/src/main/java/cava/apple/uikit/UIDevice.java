@@ -30,7 +30,7 @@ import cava.platform.NativeCode;
 @Include("<UIKit/UIKit.h>")
 @ObjC
 public class UIDevice extends NSObject {
-
+    
     UIDevice(VoidPtr nativePeer) { super(nativePeer, true); }
     public static UIDevice getCurrentDevice() {
         return new UIDevice(NativeCode.VoidPtr("[UIDevice currentDevice]"));
@@ -38,5 +38,9 @@ public class UIDevice extends NSObject {
     
     public String getSystemVersion() {
         return NSString.createJavaString(NativeCode.VoidPtr("((UIDevice*)%s).systemVersion", nativePeer));
+    }
+    
+    public boolean checkSystemVersion(float version) {
+        return NativeCode.Bool("[((UIDevice*)%s).systemVersion floatValue] >= %s", nativePeer, version);
     }
 }

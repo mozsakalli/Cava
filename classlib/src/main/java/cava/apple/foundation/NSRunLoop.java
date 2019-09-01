@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package cava.annotation;
+package cava.apple.foundation;
+
+import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-public @interface ObjC {
+public class NSRunLoop extends NSObject {
     
-    public String value() default "";
-    public boolean property() default false;
-    public boolean isStatic() default false;
-    public boolean noInit() default false;
-    public boolean noAlloc() default false;
+    public NSRunLoop(){}
+    public NSRunLoop(VoidPtr nativePeer) { this(nativePeer, false); }
+    public NSRunLoop(VoidPtr nativePeer, boolean noOwner) { super(nativePeer, noOwner); }
+    
+    public static NSRunLoop getCurrent() {
+        return new NSRunLoop(NativeCode.VoidPtr("[NSRunLoop currentRunLoop]"), true);
+    }
 }

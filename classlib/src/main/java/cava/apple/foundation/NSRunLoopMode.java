@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package cava.annotation;
+package cava.apple.foundation;
+
+import cava.c.VoidPtr;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
-public @interface ObjC {
+public enum NSRunLoopMode {
+    Default(NativeCode.VoidPtr("NSDefaultRunLoopMode")),
+    Common(NativeCode.VoidPtr("NSRunLoopCommonModes"))
+    ;
+
+    VoidPtr value;
+    NSRunLoopMode(VoidPtr value) { this.value = value; }
     
-    public String value() default "";
-    public boolean property() default false;
-    public boolean isStatic() default false;
-    public boolean noInit() default false;
-    public boolean noAlloc() default false;
+    public NSString value() {
+        return new NSString(value, true);
+    }
+
 }

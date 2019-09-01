@@ -17,12 +17,15 @@ package com.cava.graphics.app;
 
 import cava.annotation.Keep;
 import cava.annotation.ObjC;
+import cava.apple.coreanimation.CADisplayLink;
 import cava.apple.coreanimation.CAEAGLLayer;
 import cava.apple.coregraphics.CGRect;
 import cava.apple.foundation.NSDictionary;
 import cava.apple.foundation.NSMutableDictionary;
 import cava.apple.foundation.NSNumber;
 import cava.apple.foundation.NSObject;
+import cava.apple.foundation.NSRunLoop;
+import cava.apple.foundation.NSRunLoopMode;
 import cava.apple.foundation.Selector;
 import cava.apple.opengles.EAGLColorFormat;
 import cava.apple.opengles.EAGLContext;
@@ -50,6 +53,7 @@ public class IOSApplication implements Application {
         EAGLContext context;
         int _framebuffer, _colorbuffer, _depthbuffer;
         int screenWidth, screenHeight;
+        CADisplayLink displayLink;
 
         public IOSOpenGLView(CGRect bounds) {
             initWithFrame(bounds);
@@ -73,13 +77,12 @@ public class IOSApplication implements Application {
 
         @Override
         public void layoutSubviews() {
-            System.out.println("Did-Layout");
             if (_framebuffer == 0) {
-                CreateFramebuffer();
+                createFramebuffer();
             }
         }
 
-        void CreateFramebuffer() {
+        void createFramebuffer() {
             makeCurrent();
             double scaleFactor = 1;
             if (this.respondsToSelector(Selector.fromString("contentsScaleFactor"))) {
@@ -91,8 +94,7 @@ public class IOSApplication implements Application {
             CGRect bounds = getBounds();
             screenHeight = (int) Math.round(bounds.getHeight() * scaleFactor);
             screenWidth = (int) Math.round(bounds.getWidth() * scaleFactor);
-            //screenHeight = (int)System.Math.Round(Layer.Bounds.Size.Height * Layer.ContentsScale);
-            //screenWidth = (int)System.Math.Round(Layer.Bounds.Size.Width * Layer.ContentsScale);
+
             _framebuffer = GL.glGenFramebuffer();
             GL.glBindFramebuffer(GL.GL_FRAMEBUFFER, _framebuffer);
 
@@ -126,6 +128,36 @@ public class IOSApplication implements Application {
             //if (Threading.BackgroundContext == null)
             //    Threading.BackgroundContext = new OpenGLES.EAGLContext(ctx.Context.API, ctx.Context.ShareGroup);
         }
+        
+        public void startAnimation() {
+            if(displayLink == null) {
+                displayLink = CADisplayLink.create(this, Selector.fromString("doTick"));
+                displayLink.setFrameInterval(1);
+                displayLink.addToRunLoop(NSRunLoop.getCurrent(), NSRunLoopMode.Default);
+            }
+        }
+        
+        public void stopAnimation() {
+            if(displayLink != null) {
+                displayLink.removeFromRunLoop(NSRunLoop.getCurrent(), NSRunLoopMode.Default);
+                displayLink.invalidate();
+                displayLink = null;
+            }
+        }
+        
+        void present() {
+            makeCurrent();
+            GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, this._colorbuffer);
+            //GL.InvalidateFramebuffer(FramebufferTarget.Framebuffer, 2, attachements);
+            context.presentRenderbuffer(GL.GL_RENDERBUFFER);
+        }
+        
+        @ObjC("doTick")
+        void doTick() {
+            GL.glClearColor(1, 0, 0, 1);
+            GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+            present();
+        }
     }
 
     @Keep
@@ -133,7 +165,11 @@ public class IOSApplication implements Application {
         @Override
         public void loadView() {
             setView(new IOSOpenGLView(UIScreen.getMainScreen().getBounds()));
+        }
 
+        @Override
+        public void viewDidLoad() {
+            ((IOSOpenGLView)getView()).startAnimation();
         }
         
         
@@ -156,7 +192,7 @@ public class IOSApplication implements Application {
     IOSGraphicsViewController controller;
     UIWindow window;
     OpenGLGraphics graphics;
-
+    
     public IOSApplication() {
         app = this;
 
@@ -166,8 +202,6 @@ public class IOSApplication implements Application {
         controller = new IOSGraphicsViewController();
         window.setRootViewController(controller);
         window.makeKeyAndVisible();
-
-        System.out.println("started");
     }
 
     public Graphics getGraphics() {

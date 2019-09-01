@@ -49,7 +49,7 @@ public class OpenGLVertexBuffer extends VertexBuffer {
 
     @Override
     public void set(int offset, int x) {
-        NativeCode.Void("((JINT*)JvmArrayData(%s))[%s] = %s", buffer, offset, x);
+        buffer[offset] = x;
     }
     
     @Override

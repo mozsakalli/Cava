@@ -44,9 +44,6 @@ public class SootDecompiler {
     
     public static Clazz decompile(String name) {
         
-        if(name.equals("Ljava/lang/Object;")) {
-            System.out.println("...");
-        }
         System.out.println("Decompiling "+name);
         initializeSoot();
         SootClass sc = getSootClass(name.replace('/', '.'));

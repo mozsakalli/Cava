@@ -292,7 +292,6 @@ public class IOSGraphics extends NSObject implements Graphics, GLKViewDelegate, 
 
     @Override
     public void willPause(GLKViewController controller, boolean pause) {
-        System.out.println("!!!!!!!!!!!!!!!!!! Will Pause !!!!!!!!!!!!!!!!");
     }
     // Delegate methods
 

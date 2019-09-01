@@ -26,7 +26,9 @@ import compiler.util.FileUtil;
 import compiler.util.IosDevice;
 import compiler.util.XCodeUtil;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +121,19 @@ public class XCodeProject extends Project {
                             File dest = new File(CompilerContext.platformBuildDir, "generated/"+p);
                             FileUtil.copyFile(getClass().getResourceAsStream(path), dest);
                             pbxProject.addSourceFile(path, dest);
+                        } else {
+                            //add as asset
+                            String p = path;
+                            if(p.startsWith("/")) p = p.substring(1);
+                            File dest = new File(CompilerContext.platformBuildDir, "other/"+p);
+                            InputStream in = getClass().getResourceAsStream(path);
+                            if(in == null) {
+                                File file = new File("target/classes/"+p);
+                                if(!file.exists()) throw new RuntimeException("Can't find resource: "+path);
+                                in = new FileInputStream(file);
+                            }
+                            FileUtil.copyFile(in, dest);
+                            pbxProject.addAssetFile("", dest);
                         }
                     }
                 }

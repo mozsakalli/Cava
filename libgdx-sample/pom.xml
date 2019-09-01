@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>  
+    <groupId>com.cava</groupId>  
+    <artifactId>cava-libgdx-sample</artifactId>  
+    <version>2019.07.18</version>  
+    <packaging>jar</packaging>  
+    <dependencies> 
+        <dependency> 
+            <groupId>com.cava</groupId>  
+            <artifactId>cava-maven</artifactId>  
+            <version>${project.version}</version> 
+        </dependency>  
+        <dependency> 
+            <groupId>${project.groupId}</groupId>  
+            <artifactId>cava-libgdx</artifactId>  
+            <version>${project.version}</version> 
+        </dependency>           
+    </dependencies>  
+    <properties> 
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+        <maven.compiler.source>1.8</maven.compiler.source>  
+        <maven.compiler.target>1.8</maven.compiler.target> 
+    </properties>  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.cava</groupId>
+                <artifactId>cava-maven</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <applicationName>Cava Libgdx Sample</applicationName>
+                    <mainClass>com.cava.gdx.sample.IOSLauncher</mainClass>
+                    <platform>iOS</platform>
+                    <infoPList>Info.plist</infoPList>
+                    <buildDir>${project.build.directory}/cava-build</buildDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>                
+            </plugin>
+        </plugins>
+    </build>  
+</project>

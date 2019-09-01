@@ -43,8 +43,6 @@ public class JNIWriter {
     Map<String,Method> properties = new HashMap();
     
     public JNIWriter(Clazz c) {
-        if(c.name.contains("AndroidLauncher"))
-            System.out.println("...");
         clazz = c;
         if(c.isInterface) return;
         c.methods.forEach(m -> checkMethod(m));

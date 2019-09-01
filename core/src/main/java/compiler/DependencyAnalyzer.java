@@ -314,8 +314,6 @@ public class DependencyAnalyzer {
     
     
     private void dependsClass(Clazz c) {
-        if(c.name.contains("LinkedList"))
-            System.out.println("...");
         if(!analyzedClasses.contains(c) && !classQueue.contains(c))
             classQueue.add(c);
     }

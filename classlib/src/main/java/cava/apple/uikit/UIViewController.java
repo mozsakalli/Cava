@@ -41,10 +41,10 @@ public class UIViewController extends UIResponder {
         return view;
     }
     
-    @ObjC("viewWillAppear")
+    @ObjC("viewWillAppear:")
     public native void viewWillAppear(boolean animated);
 
-    @ObjC("viewDidAppear")
+    @ObjC("viewDidAppear:")
     public native void viewDidAppear(boolean animated);
     
     @ObjC("viewDidLayoutSubviews")

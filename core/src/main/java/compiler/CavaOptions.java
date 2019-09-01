@@ -118,7 +118,7 @@ public class CavaOptions {
     }
     public static File infoPList() {
         File file = getFile("infoPList");
-        if(file == null || !file.exists()) throw new RuntimeException("Info.plist file must be supplied");
+        if(file == null || !file.exists()) throw new RuntimeException("Info.plist not found at ("+file+")");
         return file;
     }
     public static void infoPList(File file) {

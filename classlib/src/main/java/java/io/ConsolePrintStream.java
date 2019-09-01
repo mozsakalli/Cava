@@ -16,13 +16,17 @@
 
 package java.io;
 
-import cava.apple.foundation.NSString;
-import cava.platform.NativeCode;
+import cava.annotation.Modify;
 
 /**
  *
  * @author mustafa
  */
+@Modify(
+    iOS = ConsolePrintStreamDarwin.class,
+    OsX = ConsolePrintStreamDarwin.class,
+    Android = ConsolePrintStreamAndroid.class
+)
 public class ConsolePrintStream extends PrintStream {
     
     StringBuilder buffer = new StringBuilder();
@@ -36,29 +40,31 @@ public class ConsolePrintStream extends PrintStream {
         super(EMPTYSTREAM);
     }
 
-    private void printImpl(StringBuilder buffer){
-        String str = buffer.toString();
-        //NativeCode.Void("printf(\"%%ls\\n\",%s)", WCharPtr.from(str));
-        NativeCode.Void("NSLog(@\"%%@\",%s)", new NSString(buffer.toString()).toNative());
-    } 
+    private native void printImpl(StringBuilder buffer);
     
     @Override
-    public synchronized void print(String str) {
-        buffer.append(str);
+    public void print(String str) {
+        synchronized(this) {
+            buffer.append(str);
+        }
     }
 
     @Override
-    public synchronized void println(String str) {
-        buffer.append(str);
-        printImpl(buffer);
-        buffer.setLength(0);
-    }
-
-    @Override
-    public synchronized void flush() {
-        if(buffer.length() > 0)
+    public void println(String str) {
+        synchronized(this) {
+            buffer.append(str);
             printImpl(buffer);
-        buffer.setLength(0);
+            buffer.setLength(0);
+        }
+    }
+
+    @Override
+    public  void flush() {
+        synchronized(this) {
+            if(buffer.length() > 0)
+                printImpl(buffer);
+            buffer.setLength(0);
+        }
     }
 
 }

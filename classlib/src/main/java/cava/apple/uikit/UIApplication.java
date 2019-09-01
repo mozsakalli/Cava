@@ -16,6 +16,7 @@
 
 package cava.apple.uikit;
 
+import cava.annotation.Include;
 import cava.annotation.Keep;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
@@ -28,20 +29,16 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
+@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
 public class UIApplication extends UIResponder {
     
-    private static UIApplicationDelegate currentDelegate;
-    private static UIApplication currentApplication;
-    
-    @Keep
-    private static void initFromLaunch(long handle) {
-        currentApplication = new UIApplication(handle);
-    }
-    
-    public UIApplication(){}
-    public UIApplication(long handle) {
-        super(handle);
+    @Keep private static UIApplicationDelegate currentDelegate;
+    @Keep private static UIApplication currentApplication;
+
+    public static <D extends NSObject & UIApplicationDelegate> 
+    void main(String[] args, Class<D> delegateClass) {
+        main(args, null, delegateClass);
     }
     
     public static <P extends UIApplication, D extends NSObject & UIApplicationDelegate> 
@@ -49,8 +46,11 @@ public class UIApplication extends UIResponder {
         int argc = 0;
         CharPtrPtr argv = null;
         
-        String principalClassName = principalClass != null ? NSObject.getObjCClassName(principalClass)  : null;
-        String delegateClassName = delegateClass != null ? NSObject.getObjCClassName(delegateClass) : null;
+        String principalClassName = principalClass != null ? NSObject.getObjectiveCName(principalClass)  : null;
+        Class dc = delegateClass;
+        while(dc != null && dc.getSuperclass() != NSObject.class)
+            dc = dc.getSuperclass();
+        String delegateClassName = delegateClass != null ? NSObject.getObjectiveCName(delegateClass) : null;
         
         if(args != null && args.length > 0) {
             argv = CharPtrPtr.alloc(args.length);
@@ -58,31 +58,28 @@ public class UIApplication extends UIResponder {
                 argv.set(i, CharPtr.allocAsciiZ(args[i]));
             }
         }
-        
         currentDelegate = (UIApplicationDelegate)delegateClass.newInstance();
-        System.out.println("principal: "+principalClassName+"  delegate:"+delegateClassName);
         main(argc, argv, principalClassName, delegateClassName);
-        //NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", argc, argv, principalClassName, delegateClassName);
     }
     
     public static void main(int argc, CharPtrPtr argv, String principal, String delegate) {
         NativeCode.Void("UIApplicationMain(%s, %s, %s, %s)", 
                 argc, 
                 argv, 
-                principal != null ? new NSString(principal).toNative() : null,
-                delegate != null ? new NSString(delegate).toNative() : null);
+                principal != null ? new NSString(principal, true).getNativePeer() : null,
+                delegate != null ? new NSString(delegate, true).getNativePeer() : null);
     }
     
     public static UIApplication getSharedApplication() {
         return currentApplication;
     }
     
-    public boolean getIdleTimerDisabled() {
-        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", handle);
+    public final boolean getIdleTimerDisabled() {
+        return NativeCode.Bool("[(UIApplication*)%s isIdleTimerDisabled]", nativePeer);
     }
     
-    public void setIdleTimerDisabled(boolean disabled) {
-        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", handle, disabled);
+    public final void setIdleTimerDisabled(boolean disabled) {
+        NativeCode.Void("[(UIApplication*)%s setIdleTimerDisabled:%s]", nativePeer, disabled);
     }
     
 }

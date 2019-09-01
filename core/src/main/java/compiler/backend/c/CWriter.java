@@ -16,6 +16,7 @@
 
 package compiler.backend.c;
 
+import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
 import compiler.backend.CodeWriter;
@@ -36,6 +37,7 @@ import compiler.model.ast.CaughtException;
 import compiler.model.ast.CheckCast;
 import compiler.model.ast.ClassInit;
 import compiler.model.ast.ClassRef;
+import compiler.model.ast.Cmp;
 import compiler.model.ast.Code;
 import compiler.model.ast.Const;
 import compiler.model.ast.Field;
@@ -60,11 +62,16 @@ public class CWriter extends CodeWriter {
     CType cType;
     Stack<Integer> returnExceptionId = new Stack();
     List<NameAndType> globalRefs;
-
+    boolean skipSuperConstructor;
+    boolean isUnsafe;
+    
     public CWriter(Method method, SourceWriter out, INameManager naming, CType cType, List<NameAndType> globalRefs) {
         super(method, out, naming);
         this.cType = cType;
         this.globalRefs = globalRefs;
+        Clazz c = CompilerContext.resolve(method.declaringClass);
+        skipSuperConstructor = method.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// false; //c.isObjCImplementation;// || A.hasObjC(c);
+        isUnsafe = !CavaOptions.debug() && (A.hasUnsafe(method) || A.hasUnsafe(c));
     }
     
     public void requireInclude(String name) {
@@ -180,21 +187,27 @@ public class CWriter extends CodeWriter {
                 this.out = tmp;
                 for(int i=0; i<args.length; i++) {
                     Code code = verifyBoxingForNative(ia.elements.get(i));
-                    /*
-                    if(code instanceof Call)
-                        code = ((Call)code).args.get(0);*/
                     this.write(code);
                     args[i] = tmp.toString();
                     tmp.clear();
                 }
-                pattern = String.format(pattern, args);
+                try {
+                    pattern = String.format(pattern, args);
+                } catch(Exception e){
+                    throw new RuntimeException(e.getMessage()+" at "+method, e.getCause());
+                }
                 this.out = saved;
             }
             out.print(pattern);
             return;
         }
-        
+
         Clazz c = CompilerContext.resolve(call.className);
+        if(call.callType == Call.CallType.Special && call.args.size() == 1 && skipSuperConstructor) {
+                //call.methodName.equals("<init>") && (c.isObjCImplementation || A.hasObjC(c))) {
+            //skip objective-C super constructor calls
+            return;
+        }
         Method m = c.findMethod(call.methodName, call.signature);
         if(m == null) throw new RuntimeException("Cant find method: "+call.className+"::"+call.methodName+"::"+call.signature);
         if(call.callType == Call.CallType.Virtual && m.virtualBaseClass != null) {
@@ -369,8 +382,9 @@ public class CWriter extends CodeWriter {
 
     @Override
     public void write(TryCatch t) {
+        if(isUnsafe) throw new RuntimeException("Unsafe methods can't contain try-catch block! method:"+method);
         out.println("/* try */");
-        out.println("jint exception%d = thread->exceptionCount++;", t.index);
+        out.println("JINT exception%d = thread->exceptionCount++;", t.index);
         out.println("thread->exceptions[exception%d].framePtr = thread->framePtr;", t.index);
         out.println("if(setjmp(thread->exceptions[exception%d].jmp) == 0) {", t.index).indent();
         returnExceptionId.push(t.index);
@@ -410,38 +424,86 @@ public class CWriter extends CodeWriter {
     @Override
     public void write(Return r) {
         if(r.value == null) {
-            out.print("{ thread->framePtr = entryFramePtr; ");
-            if(!returnExceptionId.isEmpty()) {
-                out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
-            }
-            out.print("return; }");
+            if(!isUnsafe) {
+                out.print("{ thread->framePtr = entryFramePtr; ");
+                if(!returnExceptionId.isEmpty()) {
+                    out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+                }
+                out.print("return; }");
+            } else out.print("return");
         } else {
-            //todo: dont use local variable for constant returns
-            out.print("{ %s $$ret = ", cType.toC(method.type));
-            write(r.value);
-            out.print("; thread->framePtr = entryFramePtr; ");
-            if(!returnExceptionId.isEmpty()) {
-                out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+            if(!isUnsafe) {
+                //todo: dont use local variable for constant returns
+                out.print("{ %s $$ret = ", cType.toC(method.type));
+                write(r.value);
+                out.print("; thread->framePtr = entryFramePtr; ");
+                if(!returnExceptionId.isEmpty()) {
+                    out.print("thread->exceptionCount = exception%d; ",returnExceptionId.peek());
+                }
+                out.print("return $$ret; }");
+            } else {
+                out.print("return ");
+                write(r.value);
             }
-            out.print("return $$ret; }");
         }
     }
     
     
     @Override
     public void writeLineNumber(int line) {
+        if(isUnsafe) out.print("// ");
         out.println("JVMLINE(%d)", line);
     }
 
     @Override
     public void write(Local local) {
-        out.print("LOCAL(%s,%s)",naming.local(local.ref), cType.toC(local.ref.type));
-        if(currentLine != Integer.MAX_VALUE) {
-            int[] loc = variableLocations.computeIfAbsent(local.ref.name, (k) -> new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
-            loc[0] = Math.min(loc[0], currentLine);
-            loc[1] = Math.max(loc[1], currentLine);
+        if(local.ref.type.equals("cava/c/Struct"))
+            out.print(naming.local(local.ref));
+        else {
+            out.print("LOCAL(%s,%s)",naming.local(local.ref), cType.toC(local.ref.type));
+            if(currentLine != Integer.MAX_VALUE) {
+                int[] loc = variableLocations.computeIfAbsent(local.ref.name, (k) -> new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE});
+                loc[0] = Math.min(loc[0], currentLine);
+                loc[1] = Math.max(loc[1], currentLine);
+            }
         }
         
     }
+
+    @Override
+    public void write(Cmp c) {
+        SourceWriter tmp = this.out;
+        this.out = new SourceWriter();
+        write(c.left);
+        String l = out.toString();
+        out.clear();
+        write(c.right);
+        String r = out.toString();
+        out = tmp;
+        
+        switch(c.op) {
+            case Cmpl:
+                out.print("(%s != %s || %s != %s) ? -1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r);
+                break;
+            case Cmpg:
+                out.print("(%s != %s || %s != %s) ? 1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r);
+                break;
+            case Cmp:
+                out.print("%s < %s ? -1 : (%s > %s ? 1 : 0)", l,r,l,r);
+                break;
+                /*
+                write(c.left); out.print("<"); write(c.right);
+                out.print(" ? -1 : (");
+                write(c.left); out.print(">"); write(c.right);
+                out.print(" ? 1 : 0)");
+                */
+
+                
+            //default:
+            //    out.print(c.left.getClass()+" "+c.op+" "+c.right.getClass());
+                
+        }
+    }
+    
     
 }

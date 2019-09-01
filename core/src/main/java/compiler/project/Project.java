@@ -16,10 +16,18 @@
 
 package compiler.project;
 
+import compiler.util.FileUtil;
+import java.io.File;
+
 /**
  *
  * @author mustafa
  */
-public class Project {
+public abstract class Project {
     
+    public abstract void generate() throws Exception;
+    
+    void copyCavaFiles(File target) throws Exception {
+        FileUtil.extractZip(target, getClass().getResourceAsStream("/com/cava/native.zip"));
+    }    
 }

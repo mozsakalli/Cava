@@ -61,4 +61,6 @@ public class Method {
     public Class getDeclaringClass() {
         return declaringClass;
     }
+    
+    public void setAccessible(boolean value){}
 }

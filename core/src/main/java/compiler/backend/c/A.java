@@ -16,7 +16,9 @@
 
 package compiler.backend.c;
 
+import compiler.Platform;
 import compiler.model.Clazz;
+import compiler.model.Method;
 import compiler.model.NameAndType;
 import java.util.Map;
 
@@ -29,6 +31,12 @@ public class A {
     public final static String ObjC = "cava.annotation.ObjC";
     public final static String Keep = "cava.annotation.Keep";
     public final static String Native = "cava.annotation.Native";
+    public final static String Framework = "cava.annotation.Framework";
+    public final static String Resource = "cava.annotation.Resource";
+    public final static String Inline = "cava.annotation.Inline";
+    public final static String Unsafe = "cava.annotation.Unsafe";
+    public final static String Modify = "cava.annotation.Modify";
+    public final static String JNI = "cava.annotation.JNI";
     
     static Map<String, Map<String,Object>> getAnnotationMap(Object o) {
         if(o instanceof NameAndType)
@@ -60,6 +68,9 @@ public class A {
     public static boolean hasNative(Object o) {
         return has(o, Native);
     }
+    public static String nativeValue(Object o) {
+        return string(o, Native, "value");
+    }
     public static boolean hasObjC(Object o) {
         return has(o, ObjC);
     }
@@ -69,7 +80,43 @@ public class A {
     public static boolean objcProperty(Object o) {
         return bool(o, ObjC, "property");
     }
+    public static boolean objcNoInit(Object o) {
+        return bool(o, ObjC, "noInit");
+    }
+    public static boolean objcNoAlloc(Object o) {
+        return bool(o, ObjC, "noAlloc");
+    }
     public static boolean hasKeep(Object o) {
         return has(o, Keep);
+    }
+    public static boolean hasInline(Object o) {
+        return has(o, Inline);
+    }
+    public static boolean hasUnsafe(Object o) {
+        return has(o, Unsafe);
+    }
+    public static String framework(Object o) {
+        return string(o, Framework, "value");
+    }
+    public static String modify(Object o, Platform platform) {
+        String result = string(o, Modify, platform.toString());
+        return result != null && !result.equals("java/lang/Object") && !result.isEmpty() ? result : null;
+    }
+    public static boolean hasJNI(Object o) {
+        return has(o, JNI);
+    }
+    public static String jniName(Object o) {
+        if(hasJNI(o)) {
+            String name = string(o, JNI,"value");
+            if((name == null || name.isEmpty())) {
+                if(o instanceof NameAndType) {
+                    return ((NameAndType)o).name;
+                }
+            }
+        }
+        return null;
+    }
+    public static boolean jniField(Object o) {
+        return bool(o, JNI, "field");
     }
 }

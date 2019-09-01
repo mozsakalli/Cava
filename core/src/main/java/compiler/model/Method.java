@@ -16,7 +16,6 @@
 
 package compiler.model;
 
-import compiler.DecompilerUtils;
 import compiler.model.ast.Block;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -40,6 +39,8 @@ public class Method extends NameAndType implements Serializable {
     public transient String virtualBaseClass;
     public transient String interfaceBaseClass;
 
+    public transient int virtualTableIndex;
+    
     //if there is only 1 method for this interface method
     public transient Method interfaceImplementor;
     public transient int interfaceTableIndex = -1;
@@ -47,8 +48,7 @@ public class Method extends NameAndType implements Serializable {
     public transient int minLine;
     public transient int maxLine;
 
-    public HashSet<String> requiredTypes = new HashSet();
-    public HashSet<String> requiredMethods = new HashSet();
+    public transient boolean isObjCImplementation;
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);

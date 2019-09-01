@@ -31,39 +31,44 @@ public class CType {
     public String toC(String type) {
         switch (type) {
             case "B":
-                return "jbyte";
+                return "JBYTE";
             case "Z":
-                return "jbool";
+                return "JBOOL";
             case "C":
-                return "jchar";
+                return "JCHAR";
             case "S":
-                return "jshort";
+                return "JSHORT";
             case "I":
-                return "jint";
+                return "JINT";
             case "F":
-                return "jfloat";
+                return "JFLOAT";
             case "J":
-                return "jlong";
+                return "JLONG";
             case "D":
-                return "jdouble";
+                return "JDOUBLE";
             case "V":
                 return "void";
             default:
                 dependency.add(type);
-                return "jobject";
+                return "JOBJECT";
         }
     }
 
     public String getIncludes(NameManager naming, Set<String> exclude) {
         String includes = "";
+        Set<String> used = new HashSet();
         for (String d : dependency) {
-            if(d.startsWith("[")) continue;
+            if(d.startsWith("[")) {
+                d = DecompilerUtils.elementType(d);
+            }
             if (exclude != null && exclude.contains(d)) {
                 continue;
             }
+            if(used.contains(d)) continue;
             if (DecompilerUtils.isPrimitive(d)) {
                 continue;
             }
+            used.add(d);
             if (!includes.isEmpty()) {
                 includes += "\n";
             }

@@ -49,6 +49,8 @@ public class PBXProject extends PBXNode {
     private final PBXNode sourcesBuildPhaseCava = new PBXNode(this, "Sources");
     private final PBXNode frameworksBuildPhaseCava = new PBXNode(this, "Frameworks");
     private final PBXNode buildNativeTarget = new PBXNode(this, CavaOptions.applicationName());
+    private final PBXGroup buildResourcesGroup = new PBXGroup(this, "buildResourcesGroup");
+    private final PBXNode resourcesBuildPhase = new PBXNode(this, "Resources");
     
     private final PBXProduct productNode = productGroup.addChild(new PBXProduct(this, "cava.app"));
     
@@ -75,11 +77,12 @@ public class PBXProject extends PBXNode {
             buildFilesGroup.addChild(new PBXBuildFile(this, fileNode));
     }
 
-    public void addResourceFile(String groupId, File path) {
+    public PBXFile addResourceFile(String groupId, File path) {
         PBXGroup group = groupId.isEmpty() ? resourcesGroup : resourcesGroup.getChildGroup(groupId);
         if (group == null)
             group = resourcesGroup.addChild(new PBXGroup(this, groupId));
 
+        PBXFile pbxFile = null;
         // special case -- files in lproj folders has to be exported as name of .lproj
         String parenName = path.getParentFile().getName();
         if (parenName.endsWith(".lproj")) {
@@ -89,11 +92,18 @@ public class PBXProject extends PBXNode {
             if (variantGroup == null) {
                 variantGroup = group.addChild(new PBXGroup(this, path.getName(), PBXGroup.Type.VARIANT_GROUP));
             }
-            variantGroup.addChild(new PBXFile(this, name, path));
+            
+            variantGroup.addChild(pbxFile = new PBXFile(this, name, path));
         } else {
-            group.addChild(new PBXFile(this, path));
+            group.addChild(pbxFile = new PBXFile(this, path));
 
         }
+        return pbxFile;
+    }
+    
+    public void addAssetFile(String groupId, File path) {
+        PBXFile pbxFile = addResourceFile(groupId, path);
+        buildResourcesGroup.addChild(new PBXBuildFile(this, pbxFile));
     }
 
     public void addFramework(String name, File path) {
@@ -146,6 +156,7 @@ public class PBXProject extends PBXNode {
         // dump PBXBuildFile refs
         out.println("/* Begin PBXBuildFile section */");
         this.dumpPBXBuildFilesfiles(out);
+        this.dumpPBXBuildResourcesFiles(out);
         out.println("/* End PBXBuildFile section */").ln();
 
         // dump source build phases
@@ -158,6 +169,11 @@ public class PBXProject extends PBXNode {
         this.dumpFrameworksBuildPhase(out);
         out.println("/* End PBXFrameworksBuildPhase section */").ln();
 
+        // dump resources build phases
+        out.println("/* Begin PBXResourcesBuildPhase section */");
+        this.dumpResourcesBuildPhase(out);
+        out.println("/* End PBXResourcesBuildPhase section */").ln();
+        
         // dump native targets
         out.println("/* Begin PBXNativeTarget section */");
         this.dumpBuildNativeTarget(out);
@@ -208,6 +224,11 @@ public class PBXProject extends PBXNode {
             node.dump(out);
     }
 
+    private void dumpPBXBuildResourcesFiles(SourceWriter out) {
+        for (PBXNode node : buildResourcesGroup.getChildren())
+            node.dump(out);
+    }
+    
     private void dumpBuildConfigurationList(SourceWriter out) {
         out.println(buildConfigurationList.uuidWithComment() + " = {");
         out.indent().println("isa = XCConfigurationList;")
@@ -228,7 +249,9 @@ public class PBXProject extends PBXNode {
         .println("INFOPLIST_FILE = \"%s\";", CavaOptions.infoPList().getAbsolutePath())
         .println("IPHONEOS_DEPLOYMENT_TARGET = %s;", xcodeProject.getIosSdk())
         .println("CLANG_ENABLE_OBJC_ARC = NO;")
-        .println("OTHER_CFLAGS = \"-fshort-wchar%s\";", CavaOptions.debug() ? " -DJVM_DEBUG -DJVM_DEBUG_PORT="+CavaOptions.debugPort() : "")     
+        .println("OTHER_CFLAGS = \"-fshort-wchar %s\";", CavaOptions.debug() ? "-DJVM_DEBUG" : "")
+                //CavaOptions.debug() ? " -DJVM_DEBUG -DJVM_DEBUG_PORT="+CavaOptions.debugPort()//+" -DJVM_DEBUG_HOST=\""+CavaOptions.debugHost()+"\""
+                //        : "")     
         .println("ENABLE_BITCODE = NO;")
         .println("GCC_OPTIMIZATION_LEVEL = s;")        
         .println("COPY_PHASE_STRIP = NO;") 
@@ -297,6 +320,19 @@ public class PBXProject extends PBXNode {
         .println("runOnlyForDeploymentPostprocessing = 0;")
         .undent().println("};");
     }
+    
+    private void dumpResourcesBuildPhase(SourceWriter out) {
+        out.println(resourcesBuildPhase.uuidWithComment() + " = {")
+        .indent().println("isa = PBXResourcesBuildPhase;")
+        .println("buildActionMask = 2147483647;")
+        .println("files = (").indent();
+        for (PBXNode node : buildResourcesGroup.getChildren())
+            out.println(node.uuidWithComment() + ",");
+        out.undent().println(");")
+        .println("runOnlyForDeploymentPostprocessing = 0;")
+        .undent().println("};");
+        
+    }
 
     private void dumpBuildNativeTarget(SourceWriter out) {
         out.println(buildNativeTarget.uuidWithComment() + " = {")
@@ -304,6 +340,7 @@ public class PBXProject extends PBXNode {
         .println("buildPhases = (")
         .indent().println(sourcesBuildPhaseCava.uuidWithComment() + ",")
         .println(frameworksBuildPhaseCava.uuidWithComment() + ",")
+        .println(resourcesBuildPhase.uuidWithComment() + ",")        
         .undent().println(");")
         .println("buildRules = (")
         .println(");")

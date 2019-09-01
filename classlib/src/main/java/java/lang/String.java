@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
 public final class String implements java.lang.CharSequence, Comparable<String> {
 
     private static ArrayList<String> str = new ArrayList<String>();
-    
+
     @Keep
     public final char[] value;
-
+    
     @Keep
     public final int offset;
 
@@ -37,6 +37,7 @@ public final class String implements java.lang.CharSequence, Comparable<String> 
     @Keep
     private int hashCode = 0;
 
+    
     private static final char[] ZERO_CHAR = new char[0];
 
     /**
@@ -96,7 +97,8 @@ public final class String implements java.lang.CharSequence, Comparable<String> 
         this(bytesToChars(bytes, 0, bytes.length, enc));
     }
 
-    private static char[] bytesToChars(byte[] bytes, int offset, int length, String encoding) {
+    //only utf8 supported
+    public static char[] bytesToChars(byte[] bytes, int offset, int length, String encoding) {
         char[] chars = new char[length];
         int end = offset + length;
         int ptr = offset;

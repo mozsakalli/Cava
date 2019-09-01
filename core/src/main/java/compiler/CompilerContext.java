@@ -20,10 +20,11 @@ import com.strobel.decompiler.Decompiler;
 import com.strobel.decompiler.DecompilerSettings;
 import com.strobel.decompiler.PlainTextOutput;
 import compiler.backend.StringCollector;
+import compiler.backend.c.A;
 import compiler.backend.c.CBackend;
 import compiler.model.Clazz;
 import compiler.model.Method;
-import compiler.project.XCodeProject;
+import compiler.project.Project;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,9 +42,6 @@ import java.util.Map;
  */
 public class CompilerContext {
     
-    //public static String mainClassName;
-    //public static String mainName;
-    //public static String mainSignature;
     public static File[] classPath;
     public static File[] shadowClassPath;
     public static Map<String, Clazz> classes = new HashMap();
@@ -52,13 +50,9 @@ public class CompilerContext {
     public static String[] keepClasses;
     
     public static boolean keepAll;
-    //public static boolean isDebug = true;
-    //public static Platform targetPlatform = Platform.Ios;
-    
-    //public static File buildDir = new File("build");
     public static File platformBuildDir;
     public static File classCacheDir;
-    
+
     static DecompilerSettings getDecompilerSettings() {
         DecompilerSettings decompilerSettings = new DecompilerSettings();
         decompilerSettings.setDisableForEachTransforms(true);
@@ -73,18 +67,24 @@ public class CompilerContext {
         return decompilerSettings;
     }
     
+    
     public static Method getMainMethod() {
         //todo: 
-        return classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
+        return CavaOptions.targetPlatform() == Platform.Android ?
+                classes.get(CavaOptions.mainClass()).findDeclaredMethod("onCreate", "(Lcava/android/os/Bundle;)V") :
+                classes.get(CavaOptions.mainClass()).findDeclaredMethod("main", "()V");
     }
     
     static Clazz load(String name) {
+        
         System.out.println("Decompiling "+name);
         PlainTextOutput po = new PlainTextOutput();
         DecompilerSettings settings = getDecompilerSettings();
         Decompiler.decompile(name.replace('.', '/'), po, settings);
         Clazz clazz = ((ModelLanguage)settings.getLanguage()).clazz;
         return clazz;
+        
+        //return SootDecompiler.decompile(name);
     }
     
     
@@ -101,11 +101,15 @@ public class CompilerContext {
     
     static HashSet<String> loadingClasses = new HashSet();
     public static Clazz resolve(String name) {
+        Clazz clazz = null;
         try {
-            return _resolve(name);
+            clazz =  _resolve(name);
         } catch(Exception e){
             throw new RuntimeException(e);
         }
+        if(A.hasObjC(clazz) && !CavaOptions.targetPlatform().isObjC())
+            throw new RuntimeException(CavaOptions.targetPlatform()+" does not support Objective-C class: "+name);
+        return clazz;
     }
     
     static long ioTime;
@@ -114,7 +118,6 @@ public class CompilerContext {
     public static Clazz _resolve(String name) throws Exception {
         Clazz clazz = classes.get(name);
         if(clazz != null) return clazz;
-        
         if(name.startsWith("[")) {
             clazz = new Clazz();
             clazz.name = name;
@@ -138,7 +141,7 @@ public class CompilerContext {
             decompileTime += System.currentTimeMillis() - time;
 
             classes.put(name, clazz);
-            LambdaGenerator.process();
+            //soot LambdaGenerator.process();
 
             time = System.currentTimeMillis();
             path.getParentFile().mkdirs();
@@ -193,8 +196,9 @@ public class CompilerContext {
             });
         });
         
-        XCodeProject project = new XCodeProject();
-        project.build();
+        Project project = CavaOptions.targetPlatform().createProject();
+        //XCodeProject project = new XCodeProject();
+        project.generate();
         
         System.out.println(stat[0]+" methods "+stat[1]+" virtual "+stat[2]+" devirtualized");
         System.out.println("decompile="+decompileTime+" io="+ioTime);        
@@ -203,18 +207,6 @@ public class CompilerContext {
     static Clazz patchClass(Clazz clazz) {
         if(clazz.name.equals("java/lang/Object")) {
             clazz.superName = null;
-            /*
-            Method m = new Method();
-            m.name = "getClass";
-            m.signature = "()Ljava/lang/Class;";
-            m.modifiers = Modifier.NATIVE | Modifier.PUBLIC;
-            m.usedInProject = true;
-            m.declaringClass = "java/lang/Object";
-            m.type = "java/lang/Class";
-            Block b = new Block();
-            b.children.add(new Return(new NativeCode("$_self.c")));
-            m.body = b;
-            clazz.methods.add(m);*/
         }
         
         return clazz;
@@ -223,7 +215,11 @@ public class CompilerContext {
     
     public static HashSet<File> generatedSourceFiles = new HashSet();
     public static void saveCode(String fileName, String code) throws Exception {
-        File f = new File(platformBuildDir, "generated/"+fileName);
+        saveCode(fileName, "generated", code);
+    }
+
+    public static void saveCode(String fileName, String path, String code) throws Exception {
+        File f = new File(new File(platformBuildDir, path), fileName);
         generatedSourceFiles.add(f);
         byte[] newBytes = code.getBytes();
         if(f.exists()) {

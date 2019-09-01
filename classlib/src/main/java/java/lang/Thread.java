@@ -63,7 +63,7 @@ public class Thread implements java.lang.Runnable{
     }
 
     public long getId() {
-        return NativeCode.Long("(jlong)%s", this);
+        return NativeCode.Long("(JLONG)%s", this);
     }
     
     public final static Thread currentThread() {
@@ -136,5 +136,9 @@ public class Thread implements java.lang.Runnable{
             THREADLIST.remove(this);
         }
         return null;
+    }
+    
+    public void setDaemon(boolean value) {
+        //todo
     }
 }

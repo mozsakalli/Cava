@@ -19,21 +19,49 @@ package java.io;
  * Signals that an I/O exception of some sort has occurred. This class is the general class of exceptions produced by failed or interrupted I/O operations.
  * Since: JDK1.0, CLDC 1.0 See Also:InputStream, OutputStream
  */
-public class IOException extends java.lang.Exception{
+public class IOException extends Exception {
+
+    private static final long serialVersionUID = 7818375828146090155L;
+
     /**
-     * Constructs an IOException with null as its error detail message.
+     * Constructs a new {@code IOException} with its stack trace filled in.
      */
-    public IOException(){
-         //TODO codavaj!!
+    public IOException() {
     }
 
     /**
-     * Constructs an IOException with the specified detail message. The error message string s can later be retrieved by the
-     * method of class java.lang.Throwable.
-     * s - the detail message.
+     * Constructs a new {@code IOException} with its stack trace and detail
+     * message filled in.
+     *
+     * @param detailMessage
+     *            the detail message for this exception.
      */
-    public IOException(java.lang.String s){
-         super(s);
+    public IOException(String detailMessage) {
+        super(detailMessage);
     }
 
+    /**
+     * Constructs a new instance of this class with detail message and cause
+     * filled in.
+     *
+     * @param message
+     *            The detail message for the exception.
+     * @param cause
+     *            The detail cause for the exception.
+     * @since 1.6
+     */
+    public IOException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * Constructs a new instance of this class with its detail cause filled in.
+     *
+     * @param cause
+     *            The detail cause for the exception.
+     * @since 1.6
+     */
+    public IOException(Throwable cause) {
+        super(cause == null ? null : cause.toString(), cause);
+    }
 }

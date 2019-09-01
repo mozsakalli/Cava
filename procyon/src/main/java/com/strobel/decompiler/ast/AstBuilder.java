@@ -93,10 +93,12 @@ public final class AstBuilder {
 
         Collections.sort(builder._exceptionHandlers);
 
+        
         builder.removeGetClassCallsForInvokeDynamic();
         builder.pruneExceptionHandlers();
         builder.inlineSubroutines();
-
+        
+        
         //mst: we need finalizer calls
         //FinallyInlining.run(builder._body, builder._instructions, builder._exceptionHandlers, builder._removed);
 

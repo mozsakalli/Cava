@@ -16,8 +16,6 @@
 
 package cava.apple.foundation;
 
-import cava.annotation.Framework;
-import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.platform.NativeCode;
 
@@ -25,21 +23,14 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
-@Framework("Foundation")
-@Include("<Foundation/Foundation.h>")
 @ObjC
-public class NSAutoreleasePool extends NSObject<NSAutoreleasePool> {
+public class NSAutoreleasePool extends NSObject implements AutoCloseable {
     
-    public static NSAutoreleasePool alloc() {
-        return new NSAutoreleasePool(NativeCode.Long("[NSAutoreleasePool alloc]"));
+    public NSAutoreleasePool(){}
+    
+    @Override
+    public void close() {
+        NativeCode.Void("[(NSAutoreleasePool*)%s release]", nativePeer);
     }
 
-    public NSAutoreleasePool(){}
-    public NSAutoreleasePool(long handle) {
-        super(handle);
-    }
-    public void close() {
-        NativeCode.Void("[(NSAutoreleasePool*)%s close]", handle);
-    }
-    
 }

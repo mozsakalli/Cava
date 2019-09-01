@@ -30,4 +30,5 @@ public class Constructor extends Method {
         return invoke(NativeCode.Object("JvmAllocObject(%s)",declaringClass), initargs);
     }
     
+    
 }

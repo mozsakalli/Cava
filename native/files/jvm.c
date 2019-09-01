@@ -110,8 +110,9 @@ JvmClass ArrOf_ArrOf_ArrOf_D_Class;
 /////////////////////////////////////////////
 static void _finalizeObject(GC_PTR addr, GC_PTR client_data) {
     JvmObject* object = (JvmObject*)addr;
-    if(object->klass->finalizeFunction)
+    if(object->klass->finalizeFunction) {
         object->klass->finalizeFunction(object);
+    }
 }
 static void* gcAlloc(int size) {
     void* m = GC_MALLOC(size);
@@ -119,6 +120,7 @@ static void* gcAlloc(int size) {
         GC_gcollect();
         m = GC_MALLOC(size);
     }
+    if(m) memset(m, 0, size);    
     return m;
 }
 static void* gcAllocAtomic(int size) {
@@ -127,8 +129,18 @@ static void* gcAllocAtomic(int size) {
         GC_gcollect();
         m = GC_MALLOC_ATOMIC(size);
     }
+    if(m) memset(m, 0, size);    
     return m;
 }
+static void* gcAllocAtomicNoZero(int size) {
+    void* m = GC_MALLOC_ATOMIC(size);
+    if(!m) {
+        GC_gcollect();
+        m = GC_MALLOC_ATOMIC(size);
+    }
+    return m;
+}
+
 
 void JvmAddRoot(void* ptr) {
     GC_add_roots(ptr, ptr + sizeof(void*));
@@ -138,44 +150,44 @@ JvmObject* JvmAllocObject(JvmClass* klass) {
     object->klass = klass;
     if(klass->finalizeFunction)
         GC_REGISTER_FINALIZER_NO_ORDER(object, _finalizeObject, NULL, NULL, NULL);
-	return object;
+    return object;
 }
-JvmString* JvmAllocString(jchar* chars, jint length) {
+JvmString* JvmAllocString(JCHAR* chars, JINT length) {
     JvmString* string = gcAlloc(sizeof(JvmString));
     string->klass = &java_lang_String_Class;
     string->offset = 0;
     string->count = length;
     JvmArray* array = JvmAllocPrimArray1(&ArrOf_C_Class, length);
-    memcpy(JvmArrayData(array), chars, length*sizeof(jchar));
+    memcpy(JvmArrayData(array), chars, length*sizeof(JCHAR));
     string->value = array;
     
     return string;
 }
-JvmString* JvmMakeString(jchar* chars, jint length) {
+JvmString* JvmMakeString(JCHAR* chars, JINT length) {
     JvmString* string = malloc(sizeof(JvmString));
     string->klass = &java_lang_String_Class;
     string->offset = 0;
     string->count = length;
-    JvmArray* array = malloc(sizeof(JvmArray) + length * sizeof(jchar));
+    JvmArray* array = malloc(sizeof(JvmArray) + length * sizeof(JCHAR));
     array->klass = &ArrOf_C_Class;
     array->len = length;
-    memcpy(JvmArrayData(array), chars, length*sizeof(jchar));
+    memcpy(JvmArrayData(array), chars, length*sizeof(JCHAR));
     string->value = array;
     return string;
 }
 
-JvmArray* JvmMakeObjectArray(JvmClass* klass, jint length, void* data) {
-    JvmArray* array = (JvmArray*)malloc(sizeof(JvmArray) + sizeof(jobject) * length);
+JvmArray* JvmMakeObjectArray(JvmClass* klass, JINT length, void* data) {
+    JvmArray* array = (JvmArray*)malloc(sizeof(JvmArray) + sizeof(JOBJECT) * length);
     array->klass = klass;
     array->len = length;
     if(length > 0)
-        memcpy(JvmArrayData(array), data, length * sizeof(jobject));
+        memcpy(JvmArrayData(array), data, length * sizeof(JOBJECT));
     return array;
 }
 
-JvmMethod* JvmMakeMethod(JvmClass* klass, JvmString* name, JvmClass* type, jint modifiers, JvmArray* parameters, void* methodAddress, void* dynamicWrapper
+JvmMethod* JvmMakeMethod(JvmClass* klass, JvmString* name, JvmClass* type, JINT modifiers, JvmArray* parameters, void* methodAddress, void* dynamicWrapper
 #ifdef JVM_DEBUG
-     ,jint minLine, jint maxLine, jint argCount, jint localCount, JvmLocalVariableInfo* locals
+     ,JINT minLine, JINT maxLine, JINT argCount, JINT localCount, JvmLocalVariableInfo* locals
 #endif
 ) {
     JvmMethod* m = malloc(sizeof(JvmMethod));
@@ -198,7 +210,7 @@ JvmMethod* JvmMakeMethod(JvmClass* klass, JvmString* name, JvmClass* type, jint 
     return m;
 }
 
-JvmField* JvmMakeField(JvmClass* klass, JvmString* name, JvmClass* type, jint modifiers, void* fieldAddress) {
+JvmField* JvmMakeField(JvmClass* klass, JvmString* name, JvmClass* type, JINT modifiers, void* fieldAddress) {
     JvmField* field = malloc(sizeof(JvmField));
     field->klass = &java_lang_reflect_Field_Class;
     field->declaringClass = klass;
@@ -210,27 +222,27 @@ JvmField* JvmMakeField(JvmClass* klass, JvmString* name, JvmClass* type, jint mo
 }
 
 //1d arrays
-JvmArray* JvmAllocPrimArray1(JvmClass* klass, jint length) {
+JvmArray* JvmAllocPrimArray1(JvmClass* klass, JINT length) {
     JvmArray* array = (JvmArray*)gcAllocAtomic(sizeof(JvmArray) + klass->componentType->size * length);
     array->klass = klass;
     array->len = length;
     return array;
 }
-JvmArray* JvmAllocObjectArray1(JvmClass* klass, jint length) {
-    JvmArray* array = (JvmArray*)gcAllocAtomic(sizeof(JvmArray) + (sizeof(jobject)) * length);
+JvmArray* JvmAllocObjectArray1(JvmClass* klass, JINT length) {
+    JvmArray* array = (JvmArray*)gcAlloc(sizeof(JvmArray) + (sizeof(JOBJECT)) * length);
     array->klass = klass;
     array->len = length;
     return array;
 }
 //2d arrays
-JvmArray* JvmAllocPrimArray2(JvmClass* klass, jint length, jint length2) {
+JvmArray* JvmAllocPrimArray2(JvmClass* klass, JINT length, JINT length2) {
     JvmArray* array = JvmAllocObjectArray1(klass, length);
     void** data = JvmArrayData(array);
     for(int i=0; i<length; i++)
         data[i] = JvmAllocPrimArray1(klass->componentType, length2);
     return array;
 }
-JvmArray* JvmAllocObjectArray2(JvmClass* klass, jint length, jint length2) {
+JvmArray* JvmAllocObjectArray2(JvmClass* klass, JINT length, JINT length2) {
     JvmArray* array = JvmAllocObjectArray1(klass, length);
     void** data = JvmArrayData(array);
     for(int i=0; i<length; i++)
@@ -238,15 +250,18 @@ JvmArray* JvmAllocObjectArray2(JvmClass* klass, jint length, jint length2) {
     return array;
 }
 
-JvmArray* JvmInitPrimArray1(JvmClass* klass, jint length, void* data) {
-    JvmArray* array = JvmAllocPrimArray1(klass, length);
-    memcpy(JvmArrayData(array), data, length * sizeof(klass->componentType->size));
+JvmArray* JvmInitPrimArray1(JvmClass* klass, JINT length, void* data) {
+    int byteSize = klass->componentType->size * length;
+    JvmArray* array = (JvmArray*)gcAllocAtomicNoZero(sizeof(JvmArray) + byteSize);
+    array->klass = klass;
+    array->len = length;
+    memcpy(JvmArrayData(array), data, byteSize);
     return array;
 }
 
-JvmArray* JvmInitObjectArray1(JvmClass* klass, jint length, void* data) {
+JvmArray* JvmInitObjectArray1(JvmClass* klass, JINT length, void* data) {
     JvmArray* array = JvmAllocObjectArray1(klass, length);
-    memcpy(JvmArrayData(array), data, length * sizeof(jobject));
+    memcpy(JvmArrayData(array), data, length * sizeof(JOBJECT));
     return array;
 }
 
@@ -255,26 +270,35 @@ JvmArray* JvmInitObjectArray1(JvmClass* klass, jint length, void* data) {
 //////////////////////////////////////////////
 #define CHECKBOUNDS(array,index) if(index<0 || index>=JvmArrayLen(array)) JvmArrayException(index);
 #define DEFINE_ARRAY_ACCESS(nm, type) \
-type JvmArrayGet_##nm (JvmArray* array, int index) { \
+JVMINLINE type JvmArrayGet_##nm (JvmArray* array, int index) { \
     CHECKBOUNDS(array, index); \
     return ((type*)JvmArrayData(array))[index];\
 } \
-type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
+JVMINLINE type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
     CHECKBOUNDS(array, index); \
     return ((type*)JvmArrayData(array))[index] = value; \
 }
 
-DEFINE_ARRAY_ACCESS(B, jbyte)
-DEFINE_ARRAY_ACCESS(C, jchar)
-DEFINE_ARRAY_ACCESS(S, jshort)
-DEFINE_ARRAY_ACCESS(Z, jbool)
-DEFINE_ARRAY_ACCESS(I, jint)
-DEFINE_ARRAY_ACCESS(F, jfloat)
-DEFINE_ARRAY_ACCESS(J, jlong)
-DEFINE_ARRAY_ACCESS(D, jdouble)
-DEFINE_ARRAY_ACCESS(O, jobject)
+DEFINE_ARRAY_ACCESS(B, JBYTE)
+DEFINE_ARRAY_ACCESS(C, JCHAR)
+DEFINE_ARRAY_ACCESS(S, JSHORT)
+DEFINE_ARRAY_ACCESS(Z, JBOOL)
+DEFINE_ARRAY_ACCESS(I, JINT)
+DEFINE_ARRAY_ACCESS(F, JFLOAT)
+DEFINE_ARRAY_ACCESS(J, JLONG)
+DEFINE_ARRAY_ACCESS(D, JDOUBLE)
+DEFINE_ARRAY_ACCESS(O, JOBJECT)
 
-jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
+#define DEFINE_ARRAY_ACCESS_NBC(nm, type) \
+JVMINLINE type JvmArrayGet_##nm_NBC (JvmArray* array, int index) { \
+return ((type*)JvmArrayData(array))[index];\
+} \
+JVMINLINE type JvmArraySet_##nm_NBC (JvmArray* array, int index, type value) { \
+return ((type*)JvmArrayData(array))[index] = value; \
+}
+
+JBOOL JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
+    if(src == dst) return jtrue;
     if(src == jnull || dst == jnull) JvmNullPointerException();
     
     if(src->componentType) {
@@ -282,75 +306,124 @@ jbool JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
         return JvmIsAssignableFrom(src->componentType, dst->componentType);
     }
     
-    return dst->isChildOf(src);
+    return dst->isChildOf ? dst->isChildOf(src) : jfalse;
 }
 
-jbool JvmInstanceOf(jobject object, jobject klass) {
+JBOOL JvmInstanceOf(JOBJECT object, JOBJECT klass) {
     if(object == jnull || klass == jnull) return jfalse;
     return JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass);
 }
 
-jobject JvmCheckCast(jobject object, jobject klass) {
+JOBJECT JvmCheckCast(JOBJECT object, JOBJECT klass) {
     if(object == jnull || klass == jnull) return object;
+
     if(!JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass)) {
         JvmClassCastException();
     }
-	return object;
+    return object;
 }
 
-pthread_mutex_t JvmMonitorListLock;
-typedef struct JvmMonitorMutex {
+typedef struct JvmMonitor {
     pthread_mutex_t mutex;
     void* key;
-    jbool created;
-} JvmMonitorMutex;
-#define MAXMONITOR 256
-JvmMonitorMutex JvmMonitorMutexList[MAXMONITOR];
+    JBOOL created;
+    JvmThread* thread;
+    int count;
+    struct JvmMonitor* next;
+} JvmMonitor;
+pthread_mutex_t JvmMonitorListLock;
+JvmMonitor* JvmActiveMonitors = jnull;
+JvmMonitor* JvmFreeMonitors = jnull;
 
 void JvmMonitorEnter(JvmObject* object) {
+    if(object == jnull) {
+        JvmNullPointerException();
+    }
     pthread_mutex_lock(&JvmMonitorListLock);
-    int index = -1;
-    for(int i=0; i<MAXMONITOR; i++)
-        if(JvmMonitorMutexList[i].key == (void*)object) {
-            index = i;
-            break;
-        }
-    
-    if(index == -1) {
-        for(int i=0; i<MAXMONITOR; i++)
-            if(JvmMonitorMutexList[i].key == jnull) {
-                index = i;
+    JvmMonitor* mon = jnull;
+    if(JvmActiveMonitors != jnull) {
+        JvmMonitor* ptr = JvmActiveMonitors;
+        while(ptr != jnull) {
+            if(ptr->key == (void*)object) {
+                mon = ptr;
                 break;
             }
-    }
-    if(index < 0 || index >= MAXMONITOR) {
-        pthread_mutex_unlock(&JvmMonitorListLock);
-        return; //!!
+            ptr = ptr->next;
+        }
     }
     
-    JvmMonitorMutex* mon = &JvmMonitorMutexList[index];
-    mon->key = (void*)object;
+    if(!mon) {
+        if(JvmFreeMonitors) {
+            mon = JvmFreeMonitors;
+            JvmFreeMonitors = JvmFreeMonitors->next;
+        } else {
+            mon = malloc(sizeof(JvmMonitor));
+            memset(mon, 0, sizeof(JvmMonitor));
+        }
+        mon->key = (void*)object;
+        mon->next = JvmActiveMonitors;
+        JvmActiveMonitors = mon;
+    }
+    
     if(!mon->created) {
         pthread_mutex_init(&mon->mutex, jnull);
         mon->created = jtrue;
     }
-    pthread_mutex_unlock(&JvmMonitorListLock);
     
-    pthread_mutex_lock(&mon->mutex);
+    JvmThread* thread = JvmCurrentThread();
+    if(mon->thread == thread || mon->thread == jnull) {
+        mon->thread = thread;
+        mon->count++;
+        pthread_mutex_unlock(&JvmMonitorListLock);
+        return;
+    }
+    //safe to release list lock
+    pthread_mutex_unlock(&JvmMonitorListLock);
+
+    while(jtrue) {
+        if(pthread_mutex_trylock(&mon->mutex) == 0) break;
+        usleep(1);
+    }
+    
+    //we got the lock!!
+    mon->thread = thread;
+    mon->count++;
 }
 
 void JvmMonitorExit(JvmObject* object) {
-    //we already locked dont need to lock list while searching...
-    JvmMonitorMutex* mon = jnull;
-    for(int i=0; i<MAXMONITOR; i++)
-        if(JvmMonitorMutexList[i].key == (void*)object) {
-            mon = &JvmMonitorMutexList[i];
-            break;
-        }
-    if(!mon) return; //this souldn't happen in general!!
+    pthread_mutex_lock(&JvmMonitorListLock);
+    JvmMonitor* mon = JvmActiveMonitors;
+    JvmMonitor* pre = jnull;
     
-    mon->key = jnull;
+    while(mon) {
+        if(mon->key == (void*)object) break;
+        pre = mon;
+        mon = mon->next;
+    }
+    
+    if(mon == jnull) {
+        //panic!!
+        printf("Can't find active monitor!!");
+        pthread_mutex_unlock(&JvmMonitorListLock);
+        return;
+    }
+    mon->count--;
+    if(mon->count <= 0) {
+        if(!pre)
+            JvmActiveMonitors = JvmActiveMonitors->next;
+        else {
+            pre->next = mon->next;
+        }
+        mon->next = JvmFreeMonitors;
+        JvmFreeMonitors = mon;
+        mon->count = 0;
+        mon->thread = jnull;
+        mon->next = jnull;
+        mon->key = jnull;
+    }
+    
     pthread_mutex_unlock(&mon->mutex);
+    pthread_mutex_unlock(&JvmMonitorListLock);
 }
 
 
@@ -358,16 +431,15 @@ void JvmMonitorExit(JvmObject* object) {
 // Exception Handling
 //////////////////////////////////////////////
 void JvmExit();
-extern void mjava_lang_Throwable_printStackTrace___V(jobject pthis);
-void JvmThrow(jobject exception) {
+extern void mjava_lang_Throwable_printStackTrace___V(JOBJECT pthis);
+void JvmThrow(JOBJECT exception) {
     JvmThread* thread = JvmCurrentThread();
     if(thread == jnull) {
         printf("Exception caught on non jvm thread!!!!!\n");
         return;
     }
-    
+
     thread->exception = exception;
-    
     //fill stack trace
     if(exception) {
         JvmArray* array = JvmAllocObjectArray1(&ArrOf_java_lang_StackTraceElement_Class, thread->framePtr);
@@ -447,7 +519,7 @@ void JvmExit() {
 /////////////////////////////////////////////
 void JvmSetup() {
     pthread_mutex_init(&JvmMonitorListLock, jnull);
-    memset(&JvmMonitorMutexList, 0, sizeof(JvmMonitorMutexList));
+    JvmFreeMonitors = JvmActiveMonitors = jnull;
     
     //Initialize GC
     GC_set_no_dls(1);
@@ -469,14 +541,14 @@ void JvmSetup() {
     cls.methods = jnull; \
     cls.finalizeFunction = jnull;
 
-    PRIMITIVE(Z_Class, jbool, JvmMakeString(L"boolean",7));
-    PRIMITIVE(B_Class, jbyte, JvmMakeString(L"byte",4));
-    PRIMITIVE(C_Class, jchar, JvmMakeString(L"char",4));
-    PRIMITIVE(S_Class, jshort, JvmMakeString(L"short",5));
-    PRIMITIVE(I_Class, jint, JvmMakeString(L"int",3));
-    PRIMITIVE(F_Class, jfloat, JvmMakeString(L"float",5));
-    PRIMITIVE(J_Class, jlong, JvmMakeString(L"long",4));
-    PRIMITIVE(D_Class, jdouble, JvmMakeString(L"double",6));
+    PRIMITIVE(Z_Class, JBOOL, JvmMakeString(L"boolean",7));
+    PRIMITIVE(B_Class, JBYTE, JvmMakeString(L"byte",4));
+    PRIMITIVE(C_Class, JCHAR, JvmMakeString(L"char",4));
+    PRIMITIVE(S_Class, JSHORT, JvmMakeString(L"short",5));
+    PRIMITIVE(I_Class, JINT, JvmMakeString(L"int",3));
+    PRIMITIVE(F_Class, JFLOAT, JvmMakeString(L"float",5));
+    PRIMITIVE(J_Class, JLONG, JvmMakeString(L"long",4));
+    PRIMITIVE(D_Class, JDOUBLE, JvmMakeString(L"double",6));
     PRIMITIVE(V_Class, void, JvmMakeString(L"void", 4));
     
     //Setup Primitive Arrays
@@ -559,53 +631,53 @@ void JvmSetup2() {
 #include "java_lang_Long.h"
 #include "java_lang_Double.h"
 
-jbyte JvmUnbox_B(jobject object) {
+JBYTE JvmUnbox_B(JOBJECT object) {
     return virtual_mjava_lang_Number_byteValue___B(JvmCheckCast(object, &java_lang_Number_Class));
 }
-jbool JvmUnbox_Z(jobject object) {
+JBOOL JvmUnbox_Z(JOBJECT object) {
     return mjava_lang_Boolean_booleanValue___Z(JvmCheckCast(object, &java_lang_Boolean_Class));
 }
-jchar JvmUnbox_C(jobject object) {
+JCHAR JvmUnbox_C(JOBJECT object) {
     return mjava_lang_Character_charValue___C(JvmCheckCast(object, &java_lang_Character_Class));
 }
-jshort JvmUnbox_S(jobject object) {
+JSHORT JvmUnbox_S(JOBJECT object) {
     return virtual_mjava_lang_Number_shortValue___S(JvmCheckCast(object, &java_lang_Number_Class));
 }
-jint JvmUnbox_I(jobject object) {
+JINT JvmUnbox_I(JOBJECT object) {
     return virtual_mjava_lang_Number_intValue___I(JvmCheckCast(object, &java_lang_Number_Class));
 }
-jfloat JvmUnbox_F(jobject object) {
+JFLOAT JvmUnbox_F(JOBJECT object) {
     return virtual_mjava_lang_Number_floatValue___F(JvmCheckCast(object, &java_lang_Number_Class));
 }
-jlong JvmUnbox_J(jobject object) {
+JLONG JvmUnbox_J(JOBJECT object) {
     return virtual_mjava_lang_Number_longValue___J(JvmCheckCast(object, &java_lang_Number_Class));
 }
-jdouble JvmUnbox_D(jobject object) {
+JDOUBLE JvmUnbox_D(JOBJECT object) {
     return virtual_mjava_lang_Number_doubleValue___D(JvmCheckCast(object, &java_lang_Number_Class));
 }
 
-jobject JvmBox_B(jbyte value) {
+JOBJECT JvmBox_B(JBYTE value) {
     return mjava_lang_Byte_valueOf__B_Ljava_lang_Byte_(value);
 }
-jobject JvmBox_Z(jbool value) {
+JOBJECT JvmBox_Z(JBOOL value) {
     return mjava_lang_Boolean_valueOf__Z_Ljava_lang_Boolean_(value);
 }
-jobject JvmBox_C(jchar value) {
+JOBJECT JvmBox_C(JCHAR value) {
     return mjava_lang_Character_valueOf__C_Ljava_lang_Character_(value);
 }
-jobject JvmBox_S(jshort value) {
+JOBJECT JvmBox_S(JSHORT value) {
     return mjava_lang_Short_valueOf__S_Ljava_lang_Short_(value);
 }
-jobject JvmBox_I(jint value) {
+JOBJECT JvmBox_I(JINT value) {
     return mjava_lang_Integer_valueOf__I_Ljava_lang_Integer_(value);
 }
-jobject JvmBox_F(jfloat value) {
+JOBJECT JvmBox_F(JFLOAT value) {
     return mjava_lang_Float_valueOf__F_Ljava_lang_Float_(value);
 }
-jobject JvmBox_J(jlong value) {
+JOBJECT JvmBox_J(JLONG value) {
     return mjava_lang_Long_valueOf__J_Ljava_lang_Long_(value);
 }
-jobject JvmBox_D(jdouble value) {
+JOBJECT JvmBox_D(JDOUBLE value) {
     return mjava_lang_Double_valueOf__D_Ljava_lang_Double_(value);
 }
 
@@ -617,9 +689,9 @@ jobject JvmBox_D(jdouble value) {
 #define MAXBREAKPOINT   128
 pthread_mutex_t JvmBreakpointMutex;
 typedef struct JvmBreakpoint {
-    jlong method;
-    jint line;
-    jint requestId;
+    JLONG method;
+    JINT line;
+    JINT requestId;
 } JvmBreakpoint;
 JvmBreakpoint JvmBreakpoints[MAXBREAKPOINT];
 int JvmBreakpointCount;
@@ -629,7 +701,7 @@ void JvmInitDebug() {
     JvmBreakpointCount = 0;
 }
 
-jbool JvmAddBreakpoint(jlong method, jint line, jint requestId) {
+JBOOL JvmAddBreakpoint(JLONG method, JINT line, JINT requestId) {
     if(JvmBreakpointCount >= MAXBREAKPOINT) return jfalse;
     for(int i=0; i<JvmBreakpointCount; i++) {
         if(JvmBreakpoints[i].method == method && JvmBreakpoints[i].line == line)
@@ -642,7 +714,7 @@ jbool JvmAddBreakpoint(jlong method, jint line, jint requestId) {
     return jtrue;
 }
 
-void JvmRemoveBreakpoint(jlong method, jint line) {
+void JvmRemoveBreakpoint(JLONG method, JINT line) {
     if(JvmBreakpointCount == 0) return;
     for(int i=0; i<JvmBreakpointCount; i++) {
         if(JvmBreakpoints[i].method == method && JvmBreakpoints[i].line == line) {
@@ -657,24 +729,24 @@ void JvmRemoveBreakpoint(jlong method, jint line) {
 void JvmRemoveAllBreakpoints() {
     JvmBreakpointCount = 0;
 }
-extern void mdebugger_VM_onHitBreakpoint__JII_V(jlong pmethodId, jint pline, jint requestId);
-void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
+extern void mcom_cava_debugger_VM_onHitBreakpoint__JII_V(JLONG pmethodId, JINT pline, JINT prequestId);
+void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, JINT line) {
     if(thread->skipBreakpointCheck) return;
     if(thread->targetFramePtr > 0) {
         if(thread->framePtr <= thread->targetFramePtr) {
             thread->suspendCount++;
             thread->targetFramePtr = 0;
             thread->skipBreakpointCheck = jtrue;
-            mdebugger_VM_onHitBreakpoint__JII_V((jlong)method, line, -1);
+            mcom_cava_debugger_VM_onHitBreakpoint__JII_V((JLONG)method, line, -1);
             thread->skipBreakpointCheck = jfalse;
         }
     } else {
         for(int i=0; i<JvmBreakpointCount; i++)
-            if(JvmBreakpoints[i].method == (jlong)method && JvmBreakpoints[i].line == line) {
+            if(JvmBreakpoints[i].method == (JLONG)method && JvmBreakpoints[i].line == line) {
                 thread->suspendCount++;
                 thread->targetFramePtr = 0;
                 thread->skipBreakpointCheck = jtrue;
-                mdebugger_VM_onHitBreakpoint__JII_V((jlong)method, line, JvmBreakpoints[i].requestId);
+                mcom_cava_debugger_VM_onHitBreakpoint__JII_V((JLONG)method, line, JvmBreakpoints[i].requestId);
                 thread->skipBreakpointCheck = jfalse;
                 break;
             }
@@ -683,6 +755,19 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, jint line) {
     while(thread->suspendCount > 0) {
         usleep(1000);
     }
+}
+
+extern void mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JOBJECT phost, JINT port);
+extern char* JVM_DEBUG_HOST;
+extern int JVM_DEBUG_PORT;
+
+void JvmStartDebugger() {
+    JCHAR tmp[128];
+    int len = strlen(JVM_DEBUG_HOST);
+    for(int i=0; i<len; i++) tmp[i] = JVM_DEBUG_HOST[i];
+    mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JvmMakeString(tmp,len), JVM_DEBUG_PORT);
+    JvmMainThread->suspendCount = 1;
+    usleep(3000 * 1000);
 }
 
 #endif

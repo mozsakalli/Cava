@@ -17,6 +17,7 @@
 package cava.c;
 
 import cava.annotation.Include;
+import cava.annotation.Inline;
 import cava.platform.NativeCode;
 
 /**
@@ -26,7 +27,31 @@ import cava.platform.NativeCode;
 @Include("<stdlib.h> <stdio.h> <string.h>")
 public class CLib {
     
-    public static void memcpy(Object dst, Object src, int size) {
-        NativeCode.Void("memcpy(%s, %s, %s)", dst, src, size);
+    public final static int BYTE_SIZE = NativeCode.Int("sizeof(JBYTE)");
+    public final static int CHAR_SIZE = NativeCode.Int("sizeof(JCHAR)");
+    public final static int SHORT_SIZE = NativeCode.Int("sizeof(JSHORT)");
+    public final static int BOOL_SIZE = NativeCode.Int("sizeof(JBOOL)");
+    public final static int INT_SIZE = NativeCode.Int("sizeof(JINT)");
+    public final static int FLOAT_SIZE = NativeCode.Int("sizeof(JFLOAT)");
+    public final static int LONG_SIZE = NativeCode.Int("sizeof(JLONG)");
+    public final static int DOUBLE_SIZE = NativeCode.Int("sizeof(JDOUBLE)");
+    
+    @Inline public static VoidPtr malloc(int size) {
+        return NativeCode.VoidPtr("malloc(%s)", size);
     }
+    @Inline public static void free(Object ptr) {
+        NativeCode.Void("free(%s)", ptr);
+    }
+    
+    @Inline public static void memcpy(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
+        NativeCode.Void("memcpy(((char*)%s)+%s, ((char*)%s)+%s, %s)", dst, dstOffset, src, srcOffset, sizeInBytes);
+    }
+    @Inline public static void memmove(Object dst, int dstOffset, Object src, int srcOffset, int sizeInBytes) {
+        NativeCode.Void("memmove(((char*)%s)+%s, ((char*)%s)+%s, %s)", dst, dstOffset, src, srcOffset, sizeInBytes);
+    }
+    @Inline public static int strlen(Object str) {
+        return NativeCode.Int("strlen(%s)", str);
+    } 
+    
+    
 }

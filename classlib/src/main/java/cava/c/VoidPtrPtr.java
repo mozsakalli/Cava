@@ -30,6 +30,10 @@ public class VoidPtrPtr {
         return NativeCode.VoidPtrPtr("%s", ptr);
     }
     
+    public static VoidPtrPtr fromAnyArray(Object array) {
+        return NativeCode.VoidPtrPtr("(void**)JvmArrayData(%s)", array);
+    }
+    
     public void set(int index, Object value) {
         NativeCode.Void("((void**)%s)[%s] = %s", this, index, value);
     }

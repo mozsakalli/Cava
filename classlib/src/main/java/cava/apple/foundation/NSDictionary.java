@@ -17,16 +17,20 @@
 package cava.apple.foundation;
 
 import cava.annotation.ObjC;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
 @ObjC
-public class NSDictionary extends NSObject<NSDictionary> {
+public class NSDictionary extends NSObject {
     
-    public NSDictionary(){}
-    public NSDictionary(long handle) {
-        super(handle);
+    public void setValue(NSString key, NSObject value) {
+        System.out.println("dict-key: "+key);
+        NativeCode.Void("[(NSDictionary*)%s setValue:(id)%s forKey:(NSString*)%s]", nativePeer, 
+                value == null ? null : value.getNativePeer(),
+                key.getNativePeer());
     }
+
 }

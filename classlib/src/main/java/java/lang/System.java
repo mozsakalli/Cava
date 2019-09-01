@@ -51,27 +51,24 @@ public final class System {
      */
     public static void arraycopy(java.lang.Object src, int srcOffset, java.lang.Object dst, int dstOffset, int length) {
         //both must be array
-        if(src.$$$$klass.componentType == null || dst.$$$$klass.componentType == null) return;
-        boolean srcIsPrim = src.$$$$klass.componentType.isPrimitive();
-        boolean dstIsPrim = dst.$$$$klass.componentType.isPrimitive();
+        if(src.klass.componentType == null || dst.klass.componentType == null) return;
+        boolean srcIsPrim = src.klass.componentType.isPrimitive();
+        boolean dstIsPrim = dst.klass.componentType.isPrimitive();
         if(srcIsPrim != dstIsPrim) return;
         int srcLen = Array.getLength(src);
         if(srcOffset + length > srcLen) throw new IndexOutOfBoundsException();
         int dstLen = Array.getLength(dst);
         if(dstOffset + length > dstLen) throw new IndexOutOfBoundsException();
         if(srcIsPrim) {
-            if(src.$$$$klass.componentType.size == dst.$$$$klass.componentType.size) {
-                int size = src.$$$$klass.componentType.size;
-                CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
-                            CharPtr.fromAnyArray(src).add(srcOffset*size),
-                            length * size);
+            if(src.klass.componentType.size == dst.klass.componentType.size) {
+                if(src.klass.componentType.size < 0 || src.klass.componentType.size > 8) throw new RuntimeException("Invalid componet size");
+                int size = src.klass.componentType.size;
+                CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
             }
         } else {
             //todo: check if classes are compatible
-            int size = src.$$$$klass.componentType.size;
-            CLib.memcpy(CharPtr.fromAnyArray(dst).add(dstOffset*size),
-                        CharPtr.fromAnyArray(src).add(srcOffset*size),
-                        length * size);
+            int size = NativeCode.Int("sizeof(JOBJECT)");
+            CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
         }
     }
 
@@ -93,7 +90,7 @@ public final class System {
         "    uint64_t t = mach_absolute_time();\n"+
         "    t *= info.numer;\n"+
         "    t /= info.denom;\n"+
-        "    %s = (jlong) t;\n"+
+        "    %s = (JLONG) t;\n"+
         "#else\n"+
         "    struct timespec now;\n"+
         "    clock_gettime(CLOCK_MONOTONIC, &now);\n"+
@@ -137,4 +134,7 @@ public final class System {
         return x.hashCode(); 
     }
 
+    public static String getenv(String name) {
+        throw new UnsupportedOperationException();
+    }
 }

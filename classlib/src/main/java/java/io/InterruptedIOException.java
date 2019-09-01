@@ -19,26 +19,33 @@ package java.io;
  * Signals that an I/O operation has been interrupted. An InterruptedIOException is thrown to indicate that an input or output transfer has been terminated because the thread performing it was terminated. The field bytesTransferred indicates how many bytes were successfully transferred before the interruption occurred.
  * Since: JDK1.0, CLDC 1.0 See Also:InputStream, OutputStream
  */
-public class InterruptedIOException extends java.io.IOException{
+public class InterruptedIOException extends IOException {
+
+    private static final long serialVersionUID = 4020568460727500567L;
+
     /**
-     * Reports how many bytes had been transferred as part of the I/O operation before it was interrupted.
+     * The number of bytes transferred before the I/O interrupt occurred.
      */
     public int bytesTransferred;
 
     /**
-     * Constructs an InterruptedIOException with null as its error detail message.
+     * Constructs a new instance.
      */
-    public InterruptedIOException(){
-         //TODO codavaj!!
+    public InterruptedIOException() {
     }
 
     /**
-     * Constructs an InterruptedIOException with the specified detail message. The string s can be retrieved later by the
-     * method of class java.lang.Throwable.
-     * s - the detail message.
+     * Constructs a new instance with the given detail message.
      */
-    public InterruptedIOException(java.lang.String s){
-         super(s);
+    public InterruptedIOException(String detailMessage) {
+        super(detailMessage);
     }
 
+    /**
+     * Constructs a new instance with given detail message and cause.
+     * @hide internal use only
+     */
+    public InterruptedIOException(String detailMessage, Throwable cause) {
+        super(detailMessage, cause);
+    }
 }

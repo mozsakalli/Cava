@@ -16,9 +16,10 @@
 
 package cava.apple.foundation;
 
-import cava.annotation.Framework;
 import cava.annotation.Include;
+import cava.annotation.Keep;
 import cava.annotation.ObjC;
+import cava.c.NativeObject;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 
@@ -27,44 +28,61 @@ import cava.platform.NativeCode;
  * @author mustafa
  */
 
-@Framework("Foundation")
-@Include("<Foundation/Foundation.h>")
+@Include("<objc/runtime.h> <Foundation/Foundation.h>")
 @ObjC
-public class NSObject<T> {
+@Keep
+public class NSObject<T> extends NativeObject {
     
-    protected long handle;
-    
-    public static NSObject alloc() {
-        return new NSObject(NativeCode.Long("[NSObject alloc]"));
-    }
-    
-    public NSObject(){}
-    public NSObject(long handle) {
-        this.handle = handle;
+    public NSObject(){
+        nativePeer = NativeCode.VoidPtr("[%s alloc]", getObjCClass(getClass()));
     }
     
     public T init() {
-        NativeCode.Void("[(NSObject*)%s init]", handle);
+        NativeCode.Void("[(NSObject*)%s init]", nativePeer);
         return (T)this;
     }
     
-    public VoidPtr toNative() {
-        return NativeCode.VoidPtr("(void*)%s", handle);
+    public NSObject(VoidPtr handle) { this(handle, false); }
+    public NSObject(VoidPtr handle, boolean sub) {
+        this.nativePeer = handle;
+        this.noOwner = sub;
+        //if(!getClass().getName().contains("NSString"))
+        //    System.out.println("-- nsobject-init: "+getClass().getName());
+    }
+    
+    public boolean respondsToSelector(Selector selector) {
+        return NativeCode.Bool("[(NSObject*)%s respondsToSelector:%s]", nativePeer, selector.nativePeer);
+    }
+    
+    public void performSelector(Selector selector) {
+        NativeCode.Void("[(NSObject*)%s performSelector:%s]", nativePeer, selector.nativePeer);
     }
     
     @Override
-    protected void finalize() throws Throwable {
-        release();
-    }
-    
-    public void release() {
-        if(handle != 0) {
-            NativeCode.Void("[(NSObject*)%s release]", handle );
-            handle = 0;
+    public void dispose() {
+        if(nativePeer != null) {
+            NativeCode.Void("[(NSObject*)%s dealloc]", nativePeer );
+            nativePeer = null;
         }
     }
+
+    public static String getObjectiveCName(Class cls) {
+        return cls.getName().replace('.', '_').replace('$', '_') + "_ObjC";
+    }
     
-    public static String getObjCClassName(Class aClass) {
-        return aClass.getName().replace('.', '_').replace('$', '_') + "_ObjC";
+    public Class getObjCClass() {
+        return getObjCClass(getClass());
+    }
+    
+    // return value is not real java class
+    // dont use it!!
+    public static Class getObjCClass(Class cls) {
+        return NativeCode.Class("NSClassFromString((NSString*)((JvmClass*)%s)->objcClass)", cls);
+    }
+    
+    public static <T extends NSObject> T alloc(Class<? extends NSObject> cls) {
+        NSObject result = (NSObject)cls.newInstance();
+        result.nativePeer = NativeCode.VoidPtr("[%s alloc]", getObjCClass(cls));
+        return (T)result;
     }
 }

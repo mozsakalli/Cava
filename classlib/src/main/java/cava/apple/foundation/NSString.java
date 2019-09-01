@@ -17,6 +17,7 @@
 package cava.apple.foundation;
 
 import cava.annotation.ObjC;
+import cava.c.VoidPtr;
 import cava.c.WCharPtr;
 import cava.platform.NativeCode;
 
@@ -24,27 +25,39 @@ import cava.platform.NativeCode;
  *
  * @author mustafa
  */
-@ObjC
-public final class NSString extends NSObject<NSString> {
+@ObjC(noInit = true)
+public final class NSString extends NSObject {
     
-    public static NSString alloc() {
-        return new NSString(NativeCode.Long("[NSString alloc]"));
-    }
-    
-    public NSString(){}
-    public NSString(long handle) {
+    public NSString(VoidPtr handle) {
         super(handle);
     }
-    
+    public NSString(VoidPtr handle, boolean noOwner) {
+        super(handle, noOwner);
+    }
     public NSString(String string) {
-        handle = NativeCode.Long("[NSString alloc]");
         initWithCharacters(WCharPtr.from(string), string.length());
     }
-    
-    public final NSString initWithCharacters(WCharPtr chars, int length) {
-        NativeCode.Void("%s=(jlong)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", handle, handle, chars, length);
-        return this;
+    public NSString(String string, boolean noOwner) {
+        initWithCharacters(WCharPtr.from(string), string.length());
+        this.noOwner = noOwner;
     }
 
+    public final NSString initWithCharacters(WCharPtr chars, int length) {
+        nativePeer = NativeCode.VoidPtr("(void*)[(NSString*)%s initWithCharacters:(unichar*)%s length:%s]", nativePeer, chars, length);
+        return this;
+    }
+    
+    public static String createJavaString(VoidPtr nativePeer) {
+        int len = NativeCode.Int("[(NSString*)%s length]", nativePeer);
+        char[] chars = new char[len];
+        NativeCode.Void("[(NSString*)%s getCharacters:(unichar*)JvmArrayData(%s)]", nativePeer, chars);
+        return new String(chars);
+    }
+
+    @Override
+    public String toString() {
+        return createJavaString(nativePeer);
+    }
+    
     
 }

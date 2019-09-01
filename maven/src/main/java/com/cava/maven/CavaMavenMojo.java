@@ -63,6 +63,9 @@ public class CavaMavenMojo extends AbstractMojo {
 
     @Parameter(property = "cava.debugPort", defaultValue = "10000")
     protected int debugPort;
+    
+    @Parameter(property = "cava.debugHost", defaultValue = "127.0.0.1")
+    protected String debugHost;
 
     @Parameter(property = "cava.infoPList")
     protected File infoPList;
@@ -79,7 +82,7 @@ public class CavaMavenMojo extends AbstractMojo {
             if(buildDir != null)
                 CavaOptions.buildDir(buildDir);
             switch(platform) {
-                case "Ios":
+                case "iOS":
                     if(infoPList == null || !infoPList.exists()) throw new RuntimeException("Info.plist file missing");
                     CavaOptions.infoPList(infoPList);
                     break;
@@ -87,18 +90,20 @@ public class CavaMavenMojo extends AbstractMojo {
             }
             CavaOptions.simulator(simulator);
             CavaOptions.debug(debug);
+            CavaOptions.debugPort(debugPort);
+            CavaOptions.debugHost(debugHost);
             
             prepareClassPath();
             CompilerContext.transpile();
             
             switch(platform) {
-                case "Ios":
+                case "iOS":
                     new Executor("open").args(new File(CavaOptions.buildDir(), "Ios/project.xcodeproj")).exec();
                     break;
             }
             
         } catch (Exception problem) {
-            throw new MojoExecutionException("Error compiling Cava", problem);
+            throw new MojoExecutionException("Error compiling Cava "+platform+" Project", problem);
         }
     }
 

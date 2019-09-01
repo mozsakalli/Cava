@@ -155,7 +155,7 @@ public class Throwable implements Serializable {
     }
 
     public StackTraceElement[] getStackTrace() {
-        return stackTrace;
+        return stackTrace != null ? stackTrace.clone() : new StackTraceElement[0];
     }
 
     public void setStackTrace(StackTraceElement[] stackTrace) {
@@ -172,4 +172,6 @@ public class Throwable implements Serializable {
         this.stackTrace = st;
     }
 
+    public final void addSuppressed(Throwable exception) {
+    }    
 }

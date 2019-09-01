@@ -18,6 +18,7 @@ package cava.platform;
 
 import cava.c.CharPtr;
 import cava.c.CharPtrPtr;
+import cava.c.Struct;
 import cava.c.VoidPtr;
 import cava.c.VoidPtrPtr;
 import cava.c.WCharPtr;
@@ -42,6 +43,7 @@ public class NativeCode {
     public native static Class[] ClassArray(String code, Object...args);
     public native static Thread Thread(String code, Object...args);
     public native static String String(String code, Object...args);
+    public native static Struct Struct(String code, Object...args);
     
     public native static VoidPtr VoidPtr(String code, Object...args);
     public native static VoidPtrPtr VoidPtrPtr(String code, Object...args);

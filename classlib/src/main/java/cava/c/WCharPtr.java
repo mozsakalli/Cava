@@ -27,7 +27,7 @@ import cava.platform.NativeCode;
 public class WCharPtr {
     
     public static WCharPtr from(Object object) {
-        return NativeCode.WCharPtr("((jchar*)%s)", object);
+        return NativeCode.WCharPtr("((JCHAR*)%s)", object);
     }
     
     public static WCharPtr from(String string) {
@@ -35,15 +35,15 @@ public class WCharPtr {
     }
     
     public static WCharPtr from(char[] chars) {
-        return NativeCode.WCharPtr("(jchar*)(JvmArrayData(%s))", chars);
+        return NativeCode.WCharPtr("(JCHAR*)(JvmArrayData(%s))", chars);
     }
 
     public static WCharPtr from(char[] chars, int index) {
-        return NativeCode.WCharPtr("((jchar*)(JvmArrayData(%s))) + %s", chars, index);
+        return NativeCode.WCharPtr("((JCHAR*)(JvmArrayData(%s))) + %s", chars, index);
     }
     
     public char get(int index) {
-        return NativeCode.Char("((jchar*)%s)[%s]", this, index);
+        return NativeCode.Char("((JCHAR*)%s)[%s]", this, index);
     }
     
 }

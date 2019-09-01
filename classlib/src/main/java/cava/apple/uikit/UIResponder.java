@@ -16,20 +16,27 @@
 
 package cava.apple.uikit;
 
+import cava.annotation.Framework;
 import cava.annotation.Include;
 import cava.annotation.ObjC;
 import cava.apple.foundation.NSObject;
+import cava.apple.foundation.NSSet;
 
 /**
  *
  * @author mustafa
  */
 @Include("<UIKit/UIKit.h>")
+@Framework("UIKit.framework")
 @ObjC
-public class UIResponder extends NSObject<UIResponder> {
+public class UIResponder extends NSObject {
     
-    public UIResponder(){}
-    public UIResponder(long handle) {
-        super(handle);
-    }
+    @ObjC("touchesBegan:withEvent:")
+    public native void touchesBegan(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesMoved:withEvent:")
+    public native void touchesMoved(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesEnded:withEvent:")
+    public native void touchesEnded(NSSet<UITouch> touches, UIEvent event);
+    @ObjC("touchesCancelled:withEvent:")
+    public native void touchesCancelled(NSSet<UITouch> touches, UIEvent event);    
 }

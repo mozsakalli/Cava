@@ -17,8 +17,12 @@
 package java.lang;
 
 import cava.annotation.Keep;
+import cava.apple.foundation.NSBundle;
 import cava.c.VoidPtrPtr;
 import cava.platform.NativeCode;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -48,6 +52,12 @@ public final class Class<T> {
     public Method[] methods;
     
     public static java.lang.Class forName(java.lang.String className)  {
+        switch(className) {
+            case "[B": return byte[].class;
+            case "[Z": return boolean[].class;
+            case "[S": return short[].class;
+            case "[C": return char[].class;
+        }
         VoidPtrPtr ptr = NativeCode.VoidPtrPtr("JVMCLASSPATH");
         int index = 0;
         Object value = ptr.get(index);
@@ -77,15 +87,30 @@ public final class Class<T> {
     }
     
     public Constructor getConstructor(Class[] args) {
-        return (Constructor)getMethod("<init>", args);
+        Method result = getMethod("<init>", args);
+        if(result != null) {
+            result.klass = Constructor.class; //hack for ClassCastException
+        }
+        return (Constructor)result;
+    }
+
+    public Constructor getDeclaredConstructor(Class[] args) {
+        Method result = getDeclaredMethod("<init>", args);
+        if(result != null) {
+            result.klass = Constructor.class; //hack for ClassCastException
+        }
+        return (Constructor)result;
     }
     
     public java.lang.String getName() {
         return name;
     }
 
-    public java.io.InputStream getResourceAsStream(java.lang.String name){
-         return null; 
+    public java.io.InputStream getResourceAsStream(java.lang.String name) throws IOException {
+        //todo: move this to another class
+        //File file = new File(NSBundle.getMainBundle().getBundlePath(), name.substring(1));
+        //return new FileInputStream(file);
+        return null;
     }
     
     public URL getResource(String name) {
@@ -195,6 +220,7 @@ public final class Class<T> {
      * <code>null</code> or an instance of <var>c</var>
      */
     public Object cast(Object object) {
+        //todo
         return object;
     }
 
@@ -250,14 +276,17 @@ public final class Class<T> {
     private Method findMethod(String name, Class[] parameters) {
         if(methods == null) return null;
         for(Method m : methods) {
-            if(parameters.length == m.parameters.length && name.equals(m.name)) {
+            if(((parameters == null && m.parameters.length == 0) || 
+               (parameters.length == m.parameters.length)) && name.equals(m.name)) {
                 boolean equals = true;
-                for(int i=0; i<parameters.length; i++)
-                    if(parameters[i] != m.parameters[i]) {
-                        //todo: boxing & assignablefrom
-                        equals = false;
-                        break;
-                    }
+                if(parameters != null) {
+                    for(int i=0; i<parameters.length; i++)
+                        if(parameters[i] != m.parameters[i]) {
+                            //todo: boxing & assignablefrom
+                            equals = false;
+                            break;
+                        }
+                }
                 if(equals) return m;
             }
         }
@@ -352,7 +381,8 @@ public final class Class<T> {
         else if(componentType == int.class) name = "I";
         else if(componentType == float.class) name = "F";
         else if(componentType == long.class) name = "J";
-        else name = "D";
+        else if(componentType == double.class) name = "D";
+        else throw new RuntimeException(componentType.getName()+" is not primitive class");
         return name;
     }
     

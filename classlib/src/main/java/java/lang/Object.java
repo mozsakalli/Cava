@@ -25,7 +25,7 @@ import java.lang.reflect.Array;
 @Keep
 public class Object{
     
-    public Class $$$$klass;
+    public Class klass;
             
     public Object(){
     }
@@ -35,11 +35,11 @@ public class Object{
     }
 
     public final Class getClass() {
-        return $$$$klass;
+        return klass;
     }
 
     public int hashCode() {
-        return VoidPtr.from(this).toInt();
+        return  (int)VoidPtr.fromObject(this).toLong();
     }
 
     public final void notify() {}
@@ -69,7 +69,8 @@ public class Object{
             return result;
         } else {
             Object result = NativeCode.Object("JvmAllocObject(%s)", getClass());
-            CLib.memcpy(result, this, getClass().size);
+            CLib.memmove(result, 0, this, 0, getClass().size);
+            //CLib.memcpy(result, this, getClass().size);
             return result;
         }
     }

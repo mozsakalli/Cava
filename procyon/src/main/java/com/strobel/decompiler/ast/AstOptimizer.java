@@ -86,7 +86,7 @@ public final class AstOptimizer {
             return;
         }
 
-        rewriteFinallyBlocks(method);
+        //mst rewriteFinallyBlocks(method);
         
         if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.SplitToMovableBlocks)) {
             return;
@@ -198,7 +198,7 @@ public final class AstOptimizer {
                 }
 
                 modified |= runOptimization(block, new IntroducePostIncrementOptimization(context, method));
-
+                
                 if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.InlineConditionalAssignments)) {
                     done = true;
                     break;
@@ -211,14 +211,14 @@ public final class AstOptimizer {
                     break;
                 }
 
-                modified |= runOptimization(block, new MakeAssignmentExpressionsOptimization(context, method));
+                //mst modified |= runOptimization(block, new MakeAssignmentExpressionsOptimization(context, method));
 
                 if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.InlineLambdas)) {
                     return;
                 }
 
                 //mst modified |= runOptimization(block, new InlineLambdasOptimization(context, method));
-
+                
                 if (!shouldPerformStep(abortBeforeStep, AstOptimizationStep.InlineVariables2)) {
                     done = true;
                     break;
@@ -233,6 +233,7 @@ public final class AstOptimizer {
                 }
 
                 modified |= mergeDisparateObjectInitializations(context, block);
+                
             }
             while (modified);
         }

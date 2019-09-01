@@ -12,5 +12,9 @@
         <module>classlib</module>
         <module>maven</module>
         <module>sample</module>
+        <module>libgdx</module>
+        <module>graphics</module>
+        <module>bgfx</module>
+        <module>libgdx-sample</module>
     </modules>
 </project>

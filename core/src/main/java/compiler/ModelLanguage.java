@@ -38,6 +38,7 @@ import com.strobel.decompiler.ast.Variable;
 import com.strobel.decompiler.languages.Language;
 import com.strobel.decompiler.languages.TypeDecompilationResults;
 import compiler.model.Clazz;
+import compiler.model.Method;
 import compiler.model.NameAndType;
 import compiler.model.ast.Visitor;
 import java.util.HashSet;
@@ -71,7 +72,54 @@ public class ModelLanguage extends Language {
         for (final MethodDefinition method : type.getDeclaredMethods()) {
             decompileMethod(method, output, options);
         }
+        /*
+        clazz.extendedFromObjC = clazz.isExtendedFromObjC();
         
+        //collect all interfaces
+        Clazz tmp = clazz;
+        while(tmp != null) {
+            for(String intfName : tmp.interfaces) {
+                Clazz intfClazz = CompilerContext.resolve(intfName);
+                while(intfClazz != null) {
+                    if(intfClazz.extendedFromObjC)
+                        clazz.allObjCInterfaces.add(intfClazz.name);
+                    else
+                        clazz.allInterfaces.add(intfClazz.name);
+
+                    intfClazz.childClasses.add(clazz.name);
+                    CompilerContext.markClassModelDirty(intfClazz.name);
+                    
+                    if(intfClazz.superName == null || intfClazz.superName.equals("java/lang/Object")) break;
+                    intfClazz = CompilerContext.resolve(intfClazz.superName);
+                }
+            }
+            if(tmp.superName == null) break;
+            tmp = CompilerContext.resolve(tmp.superName);
+        }
+        
+        if(clazz.extendedFromObjC)
+            System.out.println(clazz.name+" implements "+clazz.allInterfaces+" objc="+clazz.allObjCInterfaces);
+        
+        //link methods
+        if(!clazz.isInterface && clazz.superName != null) {
+            Clazz sc = CompilerContext.resolve(clazz.superName);
+            while(sc != null) {
+                sc.childClasses.add(clazz.name);
+                CompilerContext.markClassModelDirty(sc.name);
+                for(Method m : clazz.methods) {
+                    if(m.isStatic() || m.isNative() || m.isAbstract() || m.name.equals("<init>")) continue;
+                    Method pm = sc.findMethod(m.name, m.signature);
+                    if(pm != null) {
+                        pm.childClasses.add(clazz.name);
+                        CompilerContext.markClassModelDirty(pm.declaringClass);
+                        m.parentClass = sc.name;
+                    }
+                }
+                if(sc.superName == null) break;
+                sc = CompilerContext.resolve(sc.superName);
+            }
+        }
+        */
         return new TypeDecompilationResults( null /*no line number mapping*/);      
     }    
     
@@ -83,9 +131,8 @@ public class ModelLanguage extends Language {
          currentMethod.modifiers = method.getModifiers();
          currentMethod.type = DecompilerUtils.getTypeName(method.getReturnType());
          currentMethod.signature = DecompilerUtils.getSignature(method.getErasedSignature());
-         
          currentMethod.annotations = DecompilerUtils.parseAnnotations(method.getAnnotations());
-         
+
          for(ParameterDefinition p : method.getParameters()) {
              String type = DecompilerUtils.getTypeName(p.getParameterType());
              
@@ -194,10 +241,9 @@ public class ModelLanguage extends Language {
         for(FieldDefinition f : type.getDeclaredFields()) {
             NameAndType nt = new NameAndType(f);
             nt.declaringClass = clazz.name;
+            nt.annotations = DecompilerUtils.parseAnnotations(f.getAnnotations());
             clazz.fields.add(nt);
         }
         clazz.annotations = DecompilerUtils.parseAnnotations(type.getAnnotations());
-        
-        System.out.println(clazz.annotations);
     }
 }

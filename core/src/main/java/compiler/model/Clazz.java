@@ -18,6 +18,7 @@ package compiler.model;
 
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
+import compiler.backend.c.A;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,8 @@ public class Clazz implements Serializable {
     public String name;
     public String superName;
     public String elementType;
+    
+    //only declared interfaces in this class
     public List<String> interfaces = new ArrayList();
     public List<NameAndType> fields = new ArrayList();
     public List<Method> methods = new ArrayList();
@@ -46,7 +49,20 @@ public class Clazz implements Serializable {
     public boolean isAbstract;
     public String sourceFile;
     
+    //all interfaces declared or inherited (not objC or JNI)
+    //public Set<String> allInterfaces = new HashSet();
+    //public Set<String> allObjCInterfaces = new HashSet();
+    
+    //all classes implements this class
+    //public Set<String> childClasses = new HashSet();
+    
+    //public boolean extendedFromObjC;
+    //public boolean extendedFromJNI;
+    
+    
     public transient int interfaceTableSize = -1;
+    public transient boolean isObjCImplementation;    
+    public transient boolean isJNIImplementation;
     
     public String getSimpleName() {
         return DecompilerUtils.simpleName(name);
@@ -62,8 +78,9 @@ public class Clazz implements Serializable {
             return CompilerContext.resolve("java/lang/Object").findDeclaredMethod(name, signature);
         
         for(Method m : methods)
-            if(m.name.equals(name) && m.signature.equals(signature))
+            if(m.name.equals(name) && m.signature.equals(signature)) {
                 return m;
+            }
         
         return null;
     }
@@ -121,13 +138,35 @@ public class Clazz implements Serializable {
     }
     
     public boolean isObjC() {
-        return hasAnnotation("cava.annotation.ObjC");
+        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC();
     }
     
     public boolean isExtendedFromObjC() {
         if(superName == null) return false;
-        if(isObjC()) return true;
+        if(hasAnnotation("cava.annotation.ObjC")) return true;
         return CompilerContext.resolve(superName).isExtendedFromObjC();
+    }
+    
+    public boolean implementsInterface(String name) {
+        if(this.name.equals(name)) return true;
+        for(String iName : interfaces) {
+            if(iName.equals(name)) return true;
+            Clazz ic = CompilerContext.resolve(iName);
+            while(ic != null) {
+                if(ic.name.equals(name)) return true;
+                if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
+                ic = CompilerContext.resolve(ic.superName);
+            }
+        }
+        if(superName != null) return CompilerContext.resolve(superName).implementsInterface(name);
+        return false;
+    }
+    
+    public boolean extendsClass(String name) {
+        if(this.name.equals(name)) return true;
+        if(superName != null)
+            return CompilerContext.resolve(superName).extendsClass(name);
+        return false;
     }
     
     public Set<Clazz> getAllInterfaces(Set<Clazz> list) {
@@ -158,6 +197,33 @@ public class Clazz implements Serializable {
         
         return list;
     }  
+    
+    public boolean isExtendedFrom(String cls) {
+        if(name.equals(cls)) return true;
+        if(superName == null) return false;
+        if(cls.equals(superName)) return true;
+        return CompilerContext.resolve(superName).isExtendedFrom(cls);
+    }
+    public boolean isCustomObjCClass() {
+        if(isInterface) return false;
+        for(Method m : methods) {
+            String selector = A.objcSelector(m);
+            if(selector != null && !selector.isEmpty()) return true;
+        }
+        return false;
+    }
+    public boolean isCustomJNIClass() {
+        if(isInterface) return false;
+        for(Method m : methods) {
+            String selector = A.jniName(m);
+            if(selector != null && !selector.isEmpty()) return true;
+        }
+        return false;
+    }
+    
+    public boolean isStruct() {
+        return superName != null && superName.equals("cava/c/Struct");
+    }
 
     @Override
     public String toString() {

@@ -16,7 +16,7 @@
 
 package java.util;
 
-import java.io.Serializable;
+import java.lang.reflect.Array;
 
 /**
  * {@code Arrays} contains static methods which operate on arrays.
@@ -3915,6 +3915,21 @@ public class Arrays {
         }
         throw new IllegalArgumentException();
     }
+    
+    public static <T> T[] copyOfRange(T[] original, int start, int end) {
+        int originalLength = original.length; // For exception priority compatibility.
+        if (start > end) {
+            throw new IllegalArgumentException();
+        }
+        if (start < 0 || start > originalLength) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        int resultLength = end - start;
+        int copyLength = Math.min(resultLength, originalLength - start);
+        T[] result = (T[]) Array.newInstance(original.getClass().getComponentType(), resultLength);
+        System.arraycopy(original, start, result, 0, copyLength);
+        return result;
+    }    
     
     public static boolean[] copyOf(boolean[] original, int newLength) {
         if (newLength < 0) {

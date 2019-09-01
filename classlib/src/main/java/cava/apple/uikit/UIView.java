@@ -16,17 +16,46 @@
 
 package cava.apple.uikit;
 
+import cava.annotation.Include;
 import cava.annotation.ObjC;
+import cava.apple.coreanimation.CALayer;
+import cava.apple.coregraphics.CGRect;
+import cava.platform.NativeCode;
 
 /**
  *
  * @author mustafa
  */
+@Include("<UIKit/UIKit.h> <Foundation/Foundation.h>")
 @ObjC
 public class UIView extends UIResponder {
-    
+
     public UIView(){}
-    public UIView(long handle) {
-        super(handle);
+    public UIView(CGRect bounds) {
+        initWithFrame(bounds);
+    }
+    public <T extends UIView> T initWithFrame(CGRect frame) {
+        nativePeer = NativeCode.VoidPtr("[(UIView*)%s initWithFrame:%s]", nativePeer, frame.getStruct());
+        return (T)this;
+    }
+    
+    public <T> T getLayer(Class<? extends CALayer> layerClass) {
+        CALayer layer = (CALayer)layerClass.newInstance();
+        layer.setNoOwner(true);
+        layer.setNativePeer(NativeCode.VoidPtr("((UIView*)%s).layer", getNativePeer()));
+        return (T)layer;
+    }
+    
+    @ObjC("layoutSubviews")
+    public native void layoutSubviews();
+    
+    public double getContentScaleFactor() {
+        return NativeCode.Double("[(UIView*)%s contentScaleFactor]", nativePeer);
+    }
+    
+    public CGRect getBounds() {
+        CGRect result = new CGRect();
+        result.setStruct(NativeCode.Struct("[(UIView*)%s bounds]", nativePeer));
+        return result;
     }
 }

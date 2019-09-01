@@ -1111,4 +1111,8 @@ public final class Character{
         // Let icu4c worry about non-BMP code points.
         return false;
     }
+    
+    public static String toString(char value) {
+        return String.valueOf(value);
+    }    
 }

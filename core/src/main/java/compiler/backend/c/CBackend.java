@@ -16,23 +16,24 @@
 
 package compiler.backend.c;
 
+import compiler.CavaOptions;
 import compiler.CompilerContext;
 import compiler.DecompilerUtils;
 import compiler.DependencyOrderSet;
+import compiler.Platform;
 import compiler.backend.BootstrapSorter;
 import compiler.backend.ClassInitInserter;
 import compiler.backend.SourceWriter;
-import compiler.backend.VirtualTable;
 import compiler.backend.ConstructorFixer;
-import compiler.backend.ITableCalculator;
 import compiler.backend.InstanceOfBuilder;
+import compiler.backend.JNIWriter;
+import compiler.backend.ObjCWriter;
 import compiler.model.Clazz;
 import compiler.model.Method;
 import compiler.model.NameAndType;
 import compiler.model.ast.Switch;
 import compiler.model.ast.Throw;
 import compiler.model.ast.TryCatch;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,25 +57,31 @@ public class CBackend {
     public void generate() throws Exception {
         //NativeGenerator.process(naming);
         final List<Clazz> sortedClasses = sortClasses();
-        final VirtualTable vTable = new VirtualTable();
-        vTable.build(sortedClasses);
+        final ConstructorFixer cf = new ConstructorFixer();
+        sortedClasses.forEach(cls -> {
+                cf.fix(cls);
+        });
+        //final VirtualTable vTable = new VirtualTable();
+        //vTable.build(sortedClasses);
         
         //interfaceTableSize = ITable.calculate();
-        ITableCalculator.calculate();
+        //ITableCalculator.calculate();
         assignables = InstanceOfBuilder.build();
         
         //collect all used non primitive static fields
         List<NameAndType> globalRefs = new ArrayList();
         for(Clazz c : sortedClasses) {
-            for(NameAndType f : c.fields) {
-                if(f.usedInProject && f.isStatic() && !DecompilerUtils.isPrimitive(f.type) && !f.type.equals("java/lang/Class"))
-                    globalRefs.add(f);
+            if(!c.isStruct()) {
+                for(NameAndType f : c.fields) {
+                    if(f.usedInProject && f.isStatic() && !DecompilerUtils.isPrimitive(f.type) && !f.type.equals("java/lang/Class"))
+                        globalRefs.add(f);
+                }
             }
         }
         
         for(Clazz c : sortedClasses) {
             if(c.name.startsWith("[")) continue;
-            generateClass(c, vTable, globalRefs);
+            generateClass(c, globalRefs);
             allInvokeTypes.addAll(invokeTypes);
             invokeTypes.clear();
         }
@@ -83,11 +90,11 @@ public class CBackend {
         out.println("#include \"jvm.h\"");
         List<String> literals = CompilerContext.stringCollector.strings();
         for(int i=0; i<literals.size(); i++) {
-            out.println("jobject %s;", naming.literal(i));
+            out.println("JOBJECT %s;", naming.literal(i));
         }
         out.println("void InitJvmLiterals() {").indent();
         for(int i=0; i<literals.size(); i++) {
-            out.print("%s = JvmMakeString((jchar[]){", naming.literal(i));
+            out.print("%s = JvmMakeString((JCHAR[]){", naming.literal(i));
             String lit = literals.get(i);
             for(int k=0; k<lit.length(); k++) {
                 if(k>0) out.print(",");
@@ -100,7 +107,6 @@ public class CBackend {
         CompilerContext.saveCode("literals.c", out.toString());
         generateInvokes();
         generateBootstrap(sortedClasses, globalRefs);
-        
         /*
         for(File f : new File("c").listFiles()) {
             if(!generatedFiles.contains(f))
@@ -124,10 +130,8 @@ public class CBackend {
     }
     
     List<Method> reflectMethods = new ArrayList();
-    void generateClass(Clazz c, VirtualTable vt, List<NameAndType> globalRefs) throws Exception {
+    void generateClass(Clazz c, List<NameAndType> globalRefs) throws Exception {
         CType cType = new CType();
-        new ConstructorFixer().fix(c);
-        boolean isObjC = c.superName != null ? CompilerContext.resolve(c.superName).isExtendedFromObjC() : false;
 
         reflectMethods.clear();
         for(Method m : c.methods) {
@@ -136,6 +140,11 @@ public class CBackend {
                 invokeTypes.add(getInvokeSignature(m));
             }
         }
+        
+        boolean isStruct = c.isStruct();
+        String nativeClassName = A.nativeValue(c);
+        if(isStruct && (nativeClassName == null || nativeClassName.isEmpty())) 
+                throw new RuntimeException(c.name+" must have @Native annotation with name");
         
         SourceWriter out = new SourceWriter();
         out.println("#ifndef __Defined_%s__",naming.clazz(c.name))
@@ -154,12 +163,19 @@ public class CBackend {
             if(!f.isStatic() && f.usedInProject)
                 out.println("%s %s;", cType.toC(f.type), naming.field(f));
         }
+        if(isStruct)
+            out.println("%s $struct;", nativeClassName);
         out.undent().println("} %s;", naming.clazz(c.name));
         out.ln();
         
         for(NameAndType f : c.fields) {
-            if(f.isStatic() && f.usedInProject && (DecompilerUtils.isPrimitive(f.type) || f.type.equals("java/lang/Class")))
+            boolean isPrimitive = DecompilerUtils.isPrimitive(f.type);
+            if(f.isStatic() && f.usedInProject && (isPrimitive || f.type.equals("java/lang/Class")))
                 out.println("extern %s %s;", cType.toC(f.type), naming.field(f));
+            
+            //include field type headers
+            if(f.usedInProject && !isPrimitive)
+                cType.dependency.add(f.type);
         }
         
         out.ln();
@@ -169,35 +185,17 @@ public class CBackend {
         .println("extern void JvmSetup_%s();", naming.clazz(c.name))
         .ln();
         
-        List<Method> objcMethods = new ArrayList();
-        Set<Method> objcPropertyMethods = new HashSet();
-        List<Method> virtualMethods = !c.isInterface ? vt.getVirtualMethodList(c) : null;
-        
         for(Method m : c.methods) {
-            if(m.interfaceBaseClass != null) {
-                Clazz ifc = CompilerContext.resolve(m.interfaceBaseClass);
-                if(A.hasObjC(ifc)) {
-                    Method ifMethod = ifc.findDeclaredMethod(m.name, m.signature);
-                    m.annotations.put(A.ObjC, 
-                    ifMethod.annotations.get(A.ObjC));
-                    objcMethods.add(m);
-                    if(A.objcProperty(ifMethod))
-                        objcPropertyMethods.add(m);
-                }
-            }
             if(m.usedInProject || m.name.equals("<clinit>")) {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
                     if(c.isInterface)
                     out.print("extern %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else {
-                        //
-                        if(objcPropertyMethods.contains(m)) {
-                            out.print("extern %s %s$Property(",cType.toC(m.type), naming.method(m));
-                            printArgs(m, cType, out);
-                            out.println(");");
-                        }
-                        out.print("extern %s %s(",cType.toC(m.type), naming.method(m));
+                        if(isStruct && m.isNative() && m.name.equals("getStruct"))
+                            out.print("extern %s %s(",nativeClassName, naming.method(m));
+                        else
+                            out.print("extern %s %s(",cType.toC(m.type), naming.method(m));
                     }
                     printArgs(m, cType, out);
                     out.println(");");
@@ -206,41 +204,27 @@ public class CBackend {
         }
         
         //generate virtual method headers
-        if(virtualMethods != null) {
-            for(Method vm : virtualMethods) 
-                if(vm.virtualBaseClass.equals(c.name)) {
+        if(!c.isInterface) {
+            for(Method vm : c.methods) {
+                if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
                     out.print("extern %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
                     printArgs(vm, cType, out);
                     out.println(");");
                 }
+            }
         }
         
-        //generate objc interface
-        if(isObjC) {
-            cType.dependency.add(c.superName);
-            Set<String> writtenProperties = new HashSet();
-            out.print("@interface %s_ObjC : %s", naming.clazz(c.name), DecompilerUtils.objcType(cType,c.superName,false));
-            if(!c.interfaces.isEmpty()) {
-                out.print(" <");
-                for(int i=0; i<c.interfaces.size(); i++) {
-                    if(i > 0) out.print(",");
-                    out.print(DecompilerUtils.objcType(cType,c.interfaces.get(i),false));
-                    cType.dependency.add(c.interfaces.get(i));
-                }
-                out.print(">");
-            }
-            out.println("{").println("jobject javaobject;").println("}");
-            for(Method om : objcMethods) {
-                if(A.objcProperty(om)) {
-                    String selector = A.objcSelector(om);
-                    if(!selector.isEmpty() && !writtenProperties.contains(selector)) {
-                        writtenProperties.add(selector);
-                        out.println("@property %s %s;", DecompilerUtils.objcType(cType, om.type), selector);
-                    }
-                }
-            }
-            out.println("@end");
+        ObjCWriter objc = null;
+        JNIWriter jni = null;
+        
+        if(CavaOptions.targetPlatform() == Platform.iOS || CavaOptions.targetPlatform() == Platform.OsX) {
+            objc = new ObjCWriter(c);
+            objc.writeInterface(naming, cType, out);
+            if(c.isObjCImplementation) out.println("/* ObjC-Implementation */");
+        } else if(CavaOptions.targetPlatform() == Platform.Android) {
+            jni = new JNIWriter(c);
         }
+        
         out.ln().println("#endif");
         
         Set<String> tmpSet = new HashSet();
@@ -275,45 +259,98 @@ public class CBackend {
                 
         Set<String> usedLiterals = new HashSet();
         for(Method m : c.methods) {
+            if(isStruct && m.isNative()) {
+                String field = A.nativeValue(m);
+                if(!m.name.equals("getStruct") && !m.name.equals("setStruct") && 
+                    (field == null || field.isEmpty())) throw new RuntimeException("Struct method must have @Native annotation "+m);
+                if(m.name.equals("getStruct")) {
+                    out.println("%s %s(JOBJECT thiz) { return ((%s*)thiz)->$struct; }",
+                            nativeClassName, naming.method(m), naming.clazz(c.name));
+                }
+                else if(m.name.equals("setStruct")) {
+                    out.println("%s %s(JOBJECT thiz, %s value) { ((%s*)thiz)->$struct = value; }",
+                            cType.toC(m.type), naming.method(m), nativeClassName, naming.clazz(c.name));
+                }
+                else if(m.args.size() == 1) { //getter
+                    if(m.type.equals("V")) throw new RuntimeException("Struct getter must return value "+m);
+                    out.println("%s %s(JOBJECT thiz) {", cType.toC(m.type), naming.method(m)).indent();
+                    if(DecompilerUtils.isPrimitive(m.type))
+                        out.println("return ((%s*)thiz)->$struct.%s;", naming.clazz(c.name), field);
+                    out.undent().println("}");
+                } else if(m.args.size() == 2) { //setter
+                    if(!m.type.equals("V")) throw new RuntimeException("Struct setter must be void "+m);
+                    NameAndType arg = m.args.get(1);
+                    out.println("%s %s(JOBJECT thiz, %s value) {", cType.toC(m.type), naming.method(m), cType.toC(arg.type)).indent();
+                    if(DecompilerUtils.isPrimitive(arg.type))
+                        out.println("((%s*)thiz)->$struct.%s = value;", naming.clazz(c.name), field);
+                    else
+                        out.println("((%s*)thiz)->$struct.%s = ((%s*)value)->$struct;", 
+                                naming.clazz(c.name), field,
+                                naming.clazz(arg.type));
+                        
+                    out.undent().println("}");
+                } else throw new RuntimeException("Invalid argument count for struct method "+m);
+                continue;
+            }
             boolean isAbstract = !c.isInterface && m.isAbstract();
             if(((m.name.equals("<clinit>") || m.usedInProject) && !m.isNative())) {
                 if(!isAbstract) {
                     if(c.isInterface) 
-                        out.print("%s interface_%s(",cType.toC(m.type), naming.method(m));
+                        out.print("JVMINLINE %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else
                         out.print("%s %s(",cType.toC(m.type), naming.method(m));
                     printArgs(m, cType, out);
                     out.println(") {").indent();
 
                     if(c.isInterface) {
-                        generateMethodCallWrapper(out, c, m, cType, "itable", ITableCalculator.getIfaceIndex(m));
+                        if(m.interfaceTableIndex == -1) {
+                           throw new RuntimeException(m+" doesn't have any implementation which extended from "+c.superName);
+                        }
+                        generateMethodCallWrapper(out, c, m, cType, "itable", m.interfaceTableIndex);// ITableCalculator.getIfaceIndex(m));
                         out.undent().println("}");
                     } else {
                         if(c.name.equals("java/lang/Thread") && m.name.equals("threadProc")) {
                             out.println("JvmRegisterCurrentThread(pthis);");
                         }
                         
-                        out.println("JvmThread* thread = JvmCurrentThread();");
-                        out.println("jint entryFramePtr = thread->framePtr++;");
-                        out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
-                        
-                        out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
+                        boolean isUnsafe = !CavaOptions.debug() && (A.hasUnsafe(m) || A.hasUnsafe(c));
+                        if(!isUnsafe) {
+                            out.println("JvmThread* thread = JvmCurrentThread();");
+                            out.println("JINT entryFramePtr = thread->framePtr++;");
+                            out.println("if(entryFramePtr >= JVM_MAX_STACK) JvmStackOverflow();");
 
+                            out.println("JvmFrame* frame = &thread->frames[entryFramePtr];");
+                        }
                         int index = 0;
                         for(NameAndType a : m.args) {
-                            out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
+                            if(!a.type.equals("cava/c/Struct"))
+                                out.println("DEFARG(%s,%s,%d);", naming.local(a), cType.toC(a.type), index++);
                         }
                         for(NameAndType l : m.locals) {
                             out.println("DEFLOCAL(%s,%s,%d);", naming.local(l), cType.toC(l.type), index++);
-                            //out.println("%s %s;", cType.toC(l.type), naming.local(l));
                         }
                         out.ln();
                         
-                        int reflectIndex = reflectMethods.indexOf(m);
-                        if(reflectIndex == -1)
-                            out.println("frame->method = jnull;");
-                        else
-                            out.println("JVMMETHOD(%s_Class,%d);",naming.clazz(c.name),reflectIndex);
+                        boolean objcInitializer = 
+                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");// &&
+                        //!c.name.equals("cava/apple/foundation/Selector");
+                        
+                        //UIDevice(VoidPtr) doesn't need to create any instance
+                        if(objcInitializer) {
+                            for(NameAndType arg : m.args)
+                                if(arg.type.equals("cava/c/VoidPtr")) {
+                                    objcInitializer = false;
+                                    break;
+                                }
+                        }
+                        
+                        if(!isUnsafe) {
+                            int reflectIndex = reflectMethods.indexOf(m);
+                            if(reflectIndex == -1)
+                                out.println("frame->method = jnull;");
+                            else
+                                out.println("JVMMETHOD(%s_Class,%d);",naming.clazz(c.name),reflectIndex);
+                        }
                         CWriter writer = new CWriter(m, out, naming, cType, globalRefs);
                         if(m.name.equals("<clinit>")) {
                             new ClassInitInserter().process(m);
@@ -321,10 +358,27 @@ public class CBackend {
                                .println("if(_initialized) return;")
                                .println("_initialized = 1;");
                         }
+                        
+                        if(objcInitializer && !A.objcNoAlloc(c)) {
+                            NameAndType field = c.findField("nativePeer");
+                            String objcName = c.isObjCImplementation ? 
+                                    c.name.replace('/', '_').replace('$', '_') + "_ObjC" :
+                                    DecompilerUtils.simpleName(c.name);
+                            
+                            out.print("%s* objcPeer =((%s*)pthis)->%s= ", 
+                                    objcName, naming.clazz(c.name),naming.field(field));
+                            if(A.objcNoInit(c)) {
+                                out.println("[%s alloc];", objcName);
+                            } else {
+                                out.println("[[%s alloc] init];", objcName);
+                            }
+                            if(c.isObjCImplementation)
+                                out.println("objcPeer->javaPeer = pthis;");    
+                        } 
                         writer.writeChildren(m.body.children);
                         variableLocations.put(m, writer.variableLocations);
-                        
-                        out.println("thread->framePtr = entryFramePtr;");
+                        if(!isUnsafe)
+                            out.println("thread->framePtr = entryFramePtr;");
                         //make compiler happy for methods without return
                         if(!m.type.equals("V") && m.body.children.size() > 0 && 
                             (m.body.children.get(m.body.children.size()-1) instanceof Throw || 
@@ -336,84 +390,33 @@ public class CBackend {
                         usedLiterals.addAll(writer.usedListerals);
                     }
                 }
-                /*
-                if(m.virtualBaseClass != null && m.virtualBaseClass.equals(c.name)) {
-                    out.print("%s virtual_%s(",cType.toC(m.type), naming.method(m));
-                    printArgs(m, cType, out);
-                    out.println(") {").indent();
-                    out.println("//todo: call method from virtual table");
-                    if(!m.type.equals("V")) {
-                        out.println("return %s;", DecompilerUtils.isPrimitive(m.type) ? "0" : "jnull");
-                    }
-                    out.undent().println("}").ln();
-                }*/
-                
             }
         }
         
-        if(virtualMethods != null) {
-            for(int i=0; i<virtualMethods.size(); i++) {
-                Method vm = virtualMethods.get(i);
-                if(vm.virtualBaseClass.equals(c.name)) {
-                    out.print("%s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+        //generate virtual method bodies
+        if(!c.isInterface) {
+            for(Method vm : c.methods) {
+                if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
+                    out.print("JVMINLINE %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
                     printArgs(vm, cType, out);
                     out.println(") {").indent();
-                    generateMethodCallWrapper(out, c, vm, cType, "vtable", i);
+                    generateMethodCallWrapper(out, c, vm, cType, "vtable", vm.virtualTableIndex);
                     out.undent().println("}");
                 }
             }
         }
         
-        if(isObjC) {
-            out.println("@implementation %s_ObjC", naming.clazz(c.name));
-            for(Method m : objcMethods) {
-                String objcDesc = m.annotations.get("cava.annotation.ObjC") != null ?
-                                  m.annotations.get("cava.annotation.ObjC").get("value").toString() : null;
-                if(objcDesc == null) {
-                    System.out.println(m.declaringClass+":"+m.name+" doesn't have ObjC description");
-                    continue;
-                }
-                if(m.boolAnnotation("cava.annotation.ObjC", "property")) {
-                    
-                } else {
-                    int argCount = m.args.size();
-                    if(!m.isStatic()) argCount--;
-                    out.print("-(%s)", DecompilerUtils.objcType(cType,m.type));
-                    String[] parts = objcDesc.split(":");
-                    for(int i=0; i<parts.length; i++) {
-                        out.print(" %s:(%s) %s", parts[i], DecompilerUtils.objcType(cType,m.args.get(i+1).type), m.args.get(i+1).name);
-                    }
-                    out.println("{").indent();
-                    NameAndType field = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredField("currentDelegate");
-                    out.println("javaobject = %s;", naming.field(field));
-                    Method lm = CompilerContext.resolve("cava/apple/uikit/UIApplication").findDeclaredMethod("initFromLaunch", "(J)V");
-                    out.println("%s((jlong)self);", naming.method(lm));
-                    if(!m.type.equals("V")) out.print("return ");
-                    out.print("%s(javaobject", naming.method(m));
-                    for(int i=1; i<m.args.size(); i++) {
-                        NameAndType arg = m.args.get(i);
-                        if(!DecompilerUtils.isPrimitive(arg.type)) {
-                            Clazz argClass = CompilerContext.resolve(arg.type);
-                            Method im = argClass.findMethod("<init>", "(J)V");
-                            out.print(", %s(JvmAllocObject(&%s_Class),(jlong)%s)", naming.method(im), naming.clazz(argClass.name), arg.name);
-                        } else out.print(", %s", arg.name);
-
-                    }
-                    out.println(");");
-                    //CWriter writer = new CWriter(m, out, naming, cType);
-                    //writer.writeChildren(m.body.children);
-                    out.undent().println("}").ln();
-                    //usedLiterals.addAll(writer.usedListerals);
-                }
-            }
-            out.println("@end");
-        }
+        if(CavaOptions.targetPlatform() == Platform.iOS || CavaOptions.targetPlatform() == Platform.OsX) 
+            objc.writeImplementation(naming, cType, globalRefs, out);
+        else if(CavaOptions.targetPlatform() == Platform.Android)
+            jni.writeJNIExports(naming, cType, out);
+        
         out.println("JvmClass %s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_%s_Class;", naming.clazz(c.name))
            .println("JvmClass ArrOf_ArrOf_%s_Class;", naming.clazz(c.name))     
            .ln();
         
-        generateJvmSetup(c, out, virtualMethods, globalRefs, cType);
+        generateJvmSetup(c, out, globalRefs, cType);
         
         code = out.toString();
         cType.dependency.add(c.name);
@@ -421,11 +424,11 @@ public class CBackend {
         includes = cType.getIncludes(naming, includedHeaders);
         includes += "\n";
         for(String literal : usedLiterals) {
-            includes += "extern jobject "+literal+";\n";
+            includes += "extern JOBJECT "+literal+";\n";
         }
         code = code.replaceAll("\\_\\_includes", java.util.regex.Matcher.quoteReplacement(includes));
         
-        saveCode(c, ".m", code);
+        saveCode(c, CavaOptions.targetPlatform().codeExtension(), code);
     }
     
     void collectInheritedClasses(Clazz c, List<Clazz> list) {
@@ -438,9 +441,9 @@ public class CBackend {
             collectInheritedClasses(CompilerContext.classes.get(c.superName), list);
     }
     
-    void generateJvmSetup(Clazz c, SourceWriter out, List<Method> virtualMethods, List<NameAndType> globalRefs, CType cType) {
+    void generateJvmSetup(Clazz c, SourceWriter out, List<NameAndType> globalRefs, CType cType) {
         
-        out.println("jbool %s_isChildOf(JvmClass* klass) {", naming.clazz(c.name)).indent()
+        out.println("JBOOL %s_isChildOf(JvmClass* klass) {", naming.clazz(c.name)).indent()
            .print("return ");
         List<Clazz> inheritedClasses = new ArrayList();
         collectInheritedClasses(c, inheritedClasses);
@@ -452,7 +455,7 @@ public class CBackend {
         out.undent().println("}").ln();
         
         for(String sign : invokeTypes)
-            out.println("extern jobject invoke_%s(jobject,jobject,jobject);", sign);
+            out.println("extern JOBJECT invoke_%s(JOBJECT,JOBJECT,JOBJECT);", sign);
         
         out.println("void JvmSetup_%s() {", naming.clazz(c.name)).indent();
         out.println("static int initialized = 0;")
@@ -468,14 +471,34 @@ public class CBackend {
         out.print("void** _vTable = ");
         if(c.isInterface) out.println("java_lang_Object_Class.vtable;");
         else {
-            if(virtualMethods == null || virtualMethods.isEmpty())
+            //collect all virtual methods
+            List<Method> virtualMethods = new ArrayList();
+            Set<String> virtualMethodSignatures = new HashSet();
+            int tableSize = 0;
+            Clazz vc = c;
+            while(vc != null) {
+                for(Method vm : vc.methods) {
+                    if(vm.usedInProject && vm.virtualBaseClass != null) {
+                        String sign = vm.name+":"+vm.signature;
+                        if(!virtualMethodSignatures.contains(sign)) {
+                            virtualMethods.add(vm);
+                            virtualMethodSignatures.add(sign);
+                            tableSize = Math.max(tableSize, vm.virtualTableIndex+1);
+                        }
+                    }
+                }
+                if(vc.superName == null) break;
+                vc = CompilerContext.resolve(vc.superName);
+            }
+            
+            if(virtualMethods.isEmpty())
                 out.println("java_lang_Object_Class.vtable;");
             else {
-                out.println("malloc(sizeof(void*) * %d);", virtualMethods.size());
+                out.println("malloc(sizeof(void*) * %d);", tableSize);
                 for(int i=0; i<virtualMethods.size(); i++) {
                     Method vm = virtualMethods.get(i);
-                    out.println("_vTable[%d] = %s;", i, 
-                            vm.isAbstract() ? "jnull" : 
+                    out.println("_vTable[%d] = %s;", vm.virtualTableIndex, 
+                            vm.isAbstract() || vm.isNative() ? "jnull" : 
                             "&"+naming.method(virtualMethods.get(i)));
                 }
             }
@@ -484,37 +507,35 @@ public class CBackend {
         //generate interface method table
         out.print("void** _iTable = ");
         if(!c.isInterface && c.interfaceTableSize > 0) {
-            out.println("(void**)malloc(%d * sizeof(void*));", c.interfaceTableSize);
             Clazz kk = c;
-            HashSet<String> used = new HashSet();
+            HashSet<Integer> used = new HashSet();
+            List<Method> iMethods = new ArrayList();
+            int tableSize = 0;
             while(kk != null) {
                 for(Method m : kk.methods) {
-                    String sign = ITableCalculator.signature(m);
-                    if(!m.isStatic() && !m.isAbstract() && !used.contains(sign)) {
-                        int idx = ITableCalculator.getIfaceIndex(m);
-                        if(idx != -1 && idx < c.interfaceTableSize) {
-                            out.println("_iTable[%d] = (void*)&%s;", idx, naming.method(m));
-                            used.add(sign);
-                        }
+                    if(m.interfaceTableIndex == -1) continue;
+                    if(!used.contains(m.interfaceTableIndex)) {
+                        iMethods.add(m);
+                        tableSize = Math.max(tableSize, m.interfaceTableIndex+1);
+                        used.add(m.interfaceTableIndex);
                     }
                 }
                 if(kk.superName != null)
                     kk = CompilerContext.resolve(kk.superName);
                 else kk = null;
             }
-            
-            /*
-            out.println("malloc(sizeof(void*) * %d);", c.interfaceTableSize);
-            if(c.superName != null) {
-                Clazz sc = CompilerContext.classes.get(c.superName);
-                if(sc.interfaceTableSize > 0)
-                    out.println("memcpy(_iTable, %s_Class.itable, sizeof(void*)*%d);", naming.clazz(c.superName), sc.interfaceTableSize);
+            out.println("(void**)malloc(%d * sizeof(void*));", tableSize);
+            for(Method m : iMethods) {
+                if(m.interfaceTableIndex >= tableSize) throw new RuntimeException("Invalid interface table index: "+m+" "+m.interfaceTableIndex+"/"+tableSize);
+                if(m.isAbstract()) {
+                    Method vm = CompilerContext.resolve(m.virtualBaseClass).findDeclaredMethod(m.name, m.signature);
+                    out.println("_iTable[%d] = (void*)&virtual_%s;", m.interfaceTableIndex, naming.method(vm));
+                } else
+                out.println("_iTable[%d] = (void*)&%s;", m.interfaceTableIndex, naming.method(m));                
             }
-            for(Method m : c.methods)
-                if(m.usedInProject && m.interfaceTableIndex != -1)
-                    out.println("_iTable[%d] = &%s;", m.interfaceTableIndex, naming.method(m));
-            */
         } else out.println("jnull;");
+        
+        Method finalize = c.findMethod("finalize", "()V");
         
         out.println("JvmClass* cls = &%s_Class;", naming.clazz(c.name))
            .println("cls->klass = &java_lang_Class_Class;")
@@ -530,9 +551,21 @@ public class CBackend {
            .println("#ifdef JVM_DEBUG")
            .println("cls->sourceFile = JvmMakeString(L\"%s\",%d);", c.sourceFile == null ? "" : c.sourceFile, c.sourceFile == null ? 0 : c.sourceFile.length())
            .println("#endif")
+           .print("cls->finalizeFunction = ")
            ;  
         
-            
+        if(finalize != null && !finalize.body.children.isEmpty()) 
+            out.println("&%s;", naming.method(finalize));
+        else
+            out.println("jnull;");
+        out.print("cls->objcClass = ");
+        if(c.isObjCImplementation)
+            out.println("[[NSString alloc] initWithString:@\"%s\"];",c.name.replace('/', '_').replace('$', '_')+"_ObjC");
+        else if(A.hasObjC(c))
+            out.println("[[NSString alloc] initWithString:@\"%s\"];",DecompilerUtils.simpleName(c.name));
+        else    
+            out.println("jnull;");
+        
         out.print("cls->interfaces = ");
         if(!c.interfaces.isEmpty()) {
             out.print("JvmMakeObjectArray(&ArrOf_java_lang_Class_Class,%d,&(JvmClass*[]){",c.interfaces.size());
@@ -551,7 +584,7 @@ public class CBackend {
     }
     
     void generateReflectionInvoke(Method m, CType cType, SourceWriter out) {
-        out.println("jobject %s_Invoke(jobject pthis, jobject pargs) {", naming.method(m)).indent();
+        out.println("JOBJECT %s_Invoke(JOBJECT pthis, JOBJECT pargs) {", naming.method(m)).indent();
         out.println("if(JvmArrayLen(pargs) < %d) return jnull;", m.args.size() - (!m.isStatic() ? 1 : 0));
         boolean isVoid = m.type.equals("V");
         if(!isVoid) {
@@ -612,11 +645,17 @@ public class CBackend {
             }
             List<NameAndType> locals = new ArrayList();
             locals.addAll(m.args);
+            if(!m.isStatic()) {
+                //move this from parameters to locals
+                locals.add(locals.remove(0));
+            }
             locals.addAll(m.locals);
             out.print("}), &%s, &invoke_%s \n#ifdef JVM_DEBUG\n , %d, %d, %d, %d, (JvmLocalVariableInfo[]){", 
                     naming.method(m), 
                     getInvokeSignature(m),
-                    m.minLine != Integer.MAX_VALUE ? m.minLine : -1, m.maxLine, m.args.size(), m.locals.size());
+                    m.minLine != Integer.MAX_VALUE ? m.minLine : -1, m.maxLine, 
+                    m.isStatic() ? m.args.size() : m.args.size() - 1, 
+                    m.isStatic() ? m.locals.size() : m.locals.size() + 1);
             Map<String,int[]> locations = variableLocations.get(m);
             for(int k=0; k<locals.size(); k++) {
                 if(k > 0) out.print(",");
@@ -648,7 +687,7 @@ public class CBackend {
                 if(f.declaringClass.equals(c.name)) fieldCount++;
             }
         }
-        out.println("cls->fields = JvmMakeObjectArray(&ArrOf_java_lang_reflect_Field_Class, %d, &(JvmMethod*[]){", fieldCount);
+        out.println("cls->fields = JvmMakeObjectArray(&ArrOf_java_lang_reflect_Field_Class, %d, &(JvmField*[]){", fieldCount);
         int index = 0;
         for(NameAndType f : instanceFields) {
             if(f.declaringClass.equals(c.name)) {
@@ -736,12 +775,22 @@ public class CBackend {
     }
     
     void printArgs(Method m, CType cType, SourceWriter out) {
+        Clazz c = CompilerContext.resolve(m.declaringClass);
+        boolean isStructClass = c.name.equals("cava/c/Struct");
         for(int i=0; i<m.args.size(); i++) {
             if(i > 0) out.print(", ");
             NameAndType a = m.args.get(i);
-            out.print("%s %s", cType.toC(a.type), naming.arg(a));
+            String type = null;
+            if(!isStructClass && a.type.equals("cava/c/Struct")) {
+                type = A.nativeValue(c);
+                if(type == null && type.isEmpty())
+                    throw new RuntimeException(c.name+" must define native struct name");
+            } else type = cType.toC(a.type);
+            out.print("%s %s", type, naming.arg(a));
         }
     }
+    
+
 
     
     List<Clazz> sortClasses() {
@@ -771,12 +820,6 @@ public class CBackend {
             out.print("&%s_Class,&ArrOf_%s_Class",naming.clazz(c.name), naming.clazz(c.name));
         }
         out.println(",jnull};");
-        /*
-        out.println("extern jobject fjava_lang_Class_CLASSPATH;")
-           .println("void InitClasspath() {").indent()
-           .println("fjava_lang_Class_CLASSPATH = &CLASSPATH;")
-           .undent().println("}").ln();
-        */
         
         out.ln().ln().println("extern void JvmSetup();").println("extern void JvmSetup2();");
         for(Clazz c : sortedClasses)
@@ -785,7 +828,9 @@ public class CBackend {
         
         out.println("void SetupAllClasses() {").indent()
            .println("//Setup classes")     
-           .println("JvmSetup();");
+           .println("JvmSetup();")
+            .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(JOBJECT)*%d);", globalRefs.size());
+
         for(Clazz c : sortedClasses)
             if(!c.name.startsWith("["))
                 out.println("JvmSetup_%s();", naming.clazz(c.name));
@@ -800,38 +845,50 @@ public class CBackend {
             out.println("%s();", naming.method(m));
         out.undent().println("}").ln();
         
-        out.println("jobject** JVMGLOBALS;").ln();
+        out.println("JOBJECT** JVMGLOBALS;").ln();
 
         Method mainMethod = CompilerContext.getMainMethod();
-        out.println("extern void %s();", naming.method(mainMethod));
+        if(CavaOptions.targetPlatform() != Platform.Android) 
+            out.println("extern void %s();", naming.method(mainMethod));
+        else    
+            out.println("JavaVM* JNIJavaVM;");
+        
         out.println("extern void InitJvmLiterals();");
         out.println("void cavamain() {").indent()
-           .println("JVMGLOBALS = GC_MALLOC_UNCOLLECTABLE(sizeof(jobject)*%d);", globalRefs.size())
            .println("SetupAllClasses();")
            .println("InitJvmLiterals();")
-           .println("InitAllClasses();")
-           .println("%s();", naming.method(mainMethod))
-           .undent()
+           .println("InitAllClasses();");
+        if(CavaOptions.targetPlatform() != Platform.Android) 
+            out.println("%s();", naming.method(mainMethod));
+        out.undent()
            .println("}");
         
-        out.println("int main(int argc, char * argv[]) {").indent()
+        if(CavaOptions.targetPlatform() != Platform.Android) {
+            out.println("int main(int argc, char * argv[]) {").indent()
+               .println("cavamain();")
+               .println("return 0;")
+               .undent().println("}");
+        } else {
+           out.println("JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {").indent()
+           .println("JNIJavaVM = vm;")
            .println("cavamain();")
-           .println("return 0;")
+           .println(" return  JNI_VERSION_1_4;")
            .undent().println("}");
+        }
         CompilerContext.saveCode("cava_main.c", out.toString());
     }
     
     String signatureToCType(char sign) {
         switch(sign) {
-            case 'O': return "jobject";
-            case 'B': return "jbyte";
-            case 'C': return "jchar";
-            case 'Z': return "jbool";
-            case 'S': return "jshort";
-            case 'I': return "jint";
-            case 'F': return "jfloat";
-            case 'J': return "jlong";
-            case 'D': return "jdouble";
+            case 'O': return "JOBJECT";
+            case 'B': return "JBYTE";
+            case 'C': return "JCHAR";
+            case 'Z': return "JBOOL";
+            case 'S': return "JSHORT";
+            case 'I': return "JINT";
+            case 'F': return "JFLOAT";
+            case 'J': return "JLONG";
+            case 'D': return "JDOUBLE";
             case 'V': return "void";
         }
         return null;
@@ -856,9 +913,9 @@ public class CBackend {
                 else
                     argValues += "JvmUnbox_"+t+"(JvmArrayGet_O(pargs,"+i+"))";
             }
-            out.println("jobject invoke_%s(jobject m, jobject pthis, jobject pargs) {", sign).indent();
+            out.println("JOBJECT invoke_%s(JOBJECT m, JOBJECT pthis, JOBJECT pargs) {", sign).indent();
             out.println("JvmMethod* method = (JvmMethod*)m;");
-            out.println("if(method->parameters->len > JvmArrayLen(pargs)) {} //todo");
+            out.println("if(method->parameters->len > (pargs == jnull ? 0 : JvmArrayLen(pargs))) {} //todo");
             out.println("if((method->modifiers & 8) != 0) {").indent();
             if(returnType != 'V') out.print("return ");
             if(returnType != 'V' && returnType != 'O') out.print("JvmBox_"+returnType+"(");
@@ -868,10 +925,10 @@ public class CBackend {
             if(returnType != 'V') out.print("return ");
             if(returnType != 'V' && returnType != 'O') out.print("JvmBox_"+returnType+"(");
             if(sign.length() > 1) {
-                argTypes = "jobject,"+argTypes;
+                argTypes = "JOBJECT,"+argTypes;
                 argValues = "JvmCheckCast(pthis,method->declaringClass),"+argValues;
             } else {
-                argTypes = "jobject";
+                argTypes = "JOBJECT";
                 argValues = "JvmCheckCast(pthis,method->declaringClass)";
             }
             out.print("((%s (*)(%s))method->address)(%s)", signatureToCType(returnType), argTypes, argValues);

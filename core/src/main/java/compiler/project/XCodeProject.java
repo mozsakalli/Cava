@@ -58,7 +58,15 @@ public class XCodeProject extends Project {
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.c"));
         pbxProject.addSourceFile("cava", new File(CompilerContext.platformBuildDir, "cava/jvm.h"));
         
-
+        if(CavaOptions.debug()) {
+            File file = new File(CompilerContext.platformBuildDir,"generated/debug_settings.c");
+            String code = "char* JVM_DEBUG_HOST=\"" + CavaOptions.debugHost() + "\";\n" +
+                          "int JVM_DEBUG_PORT=" + CavaOptions.debugPort() + ";\n";
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(code.getBytes());
+            out.close();
+            pbxProject.addSourceFile(GROUP_GENERATED, file);
+        }
         for(String lib : new String[]{"gc"})
         pbxProject.addStaticLibrary(lib, 
                 new File(CompilerContext.platformBuildDir,"cava/lib/ios/arm64"),

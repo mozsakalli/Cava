@@ -72,7 +72,7 @@ public class StackFrameGetValuesHandler extends StackFrameHandler {
                         break;
                         
                     default:
-                        System.out.println("unknown frame: "+index+"  "+tag+"  "+((char)tag));
+                        System.out.println("[DEBUGGER] unknown frame: "+index+"  "+tag+"  "+((char)tag));
                 }
                 
             }

@@ -46,7 +46,6 @@ public class ObjRefInvokeMethodHandler extends ObjectReferenceHandler {
             Method method = (Method)NativeCode.Object("(JOBJECT)%s", methodId);
             //todo: call on correct thread
             Object result = method.invoke(object, args);
-            System.out.println("--- invoke: "+cls.getName()+"."+method.getName()+" ["+method.getDeclaringClass()+"] -> "+result);
             JdwpUtil.writeValue(out, result, method.getReturnType());
         } catch(Exception e){
             

@@ -86,7 +86,7 @@ public class Debugger {
         
         JdwpHandler handler = JdwpHandlers.get(packet);
         if(handler != null) {
-            System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
+            //System.out.println("handler: "+handler+" cmdset="+handler.getCommandSet()+" cmd="+handler.getCommand());
             outBuffer.reset();
             int errorCode = handler.handle(packet, outBuffer);
             outBuffer.complete(packet.id, errorCode);

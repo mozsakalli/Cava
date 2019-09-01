@@ -758,11 +758,16 @@ void JvmCheckBreakpoint(JvmThread* thread, JvmMethod* method, JINT line) {
 }
 
 extern void mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JOBJECT phost, JINT port);
-#ifndef JVM_DEBUG_PORT
-    #define JVM_DEBUG_POR 10000
-#endif
+extern char* JVM_DEBUG_HOST;
+extern int JVM_DEBUG_PORT;
+
 void JvmStartDebugger() {
-    mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JvmMakeString(L"10.10.128.48",13), JVM_DEBUG_PORT);
+    JCHAR tmp[128];
+    int len = strlen(JVM_DEBUG_HOST);
+    for(int i=0; i<len; i++) tmp[i] = JVM_DEBUG_HOST[i];
+    mcom_cava_debugger_Debugger_start__Ljava_lang_String_I_V(JvmMakeString(tmp,len), JVM_DEBUG_PORT);
+    JvmMainThread->suspendCount = 1;
+    usleep(3000 * 1000);
 }
 
 #endif

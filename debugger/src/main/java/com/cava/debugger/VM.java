@@ -145,12 +145,10 @@ public class VM  {
     
         switch(eventKind) {
             case JdwpConsts.EventKind.BREAKPOINT:
-                System.out.println("set breakpoint");
                 handleBreakpoint(e,id,true);
                 break;
             
             case JdwpConsts.EventKind.SINGLE_STEP:
-                System.out.println("single step");
                 handleSingleStep(e,id);
                 break;
                 
@@ -163,9 +161,7 @@ public class VM  {
             //    break;
                 
             default:
-                System.out.println("Unknown Set eventKind = "+eventKind);
-                if(predicates != null)
-                    for(EventPredicate p : predicates) System.out.println(p.modifierKind()+":"+p.getClass());
+                System.out.println("[DEBUGGER] Unknown Set eventKind = "+eventKind);
         }
         return id;
     }
@@ -180,13 +176,12 @@ public class VM  {
                 break;
 
             default:
-                System.out.println("Unknown Clear eventKind = "+eventKind);
+                System.out.println("[DEBUGGER] Unknown Clear eventKind = "+eventKind);
             
         }
     }
     
     static void handleBreakpoint(Event e, int requestId, boolean isSet) {
-        System.out.println("--- add breakpoint --- "+isSet);
         EventLocationPredicate location = e.predicateByKind(EventLocationPredicate.class);
         if(location != null) {
             long methodId = location.methodId();
@@ -219,7 +214,6 @@ public class VM  {
                     break;
                     
             }
-            System.out.println("step: "+step.threadId()+" / "+step.size()+" / "+step.depth()+" / "+e.eventKind);
         }
     }
     
@@ -233,11 +227,9 @@ public class VM  {
                 methodId, 
                 line);
         Debugger.sendEventData(data);
-        System.out.println(Thread.currentThread().getName()+" paused on line "+line);
     }
     
     static void handleClassPrepare(Event e, int id) {
-        System.out.println("-- class prepare");
         if(e.predicates != null) {
             for(EventPredicate p : e.predicates) {
                 if(p instanceof EventClassNameMatchPredicate) {
@@ -249,7 +241,6 @@ public class VM  {
                         Class cls = (Class)value;
                         if(ep.test(cls.getName())) {
                             Debugger.sendEventData(new ClassLoadedEventData(JdwpConsts.EventKind.CLASS_PREPARE, null, id, cls));
-                            System.out.println("class-prepare-match: "+cls.getName());
                         }
                         value = ptr.get(index++);
                     }

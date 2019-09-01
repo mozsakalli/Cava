@@ -73,7 +73,6 @@ public class EventRequestSetHandler extends EventRequestHandler {
                     // Required class pattern. Matches are limited to exact matches of the given class pattern and matches of
                     // patterns that begin or end with '*'; for example, "*.Foo" or "java.*".
                     String matchPattern = packet.readString();
-                    System.out.println("---class only: "+matchPattern);
                     eventPredicates.add(new EventClassNameMatchPredicate(modKind, matchPattern, false));
                     break;   
                     

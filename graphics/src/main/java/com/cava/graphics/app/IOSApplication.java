@@ -105,7 +105,7 @@ public class IOSApplication implements Application {
             GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_STENCIL_ATTACHMENT, GL.GL_RENDERBUFFER, _depthbuffer);
 
             _colorbuffer = GL.glGenRenderbuffer();
-            GL.glBindBuffer(GL.GL_RENDERBUFFER, _colorbuffer);
+            GL.glBindRenderbuffer(GL.GL_RENDERBUFFER, _colorbuffer);
 
             // TODO: EAGLContext.RenderBufferStorage returns false
             //       on all but the first call.  Nevertheless, it

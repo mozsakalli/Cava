@@ -332,7 +332,9 @@ public class CBackend {
                         out.ln();
                         
                         boolean objcInitializer = 
-                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject");
+                        m.name.equals("<init>") && c.isExtendedFrom("cava/apple/foundation/NSObject") &&
+                        !c.name.equals("cava/apple/foundation/Selector");
+                        
                         //UIDevice(VoidPtr) doesn't need to create any instance
                         if(objcInitializer) {
                             for(NameAndType arg : m.args)

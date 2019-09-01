@@ -44,7 +44,7 @@ public class Main {
         CavaOptions.simulator(true);
         CavaOptions.applicationId("com.cava.sample");
         CavaOptions.debug(true);
-        CavaOptions.debugHost("92.168.0.118");
+        CavaOptions.debugHost("192.168.1.56");
         //CavaOptions.debugPort(9999);
         CompilerContext.transpile();
 

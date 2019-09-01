@@ -41,7 +41,6 @@ public class StackFrameThisObjectHandler extends StackFrameHandler {
                 String name = NativeCode.String("localInfos[%s].name", i);
                 if(name != null && name.equals("this")) {
                     thiz = NativeCode.Object("locals[%s].vJOBJECT", i);
-                    System.out.println("!!!this found!!! "+thiz);
                     break;
                 }
             }

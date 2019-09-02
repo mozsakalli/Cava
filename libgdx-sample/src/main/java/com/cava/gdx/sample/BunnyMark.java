@@ -18,7 +18,6 @@ package com.cava.gdx.sample;
 
 import cava.annotation.Resource;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.InputAdapter;

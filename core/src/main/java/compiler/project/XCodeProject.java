@@ -119,7 +119,11 @@ public class XCodeProject extends Project {
                             String p = path;
                             if(p.startsWith("/")) p = p.substring(1);
                             File dest = new File(CompilerContext.platformBuildDir, "generated/"+p);
-                            FileUtil.copyFile(getClass().getResourceAsStream(path), dest);
+                            try {
+                                FileUtil.copyFile(getClass().getResourceAsStream(path), dest);
+                            } catch(Exception e){
+                                throw new RuntimeException("Error while copying file: "+path);
+                            }
                             pbxProject.addSourceFile(path, dest);
                         } else {
                             //add as asset
@@ -128,9 +132,17 @@ public class XCodeProject extends Project {
                             File dest = new File(CompilerContext.platformBuildDir, "other/"+p);
                             InputStream in = getClass().getResourceAsStream(path);
                             if(in == null) {
-                                File file = new File("target/classes/"+p);
-                                if(!file.exists()) throw new RuntimeException("Can't find resource: "+path);
-                                in = new FileInputStream(file);
+                                for(File file : CompilerContext.classPath) {
+                                    if(file.isDirectory()) {
+                                        File f = new File(file, p);
+                                        if(f.exists()) {
+                                            in = new FileInputStream(f);
+                                            break;
+                                        }
+                                    }
+                                }
+                                //File file = new File("target/classes/"+p);
+                                if(in == null) throw new RuntimeException("Can't find resource: "+path);
                             }
                             FileUtil.copyFile(in, dest);
                             pbxProject.addAssetFile("", dest);

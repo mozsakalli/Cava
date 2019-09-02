@@ -17,11 +17,8 @@
 package java.lang;
 
 import cava.annotation.Keep;
-import cava.apple.foundation.NSBundle;
 import cava.c.VoidPtrPtr;
 import cava.platform.NativeCode;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.annotation.*;
 import java.lang.reflect.Constructor;
@@ -42,6 +39,7 @@ import java.util.List;
  */
 @Keep
 public final class Class<T> {
+    public Object gcDescriptor;
     public int size;
     public String name;
     public Class superClass;

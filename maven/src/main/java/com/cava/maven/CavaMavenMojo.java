@@ -98,7 +98,7 @@ public class CavaMavenMojo extends AbstractMojo {
             
             switch(platform) {
                 case "iOS":
-                    new Executor("open").args(new File(CavaOptions.buildDir(), "Ios/project.xcodeproj")).exec();
+                    new Executor("open").args(new File(CavaOptions.buildDir(), "iOS/project.xcodeproj")).exec();
                     break;
             }
             

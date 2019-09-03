@@ -44,7 +44,7 @@ public class BunnyMark extends ApplicationAdapter {
     List<Bunny> bunnies;
     BitmapFont labelFont;
     
-    class Bunny {
+    static class Bunny {
         public float x,y,vx,vy,r,vr;
         public Bunny() {
             x = (float)Math.random() * Gdx.graphics.getWidth();
@@ -55,7 +55,7 @@ public class BunnyMark extends ApplicationAdapter {
             vr = (float)(-3 + Math.random() * 6);
         }
         
-        public void draw() {
+        public void draw(SpriteBatch batch, Texture texture) {
             batch.draw(texture, x, y, texture.getWidth()/2, texture.getHeight()/2, texture.getWidth(),texture.getHeight(),
                     1,1,r,0,0,texture.getWidth(),texture.getHeight(),false,false);
         }
@@ -63,16 +63,23 @@ public class BunnyMark extends ApplicationAdapter {
     
     @Override
     public void create() {
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                System.gc();
+                try { Thread.sleep(10); }catch(Exception e){}
+            }
+        });
         texture = new Texture("wabbit_alpha.png");
         batch = new SpriteBatch(5000);
         bunnies = new ArrayList();
         labelFont = new BitmapFont(Gdx.files.internal("font.fnt"), Gdx.files.internal("font.png"), false);
         
-        moreBunnies(100);
+        moreBunnies(1000);
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                moreBunnies(100);
+                moreBunnies(1000);
                 return true;
             }
         });
@@ -111,12 +118,13 @@ public class BunnyMark extends ApplicationAdapter {
             }
             b.r += b.vr;
             
-            b.draw();
+            b.draw(batch, texture);
         }
         labelFont.draw(batch, "Bunnies:"+bunnies.size(), 10, h-60);
         labelFont.draw(batch, "FPS:"+Gdx.graphics.getFramesPerSecond(), 10, h-100);
         
         batch.end();
+        System.gc();
     }
 
     

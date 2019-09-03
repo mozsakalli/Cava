@@ -576,10 +576,9 @@ public class CBackend {
             out.println("});");
         } else out.println("jnull;");
         generateReflection(c, out, globalRefs);
-        
+
         out.ln();
         generateArrayDefinition(naming.clazz(c.name), c.name.replace('/', '.'), out);
-        
         out.undent().println("}");        
     }
     
@@ -746,7 +745,7 @@ public class CBackend {
         out.println("cls = &ArrOf_ArrOf_%s_Class;", componentClass)
            .println("cls->klass = &java_lang_Class_Class;")
            .println("cls->size = sizeof(JvmArray);")
-           .println("cls->name = JvmMakeString(L\"[[%s\",%d);", componentName, componentName.length()+1)
+           .println("cls->name = JvmMakeString(L\"[[%s\",%d);", componentName, componentName.length()+2)
            .println("cls->superClass = &java_lang_Object_Class;")
            .println("cls->componentType = &ArrOf_%s_Class;", componentClass)
            .println("cls->modifiers = 0;")

@@ -39,7 +39,6 @@ import java.util.List;
  */
 @Keep
 public final class Class<T> {
-    public Object gcDescriptor;
     public int size;
     public String name;
     public Class superClass;

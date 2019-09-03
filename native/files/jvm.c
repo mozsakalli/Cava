@@ -49,7 +49,7 @@ void gcUnregisterCurrentThread() {
     }
 }
 
-JvmThread* JvmCurrentThread() {
+__inline__ JvmThread* JvmCurrentThread() {
     return (JvmThread*)pthread_getspecific(JvmThreadLocalKey);
 }
 
@@ -146,7 +146,7 @@ void JvmAddRoot(void* ptr) {
     GC_add_roots(ptr, ptr + sizeof(void*));
 }
 JvmObject* JvmAllocObject(JvmClass* klass) {
-    JvmObject* object = (JvmObject*)gcAlloc(klass->size);
+    JvmObject* object = (klass->modifiers&CLS_NOREF_FLAG) ? (JvmObject*)gcAllocAtomic(klass->size) : (JvmObject*)gcAlloc(klass->size);
     object->klass = klass;
     if(klass->finalizeFunction)
         GC_REGISTER_FINALIZER_NO_ORDER(object, _finalizeObject, NULL, NULL, NULL);
@@ -268,15 +268,14 @@ JvmArray* JvmInitObjectArray1(JvmClass* klass, JINT length, void* data) {
 //////////////////////////////////////////////
 // Array
 //////////////////////////////////////////////
-#define CHECKBOUNDS(array,index) if(index<0 || index>=JvmArrayLen(array)) JvmArrayException(index);
 #define DEFINE_ARRAY_ACCESS(nm, type) \
-JVMINLINE type JvmArrayGet_##nm (JvmArray* array, int index) { \
-    CHECKBOUNDS(array, index); \
-    return ((type*)JvmArrayData(array))[index];\
+__inline__ type JvmArrayGet_##nm (JvmArray* array, int index) { \
+    if(index >= 0 && index < array->len) return ((type*)JvmArrayData(array))[index]; else JvmArrayException(index); \
+    return (type)0; \
 } \
-JVMINLINE type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
-    CHECKBOUNDS(array, index); \
-    return ((type*)JvmArrayData(array))[index] = value; \
+__inline__ type JvmArraySet_##nm (JvmArray* array, int index, type value) { \
+    if(index >= 0 && index < array->len) return ((type*)JvmArrayData(array))[index] = value; else JvmArrayException(index); \
+    return (type)0; \
 }
 
 DEFINE_ARRAY_ACCESS(B, JBYTE)
@@ -289,15 +288,7 @@ DEFINE_ARRAY_ACCESS(J, JLONG)
 DEFINE_ARRAY_ACCESS(D, JDOUBLE)
 DEFINE_ARRAY_ACCESS(O, JOBJECT)
 
-#define DEFINE_ARRAY_ACCESS_NBC(nm, type) \
-JVMINLINE type JvmArrayGet_##nm_NBC (JvmArray* array, int index) { \
-return ((type*)JvmArrayData(array))[index];\
-} \
-JVMINLINE type JvmArraySet_##nm_NBC (JvmArray* array, int index, type value) { \
-return ((type*)JvmArrayData(array))[index] = value; \
-}
-
-JBOOL JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
+__inline__ JBOOL JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
     if(src == dst) return jtrue;
     if(src == jnull || dst == jnull) JvmNullPointerException();
     
@@ -309,12 +300,12 @@ JBOOL JvmIsAssignableFrom(JvmClass* src, JvmClass* dst) {
     return dst->isChildOf ? dst->isChildOf(src) : jfalse;
 }
 
-JBOOL JvmInstanceOf(JOBJECT object, JOBJECT klass) {
+__inline__ JBOOL JvmInstanceOf(JOBJECT object, JOBJECT klass) {
     if(object == jnull || klass == jnull) return jfalse;
     return JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass);
 }
 
-JOBJECT JvmCheckCast(JOBJECT object, JOBJECT klass) {
+__inline__ JOBJECT JvmCheckCast(JOBJECT object, JOBJECT klass) {
     if(object == jnull || klass == jnull) return object;
 
     if(!JvmIsAssignableFrom((JvmClass*)klass, ((JvmObject*)object)->klass)) {
@@ -535,7 +526,7 @@ void JvmSetup() {
     cls.name = nm; \
     cls.superClass = &java_lang_Object_Class; \
     cls.componentType = jnull; \
-    cls.modifiers = 0; \
+    cls.modifiers = CLS_PRIM_FLAG; \
     cls.fields = jnull; \
     cls.interfaces = jnull; \
     cls.methods = jnull; \

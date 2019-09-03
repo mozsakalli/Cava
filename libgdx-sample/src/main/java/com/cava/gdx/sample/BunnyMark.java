@@ -99,7 +99,9 @@ public class BunnyMark extends ApplicationAdapter {
         int h = g.getHeight();
         
         batch.begin();
-        for(Bunny b : bunnies) {
+        int count = bunnies.size();
+        for(int i=0; i<count; i++) {
+            Bunny b = bunnies.get(i);
             b.x += b.vx;
             if(b.x < 0) {
                 b.x = 0;

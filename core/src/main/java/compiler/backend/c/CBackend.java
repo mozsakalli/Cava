@@ -190,7 +190,7 @@ public class CBackend {
                 boolean isAbstract = !c.isInterface && m.isAbstract();
                 if(!isAbstract/* && (m.virtualBaseClass == null || m.virtualBaseClass.equals(c.name))*/) {
                     if(c.isInterface)
-                    out.print("extern %s interface_%s(",cType.toC(m.type), naming.method(m));
+                    out.print("JVMINLINE(extern %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else {
                         if(isStruct && m.isNative() && m.name.equals("getStruct"))
                             out.print("extern %s %s(",nativeClassName, naming.method(m));
@@ -198,7 +198,9 @@ public class CBackend {
                             out.print("extern %s %s(",cType.toC(m.type), naming.method(m));
                     }
                     printArgs(m, cType, out);
-                    out.println(");");
+                    out.print(")");
+                    if(c.isInterface) out.print(")");
+                    out.println(";");
                 }
             }
         }
@@ -207,9 +209,9 @@ public class CBackend {
         if(!c.isInterface) {
             for(Method vm : c.methods) {
                 if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
-                    out.print("extern %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+                    out.print("JVMINLINE(extern %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
                     printArgs(vm, cType, out);
-                    out.println(");");
+                    out.println("));");
                 }
             }
         }
@@ -296,7 +298,7 @@ public class CBackend {
             if(((m.name.equals("<clinit>") || m.usedInProject) && !m.isNative())) {
                 if(!isAbstract) {
                     if(c.isInterface) 
-                        out.print("JVMINLINE %s interface_%s(",cType.toC(m.type), naming.method(m));
+                        out.print("__inline__ %s interface_%s(",cType.toC(m.type), naming.method(m));
                     else
                         out.print("%s %s(",cType.toC(m.type), naming.method(m));
                     printArgs(m, cType, out);
@@ -397,7 +399,7 @@ public class CBackend {
         if(!c.isInterface) {
             for(Method vm : c.methods) {
                 if(vm.usedInProject && vm.virtualBaseClass != null && vm.virtualBaseClass.equals(c.name)) {
-                    out.print("JVMINLINE %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
+                    out.print("__inline__ %s virtual_%s(",cType.toC(vm.type), naming.method(vm));
                     printArgs(vm, cType, out);
                     out.println(") {").indent();
                     generateMethodCallWrapper(out, c, vm, cType, "vtable", vm.virtualTableIndex);
@@ -674,15 +676,20 @@ public class CBackend {
         List<NameAndType> instanceFields = new ArrayList();
         List<NameAndType> staticFields = new ArrayList();
         int fieldCount = 0;
+        int refCount = 0;
         for(NameAndType f : fields) {
             if(f.usedInProject) {
-                if(!DecompilerUtils.isPrimitive(f.type)) {
+                boolean isPrim = DecompilerUtils.isPrimitive(f.type);
+                if(!isPrim) {
                     if(A.hasNative(CompilerContext.resolve(f.type))) continue;
                 }
                 if(f.isStatic()) 
                     staticFields.add(f);
-                else
+                else {
                     instanceFields.add(f);
+                    if(!isPrim && !(f.declaringClass.equals("java/lang/Object") && f.name.equals("klass")))
+                        refCount++;
+                }
                 if(f.declaringClass.equals(c.name)) fieldCount++;
             }
         }
@@ -724,7 +731,8 @@ public class CBackend {
                 index++;
             }
         }
-        out.println("});");        
+        out.println("});");     
+        if(refCount == 0) out.println("cls->modifiers |= CLS_NOREF_FLAG;");
     }
     
     void generateArrayDefinition(String componentClass, String componentName, SourceWriter out) {

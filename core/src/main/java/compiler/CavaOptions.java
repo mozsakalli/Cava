@@ -116,6 +116,12 @@ public class CavaOptions {
     public static void simulator(boolean value) {
         set("simulator", value);
     }
+    public static void simulatorId(String value) {
+        set("simulatorId", value);
+    }
+    public static String simulatorId() {
+        return getStr("simulatorId", null);
+    }
     public static File infoPList() {
         File file = getFile("infoPList");
         if(file == null || !file.exists()) throw new RuntimeException("Info.plist not found at ("+file+")");

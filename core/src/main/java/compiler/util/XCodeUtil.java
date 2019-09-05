@@ -58,8 +58,13 @@ public class XCodeUtil {
     }
     
     public static void launchSimulator(IosDevice device) throws Exception {
-        Executor exec = new Executor("xcrun").args("boot", device.id());
+        System.out.println("Launching simulator: "+device+" ["+device.id()+"]");
+        Executor exec = new Executor("xcrun").args("simctl","boot", device.id());
         String capture = exec.execCapture();
+        if(exec.exitCode() != 0) throw new Exception(capture);
+        
+        exec = new Executor("open").args("/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/");
+        capture = exec.execCapture();
         if(exec.exitCode() != 0) throw new Exception(capture);
     }
     
@@ -72,6 +77,12 @@ public class XCodeUtil {
                 result.put(pair[0].trim(), pair[1].trim());
         }
         return result;
+    }
+    
+    public static File getApplicationFile(File projectPath, String projectName) throws Exception {
+        Map<String, String> settings = getBuildSettings(projectPath, projectName, true);
+        File appFile = new File(settings.get("BUILT_PRODUCTS_DIR"), settings.get("EXECUTABLE_FOLDER_PATH"));
+        return appFile;
     }
     
     public static void installApplicationOnSimulator(IosDevice device, File projectPath, String projectName) throws Exception {

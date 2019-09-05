@@ -112,6 +112,16 @@ public class AndroidProject extends Project {
         CompilerContext.saveCode("gradle.properties", "", "org.gradle.jvmargs=-Xmx1536m");
         CompilerContext.saveCode("settings.gradle", "", "include ':app'");
     }
+
+    @Override
+    public void build() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void run() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }

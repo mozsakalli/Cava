@@ -39,8 +39,8 @@ public class Main {
         //CompilerContext.mainName = "main";
         //CompilerContext.mainSignature = "()Ldebugger/Debugger;";
 
-        CavaOptions.mainClass("cava.sample.AndroidLauncher");
-        CavaOptions.targetPlatform("Android");
+        CavaOptions.mainClass("cava.sample.IOSLauncher");
+        CavaOptions.targetPlatform("iOS");
         CavaOptions.infoPList(new File("/Users/mustafa/Work/CAVA/sample/Info.plist"));
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);
@@ -48,7 +48,7 @@ public class Main {
         CavaOptions.debug(false);
         CavaOptions.debugHost("192.168.1.56");
         //CavaOptions.debugPort(9999);
-        CompilerContext.transpile();
+        CompilerContext.run();
 
     }
 }

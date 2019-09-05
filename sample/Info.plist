@@ -27,6 +27,7 @@
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
+		<true/>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<true/>

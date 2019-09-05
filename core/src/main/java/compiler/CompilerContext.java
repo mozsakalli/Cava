@@ -44,10 +44,10 @@ public class CompilerContext {
     
     public static File[] classPath;
     public static File[] shadowClassPath;
-    public static Map<String, Clazz> classes = new HashMap();
-    public static Map<String, String> shadowClasses = new HashMap();
-    public static StringCollector stringCollector = new StringCollector();
-    public static String[] keepClasses;
+    public static Map<String, Clazz> classes;// = new HashMap();
+    //public static Map<String, String> shadowClasses = new HashMap();
+    public static StringCollector stringCollector;// = new StringCollector();
+    //public static String[] keepClasses;
     
     public static boolean keepAll;
     public static File platformBuildDir;
@@ -165,9 +165,12 @@ public class CompilerContext {
         return clazz;
     }
     
-    public static void transpile() throws Exception {
+    private static void transpile() throws Exception {
         String version = System.getProperty("java.version");        
         if(!version.startsWith("1.8")) throw new RuntimeException("Cava requires JDK 1.8");
+        
+        classes = new HashMap();
+        stringCollector = new StringCollector();
         
         File buildDir = CavaOptions.buildDir();
         platformBuildDir = new File(buildDir, CavaOptions.targetPlatform().name());
@@ -196,12 +199,29 @@ public class CompilerContext {
             });
         });
         
-        Project project = CavaOptions.targetPlatform().createProject();
-        //XCodeProject project = new XCodeProject();
-        project.generate();
-        
         System.out.println(stat[0]+" methods "+stat[1]+" virtual "+stat[2]+" devirtualized");
         System.out.println("decompile="+decompileTime+" io="+ioTime);        
+    }
+    
+    public static void generate() throws Exception {
+        transpile();
+        Project project = CavaOptions.targetPlatform().createProject();
+        project.generate();
+    }
+
+    public static void build() throws Exception {
+        transpile();
+        Project project = CavaOptions.targetPlatform().createProject();
+        project.generate();
+        project.build();
+    }
+
+    public static void run() throws Exception {
+        transpile();
+        Project project = CavaOptions.targetPlatform().createProject();
+        project.generate();
+        project.build();
+        project.run();
     }
     
     static Clazz patchClass(Clazz clazz) {

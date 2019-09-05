@@ -162,15 +162,32 @@ public class XCodeProject extends Project {
         return CavaOptions.getStr("ios-sdk", "8.0");
     }
     
+    @Override
     public void build() throws Exception {
-        generate();
         XCodeUtil.build(projectDir, CavaOptions.applicationName(), CavaOptions.simulator());
+        File appFile = XCodeUtil.getApplicationFile(projectDir, CavaOptions.applicationName());
+        System.out.println("Generated: "+appFile);
     }
     
+    @Override
     public void run() throws Exception {
-        build();
         List<IosDevice> devices = XCodeUtil.getSimulators();
-        IosDevice device = devices.stream().filter(d -> d.status() == IosDevice.Status.Booted).findFirst().orElse(null);
+        IosDevice device = null;
+        String simulatorId = CavaOptions.simulatorId();
+        if(simulatorId != null) 
+            device = devices.stream().filter(d -> d.id().equals(simulatorId)).findFirst().orElse(null);
+        //IosDevice device = devices.stream().filter(d -> d.status() == IosDevice.Status.Booted).findFirst().orElse(null);
+        if(device == null) {
+            for(IosDevice d : devices) {
+                if(!d.name().equals("iPhone 5")) {
+                    device = d;
+                    break;
+                }
+            }
+        }
+        if(device.status() != IosDevice.Status.Booted)
+            XCodeUtil.launchSimulator(device);
+        
         XCodeUtil.installApplicationOnSimulator(device, projectDir, CavaOptions.applicationName());
         XCodeUtil.runOnSimulator(device, CavaOptions.applicationId());
     }

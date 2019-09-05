@@ -26,6 +26,8 @@ import java.io.File;
 public abstract class Project {
     
     public abstract void generate() throws Exception;
+    public abstract void build() throws Exception;
+    public abstract void run() throws Exception;
     
     void copyCavaFiles(File target) throws Exception {
         FileUtil.extractZip(target, getClass().getResourceAsStream("/com/cava/native.zip"));

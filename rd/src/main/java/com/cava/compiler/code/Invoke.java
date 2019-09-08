@@ -20,14 +20,17 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
-
-    public Object value;
-    public String type;
+public class Invoke extends Code {
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
+    public int opcode;
+    public String className;
+    public String name;
+    public String signature;
+    
+    public Invoke(int opcode, String className, String name, String signature) {
+        this.opcode = opcode;
+        this.className = className;
+        this.name = name;
+        this.signature = signature;
     }
-
 }

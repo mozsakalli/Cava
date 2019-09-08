@@ -20,14 +20,13 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
+public class If extends Code {
 
-    public Object value;
-    public String type;
+    int opcode;
+    String label;
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
+    public If(int opcode, String label) {
+        this.opcode = opcode;
+        this.label = label;
     }
-
 }

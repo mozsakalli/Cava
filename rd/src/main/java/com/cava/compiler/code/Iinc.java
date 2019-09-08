@@ -20,14 +20,13 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
-
-    public Object value;
-    public String type;
+public class Iinc extends Code {
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
+    int var;
+    int increment;
+    
+    public Iinc(int var, int increment) {
+        this.var = var;
+        this.increment = increment;
     }
-
 }

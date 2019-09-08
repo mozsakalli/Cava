@@ -20,14 +20,8 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
-
-    public Object value;
+public class NewArray extends Code {
+    
     public String type;
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
-    }
-
 }

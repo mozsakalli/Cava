@@ -76,7 +76,7 @@ public class MethodParser2 {
                 if(i.getInstruction() instanceof PushInstruction) stackSize++;
                 else if(i.getInstruction() instanceof PopInstruction) stackSize--;
                 else if(i.getInstruction() instanceof IfInstruction) stackSize -=2;
-                else if(i.getInstruction() instanceof ArithmeticInstruction) stackSize--;
+                //else if(i.getInstruction() instanceof ArithmeticInstruction) stackSize--;
                 else System.out.println(i+" = "+i.getInstruction().getClass());
             });
         }

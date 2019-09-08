@@ -22,6 +22,4 @@ package com.cava.compiler.code;
  */
 public class Code {
     
-    public String type;
-    
 }

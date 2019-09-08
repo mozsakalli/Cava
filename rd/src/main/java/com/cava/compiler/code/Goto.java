@@ -20,14 +20,11 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
-
-    public Object value;
-    public String type;
+public class Goto extends Code {
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
+    public String label;
+    
+    public Goto(String label) {
+        this.label = label;
     }
-
 }

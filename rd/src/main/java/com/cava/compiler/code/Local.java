@@ -20,14 +20,13 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Const extends Code {
-
-    public Object value;
-    public String type;
+public class Local extends Code {
     
-    public Const(String type, Object value) {
-        this.type = type;
-        this.value = value;
+    int opcode;
+    int var;
+    
+    public Local(int opcode, int var) {
+        this.opcode = opcode;
+        this.var = var;
     }
-
 }

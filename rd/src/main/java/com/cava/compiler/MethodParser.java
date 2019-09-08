@@ -15,8 +15,18 @@
  */
 package com.cava.compiler;
 
+import com.cava.compiler.code.Arithmetic;
 import com.cava.compiler.code.Code;
 import com.cava.compiler.code.Const;
+import com.cava.compiler.code.Dup;
+import com.cava.compiler.code.Goto;
+import com.cava.compiler.code.If;
+import com.cava.compiler.code.Iinc;
+import com.cava.compiler.code.Invoke;
+import com.cava.compiler.code.Local;
+import com.cava.compiler.code.Return;
+import com.cava.compiler.code.Switch;
+import com.cava.compiler.code.Throw;
 import com.cava.compiler.model.Clazz;
 import com.cava.compiler.model.Method;
 import java.util.ArrayList;
@@ -80,7 +90,7 @@ public class MethodParser extends MethodVisitor {
         super.visitEnd(); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
+    /*
     void push(String type, Object value) {
         String var = "stack" + stackSize + type;
         vars.add(var);
@@ -97,6 +107,7 @@ public class MethodParser extends MethodVisitor {
         vars.add(var);
         return var;
     }
+    */
     
     @Override
     public void visitLineNumber(int line, Label start) {
@@ -112,6 +123,10 @@ public class MethodParser extends MethodVisitor {
 
     @Override
     public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+        String[] lbls = new String[keys.length];
+        for(int i=0; i<keys.length; i++) lbls[i] = labels[i].toString();
+        codes.add(new Switch(keys,lbls,dflt!=null ? dflt.toString() : null));
+        /*
         System.out.println("switch("+pop()+") {");
         for(int i=0; i<keys.length; i++) {
             System.out.println("case "+keys[i]+": goto "+labels[i].toString());
@@ -119,12 +134,21 @@ public class MethodParser extends MethodVisitor {
         if(dflt != null)
             System.out.println("default: goto "+dflt.toString());
         System.out.println("}");
+        */
         //throw new RuntimeException("Unimplemented visitLookupSwitchInsn");
         super.visitLookupSwitchInsn(dflt, keys, labels); 
     }
 
     @Override
     public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+        int[] keys = new int[labels.length];
+        String[] lbls = new String[labels.length];
+        for(int i=0; i<keys.length; i++) {
+            keys[i] = min+i;
+            lbls[i] = labels[i].toString();
+        }
+        codes.add(new Switch(keys,lbls,dflt != null ? dflt.toString() : null));
+        /*
         System.out.println("switch("+pop()+"){");
         for(int i=0; i<labels.length; i++) {
             System.out.println("case "+(min+i)+": goto "+labels[i].toString()+";");
@@ -132,19 +156,21 @@ public class MethodParser extends MethodVisitor {
         if(dflt != null)
             System.out.println("default: goto "+dflt.toString()+";");
         System.out.println("}");
-        
+        */
         super.visitTableSwitchInsn(min,max, dflt, labels);
     }
 
     @Override
     public void visitIincInsn(int var, int increment) {
-        System.out.println(local(INT,var) + " += "+increment+";");
+        codes.add(new Iinc(var, increment));
+        //System.out.println(local(INT,var) + " += "+increment+";");
         super.visitIincInsn(var, increment); 
     }
 
     @Override
     public void visitLabel(Label label) {
-        System.out.println(label.toString() + ":");
+        //System.out.println(label.toString() + ":");
+        codes.add(new com.cava.compiler.code.Label(label.toString()));
         super.visitLabel(label);
     }
 
@@ -152,21 +178,26 @@ public class MethodParser extends MethodVisitor {
     public void visitJumpInsn(int opcode, Label label) {
         switch (opcode) {
             case Opcodes.IFEQ:
-                System.out.println("if("+pop()+" == 0) goto "+label.toString()+";");
+                codes.add(new If(opcode, label.toString()));
+                //System.out.println("if("+pop()+" == 0) goto "+label.toString()+";");
                 break;
                 
             case Opcodes.IFNULL:
-                System.out.println("if("+pop()+" == NULL) goto "+label.toString()+";");
+                codes.add(new If(opcode, label.toString()));
+                //System.out.println("if("+pop()+" == NULL) goto "+label.toString()+";");
                 break;
                 
             case Opcodes.IF_ICMPGE:
-                String v2 = pop();
+                /*String v2 = pop();
                 String v1 = pop();
                 System.out.println("if("+v1+" >= "+v2+") goto "+label.toString()+";");
+                */
+                codes.add(new If(opcode, label.toString()));
                 break;
                 
             case Opcodes.GOTO:
-                System.out.println("goto "+label.toString()+";");
+                codes.add(new Goto(label.toString()));
+                //System.out.println("goto "+label.toString()+";");
                 break;
                 
             default:
@@ -184,6 +215,8 @@ public class MethodParser extends MethodVisitor {
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+        codes.add(new Invoke(opcode, owner, name, desc));
+        /*
         List<String> args = DecompilerUtils.parseSignature(desc);
         String type = args.remove(args.size() - 1);
         String call = owner+"."+name+"(";
@@ -208,7 +241,7 @@ public class MethodParser extends MethodVisitor {
                 default: push(OBJECT,call);
             }
         } else System.out.println(call);
-        //throw new RuntimeException("Unimplemented");
+        //throw new RuntimeException("Unimplemented");*/
         super.visitMethodInsn(opcode, owner, name, desc, itf);
     }
 
@@ -220,6 +253,7 @@ public class MethodParser extends MethodVisitor {
 
     @Override
     public void visitTypeInsn(int opcode, String type) {
+        /*
         switch(opcode) {
             case Opcodes.NEW:
                 push(OBJECT, "alloc("+type+")");
@@ -235,13 +269,14 @@ public class MethodParser extends MethodVisitor {
                 
             default: throw new RuntimeException("Unknown opcode: "+opcode);
                 
-        }
-        //throw new RuntimeException("Unimplemented");
+        }*/
+        throw new RuntimeException("Unimplemented");
         //super.visitTypeInsn(opcode, type);
     }
 
     @Override
     public void visitVarInsn(int opcode, int var) {
+        /*
         switch(opcode) {
             case Opcodes.ILOAD:
                 push(INT, local(INT,var));
@@ -264,7 +299,8 @@ public class MethodParser extends MethodVisitor {
                 break;
                 
             default: throw new RuntimeException("Unknown opcode: "+opcode);
-        }
+        }*/
+        codes.add(new Local(opcode,var));
         //throw new RuntimeException("Unimplemented");
         super.visitVarInsn(opcode, var);
     }
@@ -273,7 +309,8 @@ public class MethodParser extends MethodVisitor {
     public void visitIntInsn(int opcode, int operand) {
         switch(opcode) {
             case Opcodes.BIPUSH:
-                push(INT, operand);
+                codes.add(new Const(INT, operand));
+                //push(INT, operand);
                 break;
                 
             default: throw new RuntimeException("Unknown opcode: "+opcode);
@@ -285,15 +322,20 @@ public class MethodParser extends MethodVisitor {
     @Override
     public void visitLdcInsn(Object value) {
         if (value instanceof Integer) {
-            push(INT, value);
+            //push(INT, value);
+            codes.add(new Const(INT, value));
         } else if (value instanceof Float) {
-            push(FLOAT, value);
+            //push(FLOAT, value);
+            codes.add(new Const(FLOAT, value));
         } else if (value instanceof Double) {
-            push(DOUBLE, value);
+            //push(DOUBLE, value);
+            codes.add(new Const(DOUBLE, value));
         } else if (value instanceof Long) {
-            push(LONG, value);
+            //push(LONG, value);
+            codes.add(new Const(LONG, value));
         } else if (value instanceof String || value instanceof Type) {
-            push(OBJECT, value);
+            //push(OBJECT, value);
+            codes.add(new Const(OBJECT, value));
         } else {
             throw new RuntimeException("Unknown constant type: " + value.getClass());
         }
@@ -304,7 +346,8 @@ public class MethodParser extends MethodVisitor {
     public void visitInsn(int opcode) {
         switch (opcode) {
             case Opcodes.ICONST_M1:
-                push(INT, -1);
+                //push(INT, -1);
+                codes.add(new Const(INT, -1));
                 break;
 
             case Opcodes.ICONST_0:
@@ -324,28 +367,34 @@ public class MethodParser extends MethodVisitor {
                 break;
                 
             case Opcodes.DUP:
-                push(stackType[stackSize - 1], "stack" + (stackSize - 1) + stackType[stackSize - 1]);
+                //push(stackType[stackSize - 1], "stack" + (stackSize - 1) + stackType[stackSize - 1]);
+                codes.add(new Dup(opcode));
                 break;
 
             case Opcodes.ARETURN:
             case Opcodes.IRETURN:
-                System.out.println("return "+pop()+";");
+                //System.out.println("return "+pop()+";");
+                codes.add(new Return(opcode));
                 break;
                 
             case Opcodes.RETURN:
-                System.out.println("return;");
+                codes.add(new Return(opcode));
+                //System.out.println("return;");
                 break;
 
             case Opcodes.ATHROW:
-                System.out.println("throw " + pop());
+                codes.add(new Throw());
+                //System.out.println("throw " + pop());
                 break;
 
             case Opcodes.IADD:
-                push(INT, pop()+"+"+pop()+";");
+                codes.add(new Arithmetic(opcode));
+                //push(INT, pop()+"+"+pop()+";");
                 break;
                 
             case Opcodes.IMUL:
-                push(INT, pop()+"*"+pop()+";");
+                codes.add(new Arithmetic(opcode));
+                //push(INT, pop()+"*"+pop()+";");
                 break;
                 
             default:

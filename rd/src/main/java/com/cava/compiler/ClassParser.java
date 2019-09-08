@@ -75,7 +75,7 @@ public class ClassParser extends ClassVisitor {
         sign.forEach(n -> m.args.add(new NameAndType("arg", n, true)));
         System.out.println(m);
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-        if(name.equals("createFramebuffer"))
+        if(name.equals("test"))
             return new JSRInlinerAdapter(new MethodParser(cls, m, mv), access, name, descriptor, signature, exceptions);
         else return mv;
     }

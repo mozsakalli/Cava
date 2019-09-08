@@ -129,6 +129,7 @@ public class CompilerContext {
             } else clazz.elementType = name;
             return clazz;
         }
+        boolean needsCompile = false;
         long classTime = ClassFileFinder.getClassTime(name);// getClassTime(name);
         File path = new File(classCacheDir,name.replace('/', '.')+".model");
         boolean isLambdaClass = name.endsWith("$Lambda");
@@ -152,11 +153,13 @@ public class CompilerContext {
             fout.close();
             path.setLastModified(classTime);
             ioTime += System.currentTimeMillis() - time;
+            needsCompile = true;
         }
         if(clazz == null) {
             long time = System.currentTimeMillis();
             ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path)));
             clazz = (Clazz)in.readObject();
+            clazz.needsCompile = true;
             ioTime += System.currentTimeMillis() - time;
         }
         patchClass(clazz);

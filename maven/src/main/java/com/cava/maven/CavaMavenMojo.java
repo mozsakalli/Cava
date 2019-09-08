@@ -94,7 +94,7 @@ public class CavaMavenMojo extends AbstractMojo {
             CavaOptions.debugHost(debugHost);
             
             prepareClassPath();
-            CompilerContext.transpile();
+            CompilerContext.generate();
             
             switch(platform) {
                 case "iOS":

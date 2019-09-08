@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package compiler.model;
+package com.cava.compiler.model;
 
-import compiler.CompilerContext;
-import compiler.DecompilerUtils;
-import compiler.backend.c.A;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.cava.compiler.Builder;
+import com.cava.compiler.DecompilerUtils;
 
 /**
  *
@@ -75,9 +74,9 @@ public class Clazz implements Serializable {
         methods.forEach(m -> m.replaceClassName(name, target));
     }
     
-    public Method findDeclaredMethod(String name, String signature) {
+    public Method findDeclaredMethod(Builder builder, String name, String signature) {
         if(elementType != null)
-            return CompilerContext.resolve("java/lang/Object").findDeclaredMethod(name, signature);
+            return builder.resolve("java/lang/Object").findDeclaredMethod(builder, name, signature);
         
         for(Method m : methods)
             if(m.name.equals(name) && m.signature.equals(signature)) {
@@ -87,16 +86,16 @@ public class Clazz implements Serializable {
         return null;
     }
     
-    public Method findMethod(String name, String signature) {
-        Method result = findDeclaredMethod(name, signature);
+    public Method findMethod(Builder builder, String name, String signature) {
+        Method result = findDeclaredMethod(builder, name, signature);
         if(result == null && superName != null) {
-            return CompilerContext.resolve(superName).findMethod(name, signature);
+            return builder.resolve(superName).findMethod(builder, name, signature);
         }
         return result;
     }
     
-    public Method findClassInitializer() {
-        return findDeclaredMethod("<clinit>", "()V");
+    public Method findClassInitializer(Builder builder) {
+        return findDeclaredMethod(builder, "<clinit>", "()V");
     }
     
     public NameAndType findDeclaredField(String name) {
@@ -106,18 +105,18 @@ public class Clazz implements Serializable {
         return null;
     }
     
-    public NameAndType findField(String name) {
+    public NameAndType findField(Builder builder, String name) {
         NameAndType result = findDeclaredField(name);
         if(result == null && superName != null) {
-            return CompilerContext.resolve(superName).findField(name);
+            return builder.resolve(superName).findField(builder,name);
         }
         return result;
     }
     
-    public List<NameAndType> getAllFields() {
+    public List<NameAndType> getAllFields(Builder builder) {
         final List<NameAndType> result = new ArrayList();
         if(superName != null) {
-            result.addAll(CompilerContext.resolve(superName).getAllFields());
+            result.addAll(builder.resolve(superName).getAllFields(builder));
         }
         result.addAll(fields);
         return result;
@@ -139,39 +138,39 @@ public class Clazz implements Serializable {
         return annotations.containsKey(name);
     }
     
-    public boolean isObjC() {
-        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC();
+    public boolean isObjC(Builder builder) {
+        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC(builder);
     }
     
-    public boolean isExtendedFromObjC() {
+    public boolean isExtendedFromObjC(Builder builder) {
         if(superName == null) return false;
         if(hasAnnotation("cava.annotation.ObjC")) return true;
-        return CompilerContext.resolve(superName).isExtendedFromObjC();
+        return builder.resolve(superName).isExtendedFromObjC(builder);
     }
     
-    public boolean implementsInterface(String name) {
+    public boolean implementsInterface(Builder builder, String name) {
         if(this.name.equals(name)) return true;
         for(String iName : interfaces) {
             if(iName.equals(name)) return true;
-            Clazz ic = CompilerContext.resolve(iName);
+            Clazz ic = builder.resolve(iName);
             while(ic != null) {
                 if(ic.name.equals(name)) return true;
                 if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
-                ic = CompilerContext.resolve(ic.superName);
+                ic = builder.resolve(ic.superName);
             }
         }
-        if(superName != null) return CompilerContext.resolve(superName).implementsInterface(name);
+        if(superName != null) return builder.resolve(superName).implementsInterface(builder, name);
         return false;
     }
     
-    public boolean extendsClass(String name) {
+    public boolean extendsClass(Builder builder, String name) {
         if(this.name.equals(name)) return true;
         if(superName != null)
-            return CompilerContext.resolve(superName).extendsClass(name);
+            return builder.resolve(superName).extendsClass(builder, name);
         return false;
     }
     
-    public Set<Clazz> getAllInterfaces(Set<Clazz> list) {
+    public Set<Clazz> getAllInterfaces(Builder builder, Set<Clazz> list) {
         boolean addSelf = true;
         if(list == null) {
             list = new HashSet();
@@ -179,47 +178,49 @@ public class Clazz implements Serializable {
         }
         
         for(String intf : interfaces) {
-            Clazz ic = CompilerContext.resolve(intf);
+            Clazz ic = builder.resolve(intf);
             list.add(ic);
-            ic.getAllInterfaces(list);
+            ic.getAllInterfaces(builder, list);
         }
         if(isInterface && addSelf) {
             list.add(this);
-            Clazz sk = superName != null ? CompilerContext.resolve(superName) : null;
+            Clazz sk = superName != null ? builder.resolve(superName) : null;
             while(sk != null && sk.isInterface) {
                 list.add(sk);
                 if(sk.superName == null) break;
-                sk = CompilerContext.resolve(sk.superName);
+                sk = builder.resolve(sk.superName);
             }
         }
         
         if(superName != null) {
-            CompilerContext.resolve(superName).getAllInterfaces(list);
+            builder.resolve(superName).getAllInterfaces(builder,list);
         }
         
         return list;
     }  
     
-    public boolean isExtendedFrom(String cls) {
+    public boolean isExtendedFrom(Builder builder, String cls) {
         if(name.equals(cls)) return true;
         if(superName == null) return false;
         if(cls.equals(superName)) return true;
-        return CompilerContext.resolve(superName).isExtendedFrom(cls);
+        return builder.resolve(superName).isExtendedFrom(builder,cls);
     }
     public boolean isCustomObjCClass() {
+        /*
         if(isInterface) return false;
         for(Method m : methods) {
             String selector = A.objcSelector(m);
             if(selector != null && !selector.isEmpty()) return true;
-        }
+        }*/
         return false;
     }
     public boolean isCustomJNIClass() {
+        /*
         if(isInterface) return false;
         for(Method m : methods) {
             String selector = A.jniName(m);
             if(selector != null && !selector.isEmpty()) return true;
-        }
+        }*/
         return false;
     }
     

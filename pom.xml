@@ -16,5 +16,6 @@
         <module>graphics</module>
         <module>bgfx</module>
         <module>libgdx-sample</module>
+        <module>rd</module>
     </modules>
 </project>

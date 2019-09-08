@@ -31,4 +31,11 @@ public class Switch extends Code {
         this.labels = labels;
         this.def = def;
     }
+
+    @Override
+    public int getStackDelta() {
+        return -1;
+    }
+    
+    
 }

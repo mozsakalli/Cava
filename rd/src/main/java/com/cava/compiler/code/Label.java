@@ -27,4 +27,11 @@ public class Label extends Code {
     public Label(String name) {
         this.name = name;
     }
+
+    @Override
+    public int getStackDelta() {
+        return 0;
+    }
+    
+    
 }

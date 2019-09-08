@@ -29,4 +29,13 @@ public class Local extends Code {
         this.opcode = opcode;
         this.var = var;
     }
+
+    @Override
+    public int getStackDelta() {
+        switch(opcode) {
+            default: throw new RuntimeException("Unknown: "+opcode);
+        }
+    }
+    
+    
 }

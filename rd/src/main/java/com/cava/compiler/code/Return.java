@@ -27,4 +27,13 @@ public class Return extends Code {
     public Return(int opcode) {
         this.opcode = opcode;
     }
+
+    @Override
+    public int getStackDelta() {
+        switch(opcode) {
+            default: throw new RuntimeException("Unknown: "+opcode);
+        }
+    }
+    
+    
 }

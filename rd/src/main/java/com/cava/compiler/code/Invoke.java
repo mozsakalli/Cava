@@ -16,6 +16,9 @@
 
 package com.cava.compiler.code;
 
+import com.cava.compiler.DecompilerUtils;
+import java.util.List;
+
 /**
  *
  * @author mustafa
@@ -33,4 +36,15 @@ public class Invoke extends Code {
         this.name = name;
         this.signature = signature;
     }
+
+    @Override
+    public int getStackDelta() {
+        List sign = DecompilerUtils.parseSignature(signature);
+        int size = -sign.size();
+        if(!sign.get(sign.size() - 1).equals("V"))
+            size++;
+        return size;
+    }
+    
+    
 }

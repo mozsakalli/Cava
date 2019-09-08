@@ -27,4 +27,11 @@ public class New extends Code {
     public New(String type) {
         this.type = type;
     }
+
+    @Override
+    public int getStackDelta() {
+        return 1;
+    }
+    
+    
 }

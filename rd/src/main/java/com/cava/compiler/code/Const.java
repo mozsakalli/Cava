@@ -30,4 +30,10 @@ public class Const extends Code {
         this.value = value;
     }
 
+    @Override
+    public int getStackDelta() {
+        return 1;
+    }
+
+    
 }

@@ -27,4 +27,13 @@ public class Arithmetic extends Code {
     public Arithmetic(int opcode) {
         this.opcode = opcode;
     }
+
+    @Override
+    public int getStackDelta() {
+        switch(opcode) {
+            default: throw new RuntimeException("Unknown: "+opcode);
+        }
+    }
+    
+    
 }

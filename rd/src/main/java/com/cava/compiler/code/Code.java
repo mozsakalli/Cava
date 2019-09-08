@@ -22,4 +22,8 @@ package com.cava.compiler.code;
  */
 public class Code {
     
+    public int getStackDelta() {
+        throw new RuntimeException();
+    }
+    
 }

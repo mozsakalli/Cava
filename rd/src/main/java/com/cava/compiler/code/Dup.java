@@ -27,4 +27,11 @@ public class Dup extends Code {
     public Dup(int opcode) {
         this.opcode = opcode;
     }
+
+    @Override
+    public int getStackDelta() {
+        return 0;
+    }
+    
+    
 }

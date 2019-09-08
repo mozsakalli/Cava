@@ -27,4 +27,11 @@ public class Goto extends Code {
     public Goto(String label) {
         this.label = label;
     }
+
+    @Override
+    public int getStackDelta() {
+        return 0;
+    }
+    
+    
 }

@@ -29,4 +29,11 @@ public class Iinc extends Code {
         this.var = var;
         this.increment = increment;
     }
+
+    @Override
+    public int getStackDelta() {
+        return 0;
+    }
+    
+    
 }

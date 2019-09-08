@@ -29,4 +29,13 @@ public class If extends Code {
         this.opcode = opcode;
         this.label = label;
     }
+
+    @Override
+    public int getStackDelta() {
+        switch(opcode) {
+            default: throw new RuntimeException("Unknown: "+opcode);
+        }
+    }
+    
+    
 }

@@ -70,14 +70,18 @@ public class MethodParser2 {
                     op == org.apache.bcel.Const.ATHROW || op == org.apache.bcel.Const.GOTO || op == org.apache.bcel.Const.GOTO_W);
         }
         
-        public void calculateStackSize() {
+        public void calculateStackSize(ConstantPoolGen cpg) {
+            final StackCalculator sc = new StackCalculator(cpg);
             stackSize = 0;
             instructions.forEach(i -> {
+                stackSize += sc.calculate(i);
+                /*
                 if(i.getInstruction() instanceof PushInstruction) stackSize++;
                 else if(i.getInstruction() instanceof PopInstruction) stackSize--;
                 else if(i.getInstruction() instanceof IfInstruction) stackSize -=2;
-                //else if(i.getInstruction() instanceof ArithmeticInstruction) stackSize--;
+                else if(i.getInstruction() instanceof ArithmeticInstruction) stackSize--;
                 else System.out.println(i+" = "+i.getInstruction().getClass());
+                */
             });
         }
     }
@@ -154,7 +158,7 @@ public class MethodParser2 {
         }
 
         for (Block b : blocks) {
-            b.calculateStackSize();
+            b.calculateStackSize(cpg);
             b.labelName = "block" + blocks.indexOf(b);
             for (InstructionHandle ih : b.instructions) {
                 if (ih instanceof BranchHandle) {
@@ -175,6 +179,12 @@ public class MethodParser2 {
             }
         }
 
+        for(Block b : blocks) {
+            GeneratorVisitor v = new GeneratorVisitor(cpg);
+            for(InstructionHandle ih : b.instructions) {
+                v.generate(ih);
+            }
+        }
         //for(int i=0; i<parameters.size(); i++)
         //    locals[i] = parameters.get(i);
         for (Block b : blocks) {

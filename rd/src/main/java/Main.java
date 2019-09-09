@@ -29,7 +29,7 @@ public class Main {
     public static int test() {
         int result = 0;
         for(int i=0; i<100; i++) {
-            int mul = i < 50 ? 2 : 4;
+            int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
             result += i * mul;
         }
         return result;

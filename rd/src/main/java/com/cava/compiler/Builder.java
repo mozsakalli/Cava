@@ -42,7 +42,7 @@ public class Builder {
             ClassSource src = classFinder.findClass(name);
             cls = new Clazz();
             classes.put(name, cls);
-            ClassParser parser = new ClassParser(cls);
+            ClassParser2 parser = new ClassParser2(cls);
             parser.parse(src);
         } catch(Exception e){
             throw new RuntimeException(e);

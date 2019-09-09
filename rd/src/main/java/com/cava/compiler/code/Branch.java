@@ -20,16 +20,8 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Goto extends Branch {
+public class Branch extends Code {
     
-    public Goto(String label) {
-        this.label = label;
-    }
-
-    @Override
-    public int getStackDelta() {
-        return 0;
-    }
-    
+    public String label;
     
 }

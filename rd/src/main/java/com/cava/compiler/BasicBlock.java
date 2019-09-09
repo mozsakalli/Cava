@@ -16,14 +16,16 @@
 
 package com.cava.compiler;
 
+import com.cava.compiler.code.Branch;
 import com.cava.compiler.code.Code;
+import com.cava.compiler.code.Label;
+import com.cava.compiler.code.Return;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.bcel.generic.BranchHandle;
 import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.ReturnInstruction;
 
 /**
  *
@@ -33,72 +35,75 @@ public class BasicBlock {
     
     public Set<BasicBlock> sources = new HashSet();
     public Set<BasicBlock> targets = new HashSet();
-    
+    public List<Code> codes = new ArrayList();
     
     public static void build(List<Code> codes) {
-        /*
+        
         List<BasicBlock> blocks = new ArrayList();
         //create basic blocks
         int[] marks = new int[codes.size()];
         //Block current = marks[0] = new Block(); //begin block
         for (int i = 0; i < codes.size(); i++) {
-            InstructionHandle ih = ihs[i];
-            int pos = ih.getPosition();
+            Code c = codes.get(i);
 
-            if (ih.getInstruction() instanceof ReturnInstruction) {
-                marks[pos] = -1; //eof
-            } else if (ih instanceof BranchHandle) {
-                BranchHandle bh = (BranchHandle) ih;
-                int target = bh.getTarget().getPosition();
+            if (c instanceof Return) {
+                marks[i] = -1; //eof
+            } else if (c instanceof Branch) {
+                Branch b = (Branch)c;
+                Code ll = codes.stream().filter(l -> l instanceof Label && ((Label)l).name.equals(b.label)).findFirst().orElse(null);
+                int target = codes.indexOf(ll);
                 marks[target] = 1; //begin
-                marks[pos] = -1;
+                marks[i] = -1;
             }
         }
 
-        MethodParser2.Block current = new MethodParser2.Block();
+        BasicBlock current = new BasicBlock();
         blocks.add(current);
-        for (int i = 0; i < ihs.length; i++) {
-            InstructionHandle ih = ihs[i];
-            int pos = ih.getPosition();
+        for (int i = 0; i < codes.size(); i++) {
+            Code c = codes.get(i);
+            int pos = i;
             if (marks[pos] == 1) {
-                current = new MethodParser2.Block();
+                current = new BasicBlock();
                 blocks.add(current);
             } else if (marks[pos] == -1) {
                 if (current == null) {
-                    blocks.add(current = new MethodParser2.Block());
+                    blocks.add(current = new BasicBlock());
                 }
-                current.instructions.add(ih);
+                current.codes.add(c);
                 current = null;
                 continue;
             }
             if (current == null) {
-                blocks.add(current = new MethodParser2.Block());
+                blocks.add(current = new BasicBlock());
             }
-            current.instructions.add(ih);
+            current.codes.add(c);
         }
 
         for (int i = 0; i < blocks.size(); i++) {
-            MethodParser2.Block source = blocks.get(i);
-            InstructionHandle ih = source.instructions.get(source.instructions.size() - 1);
-            if (ih instanceof BranchHandle) {
-                BranchHandle bh = (BranchHandle) ih;
-                int target = bh.getTarget().getPosition();
+            BasicBlock source = blocks.get(i);
+            Code ih = source.codes.get(source.codes.size() - 1);
+            if (ih instanceof Branch) {
+                Branch bh = (Branch) ih;
+                Code ll = codes.stream().filter(l -> l instanceof Label && ((Label)l).name.equals(bh.label)).findFirst().orElse(null);
+                int target = codes.indexOf(ll);
                 for (int k = 0; k < blocks.size(); k++) {
-                    MethodParser2.Block tb = blocks.get(k);
+                    BasicBlock tb = blocks.get(k);
+                    /*
                     if (tb.contains(bh.getTarget())) {
                         source.targets.add(tb);
                         tb.sources.add(source);
-                    }
+                    }*/
                 }
             }
-
+            /*
             if (i < blocks.size() - 1 && !source.isCompleted()) {
                 MethodParser2.Block target = blocks.get(i + 1);
                 source.targets.add(target);
                 target.sources.add(source);
-            }
+            }*/
         }
 
+        /*
         for (MethodParser2.Block b : blocks) {
             b.calculateStackSize();
             b.labelName = "block" + blocks.indexOf(b);

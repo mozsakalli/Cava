@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.cava.compiler;
 
 import com.cava.compiler.model.Clazz;
@@ -26,24 +25,24 @@ import org.apache.bcel.classfile.JavaClass;
  * @author mustafa
  */
 public class ClassParser2 {
-    
+
     Clazz cls;
-    
+
     public ClassParser2(Clazz cls) {
         this.cls = cls;
     }
-    
+
     public void parse(ClassSource source) throws Exception {
         org.apache.bcel.classfile.ClassParser parser = new org.apache.bcel.classfile.ClassParser(new ByteArrayInputStream(source.read()), "");
         JavaClass jcls = parser.parse();
-        for(org.apache.bcel.classfile.Method jm : jcls.getMethods()) {
+        for (org.apache.bcel.classfile.Method jm : jcls.getMethods()) {
             Method m = new Method();
             m.declaringClass = jcls.getClassName();
             m.name = jm.getName();
             m.signature = jm.getSignature();
-            if(m.name.equals("test")) {
-            System.out.println(m);
-            MethodParser2 mp = new MethodParser2(cls, m, jm);
+            if (m.name.equals("test")) {
+                System.out.println(m);
+                MethodParser2 mp = new MethodParser2(cls, m, jm);
             }
         }
     }

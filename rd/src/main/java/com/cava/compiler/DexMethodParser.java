@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler;
+
+import com.cava.compiler.model.Clazz;
+import com.cava.compiler.model.Method;
 
 /**
  *
  * @author mustafa
  */
-public class Goto extends Branch {
+public class DexMethodParser {
     
-    public Goto(String label) {
-        this.label = label;
+    Clazz cls;
+    Method mth;
+    
+    public DexMethodParser(Clazz cls, Method mth) {
+        this.cls = cls;
+        this.mth = mth;
     }
-
-    @Override
-    public int getStackDelta() {
-        return 0;
-    }
-    
-    
 }

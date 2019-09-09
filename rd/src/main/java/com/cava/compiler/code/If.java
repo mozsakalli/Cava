@@ -20,10 +20,9 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class If extends Code {
+public class If extends Branch {
 
     int opcode;
-    String label;
     
     public If(int opcode, String label) {
         this.opcode = opcode;

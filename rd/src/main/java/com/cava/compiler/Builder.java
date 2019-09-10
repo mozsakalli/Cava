@@ -17,6 +17,9 @@
 package com.cava.compiler;
 
 import com.cava.compiler.model.Clazz;
+import com.strobel.decompiler.Decompiler;
+import com.strobel.decompiler.DecompilerSettings;
+import com.strobel.decompiler.PlainTextOutput;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,13 +43,34 @@ public class Builder {
         if(cls != null) return cls;
         try {
             ClassSource src = classFinder.findClass(name);
+            PlainTextOutput po = new PlainTextOutput();
+            DecompilerSettings settings = getDecompilerSettings();
+            Decompiler.decompile(name.replace('.', '/'), po, settings);
+            System.out.println(po.toString());
+            /*
             cls = new Clazz();
             classes.put(name, cls);
             ClassParser2 parser = new ClassParser2(cls);
-            parser.parse(src);
+            parser.parse(src);*/
+            
         } catch(Exception e){
             throw new RuntimeException(e);
         }
         return cls;
     }
+    
+    DecompilerSettings getDecompilerSettings() {
+        DecompilerSettings decompilerSettings = new DecompilerSettings();
+        decompilerSettings.setDisableForEachTransforms(true);
+        decompilerSettings.setMergeVariables(true);
+        decompilerSettings.setSimplifyMemberReferences(false);
+        decompilerSettings.setAlwaysGenerateExceptionVariableForCatchBlocks(true);
+        decompilerSettings.setExcludeNestedTypes(true);
+        
+        decompilerSettings.setLanguage(new ASTLanguage());
+        decompilerSettings.setTypeLoader(new ClasspathTypeLoader(classFinder));
+        
+        return decompilerSettings;
+    }
+    
 }

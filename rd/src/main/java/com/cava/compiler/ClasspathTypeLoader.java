@@ -30,7 +30,7 @@ public class ClasspathTypeLoader implements ITypeLoader {
     Map<String, byte[]> classes = new HashMap();
     ClassFileFinder finder;
     
-    ClasspathTypeLoader(ClassFileFinder finder) {
+    public ClasspathTypeLoader(ClassFileFinder finder) {
         this.finder = finder;
     }
     @Override

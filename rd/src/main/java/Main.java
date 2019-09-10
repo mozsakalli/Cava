@@ -26,10 +26,18 @@ import java.io.File;
  */
 public class Main {
     
+    static int v1(int t) {
+        return t/2 < 50 ? t*2 : t/100;
+    }
+    
+    static int v2(int t, int t2) {
+        return t*t2;
+    }
     public static int test() {
         int result = 0;
         for(int i=0; i<100; i++) {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
+            mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
             result += i * mul;
         }
         return result;
@@ -39,6 +47,7 @@ public class Main {
         
         BuilderOptions opt = new BuilderOptions();
         opt.classPath(new File[]{
+            new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/target/classes"),
         });
         

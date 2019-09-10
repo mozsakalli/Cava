@@ -16,6 +16,8 @@
 
 package com.cava.compiler;
 
+import java.util.HashSet;
+import java.util.List;
 import org.apache.bcel.generic.AALOAD;
 import org.apache.bcel.generic.AASTORE;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -209,16 +211,41 @@ public class GeneratorVisitor implements Visitor {
     
     ConstantPoolGen cpg;
     int stackSize;
+    HashSet<String> stackVars = new HashSet();
+    HashSet<String> localVars = new HashSet();
+    String[] stackType = new String[256];
     
-    public GeneratorVisitor(ConstantPoolGen cpg, int stackSize) {
+    public GeneratorVisitor(ConstantPoolGen cpg, int stackSize, String stackType) {
         this.cpg = cpg;
         this.stackSize = stackSize;
+        if(stackSize > 0 && stackType != null)
+            this.stackType[stackSize - 1] = stackType;
     }
     
     public void generate(InstructionHandle i) {
         i.accept(this);
     }
 
+    void push(String type, Object value) {
+        String var = "stack" + stackSize + type;
+        if(var.endsWith("null"))
+            System.out.println("...");
+        stackVars.add(var);
+        System.out.println(var + " = " + value+";");
+        stackType[stackSize++] = type;
+    }
+    
+    String pop() {
+        return "stack" + (--stackSize) + stackType[stackSize];
+    }
+
+    String local(String type, int index) {
+        String var = "local"+index+type;
+        localVars.add(var);
+        return var;
+    }
+    
+    
     @Override
     public void visitStackInstruction(StackInstruction si) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -226,17 +253,14 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitLocalVariableInstruction(LocalVariableInstruction lvi) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitBranchInstruction(BranchInstruction bi) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitLoadClass(LoadClass lc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -246,7 +270,6 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIfInstruction(IfInstruction ii) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -256,12 +279,10 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitPopInstruction(PopInstruction pi) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitStoreInstruction(StoreInstruction si) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -280,12 +301,12 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitGotoInstruction(GotoInstruction gi) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("goto label"+gi.getTarget().getPosition()+";");
     }
 
     @Override
     public void visitUnconditionalBranch(UnconditionalBranch ub) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -294,17 +315,14 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitArithmeticInstruction(ArithmeticInstruction ai) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitCPInstruction(CPInstruction cpi) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitInvokeInstruction(InvokeInstruction ii) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -319,12 +337,11 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitReturnInstruction(ReturnInstruction ri) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitFieldOrMethod(FieldOrMethod fom) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -333,17 +350,15 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitExceptionThrower(ExceptionThrower et) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitLoadInstruction(LoadInstruction li) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void visitVariableLengthInstruction(VariableLengthInstruction vli) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -396,7 +411,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitISTORE(ISTORE istore) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(local("I",istore.getIndex())+" = "+pop()+";");
     }
 
     @Override
@@ -436,7 +451,23 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitINVOKESTATIC(INVOKESTATIC i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String clsName = i.getClassName(cpg);
+        String mthName = i.getMethodName(cpg);
+        String signature = i.getSignature(cpg);
+        List<String> args = DecompilerUtils.parseSignature(signature);
+        String returnType = args.remove(args.size() - 1);
+        if(!returnType.equals("I") && !returnType.equals("F") && !returnType.equals("D") &&
+           !returnType.equals("J") && !returnType.equals("V")) returnType = "L";
+        String call = mthName+"(";
+        for(int k=0; k<args.size(); k++) {
+            if(k > 0) call+=",";
+            call += pop();
+        }
+        call += ")";
+        if(!returnType.equals("V"))
+            push(returnType, call);
+        else
+            System.out.println(call+";");
     }
 
     @Override
@@ -491,7 +522,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitILOAD(ILOAD iload) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        push("I", local("I", iload.getIndex()));
     }
 
     @Override
@@ -536,7 +567,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIINC(IINC iinc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(local("I", iinc.getIndex())+" += "+iinc.getIncrement()+";");
     }
 
     @Override
@@ -566,7 +597,9 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIF_ICMPGE(IF_ICMPGE ifcmpg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String v2 = pop();
+        String v1 = pop();
+        System.out.println("if("+v1+" >= "+v2+") goto label"+ifcmpg.getTarget().getPosition()+";");
     }
 
     @Override
@@ -601,7 +634,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitBIPUSH(BIPUSH bipush) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        push("I", bipush.getValue().intValue());
     }
 
     @Override
@@ -721,7 +754,9 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIREM(IREM irem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String v1 = pop();
+        String v2 = pop();
+        push("I", v2+"%"+v1);
     }
 
     @Override
@@ -781,7 +816,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIFNE(IFNE ifne) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("if("+pop()+" != 0) goto label"+ifne.getTarget().getPosition()+";");
     }
 
     @Override
@@ -926,12 +961,12 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIRETURN(IRETURN irtrn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("return "+pop()+";");
     }
 
     @Override
     public void visitIF_ICMPNE(IF_ICMPNE ifcmpn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("if("+pop()+"!="+pop()+") goto label"+ifcmpn.getTarget().getPosition()+";");
     }
 
     @Override
@@ -986,7 +1021,6 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitGOTO_W(GOTO_W goto_w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -996,7 +1030,6 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitGOTO(GOTO g) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -1016,8 +1049,7 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitICONST(ICONST iconst) {
-        iconst.getValue().intValue()
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        push("I", iconst.getValue().intValue());
     }
 
     @Override
@@ -1042,12 +1074,16 @@ public class GeneratorVisitor implements Visitor {
 
     @Override
     public void visitIMUL(IMUL imul) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String v1 = pop();
+        String v2 = pop();
+        push("I", v1+"*"+v2);
     }
 
     @Override
     public void visitIADD(IADD iadd) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String v1 = pop();
+        String v2 = pop();
+        push("I", v1+"+"+v2);
     }
 
     @Override

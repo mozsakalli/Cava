@@ -21,17 +21,5 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Label extends Code {
-    
-    public String name;
-    
-    public Label(String name) {
-        this.name = name;
-    }
 
-    @Override
-    public int getStackDelta() {
-        return 0;
-    }
-    
-    
 }

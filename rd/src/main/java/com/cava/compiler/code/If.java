@@ -20,21 +20,19 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class If extends Branch {
-
-    int opcode;
+public class If extends Code {
     
-    public If(int opcode, String label) {
-        this.opcode = opcode;
-        this.label = label;
-    }
-
-    @Override
-    public int getStackDelta() {
-        switch(opcode) {
-            default: throw new RuntimeException("Unknown: "+opcode);
-        }
+    public enum Condition {
+        Eq, Neq, Gt, Lt, Ge, Le
     }
     
+    public Code left, right;
+    public Condition op;
     
+    public If(){}
+    public If(Code left, Code right, Condition op) {
+        this.left = left;
+        this.right = right;
+        this.op = op;
+    }
 }

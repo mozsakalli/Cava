@@ -20,31 +20,19 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class If extends Code {
+public class AllocArray extends Code {
     
-    public enum Condition {
-        Eq("=="), Neq("!="), Gt(">"), Lt("<"), Ge(">="), Le("<=");
-        String sign;
-        Condition(String sign) {
-            this.sign = sign;
-        }
-    }
+    public Code size;
+    public String type;
     
-    public Code left, right;
-    public Condition op;
-    public int target;
-    
-    public If(){}
-    public If(Code left, Code right, Condition op, int target) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
-        this.target = target;
+    public AllocArray(Code size, String type) {
+        this.size = size;
+        this.type = type;
     }
 
     @Override
     public String toString() {
-        return "if("+left+op.sign+right+") goto label"+target+";";
+        return "newArray("+type+","+size+")";
     }
     
     

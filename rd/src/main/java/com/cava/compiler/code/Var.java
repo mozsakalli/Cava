@@ -20,31 +20,25 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class If extends Code {
+public class Var extends Code {
     
-    public enum Condition {
-        Eq("=="), Neq("!="), Gt(">"), Lt("<"), Ge(">="), Le("<=");
-        String sign;
-        Condition(String sign) {
-            this.sign = sign;
-        }
+    public String name;
+    public int index;
+    public String type;
+    
+    public Var(String name, int index, String type) {
+        this.name = name;
+        this.index = index;
+        this.type = type;
     }
     
-    public Code left, right;
-    public Condition op;
-    public int target;
-    
-    public If(){}
-    public If(Code left, Code right, Condition op, int target) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
-        this.target = target;
+    public Var(soot.Local local) {
+        this(local.getName(), local.getIndex(), com.cava.compiler.ClassLoader.toJavaType(local.getType()));
     }
 
     @Override
     public String toString() {
-        return "if("+left+op.sign+right+") goto label"+target+";";
+        return name;
     }
     
     

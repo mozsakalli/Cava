@@ -20,31 +20,16 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class If extends Code {
+public class Goto extends Code {
     
-    public enum Condition {
-        Eq("=="), Neq("!="), Gt(">"), Lt("<"), Ge(">="), Le("<=");
-        String sign;
-        Condition(String sign) {
-            this.sign = sign;
-        }
-    }
-    
-    public Code left, right;
-    public Condition op;
     public int target;
-    
-    public If(){}
-    public If(Code left, Code right, Condition op, int target) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
+    public Goto(int target) {
         this.target = target;
     }
 
     @Override
     public String toString() {
-        return "if("+left+op.sign+right+") goto label"+target+";";
+        return "goto label"+target;
     }
     
     

@@ -101,7 +101,7 @@ public class ClassLoader {
             }
             m.signature = buildJavaSignature(m);
             if(!c.isInterface && !m.isAbstract() && !m.isNative()) {
-                if(!m.name.contains("<"))
+                if(m.name.equals("test"))
                     new SootMethodDecompiler().decompile(sm, m, c);
             }
             m.annotations = decodeAnnotations(sm);

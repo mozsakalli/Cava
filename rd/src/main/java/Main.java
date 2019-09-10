@@ -34,11 +34,12 @@ public class Main {
         return t*t2;
     }
     public static int test() {
+        int[] vals = new int[]{0,1,2,3};
         int result = 0;
         for(int i=0; i<100; i++) {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
-            mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
-            result += i * mul;
+            //mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
+            result += i * mul + vals[i%4];
         }
         return result;
     }

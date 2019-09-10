@@ -14,16 +14,27 @@ import soot.jimple.TableSwitchStmt;
 
 import com.cava.compiler.model.*;
 import com.cava.compiler.code.*;
+import java.util.HashSet;
+import java.util.Set;
+import soot.ArrayType;
 import soot.Immediate;
-import soot.Value;
+import soot.jimple.AddExpr;
+import soot.jimple.ArrayRef;
+import soot.jimple.BinopExpr;
 import soot.jimple.ConditionExpr;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.EqExpr;
 import soot.jimple.GeExpr;
 import soot.jimple.GtExpr;
+import soot.jimple.IntConstant;
 import soot.jimple.LeExpr;
 import soot.jimple.LtExpr;
+import soot.jimple.MulExpr;
 import soot.jimple.NeExpr;
+import soot.jimple.NewArrayExpr;
+import soot.jimple.RemExpr;
+import soot.jimple.ReturnStmt;
+import soot.jimple.SubExpr;
 
 /**
  *
@@ -34,7 +45,9 @@ public class SootMethodDecompiler {
     Method method;
     SootMethod sootMethod;
     Map<Unit, Label> unitToLabelMap = new HashMap();
-
+    Map<Unit, Integer> unitToIndex = new HashMap();
+    Set<Integer> labels = new HashSet();
+    
     public void decompile(SootMethod sm, Method m, Clazz c) {
         klass = c;
         method = m;
@@ -45,21 +58,32 @@ public class SootMethodDecompiler {
         PackManager.v().getPack("jop").apply(body);
         PackManager.v().getPack("jap").apply(body);
 
-        generateLabels(body);
-
         for (soot.Local l : body.getLocals()) {
             m.locals.add(new NameAndType(l.getName(), ClassLoader.toJavaType(l.getType()), false));
         }
         
         Map<Unit,Code> unitToCode = new HashMap();
         
+        int index = 0;
+        for(Unit u : body.getUnits()) {
+            unitToIndex.put(u, index++);
+        }
+
+        generateLabels(body);
+
+        
         for (Unit u : body.getUnits()) {
+            index = unitToIndex.get(u);
+            if(labels.contains(index))
+                System.out.println("label"+index+":");
+            /*
             Label label = unitToLabelMap.get(u);
             if (label != null) {
                 m.codes.add(label);
-            }
+            }*/
 
             Code code = decompile(u);
+            System.out.println(code);
             if (code != null) {
                 m.codes.add(code);
                 unitToCode.put(u, code);
@@ -70,6 +94,7 @@ public class SootMethodDecompiler {
     int labelIdCounter;
 
     private void newLabel(Stmt stmt) {
+        labels.add(unitToIndex.get(stmt));
         Label label = unitToLabelMap.get(stmt);
         if (label == null) {
             label = new Label();//"label" + labelIdCounter++);
@@ -112,7 +137,14 @@ public class SootMethodDecompiler {
             return assign((DefinitionStmt)unit);
         } else if(unit instanceof IfStmt) {
             return if_((IfStmt)unit);
+        } else if(unit instanceof GotoStmt) {
+            GotoStmt g = (GotoStmt)unit;
+            return new Goto(unitToIndex.get(g.getTarget()));
+        } else if(unit instanceof ReturnStmt) {
+            return new Return(immediate((Immediate)((ReturnStmt)unit).getOp()));
         }
+        
+        
         if (unit instanceof TableSwitchStmt) {
             /*
             If f = null;
@@ -148,21 +180,69 @@ public class SootMethodDecompiler {
 
     Code assign(DefinitionStmt stmt) {
         soot.Value rightOp = stmt.getRightOp();
+        Code right;
+        if(rightOp instanceof Immediate) {
+            right = immediate((Immediate)rightOp);
+        } else
+        if(rightOp instanceof BinopExpr) {
+            right = bin((BinopExpr)rightOp);
+        } else    
+        if(rightOp instanceof NewArrayExpr) {
+            NewArrayExpr expr = (NewArrayExpr) rightOp;
+            Code size = immediate((Immediate) expr.getSize());  
+            right = new AllocArray(size, ClassLoader.toJavaType(expr.getBaseType()));
+        } else if(rightOp instanceof ArrayRef) {
+            ArrayRef ref = (ArrayRef) rightOp;
+            Code base = immediate((Immediate) ref.getBase());
+            Code index = immediate((Immediate) ref.getIndex());
+            right = new Array(base, index, ClassLoader.toJavaType(ref.getType()));
+        } 
+        else
+        throw new RuntimeException("Unknown RightOp: "+rightOp.getClass());
         
-        return null;
+        soot.Value leftOp = stmt.getLeftOp();
+        Code left;
+        if(leftOp instanceof soot.Local) {
+            left = new Var((soot.Local)leftOp);
+        } else if(leftOp instanceof ArrayRef) {
+            ArrayRef ref = (ArrayRef) leftOp;
+            Code base = immediate((Immediate) ref.getBase());
+            Code index = immediate((Immediate) ref.getIndex());
+            left = new Array(base, index, ClassLoader.toJavaType(ref.getType()));
+        } else
+        throw new RuntimeException("Unknown LeftOp: "+leftOp.getClass());
+        
+        return new Assign(left, right);
     }
     
-    Code immediate(Unit unit, Immediate v) {
+    Code bin(BinopExpr expr) {
+        Code left = immediate((Immediate)expr.getOp1());
+        Code right = immediate((Immediate)expr.getOp2());
+        Binop.Op op = null;
+        if(expr instanceof RemExpr) op = Binop.Op.Rem;
+        else if(expr instanceof MulExpr) op = Binop.Op.Mul;
+        else if(expr instanceof AddExpr) op = Binop.Op.Add;
+        else if(expr instanceof SubExpr) op = Binop.Op.Sub;
+        else throw new RuntimeException("Unknown: "+expr.getClass());
+
+        return new Binop(left, right, op, ClassLoader.toJavaType(expr.getType()));
+    }
+    
+    Code immediate(Immediate v) {
         if(v instanceof soot.Local) {
-            
+            soot.Local local = (soot.Local)v;
+            String type = ClassLoader.toJavaType(local.getType());
+            return new Var(local.getName(), local.getIndex(), type);
+        } else if(v instanceof IntConstant) {
+            return new Const(((IntConstant)v).value, "I");
         }
         throw new RuntimeException("Unknown "+v.getClass());
     }
     
     Code if_(IfStmt stmt) {
         ConditionExpr condition = (ConditionExpr) stmt.getCondition();
-        Code op1 = immediate(stmt, (Immediate) condition.getOp1());
-        Code op2 = immediate(stmt, (Immediate) condition.getOp2());
+        Code op1 = immediate((Immediate) condition.getOp1());
+        Code op2 = immediate((Immediate) condition.getOp2());
         If.Condition c = null;
         if (condition instanceof EqExpr) {
             c = If.Condition.Eq;
@@ -178,14 +258,6 @@ public class SootMethodDecompiler {
             c = If.Condition.Le;
         }
         
-        return new If(op1, op2, c);
-        /*
-        Variable result = function.newVariable(Type.I1);
-        function.add(new Icmp(result, c, op1, op2)).attach(stmt);
-        Unit nextUnit = sootMethod.getActiveBody().getUnits().getSuccOf(stmt);
-        function.add(new Br(new VariableRef(result), 
-                function.newBasicBlockRef(new Label(stmt.getTarget())), 
-                function.newBasicBlockRef(new Label(nextUnit)))).attach(stmt);
-        */
+        return new If(op1, op2, c, unitToIndex.get(stmt.getTarget()));
     }
 }

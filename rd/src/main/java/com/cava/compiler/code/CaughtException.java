@@ -20,26 +20,7 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Var extends Code {
-    
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
-    }
+public class CaughtException extends Code {
 
-    @Override
-    public String toString() {
-        return name;
-    }
-    
-    
 }
+

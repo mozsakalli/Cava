@@ -28,20 +28,15 @@ import java.util.jar.JarFile;
  */
 public class ClassFileFinder {
     
-    Map<File, JarFile> openedJarFiles = new HashMap();
-    Map<String, ClassSource> resolvedClasses = new HashMap();
-    File[] classPath;
+    static Map<File, JarFile> openedJarFiles = new HashMap();
+    static Map<String, ClassSource> resolvedClasses = new HashMap();
     
-    public ClassFileFinder(File[] classPath) {
-        this.classPath = classPath;
-    }
-    
-    public ClassSource findClass(String name) throws Exception {
+    public static ClassSource findClass(String name) throws Exception {
         name = name.replace('.', '/') + ".class";
         ClassSource resolved = resolvedClasses.get(name);
         if(resolved != null) return resolved;
         
-        for(File file : classPath) {
+        for(File file : CompilerContext.classPath) {
             if(!file.exists()) continue;
             if(file.isDirectory()) {
                 File classFile = new File(file,name);
@@ -67,7 +62,7 @@ public class ClassFileFinder {
         return null;
     }
     
-    public long getClassTime(String name) throws Exception {
+    public static long getClassTime(String name) throws Exception {
         ClassSource file = findClass(name);
         return file != null ? file.lastModified() : -1;
     }

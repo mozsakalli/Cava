@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.cava.compiler.code;
+package com.cava.compiler.relooper;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
-    
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
+public class SimpleShape extends Shape {
+
+    Block inner;
+
+    public SimpleShape() {
+        type = Shape.ShapeType.Simple;
     }
 
     @Override
-    public String toString() {
-        return name;
+    void render(boolean inLoop) {
+        inner.render(inLoop);
+        if (next != null) {
+            next.render(inLoop);
+        }
     }
-    
-    
+
 }

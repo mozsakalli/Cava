@@ -13,20 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.cava.compiler;
-
-import java.io.File;
+package com.cava.compiler.relooper;
 
 /**
  *
  * @author mustafa
  */
-public class BuilderOptions {
+public class Shape {
+
+    int id;
+    Shape next;
+    Shape natural;
+
+    public enum ShapeType {
+        Simple,
+        Multiple,
+        Loop,
+        Emulated
+    };
+    ShapeType type;
     
-    File[] classPath;
-    public File[] classPath() { return classPath; }
-    public void classPath(File[] classPath) { this.classPath = classPath; }
+    void render(boolean inLoop) {}
     
-    
+    public static MultipleShape isMultiple(Shape shape) {
+        return shape instanceof MultipleShape ? (MultipleShape)shape : null;
+    }
 }

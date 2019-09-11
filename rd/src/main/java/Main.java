@@ -1,6 +1,5 @@
 
-import com.cava.compiler.Builder;
-import com.cava.compiler.BuilderOptions;
+import com.cava.compiler.CompilerContext;
 import com.cava.compiler.model.Clazz;
 import java.io.File;
 
@@ -36,24 +35,31 @@ public class Main {
     public static int test() {
         int[] vals = new int[]{0,1,2,3};
         int result = 0;
+        byte b = 10;
         for(int i=0; i<100; i++) {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
             //mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
+            try {
             result += i * mul + vals[i%4];
+            b = (byte)(result%10);
+            } catch(Exception e){
+                b += 5;
+            } finally {
+                result -= 10;
+            }
+            result += b;
         }
         return result;
     }
     
     public static void main(String...args) {
         
-        BuilderOptions opt = new BuilderOptions();
-        opt.classPath(new File[]{
+        CompilerContext.classPath = new File[]{
             new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/target/classes"),
-        });
+        };
         
-        Builder builder = new Builder(opt);
-        Clazz cls = builder.resolve("Main");
+        Clazz cls = CompilerContext.resolve("Main");
     }
     
 }

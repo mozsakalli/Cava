@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.cava.compiler.Builder;
+import com.cava.compiler.CompilerContext;
 import com.cava.compiler.DecompilerUtils;
 
 /**
@@ -74,9 +74,9 @@ public class Clazz implements Serializable {
         methods.forEach(m -> m.replaceClassName(name, target));
     }
     
-    public Method findDeclaredMethod(Builder builder, String name, String signature) {
+    public Method findDeclaredMethod(String name, String signature) {
         if(elementType != null)
-            return builder.resolve("java/lang/Object").findDeclaredMethod(builder, name, signature);
+            return CompilerContext.resolve("java/lang/Object").findDeclaredMethod(name, signature);
         
         for(Method m : methods)
             if(m.name.equals(name) && m.signature.equals(signature)) {
@@ -86,16 +86,16 @@ public class Clazz implements Serializable {
         return null;
     }
     
-    public Method findMethod(Builder builder, String name, String signature) {
-        Method result = findDeclaredMethod(builder, name, signature);
+    public Method findMethod(String name, String signature) {
+        Method result = findDeclaredMethod(name, signature);
         if(result == null && superName != null) {
-            return builder.resolve(superName).findMethod(builder, name, signature);
+            return CompilerContext.resolve(superName).findMethod(name, signature);
         }
         return result;
     }
     
-    public Method findClassInitializer(Builder builder) {
-        return findDeclaredMethod(builder, "<clinit>", "()V");
+    public Method findClassInitializer() {
+        return findDeclaredMethod("<clinit>", "()V");
     }
     
     public NameAndType findDeclaredField(String name) {
@@ -105,18 +105,18 @@ public class Clazz implements Serializable {
         return null;
     }
     
-    public NameAndType findField(Builder builder, String name) {
+    public NameAndType findField(String name) {
         NameAndType result = findDeclaredField(name);
         if(result == null && superName != null) {
-            return builder.resolve(superName).findField(builder,name);
+            return CompilerContext.resolve(superName).findField(name);
         }
         return result;
     }
     
-    public List<NameAndType> getAllFields(Builder builder) {
+    public List<NameAndType> getAllFields() {
         final List<NameAndType> result = new ArrayList();
         if(superName != null) {
-            result.addAll(builder.resolve(superName).getAllFields(builder));
+            result.addAll(CompilerContext.resolve(superName).getAllFields());
         }
         result.addAll(fields);
         return result;
@@ -138,39 +138,39 @@ public class Clazz implements Serializable {
         return annotations.containsKey(name);
     }
     
-    public boolean isObjC(Builder builder) {
-        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC(builder);
+    public boolean isObjC() {
+        return hasAnnotation("cava.annotation.ObjC") || isExtendedFromObjC();
     }
     
-    public boolean isExtendedFromObjC(Builder builder) {
+    public boolean isExtendedFromObjC() {
         if(superName == null) return false;
         if(hasAnnotation("cava.annotation.ObjC")) return true;
-        return builder.resolve(superName).isExtendedFromObjC(builder);
+        return CompilerContext.resolve(superName).isExtendedFromObjC();
     }
     
-    public boolean implementsInterface(Builder builder, String name) {
+    public boolean implementsInterface(String name) {
         if(this.name.equals(name)) return true;
         for(String iName : interfaces) {
             if(iName.equals(name)) return true;
-            Clazz ic = builder.resolve(iName);
+            Clazz ic = CompilerContext.resolve(iName);
             while(ic != null) {
                 if(ic.name.equals(name)) return true;
                 if(ic.superName == null || ic.superName.equals("java/lang/Object")) break;
-                ic = builder.resolve(ic.superName);
+                ic = CompilerContext.resolve(ic.superName);
             }
         }
-        if(superName != null) return builder.resolve(superName).implementsInterface(builder, name);
+        if(superName != null) return CompilerContext.resolve(superName).implementsInterface(name);
         return false;
     }
     
-    public boolean extendsClass(Builder builder, String name) {
+    public boolean extendsClass(String name) {
         if(this.name.equals(name)) return true;
         if(superName != null)
-            return builder.resolve(superName).extendsClass(builder, name);
+            return CompilerContext.resolve(superName).extendsClass(name);
         return false;
     }
     
-    public Set<Clazz> getAllInterfaces(Builder builder, Set<Clazz> list) {
+    public Set<Clazz> getAllInterfaces(Set<Clazz> list) {
         boolean addSelf = true;
         if(list == null) {
             list = new HashSet();
@@ -178,32 +178,32 @@ public class Clazz implements Serializable {
         }
         
         for(String intf : interfaces) {
-            Clazz ic = builder.resolve(intf);
+            Clazz ic = CompilerContext.resolve(intf);
             list.add(ic);
-            ic.getAllInterfaces(builder, list);
+            ic.getAllInterfaces(list);
         }
         if(isInterface && addSelf) {
             list.add(this);
-            Clazz sk = superName != null ? builder.resolve(superName) : null;
+            Clazz sk = superName != null ? CompilerContext.resolve(superName) : null;
             while(sk != null && sk.isInterface) {
                 list.add(sk);
                 if(sk.superName == null) break;
-                sk = builder.resolve(sk.superName);
+                sk = CompilerContext.resolve(sk.superName);
             }
         }
         
         if(superName != null) {
-            builder.resolve(superName).getAllInterfaces(builder,list);
+            CompilerContext.resolve(superName).getAllInterfaces(list);
         }
         
         return list;
     }  
     
-    public boolean isExtendedFrom(Builder builder, String cls) {
+    public boolean isExtendedFrom(String cls) {
         if(name.equals(cls)) return true;
         if(superName == null) return false;
         if(cls.equals(superName)) return true;
-        return builder.resolve(superName).isExtendedFrom(builder,cls);
+        return CompilerContext.resolve(superName).isExtendedFrom(cls);
     }
     public boolean isCustomObjCClass() {
         /*

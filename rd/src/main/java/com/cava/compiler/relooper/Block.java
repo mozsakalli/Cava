@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.relooper;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class Block {
     
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
-    }
+    public Map<Block, Branch> branchesOut = new HashMap();
+    public Set<Block> branchesIn = new HashSet();
 
-    @Override
-    public String toString() {
-        return name;
-    }
+    public Map<Block, Branch> processedBranchesOut = new HashMap();
+    public Set<Block> processedBranchesIn = new HashSet();
     
+    Shape parent;
+    int id;
+    boolean isCheckedMultipleEntry;
     
+    void render(boolean inLoop) {}
 }

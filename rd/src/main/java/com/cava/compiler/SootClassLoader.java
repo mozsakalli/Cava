@@ -54,14 +54,14 @@ import soot.tagkit.VisibilityAnnotationTag;
  *
  * @author mustafa
  */
-public class ClassLoader {
+public class SootClassLoader {
 
     static boolean sootInitialized;
     
-    public static Clazz load(String name, BuilderOptions options) {
+    public static Clazz load(String name) {
         
         System.out.println("Decompiling "+name);
-        initializeSoot(options);
+        initializeSoot();
         SootClass sc = getSootClass(name.replace('/', '.'));
 
         Clazz c = new Clazz();
@@ -208,11 +208,11 @@ public class ClassLoader {
         return Scene.v().loadClassAndSupport(name);
     }
     
-    public static void initializeSoot(BuilderOptions options) {
+    public static void initializeSoot() {
         if(sootInitialized) return;
         sootInitialized = true;
         String classPath = "";
-        for(File f : options.classPath()) {
+        for(File f : CompilerContext.classPath) {
             if(!classPath.isEmpty()) classPath += File.pathSeparator;
             classPath += f.getAbsolutePath();
         }

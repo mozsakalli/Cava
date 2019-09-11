@@ -122,8 +122,8 @@ public class DecompilerUtils {
         return name.substring(0, p);
     }
   
-    public static boolean isStruct(Builder builder, String type) {
-        return !isPrimitive(type) && !isArray(type) ? builder.resolve(type).isStruct() : false;
+    public static boolean isStruct(String type) {
+        return !isPrimitive(type) && !isArray(type) ? CompilerContext.resolve(type).isStruct() : false;
     }
     
     /*

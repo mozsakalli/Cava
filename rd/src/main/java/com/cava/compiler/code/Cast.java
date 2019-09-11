@@ -20,25 +20,21 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class Cast extends Code {
     
-    public String name;
-    public int index;
-    public String type;
+    public Code code;
+    public String fromType;
+    public String toType;
     
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
+    public Cast(Code code, String from, String to) {
+        this.code = code;
+        this.fromType = from;
+        this.toType = to;
     }
 
     @Override
     public String toString() {
-        return name;
+        return "("+toType+")"+code;
     }
     
     

@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.relooper;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class Branch {
     
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
+    public enum FlowType {
+        Direct, Break, Continue, Nested
     }
     
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-    
+    Shape ancestor;
+    FlowType type;
+    boolean labeled;
     
 }

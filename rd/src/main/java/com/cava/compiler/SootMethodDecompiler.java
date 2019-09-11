@@ -16,11 +16,12 @@ import com.cava.compiler.model.*;
 import com.cava.compiler.code.*;
 import java.util.HashSet;
 import java.util.Set;
-import soot.ArrayType;
 import soot.Immediate;
 import soot.jimple.AddExpr;
 import soot.jimple.ArrayRef;
 import soot.jimple.BinopExpr;
+import soot.jimple.CastExpr;
+import soot.jimple.CaughtExceptionRef;
 import soot.jimple.ConditionExpr;
 import soot.jimple.DefinitionStmt;
 import soot.jimple.EqExpr;
@@ -35,6 +36,7 @@ import soot.jimple.NewArrayExpr;
 import soot.jimple.RemExpr;
 import soot.jimple.ReturnStmt;
 import soot.jimple.SubExpr;
+import soot.jimple.ThrowStmt;
 
 /**
  *
@@ -59,7 +61,8 @@ public class SootMethodDecompiler {
         PackManager.v().getPack("jap").apply(body);
 
         for (soot.Local l : body.getLocals()) {
-            m.locals.add(new NameAndType(l.getName(), ClassLoader.toJavaType(l.getType()), false));
+            m.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
+            System.out.println("local: "+l.getName()+" / "+SootClassLoader.toJavaType(l.getType()));
         }
         
         Map<Unit,Code> unitToCode = new HashMap();
@@ -142,6 +145,8 @@ public class SootMethodDecompiler {
             return new Goto(unitToIndex.get(g.getTarget()));
         } else if(unit instanceof ReturnStmt) {
             return new Return(immediate((Immediate)((ReturnStmt)unit).getOp()));
+        } else if(unit instanceof ThrowStmt) {
+            return new Throw(immediate((Immediate)((ThrowStmt)unit).getOp()));
         }
         
         
@@ -175,7 +180,7 @@ public class SootMethodDecompiler {
             //return statement((Stmt) unit);
         }
         
-        throw new RuntimeException("Unknown "+unit);
+        throw new RuntimeException("Unknown "+unit.getClass());
     }
 
     Code assign(DefinitionStmt stmt) {
@@ -190,13 +195,19 @@ public class SootMethodDecompiler {
         if(rightOp instanceof NewArrayExpr) {
             NewArrayExpr expr = (NewArrayExpr) rightOp;
             Code size = immediate((Immediate) expr.getSize());  
-            right = new AllocArray(size, ClassLoader.toJavaType(expr.getBaseType()));
+            right = new AllocArray(size, SootClassLoader.toJavaType(expr.getBaseType()));
         } else if(rightOp instanceof ArrayRef) {
             ArrayRef ref = (ArrayRef) rightOp;
             Code base = immediate((Immediate) ref.getBase());
             Code index = immediate((Immediate) ref.getIndex());
-            right = new Array(base, index, ClassLoader.toJavaType(ref.getType()));
-        } 
+            right = new Array(base, index, SootClassLoader.toJavaType(ref.getType()));
+        } else if(rightOp instanceof CastExpr) {
+            right = new Cast(immediate((Immediate) ((CastExpr) rightOp).getOp()), 
+            SootClassLoader.toJavaType(((CastExpr) rightOp).getOp().getType()), 
+            SootClassLoader.toJavaType(((CastExpr) rightOp).getCastType()));
+        } else if(rightOp instanceof CaughtExceptionRef) {
+            right = new CaughtException();
+        }
         else
         throw new RuntimeException("Unknown RightOp: "+rightOp.getClass());
         
@@ -208,7 +219,7 @@ public class SootMethodDecompiler {
             ArrayRef ref = (ArrayRef) leftOp;
             Code base = immediate((Immediate) ref.getBase());
             Code index = immediate((Immediate) ref.getIndex());
-            left = new Array(base, index, ClassLoader.toJavaType(ref.getType()));
+            left = new Array(base, index, SootClassLoader.toJavaType(ref.getType()));
         } else
         throw new RuntimeException("Unknown LeftOp: "+leftOp.getClass());
         
@@ -225,13 +236,13 @@ public class SootMethodDecompiler {
         else if(expr instanceof SubExpr) op = Binop.Op.Sub;
         else throw new RuntimeException("Unknown: "+expr.getClass());
 
-        return new Binop(left, right, op, ClassLoader.toJavaType(expr.getType()));
+        return new Binop(left, right, op, SootClassLoader.toJavaType(expr.getType()));
     }
     
     Code immediate(Immediate v) {
         if(v instanceof soot.Local) {
             soot.Local local = (soot.Local)v;
-            String type = ClassLoader.toJavaType(local.getType());
+            String type = SootClassLoader.toJavaType(local.getType());
             return new Var(local.getName(), local.getIndex(), type);
         } else if(v instanceof IntConstant) {
             return new Const(((IntConstant)v).value, "I");

@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.relooper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class MultipleShape extends LabeledShape {
     
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
-    }
+    Map<Integer, Shape> innerMap = new HashMap();
+    int breaks;
+    boolean useSwitch;
 
-    @Override
-    public String toString() {
-        return name;
+    public MultipleShape(ShapeType type) {
+        super(type);
     }
-    
     
 }

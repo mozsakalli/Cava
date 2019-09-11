@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class StringCollector {
     
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
+    private List<String> strings = new ArrayList();
+    /*
+    public String get(String str, INameManager naming) {
+        int index = strings.indexOf(str);
+        if(index == -1) {
+            strings.add(str);
+            index = strings.size() - 1;
+        }
+        
+        return naming.literal(index);
     }
+    */
     
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
+    public List<String> strings() {
+        return strings;
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-    
-    
 }

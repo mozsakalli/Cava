@@ -14,32 +14,18 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.relooper;
 
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class LoopShape extends LabeledShape {
+
+    Shape inner;
     
-    public String name;
-    public int index;
-    public String type;
-    
-    public Var(String name, int index, String type) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()));
+    public LoopShape() {
+        super(ShapeType.Loop);
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-    
-    
 }

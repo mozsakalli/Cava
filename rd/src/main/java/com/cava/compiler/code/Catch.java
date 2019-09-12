@@ -16,38 +16,10 @@
 
 package com.cava.compiler.code;
 
-import soot.Unit;
-
 /**
  *
  * @author mustafa
  */
-public class If extends Branch {
-    
-    public enum Condition {
-        Eq("=="), Neq("!="), Gt(">"), Lt("<"), Ge(">="), Le("<=");
-        String sign;
-        Condition(String sign) {
-            this.sign = sign;
-        }
-    }
-    
-    public Code left, right;
-    public Condition op;
-    public int target;
-    
-    public If(){}
-    public If(Code left, Code right, Condition op, int target) {
-        this.left = left;
-        this.right = right;
-        this.op = op;
-        this.target = target;
-    }
+public class Catch extends Code {
 
-    @Override
-    public String toString() {
-        return "if("+left+op.sign+right+") goto label"+target+";";
-    }
-    
-    
 }

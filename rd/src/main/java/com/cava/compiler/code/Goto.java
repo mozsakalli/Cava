@@ -20,7 +20,7 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Goto extends Code {
+public class Goto extends Branch {
     
     public int target;
     public Goto(int target) {

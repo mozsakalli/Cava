@@ -42,7 +42,7 @@ public class Main {
             try {
             result += i * mul + vals[i%4];
             b = (byte)(result%10);
-            } catch(Exception e){
+            } catch(Throwable e){
                 b += 5;
             } finally {
                 result -= 10;

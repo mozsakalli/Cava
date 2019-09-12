@@ -14,9 +14,12 @@ import soot.jimple.TableSwitchStmt;
 
 import com.cava.compiler.model.*;
 import com.cava.compiler.code.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import soot.Immediate;
+import soot.Trap;
 import soot.jimple.AddExpr;
 import soot.jimple.ArrayRef;
 import soot.jimple.BinopExpr;
@@ -60,6 +63,50 @@ public class SootMethodDecompiler {
         PackManager.v().getPack("jop").apply(body);
         PackManager.v().getPack("jap").apply(body);
 
+        Set<Unit> tryEof = new HashSet();
+        Set<Unit> tries = new HashSet();
+        Set<Unit> throwset = new HashSet();
+        Map<Stmt, List<Trap>> catches = new HashMap();
+        
+        for(Trap trap : body.getTraps()) {
+            Stmt begin = (Stmt) trap.getBeginUnit();
+            Stmt end = (Stmt) trap.getEndUnit();
+            Stmt handler = (Stmt)trap.getHandlerUnit();
+            newLabel(begin);
+            //newLabel(end);
+            tryEof.add(end);
+            newLabel(handler);
+            tries.add(begin);
+
+            List<Trap> traps = catches.get(end);
+            if (traps == null) {
+                traps = new ArrayList();
+                catches.put(end, traps);
+            }
+            traps.add(trap);
+            if(end.equals(handler)) throwset.add(handler);
+        }
+
+        List<Unit> units = new ArrayList();
+        for(Unit unit : body.getUnits()) {
+            if(throwset.contains(unit) && catches.containsKey(unit)) {
+                List<Trap> traps = catches.get(unit);
+                int index = 0;
+                Catch ci = new Catch();
+                for (Trap trap : traps) {
+                    ci.addTrap(SootUtils.convertType(trap.getException().getType()),
+                                    getLabel((Stmt) trap.getHandlerUnit()), index++);
+                    /*method.instructions.add(
+                            new CatchInstruction(
+                                    SootUtils.convertType(trap.getException().getType()),
+                                    getLabel((Stmt) trap.getHandlerUnit()), index++
+                            ));*/
+                }
+                //method.instructions.add(ci);
+            } 
+            
+        }
+        
         for (soot.Local l : body.getLocals()) {
             m.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
             System.out.println("local: "+l.getName()+" / "+SootClassLoader.toJavaType(l.getType()));
@@ -76,6 +123,14 @@ public class SootMethodDecompiler {
 
         
         for (Unit u : body.getUnits()) {
+            for(Trap t : body.getTraps()) {
+                if(t.getBeginUnit().equals(u)) {
+                    System.out.println("--try begin --");
+                }
+                if(t.getEndUnit() == u) {
+                    System.out.println("-- try end --");
+                }
+            }
             index = unitToIndex.get(u);
             if(labels.contains(index))
                 System.out.println("label"+index+":");

@@ -178,6 +178,7 @@ public class CavaCompileTask implements CompileTask {
                 return false;
             }
             CavaPlugin.logInfo(context.getProject(), "Build done");
+
             /*
             // set the config and compiler on the run configuration so
             // it knows where to find things.

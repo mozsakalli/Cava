@@ -1,0 +1,34 @@
+<idea-plugin>
+  <id>com.digitoygames.cava.idea</id>
+  <name>Cava IntelliJ Idea Plugin</name>
+  <version>1.0</version>
+  <vendor email="cava@digitoygames.com" url="http://www.digitoygames.com">Digitoy Games</vendor>
+
+  <description><![CDATA[
+      Cava support for IntelliJ
+    ]]></description>
+
+  <change-notes><![CDATA[
+    ]]>
+  </change-notes>
+
+  <idea-version since-build="173.0"/>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <configurationType implementation="com.cava.idea.running.CavaIosConfigurationType"/>
+    <projectTemplatesFactory implementation="com.cava.idea.builder.CavaTemplatesFactory"/>
+    <sdkType implementation="com.cava.idea.CavaSdkType"/>
+    <programRunner implementation="com.cava.idea.running.CavaRunner"/>
+  </extensions>
+
+  <project-components>
+    <component>
+      <implementation-class>com.cava.idea.components.CavaProjectComponent</implementation-class>
+    </component>
+  </project-components>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>

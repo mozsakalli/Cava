@@ -21,7 +21,7 @@ public class XCodeUtil {
             "-scheme", scheme,    
             "-sdk", forSimulator ? "iphonesimulator" : "iphoneos",    
             action    
-        );         
+        ).wd(projectPath.getParentFile());         
         
         String capture = exec.execCapture();
         int code = exec.exitCode();

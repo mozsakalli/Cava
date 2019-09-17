@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cava-compiler-2019.07.18">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../CAVA/core/target/cava-compiler-2019.07.18.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

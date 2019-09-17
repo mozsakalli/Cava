@@ -44,9 +44,9 @@ public class Main {
             b = (byte)(result%10);
             } catch(Throwable e){
                 b += 5;
-            } finally {
+            } /*finally {
                 result -= 10;
-            }
+            }*/
             result += b;
         }
         return result;

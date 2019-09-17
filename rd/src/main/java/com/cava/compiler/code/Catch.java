@@ -21,5 +21,8 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Catch extends Code {
-
+    
+    public void addTrap(String type) {
+        
+    }
 }

@@ -69,6 +69,9 @@ public class SootMethodDecompiler {
         Map<Stmt, List<Trap>> catches = new HashMap();
         
         for(Trap trap : body.getTraps()) {
+            System.out.println(trap.getException());
+            System.out.println(trap);
+            /*
             Stmt begin = (Stmt) trap.getBeginUnit();
             Stmt end = (Stmt) trap.getEndUnit();
             Stmt handler = (Stmt)trap.getHandlerUnit();
@@ -85,28 +88,24 @@ public class SootMethodDecompiler {
             }
             traps.add(trap);
             if(end.equals(handler)) throwset.add(handler);
+            */
         }
 
         List<Unit> units = new ArrayList();
+        /*
         for(Unit unit : body.getUnits()) {
             if(throwset.contains(unit) && catches.containsKey(unit)) {
                 List<Trap> traps = catches.get(unit);
                 int index = 0;
                 Catch ci = new Catch();
                 for (Trap trap : traps) {
-                    ci.addTrap(SootUtils.convertType(trap.getException().getType()),
+                    ci.addTrap(SootClassLoader.toJavaType(trap.getException().getType()),
                                     getLabel((Stmt) trap.getHandlerUnit()), index++);
-                    /*method.instructions.add(
-                            new CatchInstruction(
-                                    SootUtils.convertType(trap.getException().getType()),
-                                    getLabel((Stmt) trap.getHandlerUnit()), index++
-                            ));*/
                 }
-                //method.instructions.add(ci);
             } 
             
         }
-        
+        */
         for (soot.Local l : body.getLocals()) {
             m.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
             System.out.println("local: "+l.getName()+" / "+SootClassLoader.toJavaType(l.getType()));
@@ -123,6 +122,7 @@ public class SootMethodDecompiler {
 
         
         for (Unit u : body.getUnits()) {
+            /*
             for(Trap t : body.getTraps()) {
                 if(t.getBeginUnit().equals(u)) {
                     System.out.println("--try begin --");
@@ -130,7 +130,7 @@ public class SootMethodDecompiler {
                 if(t.getEndUnit() == u) {
                     System.out.println("-- try end --");
                 }
-            }
+            }*/
             index = unitToIndex.get(u);
             if(labels.contains(index))
                 System.out.println("label"+index+":");

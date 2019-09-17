@@ -154,7 +154,7 @@ public class IOSApplication implements Application {
         
         @ObjC("doTick")
         void doTick() {
-            GL.glClearColor(1, 0, 0, 1);
+            GL.glClearColor(1, 1, 0, 1);
             GL.glClear(GL.GL_COLOR_BUFFER_BIT);
             present();
         }

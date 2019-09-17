@@ -48,7 +48,7 @@ public class Main {
         CavaOptions.debug(false);
         CavaOptions.debugHost("192.168.1.56");
         //CavaOptions.debugPort(9999);
-        CompilerContext.generate();
+        CompilerContext.build();
 
     }
 }

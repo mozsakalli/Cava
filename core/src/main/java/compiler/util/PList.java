@@ -18,7 +18,7 @@ package compiler.util;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
@@ -102,19 +102,43 @@ public class PList {
         return result;
     }
    
-    public static class Item {}
+    public ArrayItem getRoot() {
+        return root;
+    }
+    
+    public String toString() {
+        StringBuilder buf = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n");
+        
+        for(Item it : root.nodes) {
+            it.dump(buf);
+        }
+        buf.append("</plist>\n");
+        return buf.toString();
+    }
+    
+    public static class Item {
+        public void dump(StringBuilder buf){}
+    }
     public static class StringItem extends Item {
         String value;
         public StringItem(){}
         public StringItem(String value) { this.value = value; }
+        @Override public void dump(StringBuilder buf){
+            buf.append("<string>").append(value).append("</string>\n");
+        }
+        
     }
     public static class BoolItem extends Item {
         boolean value;
         public BoolItem(){}
         public BoolItem(boolean value) { this.value = value; }
+        @Override public void dump(StringBuilder buf){
+            buf.append("<").append(value).append("/>\n");
+        }
     }
     public static class DictItem extends Item {
-        Map<String,Item> nodes = new HashMap();
+        Map<String,Item> nodes = new LinkedHashMap();
         public DictItem add(String key, Item value) {
             nodes.put(key, value);
             return this;
@@ -123,15 +147,37 @@ public class PList {
             nodes.remove(key);
             return this;
         }
+        @Override public void dump(StringBuilder buf){
+            buf.append("<dict>\n");
+            for(Map.Entry<String,Item> e : nodes.entrySet()) {
+                buf.append("<key>").append(e.getKey()).append("</key>\n");
+                e.getValue().dump(buf);
+            }
+            buf.append("</dict>\n");
+        }
+        
     }
     public static class ArrayItem extends Item {
         List<Item> nodes = new ArrayList();
         public void add(Item node) {
             nodes.add(node);
         }
-        public List<Item> getNodes() {
+        public int size() {
+            return nodes.size();
+        }
+        public Item item(int index) {
+            return nodes.get(index);
+        }
+        public List<Item> getItems() {
             return nodes;
         }
+        @Override public void dump(StringBuilder buf){
+            buf.append("<array>\n");
+            for(Item it : nodes) {
+                it.dump(buf);
+            }
+            buf.append("</array>\n");
+        }        
     }
     public static class RootItem extends ArrayItem {}
     

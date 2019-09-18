@@ -33,5 +33,6 @@ public class CavaRunProfileState extends CommandLineState {
     protected ProcessHandler executeRun() throws Throwable {
         Process process = null;
 
+        return null;
     }
 }

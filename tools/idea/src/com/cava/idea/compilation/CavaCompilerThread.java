@@ -36,7 +36,7 @@ public class CavaCompilerThread extends Thread {
     }
 
     protected void doCompile() throws Exception {
-        CompilerContext.run();
+        CompilerContext.build();
     }
 
     @Override

@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="cava-compiler-2019.07.18" level="project" />
+    <orderEntry type="library" name="maven" level="project" />
   </component>
 </module>

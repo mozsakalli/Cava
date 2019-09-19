@@ -14,24 +14,22 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import com.intellij.util.ui.UIUtil;
+import compiler.CavaOptions;
 import org.jdesktop.swingx.util.OS;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CavaPlugin {
@@ -57,7 +55,7 @@ public class CavaPlugin {
                 if (project.isDisposed()) {
                     return;
                 }
-                ToolWindow toolWindow = ToolWindowManager.getInstance(project).registerToolWindow(ROBOVM_TOOLWINDOW_ID, false, ToolWindowAnchor.BOTTOM, project, true);
+                ToolWindow toolWindow = ToolWindowManager.getInstance(project).registerToolWindow(CAVA_TOOLWINDOW_ID, false, ToolWindowAnchor.BOTTOM, project, true);
                 ConsoleView consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
                 Content content = toolWindow.getContentManager().getFactory().createContent(consoleView.getComponent(), "Console", true);
                 toolWindow.getContentManager().addContent(content);
@@ -158,7 +156,25 @@ public class CavaPlugin {
 
         return name.startsWith("cava-classlib");
     }
-    private static final String ROBOVM_TOOLWINDOW_ID = "Cava";
+
+    public static void saveCavaProperties(File root) throws Exception {
+        Properties p = new Properties();
+        p.setProperty("appName", CavaOptions.applicationName());
+        p.setProperty("appId", CavaOptions.applicationId());
+        p.setProperty("mainClass", CavaOptions.mainClass());
+        p.store(new FileOutputStream(new File(root, "cava.props")), "Cava Properties");
+    }
+
+    public static void loadCavaProperties(File root) throws Exception {
+        Properties p = new Properties();
+        p.load(new FileInputStream(new File(root, "cava.props")));
+        CavaOptions.applicationName(p.getProperty("appName"));
+        CavaOptions.applicationId(p.getProperty("appId"));
+        CavaOptions.mainClass(p.getProperty("mainClass"));
+    }
+
+
+    private static final String CAVA_TOOLWINDOW_ID = "Cava";
     private static OS os;
     static volatile Map<Project, ConsoleView> consoleViews = new ConcurrentHashMap<>();
     static volatile Map<Project, ToolWindow> toolWindows = new ConcurrentHashMap<>();
@@ -184,7 +200,7 @@ public class CavaPlugin {
                     // this may throw an exception, see #88. It appears to be a timing
                     // issue
                     try {
-                        ToolWindowManager.getInstance(project).notifyByBalloon(ROBOVM_TOOLWINDOW_ID, MessageType.ERROR, message);
+                        ToolWindowManager.getInstance(project).notifyByBalloon(CAVA_TOOLWINDOW_ID, MessageType.ERROR, message);
                     } catch (Throwable t) {
                         logError(project, message, t);
                     }

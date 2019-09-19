@@ -21,6 +21,7 @@ public class CavaIosAppWizardStep extends ModuleWizardStep {
     @Override
     public void updateDataModel() {
         builder.appName = editor.appName.getText();
-        builder.packageName = editor.packageName.getText();
+        builder.appId = editor.appId.getText();
+        builder.mainClass = editor.mainClass.getText();
     }
 }

@@ -45,9 +45,11 @@ public class XCodeProject extends Project {
     
     final static String GROUP_GENERATED = "generated";
     
+    public XCodeProject() {
+        projectDir = new File(CompilerContext.platformBuildDir,"project.xcodeproj");
+    }
     @Override
     public void generate() throws Exception {
-        projectDir = new File(CompilerContext.platformBuildDir,"project.xcodeproj");
         projectDir.mkdirs();
         pbxProject = new PBXProject(this);
         

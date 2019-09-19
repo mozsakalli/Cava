@@ -16,6 +16,7 @@
 
 package compiler.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,6 +47,12 @@ public class PList {
         Element el = doc.getDocumentElement();
         if(!el.getNodeName().equals("plist")) throw new RuntimeException("Invalid plist file tag: "+el.getNodeName());
         root = (RootItem)parse(el);
+    }
+    
+    public void parse(String text) throws Exception {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        parse(dBuilder.parse(new ByteArrayInputStream(text.getBytes())));
     }
     
     Item parse(Element el) {

@@ -4,6 +4,8 @@
   <version>1.0</version>
   <vendor email="cava@digitoygames.com" url="http://www.digitoygames.com">Digitoy Games</vendor>
 
+  <depends>org.jetbrains.idea.maven</depends>
+
   <description><![CDATA[
       Cava support for IntelliJ
     ]]></description>

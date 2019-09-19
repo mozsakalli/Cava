@@ -28,6 +28,8 @@ public class CavaRunConfiguration extends ModuleBasedConfiguration<CavaRunConfig
     private String simulatorId;
     private boolean simulator;
 
+    public boolean isDebug;
+
     public CavaRunConfiguration(ConfigurationType type, String name, CavaRunConfigurationSettings configurationModule, ConfigurationFactory factory) {
         super(name, configurationModule, factory);
         this.type = type;

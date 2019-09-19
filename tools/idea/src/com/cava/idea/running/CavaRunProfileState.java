@@ -3,8 +3,12 @@ package com.cava.idea.running;
 import com.cava.idea.CavaPlugin;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.CommandLineState;
+import com.intellij.execution.process.ColoredProcessHandler;
+import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import compiler.CompilerContext;
 import org.jetbrains.annotations.NotNull;
 
 public class CavaRunProfileState extends CommandLineState {
@@ -30,9 +34,20 @@ public class CavaRunProfileState extends CommandLineState {
         }
     }
 
-    protected ProcessHandler executeRun() throws Throwable {
-        Process process = null;
 
-        return null;
+
+    protected ProcessHandler executeRun() throws Throwable {
+
+        Process process = new CavaLaunchProcess(() -> {
+            try {
+                CompilerContext.run();
+            }catch(Exception e) {
+                CavaPlugin.logErrorThrowable(getEnvironment().getProject(), e.getMessage(), e, true);
+            }
+        });
+
+        final OSProcessHandler processHandler = new ColoredProcessHandler(process, null);
+        ProcessTerminatedListener.attach(processHandler);
+        return processHandler;
     }
 }

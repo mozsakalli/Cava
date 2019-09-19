@@ -62,9 +62,6 @@ public class CavaCompileTask implements CompileTask {
             CavaPlugin.focusToolWindow(context.getProject());
             progress.setText("Compiling Cava app");
 
-            //Config.Builder builder = new Config.Builder();
-            //builder.logger(RoboVmPlugin.getLogger(context.getProject()));
-
             // get the module we are about to compile
             ModuleManager moduleManager = ModuleManager.getInstance(runConfig.getProject());
             Module module = ApplicationManager.getApplication().runReadAction(new Computable<Module>() {
@@ -80,15 +77,16 @@ public class CavaCompileTask implements CompileTask {
             File moduleBaseDir = CavaPlugin.getModuleBaseDir(module);
 
             configureClassAndSourcepaths(context, module);
-            CavaOptions.buildDir(new File(CavaPlugin.getModuleBaseDir(module), "cava-build"));
-            CavaOptions.mainClass("d.Main");
+
+            CavaPlugin.loadCavaProperties(moduleBaseDir);
+            CavaOptions.buildDir(new File(moduleBaseDir, "cava-build"));
             CavaOptions.targetPlatform(runConfig.getTargetPlatform().toString());
-            CavaOptions.applicationName("Sample");
-            CavaOptions.applicationId("sample");
-            CavaOptions.infoPList(new File(CavaPlugin.getModuleBaseDir(module), "Info.plist"));
+            CavaOptions.infoPList(new File(moduleBaseDir, "Info.plist"));
             CavaOptions.simulator(runConfig.isSimulator());
             CavaOptions.simulatorId(runConfig.getSimulatorId());
+            CavaOptions.debug(runConfig.isDebug);
 
+            CavaPlugin.logInfo(module.getProject(), "Compiling %s", runConfig.isDebug ? "DEBUG" : "RELEASE");
             /*
             // load the robovm.xml file
             loadConfig(context.getProject(), builder, moduleBaseDir, false);

@@ -220,10 +220,10 @@ public class CompilerContext {
     }
 
     public static void run() throws Exception {
-        transpile();
+        //transpile();
         Project project = CavaOptions.targetPlatform().createProject();
-        project.generate();
-        project.build();
+        //project.generate();
+        //project.build();
         project.run();
     }
     

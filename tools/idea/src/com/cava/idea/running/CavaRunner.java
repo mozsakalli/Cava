@@ -30,15 +30,15 @@ public class CavaRunner extends GenericProgramRunner {
     @Override
     protected void execute(@NotNull ExecutionEnvironment environment, @Nullable Callback callback, @NotNull RunProfileState state) throws ExecutionException {
         CavaRunConfiguration runConfig = (CavaRunConfiguration)environment.getRunnerAndConfigurationSettings().getConfiguration();
-        //runConfig.setDebug(DEBUG_EXECUTOR.equals(environment.getExecutor().getId()));
+        runConfig.isDebug = DEBUG_EXECUTOR.equals(environment.getExecutor().getId());
         super.execute(environment, callback, state);
     }
 
     @Nullable
     @Override
     protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
+        CavaRunConfiguration runConfig = (CavaRunConfiguration)environment.getRunProfile();
         if(DEBUG_EXECUTOR.equals(environment.getExecutor().getId())) {
-            CavaRunConfiguration runConfig = (CavaRunConfiguration)environment.getRunProfile();
             /*
             RemoteConnection connection = new RemoteConnection(true, "127.0.0.1", "" + runConfig.getDebugPort(), false);
             connection.setServerMode(true);

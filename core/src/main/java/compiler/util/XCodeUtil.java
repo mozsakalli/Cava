@@ -88,7 +88,7 @@ public class XCodeUtil {
     public static void installApplicationOnSimulator(IosDevice device, File projectPath, String projectName) throws Exception {
         Map<String, String> settings = getBuildSettings(projectPath, projectName, true);
         File appFile = new File(settings.get("BUILT_PRODUCTS_DIR"), settings.get("EXECUTABLE_FOLDER_PATH"));
-        System.out.println(appFile);
+        System.out.println("Installing: "+appFile);
         Executor exec = new Executor("xcrun").args("simctl","install",device.id(),appFile.getAbsolutePath());
         String capture = exec.execCapture();
         if(exec.exitCode() != 0) throw new Exception(capture);

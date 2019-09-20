@@ -1,13 +1,27 @@
 package com.cava.idea.running;
 
+import com.intellij.debugger.DebugEnvironment;
+import com.intellij.debugger.DebuggerManagerEx;
+import com.intellij.debugger.DefaultDebugUIEnvironment;
+import com.intellij.debugger.engine.DebugProcessImpl;
+import com.intellij.debugger.engine.JavaDebugProcess;
+import com.intellij.debugger.impl.DebuggerSession;
+import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.configurations.RemoteConnection;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.runners.RunContentBuilder;
 import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.xdebugger.XDebugProcess;
+import com.intellij.xdebugger.XDebugProcessStarter;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import compiler.CavaOptions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,13 +52,34 @@ public class CavaRunner extends GenericProgramRunner {
     @Override
     protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
         CavaRunConfiguration runConfig = (CavaRunConfiguration)environment.getRunProfile();
+
         if(DEBUG_EXECUTOR.equals(environment.getExecutor().getId())) {
-            /*
-            RemoteConnection connection = new RemoteConnection(true, "127.0.0.1", "" + runConfig.getDebugPort(), false);
-            connection.setServerMode(true);
-            return attachVirtualMachine(state, environment, connection, false);
-             */
-            return null;
+            RemoteConnection connection = new RemoteConnection(true, CavaOptions.debugHost(), ""+ CavaOptions.debugPort(), true);
+            DebugEnvironment debugEnv = new DefaultDebugUIEnvironment(environment,state,connection,true).getEnvironment();
+            final DebuggerSession debuggerSession = DebuggerManagerEx.getInstanceEx(environment.getProject()).attachVirtualMachine(debugEnv);
+            if (debuggerSession == null) {
+                return null;
+            }
+
+            final DebugProcessImpl debugProcess = debuggerSession.getProcess();
+            if (debugProcess.isDetached() || debugProcess.isDetaching()) {
+                debuggerSession.dispose();
+                return null;
+            }
+            return XDebuggerManager.getInstance(environment.getProject()).startSession(environment, new XDebugProcessStarter() {
+                @Override
+                @NotNull
+                public XDebugProcess start(@NotNull XDebugSession session) {
+                    XDebugSessionImpl sessionImpl = (XDebugSessionImpl)session;
+                    ExecutionResult executionResult = debugProcess.getExecutionResult();
+                    sessionImpl.addExtraActions(executionResult.getActions());
+                    if (executionResult instanceof DefaultExecutionResult) {
+                        sessionImpl.addRestartActions(((DefaultExecutionResult)executionResult).getRestartActions());
+                        sessionImpl.addExtraStopActions(((DefaultExecutionResult)executionResult).getAdditionalStopActions());
+                    }
+                    return JavaDebugProcess.create(session, debuggerSession);
+                }
+            }).getRunContentDescriptor();
         } else {
             ExecutionResult executionResult = state.execute(environment.getExecutor(), this);
             if (executionResult == null) {

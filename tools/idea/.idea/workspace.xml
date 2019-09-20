@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="84be2ad1-b043-4360-af45-6b5ade556b71" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/compiler/CompilerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/src/main/java/compiler/CompilerContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../core/src/main/java/compiler/util/PList.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../core/src/main/java/compiler/util/PList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/idea.iml" beforeDir="false" afterPath="$PROJECT_DIR$/idea.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/resources/META-INF/plugin.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/CavaPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/CavaPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaIosAppWizardStep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaIosAppWizardStep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaModuleBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaModuleBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaNewIosAppEditor.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaNewIosAppEditor.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaNewIosAppEditor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/builder/CavaNewIosAppEditor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/cava/idea/compilation/CavaCompileTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/compilation/CavaCompileTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunProfileState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunProfileState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/cava/idea/running/CavaRunner.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -32,8 +20,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/cava/idea/compilation/CavaCompileTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="88" column="106" selection-start-line="88" selection-start-column="106" selection-end-line="88" selection-end-column="106" />
+            <state relative-caret-position="450">
+              <caret line="87" column="47" selection-start-line="87" selection-start-column="47" selection-end-line="87" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -44,11 +32,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/cava/idea/running/CavaRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="444">
-              <caret line="37" column="13" lean-forward="true" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+            <state relative-caret-position="233">
+              <caret line="56" column="61" selection-start-line="56" selection-start-column="61" selection-end-line="56" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#3261#4119#0" expanded="true" />
+                <element signature="e#4118#4119#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/execution/configurations/RemoteConnection.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-470">
+              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -66,34 +65,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CompilerContext.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="206" selection-start-line="206" selection-end-line="206" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/project/XCodeProject.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="195" column="17" lean-forward="true" selection-start-line="195" selection-start-column="17" selection-end-line="195" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/cava/idea/running/CavaLaunchProcess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-83">
-              <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+            <state relative-caret-position="150">
+              <caret line="14" column="21" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#649#650#0" expanded="true" />
+                <element signature="e#740#741#0" expanded="true" />
                 <element signature="e#785#786#0" expanded="true" />
+                <element signature="e#842#843#0" expanded="true" />
                 <element signature="e#869#870#0" expanded="true" />
+                <element signature="e#926#927#0" expanded="true" />
                 <element signature="e#953#954#0" expanded="true" />
+                <element signature="e#1123#1124#0" expanded="true" />
                 <element signature="e#1147#1148#0" expanded="true" />
               </folding>
             </state>
@@ -103,7 +87,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/util/XCodeUtil.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
+            <state relative-caret-position="1440">
               <caret line="107" selection-start-line="107" selection-end-line="107" />
             </state>
           </provider>
@@ -112,7 +96,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CavaOptions.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
+            <state relative-caret-position="1815">
               <caret line="154" selection-start-line="154" selection-end-line="154" />
             </state>
           </provider>
@@ -121,8 +105,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaPlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="222" column="23" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="23" />
+            <state relative-caret-position="995">
+              <caret line="95" column="48" lean-forward="true" selection-start-line="95" selection-start-column="48" selection-end-line="95" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaSdkType.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="622">
+              <caret line="115" column="35" lean-forward="true" selection-start-line="115" selection-start-column="35" selection-end-line="115" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -133,7 +129,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/openapi/application/impl/LaterInvocator.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
+            <state relative-caret-position="7935">
               <caret line="576" selection-start-line="576" selection-end-line="576" />
               <folding>
                 <element signature="e#19979#19980#0" expanded="true" />
@@ -228,7 +224,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -299,6 +294,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -362,9 +358,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="24" width="1680" height="972" extended-state="6" />
+    <frame x="0" y="23" width="1680" height="972" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2802198" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2832723" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -439,16 +435,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaSdkType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1065">
-          <caret line="93" column="42" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -596,40 +582,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/openapi/application/impl/LaterInvocator.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="576" selection-start-line="576" selection-end-line="576" />
-          <folding>
-            <element signature="e#19979#19980#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CompilerContext.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="206" selection-start-line="206" selection-end-line="206" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CavaOptions.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="154" selection-start-line="154" selection-end-line="154" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaPlugin.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="222" column="23" selection-start-line="222" selection-start-column="23" selection-end-line="222" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_121.jdk/Contents/Home/src.zip!/java/lang/Runnable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="445">
@@ -637,31 +589,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/util/XCodeUtil.class">
+    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CompilerContext.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        <state relative-caret-position="2775">
+          <caret line="206" selection-start-line="206" selection-end-line="206" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/project/XCodeProject.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="195" column="17" lean-forward="true" selection-start-line="195" selection-start-column="17" selection-end-line="195" selection-end-column="17" />
+        <state relative-caret-position="2520">
+          <caret line="195" column="17" selection-start-line="195" selection-start-column="17" selection-end-line="195" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/cava/idea/running/CavaLaunchProcess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-83">
-          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+        <state relative-caret-position="150">
+          <caret line="14" column="21" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#649#650#0" expanded="true" />
+            <element signature="e#740#741#0" expanded="true" />
             <element signature="e#785#786#0" expanded="true" />
+            <element signature="e#842#843#0" expanded="true" />
             <element signature="e#869#870#0" expanded="true" />
+            <element signature="e#926#927#0" expanded="true" />
             <element signature="e#953#954#0" expanded="true" />
+            <element signature="e#1123#1124#0" expanded="true" />
             <element signature="e#1147#1148#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/util/XCodeUtil.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1440">
+          <caret line="107" selection-start-line="107" selection-end-line="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../core/target/cava-compiler-2019.07.18.jar!/compiler/CavaOptions.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1815">
+          <caret line="154" selection-start-line="154" selection-end-line="154" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/platform-impl.jar!/com/intellij/openapi/application/impl/LaterInvocator.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7935">
+          <caret line="576" selection-start-line="576" selection-end-line="576" />
+          <folding>
+            <element signature="e#19979#19980#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="995">
+          <caret line="95" column="48" lean-forward="true" selection-start-line="95" selection-start-column="48" selection-end-line="95" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/cava/idea/CavaSdkType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="622">
+          <caret line="115" column="35" lean-forward="true" selection-start-line="115" selection-start-column="35" selection-end-line="115" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -676,10 +675,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/execution/configurations/RemoteConnection.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-470">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/cava/idea/compilation/CavaCompileTask.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="491">
-          <caret line="88" column="106" selection-start-line="88" selection-start-column="106" selection-end-line="88" selection-end-column="106" />
+        <state relative-caret-position="450">
+          <caret line="87" column="47" selection-start-line="87" selection-start-column="47" selection-end-line="87" selection-end-column="47" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -688,10 +694,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/cava/idea/running/CavaRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="37" column="13" lean-forward="true" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+        <state relative-caret-position="233">
+          <caret line="56" column="61" selection-start-line="56" selection-start-column="61" selection-end-line="56" selection-end-column="61" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3261#4119#0" expanded="true" />
+            <element signature="e#4118#4119#0" expanded="true" />
           </folding>
         </state>
       </provider>

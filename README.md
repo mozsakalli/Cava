@@ -1,3 +1,5 @@
+## !!! Looking for contributors developing Intellij plugin !!!
+
 # Cava
 
 Cava is a compiler for Java bytecode to plain C code targeting Ios, Android and OsX,Linux,Windows soon...
@@ -32,4 +34,4 @@ After this step every class file converted to equivalent C files and headers.
 
 ** Cava requires JDK 1.8 and a Mac XCode with commandline tools installed to test generated sample project.
 
-## !!! Looking for contributors developing Intellij plugin !!!
+

@@ -98,14 +98,15 @@ public class XCodeUtil {
     
     //todo: xcrun simctl spawn booted log stream -predicate 'processImagePath endswith "Cava Sample"'
     public static void runOnSimulator(IosDevice device, String bundleIdentifier) throws Exception {
-        File stdOut = CavaOptions.stdOutFifo();
+        CavaOptions.mkfifo("stdOut");
+        CavaOptions.mkfifo("stdErr");
         Executor exec = new Executor("xcrun").args(
             "simctl",
             "launch",
-            "--stdout=",
-            stdOut.getAbsolutePath(),
+            "--console",
             device.id(),
             bundleIdentifier);
+        exec.out(System.out).err(System.err);
         exec.exec();
         //if(exec.exitCode() != 0) throw new Exception(capture);
     }

@@ -1,6 +1,8 @@
 package compiler.util;
 
+import compiler.CavaOptions;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,9 +98,16 @@ public class XCodeUtil {
     
     //todo: xcrun simctl spawn booted log stream -predicate 'processImagePath endswith "Cava Sample"'
     public static void runOnSimulator(IosDevice device, String bundleIdentifier) throws Exception {
-        Executor exec = new Executor("xcrun").args("simctl","launch",device.id(),bundleIdentifier);
-        String capture = exec.execCapture();
-        if(exec.exitCode() != 0) throw new Exception(capture);
+        File stdOut = CavaOptions.stdOutFifo();
+        Executor exec = new Executor("xcrun").args(
+            "simctl",
+            "launch",
+            "--stdout=",
+            stdOut.getAbsolutePath(),
+            device.id(),
+            bundleIdentifier);
+        exec.exec();
+        //if(exec.exitCode() != 0) throw new Exception(capture);
     }
     
 }

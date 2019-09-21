@@ -17,6 +17,8 @@
 package compiler;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,4 +149,41 @@ public class CavaOptions {
     public static void applicationId(String id) {
         set("appId", id);
     }
+    
+    public static void outputStream(OutputStream stream) {
+        set("outputStream", stream);
+    }
+    
+    public static OutputStream outputStream() {
+        return (OutputStream)get("inputStream", System.out);
+    }
+    
+    public static File stdOutFifo() {
+        return (File)get("stdOut", null);
+    }
+    
+    public static void stdOutFifo(File file) {
+        try {
+            if(file == null) file = mkfifo("stdOut");
+            set("stdOut", file);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public static File mkfifo(String type) throws IOException {
+        File f = File.createTempFile("cava-" + type + "-", ".fifo");
+        f.delete();
+        ProcessBuilder pb = new ProcessBuilder("mkfifo", "-m", "600", f.getAbsolutePath());
+        try {
+            int exitValue = pb.start().waitFor();
+            if (exitValue != 0) {
+                throw new IOException("Failed to create " + type + " fifo");
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return f;
+    }    
+    
 }

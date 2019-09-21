@@ -1,17 +1,27 @@
 package com.cava.idea.running;
 
+import compiler.CavaOptions;
+import compiler.util.OpenOnReadFileInputStream;
 import org.apache.commons.io.output.NullOutputStream;
+import com.intellij.execution.process.*;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
 public class CavaLaunchProcess extends Process {
 
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private Thread thread;
+    int exitCode = -1;
+    InputStream in;
+
 
     public CavaLaunchProcess(Runnable runnable) {
+        try {
+            in = new OpenOnReadFileInputStream(CavaOptions.stdOutFifo());
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
         thread = new Thread() {
             @Override
             public void run() {
@@ -19,6 +29,7 @@ public class CavaLaunchProcess extends Process {
                     runnable.run();
                 }finally {
                     countDownLatch.countDown();
+                    exitCode = 0;
                 }
             }
         };
@@ -33,12 +44,12 @@ public class CavaLaunchProcess extends Process {
 
     @Override
     public InputStream getInputStream() {
-        return null;
+        return in;
     }
 
     @Override
     public InputStream getErrorStream() {
-        return null;
+        return waitInputStream;
     }
 
     @Override
@@ -49,13 +60,27 @@ public class CavaLaunchProcess extends Process {
 
     @Override
     public int exitValue() {
-        return 0;
+        return exitCode;
     }
 
     @Override
     public void destroy() {
         try {
+            thread.interrupt();
             thread.join();
         }catch(Exception e){}
     }
+
+    final InputStream waitInputStream = new  InputStream() {
+        @Override
+        public int read() throws IOException {
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                throw new InterruptedIOException();
+            }
+            return -1;
+        }
+    };
+
 }

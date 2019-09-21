@@ -19,6 +19,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.pom.java.LanguageLevel;
 import compiler.CavaOptions;
 import compiler.util.PList;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
@@ -140,7 +141,8 @@ public class CavaModuleBuilder extends JavaModuleBuilder {
     void createPOM(File root) throws Exception {
         String pom = POM.replaceAll("__appId__", getPackageName())
                         .replaceAll("__appName__", appName);
-        new FileOutputStream(new File(root,"pom.xml")).write(pom.getBytes());
+        FileUtils.write(new File(root,"pom.xml"), pom, "UTF-8");
+        //new FileOutputStream(new File(root,"pom.xml")).write(pom.getBytes());
     }
 
     final static String PLIST =

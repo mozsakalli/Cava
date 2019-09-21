@@ -79,6 +79,7 @@ public class CavaCompileTask implements CompileTask {
             configureClassAndSourcepaths(context, module);
 
             CavaPlugin.loadCavaProperties(moduleBaseDir);
+            CavaOptions.stdOutFifo(null);
             CavaOptions.buildDir(new File(moduleBaseDir, "cava-build"));
             CavaOptions.targetPlatform(runConfig.getTargetPlatform().toString());
             CavaOptions.infoPList(new File(moduleBaseDir, "Info.plist"));
@@ -88,6 +89,7 @@ public class CavaCompileTask implements CompileTask {
             CavaOptions.debugHost("192.168.1.40");
 
             CavaPlugin.logInfo(module.getProject(), "Compiling %s", runConfig.isDebug ? "DEBUG" : "RELEASE");
+            CavaPlugin.logInfo(module.getProject(), CavaOptions.stdOutFifo().getAbsolutePath());
             /*
             // load the robovm.xml file
             loadConfig(context.getProject(), builder, moduleBaseDir, false);

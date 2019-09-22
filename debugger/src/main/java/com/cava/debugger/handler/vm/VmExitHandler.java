@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-package compiler.project;
+package com.cava.debugger.handler.vm;
 
-import compiler.util.FileUtil;
-import java.io.File;
+import com.cava.debugger.JdwpConsts;
+import com.cava.debugger.OutBuffer;
+import com.cava.debugger.Packet;
 
 /**
  *
  * @author mustafa
  */
-public abstract class Project {
+public class VmExitHandler extends VmHandler {
+
+    @Override
+    public int handle(Packet packet, OutBuffer out) {
+        int exitCode = packet.readInt();
+        return JdwpConsts.Error.VM_DEAD;        
+    }
+
+    @Override
+    public int getCommand() {
+        return 7;
+    }
+
     
-    public abstract void generate() throws Exception;
-    public abstract void build() throws Exception;
-    public abstract void run() throws Exception;
-    public abstract void terminate() throws Exception;
-    
-    void copyCavaFiles(File target) throws Exception {
-        FileUtil.extractZip(target, getClass().getResourceAsStream("/com/cava/native.zip"));
-    }    
 }

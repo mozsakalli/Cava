@@ -61,6 +61,7 @@ import com.cava.debugger.handler.vm.VmCapabilitiesNewHandler;
 import com.cava.debugger.handler.vm.VmClassesBySignatureHandler;
 import com.cava.debugger.handler.vm.VmCreateStringHandler;
 import com.cava.debugger.handler.vm.VmDisposeHandler;
+import com.cava.debugger.handler.vm.VmExitHandler;
 import com.cava.debugger.handler.vm.VmIdSizesHandler;
 import com.cava.debugger.handler.vm.VmResumeHandler;
 import com.cava.debugger.handler.vm.VmTopLevelThreadGroupsHandler;
@@ -93,6 +94,7 @@ public class JdwpHandlers {
         registerHandler(new VmDisposeHandler());                //6
         registerHandler(new VmIdSizesHandler());                //7
         registerHandler(new VmResumeHandler());                 //9
+        registerHandler(new VmExitHandler());                   //10
         registerHandler(new VmCreateStringHandler());           //11
         registerHandler(new VmCapabilitiesHandler());           //12
         registerHandler(new VmCapabilitiesNewHandler());        //17

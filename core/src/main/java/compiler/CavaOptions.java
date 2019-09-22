@@ -155,7 +155,7 @@ public class CavaOptions {
     }
     
     public static OutputStream outputStream() {
-        return (OutputStream)get("inputStream", System.out);
+        return (OutputStream)get("outputStream", System.out);
     }
     
     public static File stdOutFifo() {

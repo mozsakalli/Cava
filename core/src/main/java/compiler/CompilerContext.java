@@ -220,11 +220,13 @@ public class CompilerContext {
     }
 
     public static void run() throws Exception {
-        //transpile();
         Project project = CavaOptions.targetPlatform().createProject();
-        //project.generate();
-        //project.build();
         project.run();
+    }
+
+    public static void terminate() throws Exception {
+        Project project = CavaOptions.targetPlatform().createProject();
+        project.terminate();
     }
     
     static Clazz patchClass(Clazz clazz) {

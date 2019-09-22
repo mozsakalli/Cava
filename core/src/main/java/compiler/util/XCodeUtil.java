@@ -2,7 +2,7 @@ package compiler.util;
 
 import compiler.CavaOptions;
 import java.io.File;
-import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,14 +100,31 @@ public class XCodeUtil {
     public static void runOnSimulator(IosDevice device, String bundleIdentifier) throws Exception {
         CavaOptions.mkfifo("stdOut");
         CavaOptions.mkfifo("stdErr");
+        OutputStream out = CavaOptions.outputStream();
+        if(out == null) {
+            System.out.println("Using System.out as output");
+            out = System.out;
+        }
         Executor exec = new Executor("xcrun").args(
             "simctl",
             "launch",
             "--console",
             device.id(),
             bundleIdentifier);
-        exec.out(System.out).err(System.err);
+        exec.out(out).err(out);
         exec.exec();
+        //if(exec.exitCode() != 0) throw new Exception(capture);
+    }
+
+    public static void terminateOnSimulator(IosDevice device, String bundleIdentifier) throws Exception {
+        System.out.println("xcrun simctl terminate "+device.id()+" "+bundleIdentifier);
+        Executor exec = new Executor("xcrun").args(
+            "simctl",
+            "terminate",
+            device.id(),
+            bundleIdentifier);
+        System.out.println(exec.execCapture());
+        
         //if(exec.exitCode() != 0) throw new Exception(capture);
     }
     

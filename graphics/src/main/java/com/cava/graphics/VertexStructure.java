@@ -23,7 +23,7 @@ package com.cava.graphics;
 public class VertexStructure {
 
     public static enum Type {
-        FLOAT1(1), FLOAT2(2), FLOAT3(3), FLOAT4(4), RGBA(5);
+        FLOAT1(1), FLOAT2(2), FLOAT3(3), FLOAT4(4), RGBA(4);
         int size;
         Type(int size) {
             this.size = size;

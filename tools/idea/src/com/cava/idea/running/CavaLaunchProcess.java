@@ -16,12 +16,8 @@ public class CavaLaunchProcess extends Process {
     InputStream in;
 
 
-    public CavaLaunchProcess(Runnable runnable) {
-        try {
-            in = new OpenOnReadFileInputStream(CavaOptions.stdOutFifo());
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
+    public CavaLaunchProcess(Runnable runnable, InputStream in) {
+        this.in = in;
         thread = new Thread() {
             @Override
             public void run() {

@@ -193,4 +193,16 @@ public class XCodeProject extends Project {
         XCodeUtil.installApplicationOnSimulator(device, projectDir, CavaOptions.applicationName());
         XCodeUtil.runOnSimulator(device, CavaOptions.applicationId());
     }
+
+    @Override
+    public void terminate() throws Exception {
+        String simulatorId = CavaOptions.simulatorId();
+        if(simulatorId == null) return;
+        List<IosDevice> devices = XCodeUtil.getSimulators();
+        IosDevice device = devices.stream().filter(d -> d.id().equals(simulatorId)).findFirst().orElse(null);
+        if(device == null) return;
+        XCodeUtil.terminateOnSimulator(device, CavaOptions.applicationId());
+    }
+    
+    
 }

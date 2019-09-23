@@ -45,11 +45,13 @@ public class Main {
         CavaOptions.applicationName("Cava Sample");
         CavaOptions.simulator(true);
         CavaOptions.applicationId("com.cava.sample");
-        CavaOptions.debug(false);
-        CavaOptions.debugHost("192.168.1.56");
+        CavaOptions.debug(true);
+        CavaOptions.debugHost("192.168.1.42");
+        
+        CompilerContext.generate();
         //CavaOptions.debugPort(9999);
-        CompilerContext.build();
-        CompilerContext.run();
+        //CompilerContext.build();
+        //CompilerContext.run();
 
     }
 }

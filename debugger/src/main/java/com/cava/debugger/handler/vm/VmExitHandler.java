@@ -34,7 +34,7 @@ public class VmExitHandler extends VmHandler {
 
     @Override
     public int getCommand() {
-        return 7;
+        return 10;
     }
 
     

@@ -32,6 +32,7 @@ public class ThreadSuspendCountHandler extends ThreadHandler {
         try {
             long threadId = packet.readLong();
             int suspendCount = NativeCode.Int("((JvmThread*)%s)->suspendCount", threadId);
+            System.out.println("Thread suspend count="+suspendCount);
             if(suspendCount == 0)
                  return JdwpConsts.Error.THREAD_NOT_SUSPENDED;
             

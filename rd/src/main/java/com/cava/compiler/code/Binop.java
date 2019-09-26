@@ -23,7 +23,7 @@ package com.cava.compiler.code;
 public class Binop extends Code {
     
     public enum Op {
-        Rem("%"),Mul("*"),Add("+"),Sub("-");
+        Rem("%"),Mul("*"),Add("+"),Sub("-"),Div("/");
         
         String sign;        
         Op(String sign) { this.sign = sign; }

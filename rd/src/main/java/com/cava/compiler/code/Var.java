@@ -45,7 +45,7 @@ public class Var extends Code {
     }
     @Override
     public String toString() {
-        return name;
+        return name+"("+index+")";
     }
     
     

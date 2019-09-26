@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import soot.Immediate;
 import soot.Local;
+import soot.LocalVariable;
 import soot.PatchingChain;
 import soot.Trap;
 import soot.UnitBox;
@@ -32,11 +33,13 @@ import soot.jimple.CastExpr;
 import soot.jimple.CaughtExceptionRef;
 import soot.jimple.ConditionExpr;
 import soot.jimple.DefinitionStmt;
+import soot.jimple.DivExpr;
 import soot.jimple.EqExpr;
 import soot.jimple.GeExpr;
 import soot.jimple.GtExpr;
 import soot.jimple.IntConstant;
 import soot.jimple.LeExpr;
+import soot.jimple.LongConstant;
 import soot.jimple.LtExpr;
 import soot.jimple.MulExpr;
 import soot.jimple.NeExpr;
@@ -87,7 +90,10 @@ public class SootMethodDecompiler {
             if (tag != null)
                 unitToLine.put(unit, tag.getLineNumber());
         }        
-        
+
+        for(LocalVariable l : body.getLocalVariables()) {
+            System.out.println(l.getName());
+        }
         for(Local l : body.getLocals()) {
             method.locals.add(new Var(l));
             //method.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
@@ -456,6 +462,7 @@ public class SootMethodDecompiler {
         else if(expr instanceof MulExpr) op = Binop.Op.Mul;
         else if(expr instanceof AddExpr) op = Binop.Op.Add;
         else if(expr instanceof SubExpr) op = Binop.Op.Sub;
+        else if(expr instanceof DivExpr) op = Binop.Op.Div;
         else throw new RuntimeException("Unknown: "+expr.getClass());
 
         return new Binop(left, right, op, SootClassLoader.toJavaType(expr.getType()));
@@ -469,6 +476,8 @@ public class SootMethodDecompiler {
             return new Const(((IntConstant)v).value, "I");
         } else if(v instanceof StringConstant) {
             return new Const(((StringConstant)v).value, "java/lang/String");
+        } else if(v instanceof LongConstant) {
+            return new Const(((LongConstant)v).value, "J");
         }
         throw new RuntimeException("Unknown "+v.getClass());
     }

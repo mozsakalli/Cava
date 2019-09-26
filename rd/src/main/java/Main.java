@@ -40,6 +40,13 @@ public class Main {
         for(int i=0; i<100; i++) {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
             //mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
+            if(result > 10) {
+                for(int k=0; k<10; k++) result *= 10;
+            } else {
+                long k = 100;
+                int e = result/2;
+                result += (byte)k + e;
+            }
             try {
                 result += i * mul + vals[i%4] + ((int[])o)[0];
                 if(result % 10 == 0) result++; else break;

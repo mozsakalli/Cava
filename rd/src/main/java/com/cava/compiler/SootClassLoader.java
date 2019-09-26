@@ -230,7 +230,7 @@ public class SootClassLoader {
          * verbose logging for debugging purposes only.
          */
         // Options.v().set_verbose(true);
-        Options.v().setPhaseOption("jb", "use-original-names:true");
+        //Options.v().setPhaseOption("jb", "use-original-names:true");
         /*
          * Disable the jb.dae phase (DeadAssignmentEliminator) since it removes
          * LDC instructions which would have thrown a NoClassDefFoundError.

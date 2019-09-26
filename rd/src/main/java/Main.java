@@ -32,7 +32,7 @@ public class Main {
     static int v2(int t, int t2) {
         return t*t2;
     }
-    public static int test() {
+    public static int test(double dbl, int startValue) {
         int[] vals = new int[]{0,1,2,3};
         int result = 0;
         Object o = new int[]{0};
@@ -48,9 +48,9 @@ public class Main {
                 }catch(Exception e){}*/
                 b = (byte)(result%100);
                 return b;
-            } catch(NullPointerException n){
+            } catch(NullPointerException e){
                 b += 5;
-            } catch(ArrayIndexOutOfBoundsException a) {
+            } catch(ArrayIndexOutOfBoundsException e) {
                 mul = 20;
             } catch(ArithmeticException e) {
                 b -= 120;

@@ -16,36 +16,22 @@
 
 package com.cava.compiler.code;
 
-import soot.jimple.ParameterRef;
-
 /**
  *
  * @author mustafa
  */
-public class Var extends Code {
+public class LineNumber extends Code {
     
-    public String name;
-    public int index;
-    public String type;
-    public boolean isParam;
+    public int line;
     
-    public Var(String name, int index, String type, boolean isParam) {
-        this.name = name;
-        this.index = index;
-        this.type = type;
-        this.isParam = isParam;
-    }
-    
-    public Var(soot.Local local) {
-        this(local.getName(), local.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(local.getType()), false);
+    public LineNumber(){}
+    public LineNumber(int line) {
+        this.line = line;
     }
 
-    public Var(ParameterRef param) {
-        this("param"+param.getIndex(), param.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(param.getType()), true);
-    }
     @Override
     public String toString() {
-        return name;
+        return "#Line "+line;
     }
     
     

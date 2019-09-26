@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import soot.Immediate;
+import soot.Local;
 import soot.PatchingChain;
 import soot.Trap;
 import soot.UnitBox;
@@ -40,11 +41,13 @@ import soot.jimple.LtExpr;
 import soot.jimple.MulExpr;
 import soot.jimple.NeExpr;
 import soot.jimple.NewArrayExpr;
+import soot.jimple.ParameterRef;
 import soot.jimple.RemExpr;
 import soot.jimple.ReturnStmt;
 import soot.jimple.StringConstant;
 import soot.jimple.SubExpr;
 import soot.jimple.ThrowStmt;
+import soot.tagkit.LineNumberTag;
 import soot.util.Chain;
 
 /**
@@ -77,6 +80,22 @@ public class SootMethodDecompiler {
             unitToIndex.put(u, index++);
         }
 
+        // build unit to line map
+        Map<Unit, Integer> unitToLine = new HashMap<>();
+        for (Unit unit : body.getUnits()) {
+            LineNumberTag tag = (LineNumberTag) unit.getTag("LineNumberTag");
+            if (tag != null)
+                unitToLine.put(unit, tag.getLineNumber());
+        }        
+        
+        for(Local l : body.getLocals()) {
+            method.locals.add(new Var(l));
+            //method.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
+        }
+        
+        for(Var l : method.locals) {
+            System.out.println(l.index+": "+l.name+" "+l.type);
+        }
         Map<Unit, Code> unitToCode = new HashMap();
         Map<Unit, List<Trap>> catches = new HashMap();
         Set<Unit> tries = new HashSet();
@@ -116,6 +135,7 @@ public class SootMethodDecompiler {
         Map<Unit, Integer> selChanges = new HashMap<Unit, Integer>();
         
         if(!body.getTraps().isEmpty()) {
+            System.out.println("Traps = "+body.getTraps().size());
             List<List<Trap>> recordedTraps = new ArrayList<List<Trap>>();
             for (Unit unit : units) {
                 // Calculate the predecessor units of unit 
@@ -142,77 +162,68 @@ public class SootMethodDecompiler {
                         selChanges.put(unit, index + 1);
                     }
                 }
+                
             }  
-            
             for (List<Trap> traps : recordedTraps) {
+                TrapInfo ti = new TrapInfo();
                 for (Trap trap : traps) {
                     String exception = trap.getException().getName().replace('.', '/');
-                    int sel = trapHandlers.get(trap.getHandlerUnit());
-                    method.body.add(new If(new TrapSelector(-1), new Const(sel,"I"), If.Condition.Eq, unitToIndex.get(trap.getHandlerUnit())));
+                    ti.addTrap(exception, unitToIndex.get(trap.getHandlerUnit()));
                 }
+                method.traps.add(ti);
             }
             
             method.body.add(new TrapEnter());
         }
         
-        trapDepth = 0;
+        int currentLine = -1;
+        Map<Code, Code> codeRealStartMap = new HashMap();
+        
         for (Unit u : body.getUnits()) {
-            /*if(tries.contains(u)) {
-                method.body.add(new TrapEnter());
-                trapDepth++;
-            }*/
-            if(selChanges.containsKey(u)) {
-                method.body.add(new TrapSelector(selChanges.get(u)));
-            }
 
             Code code = decompile(u);
             unitToCode.put(u, code);
             
-            /*
-            if(trapDepth > 0) {
-                Unit target = null;
-                if(u instanceof JGotoStmt) {
-                    target = ((JGotoStmt)u).getTarget();
-                } else if(u instanceof JReturnStmt || u instanceof JReturnVoidStmt) {
-                    method.body.add(new TrapLeave(trapDepth));
-                }
-                
-                if(target != null) {
-                    int targetDepth = trapDepthMap.get(target);
-                    if(targetDepth < trapDepth) {
-                        method.body.add(new TrapLeave(trapDepth - targetDepth));
-                        trappedJumps.add(code);
-                    }
-                }
+            Integer lineNumber = unitToLine.get(u);
+            if(lineNumber != null && lineNumber != currentLine) {
+                Code line = new LineNumber(currentLine = lineNumber);
+                method.body.add(line);
+                if(!codeRealStartMap.containsKey(code))
+                    codeRealStartMap.put(code, line);
             }
-            */
-            if(!body.getTraps().isEmpty() && code instanceof Return)
-                method.body.add(new TrapLeave());
+
+            if(selChanges.containsKey(u)) {
+                Code sel = new TrapSelector(selChanges.get(u));
+                method.body.add(sel);
+                if(!codeRealStartMap.containsKey(code))
+                    codeRealStartMap.put(code, sel);
+            }
+            
+            if(!body.getTraps().isEmpty() && code instanceof Return) {
+                Code leave = new TrapLeave();
+                method.body.add(leave);
+                if(!codeRealStartMap.containsKey(code))
+                    codeRealStartMap.put(code, leave);
+            }
+            
             method.body.add(code);
-            /*
-            if(catches.containsKey(u)) {
-                trapDepth--;
-                for(Trap t : catches.get(u)) {
-                    Var v = new Var("_exc",0,"I");
-                    method.body.add(new Assign(v, new InstanceOf(new CaughtException(), t.getException().getName().replace('.', '/'))));
-                    method.body.add(new If(v, new Const(1,"I"), If.Condition.Eq, unitToIndex.get(t.getHandlerUnit())));
-                }
-            }*/
         }
         
-        
+        //fix branch targets
         for(Code code : method.body) {
             if(code instanceof Branch) {
                 Branch b = (Branch)code;
-                Map.Entry<Unit,Integer> entry = unitToIndex.entrySet().stream().filter(e -> e.getValue() == b.target).findFirst().orElse(null);
-                if(entry != null) {
-                    Code target = unitToCode.get(entry.getKey());
-                    if(target != null) {
-                        int targetIndex = method.body.indexOf(target);
-                        //if(trappedJumps.contains(target)) targetIndex--;
-                        b.target = targetIndex;
-                    }
-                }
+                int newTarget = findRealTarget(b.target, unitToCode, codeRealStartMap);
+                if(newTarget != -1) b.target = newTarget;
+            }
+        }
+        //fix trap targets
+        for(TrapInfo ti : method.traps) {
+            System.out.println("TrapSet#"+method.traps.indexOf(ti));
+            for(TrapInfo.Info inf : ti.handlers) {
+                int newTarget = findRealTarget(inf.target, unitToCode, codeRealStartMap);
+                if(newTarget != -1) inf.target = newTarget;
+                System.out.println("   "+inf.type+" ? label"+inf.target);
             }
         }
         int line = 0;
@@ -220,6 +231,18 @@ public class SootMethodDecompiler {
             System.out.println((line++)+": "+cd);
     }
 
+    int findRealTarget(int oldTarget, Map<Unit, Code> unitToCode, Map<Code, Code> codeRealStartMap) {
+        Map.Entry<Unit,Integer> entry = unitToIndex.entrySet().stream().filter(e -> e.getValue() == oldTarget).findFirst().orElse(null);
+        if(entry != null) {
+            Code target = unitToCode.get(entry.getKey());
+            if(target != null) {
+                if(codeRealStartMap.containsKey(target))
+                    target = codeRealStartMap.get(target);
+                return method.body.indexOf(target);
+            }
+        }
+        return -1;
+    }
     private boolean trapsDiffer(Unit unit, Collection<Unit> incomingUnits) {
         List<Trap> traps = getTrapsAt(unit);
         for (Unit incomingUnit : incomingUnits) {
@@ -404,6 +427,8 @@ public class SootMethodDecompiler {
             SootClassLoader.toJavaType(((CastExpr) rightOp).getCastType()));
         } else if(rightOp instanceof CaughtExceptionRef) {
             right = new CaughtException();
+        } else if(rightOp instanceof ParameterRef) {
+            right = new Var((ParameterRef)rightOp);
         }
         else
         throw new RuntimeException("Unknown RightOp: "+rightOp.getClass());
@@ -439,8 +464,7 @@ public class SootMethodDecompiler {
     Code immediate(Immediate v) {
         if(v instanceof soot.Local) {
             soot.Local local = (soot.Local)v;
-            String type = SootClassLoader.toJavaType(local.getType());
-            return new Var(local.getName(), local.getIndex(), type);
+            return new Var(local);
         } else if(v instanceof IntConstant) {
             return new Const(((IntConstant)v).value, "I");
         } else if(v instanceof StringConstant) {

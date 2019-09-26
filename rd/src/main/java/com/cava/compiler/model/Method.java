@@ -17,6 +17,7 @@
 package com.cava.compiler.model;
 
 import com.cava.compiler.code.Code;
+import com.cava.compiler.code.Var;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Method extends NameAndType implements Serializable {
 
     public String signature;
     public List<NameAndType> args = new ArrayList();
-    public List<NameAndType> locals = new ArrayList();
+    public List<Var> locals = new ArrayList();
     //public Block body = new Block();
     public boolean hasGoto;
     public boolean hasTryCatch;
@@ -50,6 +51,7 @@ public class Method extends NameAndType implements Serializable {
     public transient boolean isObjCImplementation;
     
     public List<Code> body = new ArrayList();
+    public List<TrapInfo> traps = new ArrayList();
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);
@@ -57,10 +59,12 @@ public class Method extends NameAndType implements Serializable {
     
     @Override
     public void replaceClassName(String src, String dest) {
+        /*
         super.replaceClassName(src, dest);
         args.forEach(a -> a.replaceClassName(src, dest));
         locals.forEach(l -> l.replaceClassName(src, dest));
         //if(body != null) body.replaceClassName(src, dest);
+        */
     }
 
     @Override

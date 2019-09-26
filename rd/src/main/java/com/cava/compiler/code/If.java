@@ -34,7 +34,6 @@ public class If extends Branch {
     
     public Code left, right;
     public Condition op;
-    public int target;
     
     public If(){}
     public If(Code left, Code right, Condition op, int target) {

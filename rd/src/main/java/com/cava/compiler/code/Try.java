@@ -16,17 +16,16 @@
 
 package com.cava.compiler.code;
 
+import java.util.ArrayList;
+import java.util.List;
+import soot.Unit;
+
 /**
  *
  * @author mustafa
  */
-public class CaughtException extends Code {
-
-    @Override
-    public String toString() {
-        return "__caught__";
-    }
-
+public class Try extends Code {
     
+    public List<Unit> body = new ArrayList();
+    public List<Catch> catches = new ArrayList();
 }
-

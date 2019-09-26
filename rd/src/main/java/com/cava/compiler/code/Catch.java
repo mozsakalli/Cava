@@ -16,13 +16,17 @@
 
 package com.cava.compiler.code;
 
+import java.util.ArrayList;
+import java.util.List;
+import soot.Unit;
+
 /**
  *
  * @author mustafa
  */
 public class Catch extends Code {
     
-    public void addTrap(String type) {
-        
-    }
+    public List<Unit> body = new ArrayList();
+    public String type;
+    
 }

@@ -20,13 +20,21 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class CaughtException extends Code {
+public class InstanceOf extends Code {
+    
+    public Code value;
+    public String type;
+    
+    public InstanceOf() {}
+    public InstanceOf(Code value, String type) {
+        this.value = value;
+        this.type = type;
+    }
 
     @Override
     public String toString() {
-        return "__caught__";
+        return value.toString()+" is "+type;
     }
-
+    
     
 }
-

@@ -15,11 +15,15 @@ import soot.jimple.TableSwitchStmt;
 import com.cava.compiler.model.*;
 import com.cava.compiler.code.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import soot.Immediate;
+import soot.PatchingChain;
 import soot.Trap;
+import soot.UnitBox;
 import soot.jimple.AddExpr;
 import soot.jimple.ArrayRef;
 import soot.jimple.BinopExpr;
@@ -38,8 +42,10 @@ import soot.jimple.NeExpr;
 import soot.jimple.NewArrayExpr;
 import soot.jimple.RemExpr;
 import soot.jimple.ReturnStmt;
+import soot.jimple.StringConstant;
 import soot.jimple.SubExpr;
 import soot.jimple.ThrowStmt;
+import soot.util.Chain;
 
 /**
  *
@@ -51,6 +57,9 @@ public class SootMethodDecompiler {
     SootMethod sootMethod;
     Map<Unit, Label> unitToLabelMap = new HashMap();
     Map<Unit, Integer> unitToIndex = new HashMap();
+    Map<Unit, List<Trap>> trapsAt = new HashMap();
+    
+    
     Set<Integer> labels = new HashSet();
     
     public void decompile(SootMethod sm, Method m, Clazz c) {
@@ -63,90 +72,223 @@ public class SootMethodDecompiler {
         PackManager.v().getPack("jop").apply(body);
         PackManager.v().getPack("jap").apply(body);
 
-        Set<Unit> tryEof = new HashSet();
-        Set<Unit> tries = new HashSet();
-        Set<Unit> throwset = new HashSet();
-        Map<Stmt, List<Trap>> catches = new HashMap();
-        
-        for(Trap trap : body.getTraps()) {
-            System.out.println(trap.getException());
-            System.out.println(trap);
-            /*
-            Stmt begin = (Stmt) trap.getBeginUnit();
-            Stmt end = (Stmt) trap.getEndUnit();
-            Stmt handler = (Stmt)trap.getHandlerUnit();
-            newLabel(begin);
-            //newLabel(end);
-            tryEof.add(end);
-            newLabel(handler);
-            tries.add(begin);
-
-            List<Trap> traps = catches.get(end);
-            if (traps == null) {
-                traps = new ArrayList();
-                catches.put(end, traps);
-            }
-            traps.add(trap);
-            if(end.equals(handler)) throwset.add(handler);
-            */
-        }
-
-        List<Unit> units = new ArrayList();
-        /*
-        for(Unit unit : body.getUnits()) {
-            if(throwset.contains(unit) && catches.containsKey(unit)) {
-                List<Trap> traps = catches.get(unit);
-                int index = 0;
-                Catch ci = new Catch();
-                for (Trap trap : traps) {
-                    ci.addTrap(SootClassLoader.toJavaType(trap.getException().getType()),
-                                    getLabel((Stmt) trap.getHandlerUnit()), index++);
-                }
-            } 
-            
-        }
-        */
-        for (soot.Local l : body.getLocals()) {
-            m.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
-            System.out.println("local: "+l.getName()+" / "+SootClassLoader.toJavaType(l.getType()));
-        }
-        
-        Map<Unit,Code> unitToCode = new HashMap();
-        
         int index = 0;
         for(Unit u : body.getUnits()) {
             unitToIndex.put(u, index++);
         }
 
-        generateLabels(body);
-
+        Map<Unit, Code> unitToCode = new HashMap();
+        Map<Unit, List<Trap>> catches = new HashMap();
+        Set<Unit> tries = new HashSet();
+        Set<Unit> throwset = new HashSet();
         
+        for(Trap t : body.getTraps()) {
+            Unit end = t.getEndUnit();
+            List<Trap> traps = catches.get(end);
+            if(traps == null) {
+                traps = new ArrayList();
+                catches.put(end, traps);
+            }
+            traps.add(t);
+            
+            Unit begin = t.getBeginUnit();
+            tries.add(begin);
+            
+            if(end.equals(t.getHandlerUnit())) throwset.add(t.getHandlerUnit());
+        }
+        
+        Map<Unit,Integer> trapDepthMap = new HashMap();
+        int trapDepth = 0;
+        for(Unit u : body.getUnits()) {
+            trapDepthMap.put(u, trapDepth);
+            if(tries.contains(u)) {
+                trapDepth++;
+            }
+            if(catches.containsKey(u)) {
+                trapDepth--;
+            }
+            
+        }
+        
+        PatchingChain<Unit> units = body.getUnits();
+        Map<Unit, List<Unit>> branchTargets = getBranchTargets(body);
+        Map<Unit, Integer> trapHandlers = getTrapHandlers(body);
+        Map<Unit, Integer> selChanges = new HashMap<Unit, Integer>();
+        
+        if(!body.getTraps().isEmpty()) {
+            List<List<Trap>> recordedTraps = new ArrayList<List<Trap>>();
+            for (Unit unit : units) {
+                // Calculate the predecessor units of unit 
+                Set<Unit> incoming = new HashSet<Unit>();
+                if (units.getFirst() != unit && units.getPredOf(unit).fallsThrough()) {
+                    incoming.add(units.getPredOf(unit));
+                }
+                if (branchTargets.keySet().contains(unit)) {
+                    incoming.addAll(branchTargets.get(unit));
+                }
+                
+                if (unit == units.getFirst() || trapHandlers.containsKey(unit) 
+                        || trapsDiffer(unit, incoming)) {
+                    
+                    List<Trap> traps = getTrapsAt(unit);
+                    if (traps.isEmpty()) {
+                        selChanges.put(unit, 0);
+                    } else {
+                        index = recordedTraps.indexOf(traps);
+                        if (index == -1) {
+                            index = recordedTraps.size();
+                            recordedTraps.add(traps);
+                        }
+                        selChanges.put(unit, index + 1);
+                    }
+                }
+            }  
+            
+            for (List<Trap> traps : recordedTraps) {
+                for (Trap trap : traps) {
+                    String exception = trap.getException().getName().replace('.', '/');
+                    int sel = trapHandlers.get(trap.getHandlerUnit());
+                    method.body.add(new If(new TrapSelector(-1), new Const(sel,"I"), If.Condition.Eq, unitToIndex.get(trap.getHandlerUnit())));
+                }
+            }
+            
+            method.body.add(new TrapEnter());
+        }
+        
+        trapDepth = 0;
         for (Unit u : body.getUnits()) {
-            /*
-            for(Trap t : body.getTraps()) {
-                if(t.getBeginUnit().equals(u)) {
-                    System.out.println("--try begin --");
-                }
-                if(t.getEndUnit() == u) {
-                    System.out.println("-- try end --");
-                }
+            /*if(tries.contains(u)) {
+                method.body.add(new TrapEnter());
+                trapDepth++;
             }*/
-            index = unitToIndex.get(u);
-            if(labels.contains(index))
-                System.out.println("label"+index+":");
-            /*
-            Label label = unitToLabelMap.get(u);
-            if (label != null) {
-                m.codes.add(label);
-            }*/
+            if(selChanges.containsKey(u)) {
+                method.body.add(new TrapSelector(selChanges.get(u)));
+            }
 
             Code code = decompile(u);
-            System.out.println(code);
-            if (code != null) {
-                m.codes.add(code);
-                unitToCode.put(u, code);
+            unitToCode.put(u, code);
+            
+            /*
+            if(trapDepth > 0) {
+                Unit target = null;
+                if(u instanceof JGotoStmt) {
+                    target = ((JGotoStmt)u).getTarget();
+                } else if(u instanceof JReturnStmt || u instanceof JReturnVoidStmt) {
+                    method.body.add(new TrapLeave(trapDepth));
+                }
+                
+                if(target != null) {
+                    int targetDepth = trapDepthMap.get(target);
+                    if(targetDepth < trapDepth) {
+                        method.body.add(new TrapLeave(trapDepth - targetDepth));
+                        trappedJumps.add(code);
+                    }
+                }
+            }
+            */
+            if(!body.getTraps().isEmpty() && code instanceof Return)
+                method.body.add(new TrapLeave());
+            method.body.add(code);
+            /*
+            if(catches.containsKey(u)) {
+                trapDepth--;
+                for(Trap t : catches.get(u)) {
+                    Var v = new Var("_exc",0,"I");
+                    method.body.add(new Assign(v, new InstanceOf(new CaughtException(), t.getException().getName().replace('.', '/'))));
+                    method.body.add(new If(v, new Const(1,"I"), If.Condition.Eq, unitToIndex.get(t.getHandlerUnit())));
+                }
+            }*/
+        }
+        
+        
+        for(Code code : method.body) {
+            if(code instanceof Branch) {
+                Branch b = (Branch)code;
+                Map.Entry<Unit,Integer> entry = unitToIndex.entrySet().stream().filter(e -> e.getValue() == b.target).findFirst().orElse(null);
+                if(entry != null) {
+                    Code target = unitToCode.get(entry.getKey());
+                    if(target != null) {
+                        int targetIndex = method.body.indexOf(target);
+                        //if(trappedJumps.contains(target)) targetIndex--;
+                        b.target = targetIndex;
+                    }
+                }
             }
         }
+        int line = 0;
+        for(Code cd : method.body)
+            System.out.println((line++)+": "+cd);
+    }
+
+    private boolean trapsDiffer(Unit unit, Collection<Unit> incomingUnits) {
+        List<Trap> traps = getTrapsAt(unit);
+        for (Unit incomingUnit : incomingUnits) {
+            if (!traps.equals(getTrapsAt(incomingUnit))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private Map<Unit, List<Unit>> getBranchTargets(Body body) {
+        Map<Unit, List<Unit>> result = new HashMap<Unit, List<Unit>>();
+        for (Unit unit : body.getUnits()) {
+            if (unit.branches()) {
+                List<Unit> targetUnits = new ArrayList<Unit>();
+                for (UnitBox ub : unit.getUnitBoxes()) {
+                    targetUnits.add(ub.getUnit());
+                }
+                if (unit.fallsThrough()) {
+                    targetUnits.add(body.getUnits().getSuccOf(unit));
+                }
+                for (Unit targetUnit : targetUnits) {
+                    List<Unit> sourceUnits = result.get(targetUnit);
+                    if (sourceUnits == null) {
+                        sourceUnits = new ArrayList<Unit>();
+                        result.put(targetUnit, sourceUnits);
+                    }
+                    sourceUnits.add(unit);
+                }
+            }
+        }
+        return result;
+    }
+    
+    private Map<Unit, Integer> getTrapHandlers(Body body) {
+        Map<Unit, Integer> trapHandlers = new HashMap<Unit, Integer>();
+        for (Trap trap : body.getTraps()) {
+            Unit beginUnit = trap.getBeginUnit();
+            Unit endUnit = trap.getEndUnit();
+            if (beginUnit != endUnit && !trapHandlers.containsKey(trap.getHandlerUnit())) {
+                trapHandlers.put(trap.getHandlerUnit(), trapHandlers.size());
+            }
+        }
+        return trapHandlers;
+    }
+    
+    private List<Trap> getTrapsAt(Unit u) {
+        List<Trap> result = this.trapsAt.get(u);
+        if (result == null) {
+            Body body = sootMethod.getActiveBody();
+            Chain<Trap> traps = body.getTraps();
+            if (traps.isEmpty()) {
+                result = Collections.emptyList();
+            } else {
+                result = new ArrayList<Trap>();
+                PatchingChain<Unit> units = body.getUnits();
+                for (Trap trap : traps) {
+                    Unit beginUnit = trap.getBeginUnit();
+                    Unit endUnit = trap.getEndUnit();
+                    if (beginUnit != endUnit && u != endUnit) {
+                        if (u == beginUnit || (units.follows(u, beginUnit) && units.follows(endUnit, u))) {
+                            result.add(trap);
+                        }
+                    }
+                }
+            }
+            this.trapsAt.put(u, result);
+        }
+        return result;
     }
 
     int labelIdCounter;
@@ -301,6 +443,8 @@ public class SootMethodDecompiler {
             return new Var(local.getName(), local.getIndex(), type);
         } else if(v instanceof IntConstant) {
             return new Const(((IntConstant)v).value, "I");
+        } else if(v instanceof StringConstant) {
+            return new Const(((StringConstant)v).value, "java/lang/String");
         }
         throw new RuntimeException("Unknown "+v.getClass());
     }

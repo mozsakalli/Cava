@@ -49,7 +49,7 @@ public class Method extends NameAndType implements Serializable {
 
     public transient boolean isObjCImplementation;
     
-    public List<Code> codes = new ArrayList();
+    public List<Code> body = new ArrayList();
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);

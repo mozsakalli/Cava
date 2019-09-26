@@ -20,13 +20,9 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class CaughtException extends Code {
-
-    @Override
-    public String toString() {
-        return "__caught__";
-    }
-
+public class CheckCast extends Code {
+    
+    public Code value;
+    public String type;
     
 }
-

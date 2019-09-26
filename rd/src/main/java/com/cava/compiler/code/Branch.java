@@ -16,14 +16,12 @@
 
 package com.cava.compiler.code;
 
-import soot.Unit;
-
 /**
  *
  * @author mustafa
  */
 public class Branch extends Code {
     
-    public transient Unit targetUnit;
+    public int target;
     
 }

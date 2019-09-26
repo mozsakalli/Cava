@@ -35,16 +35,27 @@ public class Main {
     public static int test() {
         int[] vals = new int[]{0,1,2,3};
         int result = 0;
+        Object o = new int[]{0};
         byte b = 10;
         for(int i=0; i<100; i++) {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
             //mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
             try {
-            result += i * mul + vals[i%4];
-            b = (byte)(result%10);
-            } catch(Throwable e){
+                result += i * mul + vals[i%4] + ((int[])o)[0];
+                if(result % 10 == 0) result++; else break;
+                /*try {
+                    result *= 120;
+                }catch(Exception e){}*/
+                b = (byte)(result%100);
+                return b;
+            } catch(NullPointerException n){
                 b += 5;
-            } /*finally {
+            } catch(ArrayIndexOutOfBoundsException a) {
+                mul = 20;
+            } catch(ArithmeticException e) {
+                b -= 120;
+            }
+            /*finally {
                 result -= 10;
             }*/
             result += b;

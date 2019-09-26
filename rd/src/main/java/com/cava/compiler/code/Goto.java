@@ -22,7 +22,6 @@ package com.cava.compiler.code;
  */
 public class Goto extends Branch {
     
-    public int target;
     public Goto(int target) {
         this.target = target;
     }

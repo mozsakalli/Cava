@@ -102,6 +102,8 @@ public class CompilerContext {
     public static Clazz _resolve(String name) throws Exception {
         Clazz clazz = classes.get(name);
         if(clazz != null) return clazz;
+        System.out.println("Decompiling "+name);
+                
         if(name.startsWith("[")) {
             clazz = new Clazz();
             clazz.name = name;

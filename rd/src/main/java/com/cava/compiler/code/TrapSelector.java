@@ -20,13 +20,19 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class CaughtException extends Code {
+public class TrapSelector extends Code {
+    
+    public int selector;
+    
+    public TrapSelector(){}
+    public TrapSelector(int selector) {
+        this.selector = selector;
+    }
 
     @Override
     public String toString() {
-        return "__caught__";
+        return "TrapSelector("+selector+")";
     }
-
+    
     
 }
-

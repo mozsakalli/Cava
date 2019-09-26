@@ -20,13 +20,14 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class CaughtException extends Code {
+public class TrapLeave extends Code {
+    
+    public TrapLeave() {}
 
     @Override
     public String toString() {
-        return "__caught__";
+        return "TrapLeave";
     }
-
+    
     
 }
-

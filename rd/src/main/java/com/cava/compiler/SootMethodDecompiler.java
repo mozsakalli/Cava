@@ -9,7 +9,6 @@ import soot.Unit;
 import soot.jimple.GotoStmt;
 import soot.jimple.IfStmt;
 import soot.jimple.LookupSwitchStmt;
-import soot.jimple.Stmt;
 import soot.jimple.TableSwitchStmt;
 
 import com.cava.compiler.model.*;
@@ -21,10 +20,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import soot.Immediate;
-import soot.Local;
 import soot.LocalVariable;
 import soot.PatchingChain;
 import soot.Trap;
+import soot.Type;
 import soot.UnitBox;
 import soot.jimple.AddExpr;
 import soot.jimple.ArrayRef;
@@ -64,9 +63,7 @@ public class SootMethodDecompiler {
     Map<Unit, Label> unitToLabelMap = new HashMap();
     Map<Unit, Integer> unitToIndex = new HashMap();
     Map<Unit, List<Trap>> trapsAt = new HashMap();
-    
-    
-    Set<Integer> labels = new HashSet();
+    Map<String, Var> variableMap = new HashMap();
     
     public void decompile(SootMethod sm, Method m, Clazz c) {
         klass = c;
@@ -92,49 +89,20 @@ public class SootMethodDecompiler {
         }        
 
         for(LocalVariable l : body.getLocalVariables()) {
-            System.out.println(l.getName());
+            System.out.println(l.getName()+":"+unitToIndex.get(l.getStartUnit())+":"+
+                    unitToIndex.get(l.getEndUnit())+":"+l.getIndex());
         }
+        /*
         for(Local l : body.getLocals()) {
             method.locals.add(new Var(l));
             //method.locals.add(new NameAndType(l.getName(), SootClassLoader.toJavaType(l.getType()), false));
-        }
+        }*/
         
         for(Var l : method.locals) {
             System.out.println(l.index+": "+l.name+" "+l.type);
         }
         Map<Unit, Code> unitToCode = new HashMap();
-        Map<Unit, List<Trap>> catches = new HashMap();
-        Set<Unit> tries = new HashSet();
-        Set<Unit> throwset = new HashSet();
-        
-        for(Trap t : body.getTraps()) {
-            Unit end = t.getEndUnit();
-            List<Trap> traps = catches.get(end);
-            if(traps == null) {
-                traps = new ArrayList();
-                catches.put(end, traps);
-            }
-            traps.add(t);
-            
-            Unit begin = t.getBeginUnit();
-            tries.add(begin);
-            
-            if(end.equals(t.getHandlerUnit())) throwset.add(t.getHandlerUnit());
-        }
-        
-        Map<Unit,Integer> trapDepthMap = new HashMap();
-        int trapDepth = 0;
-        for(Unit u : body.getUnits()) {
-            trapDepthMap.put(u, trapDepth);
-            if(tries.contains(u)) {
-                trapDepth++;
-            }
-            if(catches.containsKey(u)) {
-                trapDepth--;
-            }
-            
-        }
-        
+
         PatchingChain<Unit> units = body.getUnits();
         Map<Unit, List<Unit>> branchTargets = getBranchTargets(body);
         Map<Unit, Integer> trapHandlers = getTrapHandlers(body);
@@ -320,47 +288,20 @@ public class SootMethodDecompiler {
         return result;
     }
 
-    int labelIdCounter;
-
-    private void newLabel(Stmt stmt) {
-        labels.add(unitToIndex.get(stmt));
-        Label label = unitToLabelMap.get(stmt);
-        if (label == null) {
-            label = new Label();//"label" + labelIdCounter++);
-            unitToLabelMap.put(stmt, label);
-        }
+    Var newVariable(String name, Type type) {
+        String t = SootClassLoader.toJavaType(type);
+        Var old = variableMap.get(name);
+        if(old != null) {
+            String ot = !DecompilerUtils.isPrimitive(old.type) ? "O" : old.type;
+            String nt = !DecompilerUtils.isPrimitive(t) ? "O" : t;
+            if(!ot.equals(nt)) throw new RuntimeException(name+" differes "+old.type+" to "+t);
+        } else {
+            old = new Var(name,0,t,false);
+            variableMap.put(name, old);
+        }        
+        return old;
     }
-
-    void generateLabels(Body body) {
-        // generate labels for each statement another statement points to
-        for (Unit unit : body.getUnits()) {
-            if (unit instanceof IfStmt) {
-                newLabel(((IfStmt) unit).getTarget());
-            }
-            if (unit instanceof GotoStmt) {
-                newLabel((Stmt) ((GotoStmt) unit).getTarget());
-            }
-            if (unit instanceof TableSwitchStmt) {
-                TableSwitchStmt stmt = (TableSwitchStmt) unit;
-                for (Object target : stmt.getTargets()) {
-                    newLabel((Stmt) target);
-                }
-                if (stmt.getDefaultTarget() != null) {
-                    newLabel((Stmt) stmt.getDefaultTarget());
-                }
-            }
-            if (unit instanceof LookupSwitchStmt) {
-                LookupSwitchStmt stmt = (LookupSwitchStmt) unit;
-                for (Object target : stmt.getTargets()) {
-                    newLabel((Stmt) target);
-                }
-                if (stmt.getDefaultTarget() != null) {
-                    newLabel((Stmt) stmt.getDefaultTarget());
-                }
-            }
-        }
-    }
-
+    
     Code decompile(Unit unit) {
         if(unit instanceof DefinitionStmt) {
             return assign((DefinitionStmt)unit);
@@ -434,15 +375,17 @@ public class SootMethodDecompiler {
         } else if(rightOp instanceof CaughtExceptionRef) {
             right = new CaughtException();
         } else if(rightOp instanceof ParameterRef) {
-            right = new Var((ParameterRef)rightOp);
-        }
+            ParameterRef p = (ParameterRef)rightOp;
+            right = newVariable("p" + ((sootMethod.isStatic() ? 1 : 2) + p.getIndex()), p.getType());
+        } 
         else
         throw new RuntimeException("Unknown RightOp: "+rightOp.getClass());
         
         soot.Value leftOp = stmt.getLeftOp();
         Code left;
         if(leftOp instanceof soot.Local) {
-            left = new Var((soot.Local)leftOp);
+            soot.Local l = (soot.Local)leftOp;
+            left = newVariable(l.getName(), l.getType());
         } else if(leftOp instanceof ArrayRef) {
             ArrayRef ref = (ArrayRef) leftOp;
             Code base = immediate((Immediate) ref.getBase());
@@ -471,7 +414,7 @@ public class SootMethodDecompiler {
     Code immediate(Immediate v) {
         if(v instanceof soot.Local) {
             soot.Local local = (soot.Local)v;
-            return new Var(local);
+            return newVariable(local.getName(), local.getType()); 
         } else if(v instanceof IntConstant) {
             return new Const(((IntConstant)v).value, "I");
         } else if(v instanceof StringConstant) {

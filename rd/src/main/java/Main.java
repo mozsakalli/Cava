@@ -1,5 +1,7 @@
 
+import com.cava.compiler.CavaOptions;
 import com.cava.compiler.CompilerContext;
+import com.cava.compiler.Platform;
 import com.cava.compiler.model.Clazz;
 import java.io.File;
 
@@ -32,7 +34,12 @@ public class Main {
     static int v2(int t, int t2) {
         return t*t2;
     }
-    public static int test(double dbl, int startValue) {
+    
+    float tmp(int val) {
+        return val*12;
+    }
+    
+    public int test(double dbl, int startValue) {
         int[] vals = new int[]{0,1,2,3};
         int result = 0;
         Object o = new int[]{0};
@@ -41,14 +48,16 @@ public class Main {
             int mul = i < 50 ? 2 : (i%10==2 ? 9 : 4);
             //mul *= mul % 10 == 0 ? v1(mul) : v2(mul,i);
             if(result > 10) {
-                for(int k=0; k<10; k++) result *= 10;
+                for(int k=0; k<10; k++) result *= tmp(b);
             } else {
                 long k = 100;
                 int e = result/2;
-                result += (byte)k + e;
+                result += (byte)k + e + startValue;
+                startValue = 10;
             }
             try {
                 result += i * mul + vals[i%4] + ((int[])o)[0];
+                vals[0]++;
                 if(result % 10 == 0) result++; else break;
                 /*try {
                     result *= 120;
@@ -70,14 +79,17 @@ public class Main {
         return result;
     }
     
-    public static void main(String...args) {
+    public static void main(String...args) throws Exception {
         
         CompilerContext.classPath = new File[]{
             new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/target/classes"),
         };
         
-        Clazz cls = CompilerContext.resolve("Main");
+        CavaOptions.mainClass("Test");
+        CavaOptions.buildDir(new File("./build"));
+        CavaOptions.targetPlatform(Platform.iOS.toString());
+        CompilerContext.transpile();
     }
     
 }

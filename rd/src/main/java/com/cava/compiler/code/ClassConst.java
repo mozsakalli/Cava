@@ -16,17 +16,24 @@
 
 package com.cava.compiler.code;
 
-import java.util.ArrayList;
-import java.util.List;
-import soot.Unit;
-
 /**
  *
  * @author mustafa
  */
-public class Catch extends Code {
+public class ClassConst extends Code {
     
-    public List<Unit> body = new ArrayList();
-    public String type;
+    public String name;
+    
+    public ClassConst(){}
+    public ClassConst(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.classRef(this);
+        visitor.visitClassReference(name);
+    }
+    
     
 }

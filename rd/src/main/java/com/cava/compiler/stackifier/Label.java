@@ -14,32 +14,12 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.stackifier;
 
 /**
  *
  * @author mustafa
  */
-public class Return extends Code {
-    final static long serialVersionUID = 0;
-    
-    public Code value;
-    
-    public Return(Code value) {
-        this.value = value;
-    }
+public class Label {
 
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.return_(this);
-        if(value != null) value.visit(visitor);
-    }
-
-    
-    @Override
-    public String toString() {
-        return "return "+value;
-    }
-    
-    
 }

@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
-
 /**
  *
  * @author mustafa
  */
-public class Return extends Code {
-    final static long serialVersionUID = 0;
+public class Test {
     
-    public Code value;
-    
-    public Return(Code value) {
-        this.value = value;
+    public static void main() {
+        int ret = 0;
+        try {
+            int sum = 0;
+            for(int i=0; i<10; i++) {
+                sum += i;
+            }
+        }catch(NullPointerException e){
+            ret = 1;
+        }catch(ArrayIndexOutOfBoundsException e) {
+            ret = 2;
+        }
     }
-
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.return_(this);
-        if(value != null) value.visit(visitor);
-    }
-
-    
-    @Override
-    public String toString() {
-        return "return "+value;
-    }
-    
-    
 }

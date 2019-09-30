@@ -16,6 +16,7 @@
 
 package com.cava.compiler.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +24,9 @@ import java.util.List;
  *
  * @author mustafa
  */
-public class TrapInfo {
+public class TrapInfo implements Serializable {
     
-    public static class Info {
+    public static class Info implements Serializable {
         public String type;
         public int target;
     }

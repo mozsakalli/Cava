@@ -16,14 +16,16 @@
 
 package com.cava.compiler.code;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mustafa
  */
-public class Code {
+public class Code implements Serializable {
+    final static long serialVersionUID = 0;
     
-    public int getStackDelta() {
-        throw new RuntimeException();
+    public void visit(Visitor visitor) {
+        throw new RuntimeException("Visitor not implemented: "+getClass());
     }
-    
 }

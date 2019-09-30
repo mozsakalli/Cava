@@ -22,6 +22,8 @@ package com.cava.compiler.code;
  */
 public class TrapSelector extends Code {
     
+    final static long serialVersionUID = 0;
+    
     public int selector;
     
     public TrapSelector(){}
@@ -29,6 +31,11 @@ public class TrapSelector extends Code {
         this.selector = selector;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+    }
+
+    
     @Override
     public String toString() {
         return "TrapSelector("+selector+")";

@@ -27,6 +27,11 @@ public class CaughtException extends Code {
         return "__caught__";
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.visitClassReference("java/lang/Throwable");
+    }
+
     
 }
 

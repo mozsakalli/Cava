@@ -21,6 +21,7 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class AllocArray extends Code {
+    final static long serialVersionUID = 0;
     
     public Code size;
     public String type;
@@ -30,6 +31,14 @@ public class AllocArray extends Code {
         this.type = type;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.newArray(this);
+        size.visit(visitor);
+        visitor.visitClassReference(type);
+    }
+
+    
     @Override
     public String toString() {
         return "newArray("+type+","+size+")";

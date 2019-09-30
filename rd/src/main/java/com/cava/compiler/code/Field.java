@@ -20,26 +20,25 @@ package com.cava.compiler.code;
  *
  * @author mustafa
  */
-public class Return extends Code {
-    final static long serialVersionUID = 0;
+public class Field extends Code {
+
+    public Code base;
+    public String className;
+    public String name;
     
-    public Code value;
+    public Field(){}
     
-    public Return(Code value) {
-        this.value = value;
+    public Field(Code base, String className, String name) {
+        this.base = base;
+        this.className = className;
+        this.name = name;
     }
 
     @Override
-    public void visit(Visitor visitor) {
-        visitor.return_(this);
-        if(value != null) value.visit(visitor);
+    public void visit(Visitor v) {
+        v.field(this);
+        if(base != null) base.visit(v);
+        v.visitClassReference(className);
     }
-
-    
-    @Override
-    public String toString() {
-        return "return "+value;
-    }
-    
     
 }

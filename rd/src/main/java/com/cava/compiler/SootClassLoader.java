@@ -16,6 +16,7 @@
 
 package com.cava.compiler;
 
+import com.cava.compiler.code.Var;
 import com.cava.compiler.model.Clazz;
 import com.cava.compiler.model.Method;
 import com.cava.compiler.model.NameAndType;
@@ -59,8 +60,6 @@ public class SootClassLoader {
     static boolean sootInitialized;
     
     public static Clazz load(String name) {
-        
-        System.out.println("Decompiling "+name);
         initializeSoot();
         SootClass sc = getSootClass(name.replace('/', '.'));
 
@@ -96,13 +95,16 @@ public class SootClassLoader {
             m.type = toJavaType(sm.getReturnType());
             m.declaringClass = name;
             m.modifiers = sm.getModifiers();
+            int paramIndex = 0;
+            if(!sm.isStatic())
+                m.args.add(new Var("this", paramIndex++, c.name, true));
             for(int i=0; i<sm.getParameterCount(); i++) {
-                m.args.add(new NameAndType("arg"+i, toJavaType(sm.getParameterType(i)), true));
+                m.args.add(new Var("arg"+(paramIndex), paramIndex++, toJavaType(sm.getParameterType(i)), true));
             }
             m.signature = buildJavaSignature(m);
             if(!c.isInterface && !m.isAbstract() && !m.isNative()) {
-                if(m.name.equals("test"))
-                    new SootMethodDecompiler().decompile(sm, m, c);
+                //if(m.name.equals("test"))
+                new SootMethodDecompiler().decompile(sm, m, c);
             }
             m.annotations = decodeAnnotations(sm);
             c.methods.add(m);
@@ -138,7 +140,7 @@ public class SootClassLoader {
     
     public static String buildJavaSignature(Method m) {
         String signature = "(";
-        for(NameAndType arg : m.args) {
+        for(Var arg : m.args) {
             signature += toJavaSignature(arg.type);
         }
         signature += ")";

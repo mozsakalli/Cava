@@ -21,10 +21,19 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Throw extends Code {
+    final static long serialVersionUID = 0;
     
     public Code exception;
     
     public Throw(Code exception) {
         this.exception = exception;
     }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.throw_(this);
+        exception.visit(visitor);
+    }
+    
+    
 }

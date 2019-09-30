@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-package com.cava.compiler.code;
+package com.cava.compiler.model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author mustafa
  */
-public class Return extends Code {
-    final static long serialVersionUID = 0;
+public class DebugVariableInfo implements Serializable {
     
-    public Code value;
+    public String name;
     
-    public Return(Code value) {
-        this.value = value;
-    }
-
-    @Override
-    public void visit(Visitor visitor) {
-        visitor.return_(this);
-        if(value != null) value.visit(visitor);
-    }
-
-    
-    @Override
-    public String toString() {
-        return "return "+value;
-    }
-    
+    public List<int[]> list = new ArrayList();
     
 }

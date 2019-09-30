@@ -21,6 +21,8 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class InstanceOf extends Code {
+
+    final static long serialVersionUID = 0;
     
     public Code value;
     public String type;
@@ -31,6 +33,14 @@ public class InstanceOf extends Code {
         this.type = type;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.instanceOf(this);
+        value.visit(visitor);
+        visitor.visitClassReference(type);
+    }
+
+    
     @Override
     public String toString() {
         return value.toString()+" is "+type;

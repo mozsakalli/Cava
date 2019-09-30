@@ -21,5 +21,11 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class TrapEnter extends Code {
+    final static long serialVersionUID = 0;
 
+    @Override
+    public void visit(Visitor visitor) {
+    }
+
+    
 }

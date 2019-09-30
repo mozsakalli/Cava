@@ -16,16 +16,26 @@
 
 package com.cava.compiler.code;
 
-import java.util.ArrayList;
-import java.util.List;
-import soot.Unit;
-
 /**
  *
  * @author mustafa
  */
-public class Try extends Code {
+public class Monitor extends Code {
+    final static long serialVersionUID = 0;
     
-    public List<Unit> body = new ArrayList();
-    public List<Catch> catches = new ArrayList();
+    public Code value;
+    public boolean leave;
+    
+    public Monitor(){}
+    public Monitor(Code value, boolean leave) {
+        this.value = value;
+        this.leave = leave;
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+        value.visit(visitor);
+    }
+    
+    
 }

@@ -56,6 +56,7 @@ public class CompilerContext {
     }
     
     static Clazz load(String name) {
+        System.out.println("Decompiling "+name);
         return SootClassLoader.load(name);
         /*
         System.out.println("Decompiling "+name);
@@ -102,7 +103,6 @@ public class CompilerContext {
     public static Clazz _resolve(String name) throws Exception {
         Clazz clazz = classes.get(name);
         if(clazz != null) return clazz;
-        System.out.println("Decompiling "+name);
                 
         if(name.startsWith("[")) {
             clazz = new Clazz();
@@ -153,7 +153,7 @@ public class CompilerContext {
         return clazz;
     }
     
-    private static void transpile() throws Exception {
+    public static void transpile() throws Exception {
         String version = System.getProperty("java.version");        
         if(!version.startsWith("1.8")) throw new RuntimeException("Cava requires JDK 1.8");
         
@@ -168,9 +168,11 @@ public class CompilerContext {
         classCacheDir.mkdirs();
         
         long time = System.currentTimeMillis();
-        //todo: new DependencyAnalyzer().analyze(CavaOptions.mainClass());
+        new DependencyAnalyzer().analyze(CavaOptions.mainClass());
         time = System.currentTimeMillis() - time;
         System.out.println("Dependency: "+time);
+        
+        new JSGenerator().generate();
         //new JSBackend().generate();
         //new CBackend().generate();
         

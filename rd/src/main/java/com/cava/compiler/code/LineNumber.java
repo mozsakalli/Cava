@@ -30,6 +30,11 @@ public class LineNumber extends Code {
     }
 
     @Override
+    public void visit(Visitor visitor) {
+    }
+
+    
+    @Override
     public String toString() {
         return "#Line "+line;
     }

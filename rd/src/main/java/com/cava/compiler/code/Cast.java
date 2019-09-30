@@ -33,6 +33,14 @@ public class Cast extends Code {
     }
 
     @Override
+    public void visit(Visitor visitor) {
+        visitor.cast(this);
+        visitor.visitClassReference(fromType);
+        visitor.visitClassReference(toType);
+    }
+
+    
+    @Override
     public String toString() {
         return "("+toType+")"+code;
     }

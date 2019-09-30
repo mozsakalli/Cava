@@ -21,6 +21,7 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Const extends Code {
+    final static long serialVersionUID = 0;
     
     public String type;
     public Object value;
@@ -30,6 +31,13 @@ public class Const extends Code {
         this.type = type;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.constant(this);
+        visitor.visitClassReference(type);
+    }
+
+    
     @Override
     public String toString() {
         return String.valueOf(value);

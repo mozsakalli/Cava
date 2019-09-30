@@ -16,29 +16,24 @@
 
 package com.cava.compiler.code;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author mustafa
  */
-public class Return extends Code {
+public class Switch extends Code {
+
     final static long serialVersionUID = 0;
     
-    public Code value;
-    
-    public Return(Code value) {
-        this.value = value;
-    }
+    public Code key;
+    public List<Integer> values = new ArrayList();
+    public List<Integer> labels = new ArrayList();
 
     @Override
     public void visit(Visitor visitor) {
-        visitor.return_(this);
-        if(value != null) value.visit(visitor);
-    }
-
-    
-    @Override
-    public String toString() {
-        return "return "+value;
+        key.visit(visitor);
     }
     
     

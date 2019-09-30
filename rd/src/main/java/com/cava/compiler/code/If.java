@@ -16,13 +16,12 @@
 
 package com.cava.compiler.code;
 
-import soot.Unit;
-
 /**
  *
  * @author mustafa
  */
 public class If extends Branch {
+    final static long serialVersionUID = 0;
     
     public enum Condition {
         Eq("=="), Neq("!="), Gt(">"), Lt("<"), Ge(">="), Le("<=");
@@ -43,6 +42,14 @@ public class If extends Branch {
         this.target = target;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.if_(this);
+        left.visit(visitor);
+        right.visit(visitor);
+    }
+
+    
     @Override
     public String toString() {
         return "if("+left+op.sign+right+") goto label"+target+";";

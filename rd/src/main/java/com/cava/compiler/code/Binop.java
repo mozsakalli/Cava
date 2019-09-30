@@ -21,13 +21,23 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Binop extends Code {
+    final static long serialVersionUID = 0;
     
     public enum Op {
-        Rem("%"),Mul("*"),Add("+"),Sub("-"),Div("/");
-        
-        String sign;        
-        Op(String sign) { this.sign = sign; }
-        public String sign() { return sign; }
+        Rem,
+        Mul,
+        Add,
+        Sub,
+        Div,
+        And,
+        Or,
+        Xor,
+        Shl,
+        Shr,
+        UShr,
+        Cmp,
+        Cmpl, 
+        Cmpg;
     }
     
     public Code left, right;
@@ -42,8 +52,16 @@ public class Binop extends Code {
     }
 
     @Override
+    public void visit(Visitor visitor) {
+        visitor.binary(this);
+        left.visit(visitor);
+        right.visit(visitor);
+    }
+
+    
+    @Override
     public String toString() {
-        return left+op.sign()+right;
+        return left+" "+op+" "+right;
     }
     
     

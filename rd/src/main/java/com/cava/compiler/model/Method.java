@@ -18,9 +18,12 @@ package com.cava.compiler.model;
 
 import com.cava.compiler.code.Code;
 import com.cava.compiler.code.Var;
+import com.cava.compiler.code.Visitor;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -30,11 +33,10 @@ public class Method extends NameAndType implements Serializable {
     final static long serialVersionUID = 0;
 
     public String signature;
-    public List<NameAndType> args = new ArrayList();
+    public List<Var> args = new ArrayList();
     public List<Var> locals = new ArrayList();
     //public Block body = new Block();
     public boolean hasGoto;
-    public boolean hasTryCatch;
     
     public transient String virtualBaseClass;
     public transient String interfaceBaseClass;
@@ -45,28 +47,25 @@ public class Method extends NameAndType implements Serializable {
     public transient Method interfaceImplementor;
     public transient int interfaceTableIndex = -1;
     
-    public transient int minLine;
-    public transient int maxLine;
+    public int minLine;
+    public int maxLine;
 
     public transient boolean isObjCImplementation;
     
     public List<Code> body = new ArrayList();
     public List<TrapInfo> traps = new ArrayList();
+    public List<DebugVariableInfo> debugVariables = new ArrayList();
+    
+    public Set<Integer> labels = new HashSet();
     
     public boolean isOverrideWith(Method m) {
         return m.name.equals(name) && m.signature.equals(signature);
     }
-    
-    @Override
-    public void replaceClassName(String src, String dest) {
-        /*
-        super.replaceClassName(src, dest);
-        args.forEach(a -> a.replaceClassName(src, dest));
-        locals.forEach(l -> l.replaceClassName(src, dest));
-        //if(body != null) body.replaceClassName(src, dest);
-        */
-    }
 
+    public void visit(Visitor visitor) {
+        for(Code code : body)
+            code.visit(visitor);
+    }
     @Override
     public int hashCode() {
         return (name+type+modifiers+declaringClass+value+isParameter+signature).hashCode();

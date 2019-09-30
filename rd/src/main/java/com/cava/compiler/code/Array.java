@@ -21,6 +21,7 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Array extends Code {
+    final static long serialVersionUID = 0;
     
     public Code array;
     public Code index;
@@ -32,6 +33,14 @@ public class Array extends Code {
         this.type = type;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.arrayAccess(this);
+        array.visit(visitor);
+        index.visit(visitor);
+    }
+
+    
     @Override
     public String toString() {
         return array+"["+index+"]";

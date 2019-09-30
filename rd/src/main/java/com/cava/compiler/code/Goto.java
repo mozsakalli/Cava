@@ -21,11 +21,18 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Goto extends Branch {
+    final static long serialVersionUID = 0;
     
     public Goto(int target) {
         this.target = target;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.goto_(this);
+    }
+
+    
     @Override
     public String toString() {
         return "goto label"+target;

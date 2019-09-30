@@ -21,9 +21,15 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class TrapLeave extends Code {
+    final static long serialVersionUID = 0;
     
     public TrapLeave() {}
 
+    @Override
+    public void visit(Visitor visitor) {
+    }
+
+    
     @Override
     public String toString() {
         return "TrapLeave";

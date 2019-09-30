@@ -16,6 +16,7 @@
 
 package com.cava.compiler;
 
+import com.cava.compiler.code.Var;
 import java.util.List;
 import com.cava.compiler.model.*;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class DecompilerUtils {
     
     public static String generateMethodSignature(Method m) {
         String result = "(";
-        for(NameAndType arg : m.args)
+        for(Var arg : m.args)
             result += javaSignature(arg.type);
         return result + ")"+javaSignature(m.type);
     }

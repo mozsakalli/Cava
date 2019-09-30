@@ -23,6 +23,7 @@ import soot.jimple.ParameterRef;
  * @author mustafa
  */
 public class Var extends Code {
+    final static long serialVersionUID = 0;
     
     public String name;
     public int index;
@@ -43,6 +44,13 @@ public class Var extends Code {
     public Var(ParameterRef param) {
         this("param"+param.getIndex(), param.getIndex(), com.cava.compiler.SootClassLoader.toJavaType(param.getType()), true);
     }
+
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.visitClassReference(type);
+    }
+    
+    
     @Override
     public String toString() {
         return name;

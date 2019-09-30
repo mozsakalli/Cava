@@ -21,6 +21,7 @@ package com.cava.compiler.code;
  * @author mustafa
  */
 public class Assign extends Code {
+    final static long serialVersionUID = 0;
     
     public Code left;
     public Code right;
@@ -30,6 +31,14 @@ public class Assign extends Code {
         this.right = right;
     }
 
+    @Override
+    public void visit(Visitor visitor) {
+        visitor.assign(this);
+        left.visit(visitor);
+        right.visit(visitor);
+    }
+
+    
     @Override
     public String toString() {
         return left+" = "+right;

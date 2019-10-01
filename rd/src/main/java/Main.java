@@ -2,7 +2,6 @@
 import com.cava.compiler.CavaOptions;
 import com.cava.compiler.CompilerContext;
 import com.cava.compiler.Platform;
-import com.cava.compiler.model.Clazz;
 import java.io.File;
 
 /*

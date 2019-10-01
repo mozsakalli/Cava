@@ -24,8 +24,9 @@ public class Test {
         int ret = 0;
         try {
             int sum = 0;
-            for(int i=0; i<10; i++) {
+            for(int i=0; i<100000; i++) {
                 sum += i;
+                if(sum%10 == 0) sum++;
             }
         }catch(NullPointerException e){
             ret = 1;

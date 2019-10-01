@@ -36,6 +36,7 @@ public class JSMethodGenerator {
     }
     
     public void generate() {
+        Restruct rt = new Restruct(method);
         out.println("var $f=vm.frames[vm.fp++];");
         if(method.hasGoto) {
             out.println("var $b=-1;");
@@ -212,6 +213,13 @@ public class JSMethodGenerator {
     }
     public void binary(Binop bin) {
         code(bin.left);
+        String sign = null;
+        switch(bin.op) {
+            case Add: sign="+";break;
+            case Rem: sign="%";break;
+            default: bin.op.toString();
+        }
+        out.print(" %s ",sign);
         out.print(bin.op);
         code(bin.right);
     }

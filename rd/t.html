@@ -1,11 +1,14 @@
 <script type="text/javascript">
 function c(){
 	var sum=0;
-	for(var i=0;i<100000; i++) sum += i;
+	for(var i=0;i<100000; i++) {
+		sum += i;
+		if(sum%10 == 0) sum++;
+	}
 	return sum;
 }
 function _c(vm){
-var v0,v1,v2,v3,v4,v5,v6,v7;
+var v0,v1,v2,v3,v4,v5,v6,v7,v8;
 var $f=vm.frames[vm.fp++];
 var $b=-1;
 while(1)try{switch($b){
@@ -18,111 +21,52 @@ while(1)try{switch($b){
 		v1=0;
 		$f.l=27;
 		v2=0;
-	//case 9:
-		while(true) {
-		if(v2>=100000) {$b=15; break;}
+	case 9:
+		if(v2>=100000) {$b=19; break;}
 		$f.l=28;
 		v1=v1+v2;
-		$f.l=27;
-		v2=v2+1;
-		}
-		//{ $b=9; break; }
-	case 15:
-		$f.l=34;
-		$f.trap=0;
-		{ $b=32; break; }
-	case 18:
-		$f.l=30;
-		$f.trap=0;
-		v3=__caught;
-		v4=v3;
-		$f.l=31;
-		v0=1;
-		$f.l=34;
-		{ $b=32; break; }
-	case 26:
-		$f.l=32;
-		$f.trap=0;
-		v5=__caught;
-		v6=v5;
-		$f.l=33;
-		v7=2;
-	case 32:
-		$f.l=35;
-		$f.trap=0;
-		return v1;
-}
-}catch(error){
-	if($f.trap==1){
-		if(true) {$b=18; continue;}
-		if(false) {$b=26; continue;}
-	}
-throw error;
-}
-}
-
-function _c2(vm){
-var v0,v1,v2,v3,v4,v5,v6,v7;
-var $f=vm.frames[vm.fp++];
-var $b=-1;
-while(1)try{//switch($b){
-	l_1: do {//case -1:
-		$f.l=24;
-		$f.trap=0;
-		v0=0;
-		$f.l=26;
-		$f.trap=1;
-		v1=0;
-		$f.l=27;
-		v2=0;
-		break;
-	}while(1);
-	l_9: do {//case 9:
-		if(v2>=100000) break;//{$b=15; break;}
-		$f.l=28;
-		v1=v1+v2;
+		$f.l=29;
+		v3=v1%10;
+		if(v3!=0) {$b=16; break;}
+		v1=v1+1;
+	case 16:
 		$f.l=27;
 		v2=v2+1;
 		{ $b=9; break; }
-	}while(1)
-	l_15: do { //case 15:
-		$f.l=34;
-		$f.trap=0;
-		{ $b=32; break; }
-	}while(1)
-	l_18: do{//case 18:
-		$f.l=30;
-		$f.trap=0;
-		v3=__caught;
-		v4=v3;
-		$f.l=31;
-		v0=1;
-		$f.l=34;
-		{ $b=32; break; }
-	}while(1)
-	l_26: do{//case 26:
-		$f.l=32;
-		$f.trap=0;
-		v5=__caught;
-		v6=v5;
-		$f.l=33;
-		v7=2;
-		break;
-	}while(1)
-	l_32: do{//case 32:
+	case 19:
 		$f.l=35;
 		$f.trap=0;
+		{ $b=36; break; }
+	case 22:
+		$f.l=31;
+		$f.trap=0;
+		v4=__caught;
+		v5=v4;
+		$f.l=32;
+		v0=1;
+		$f.l=35;
+		{ $b=36; break; }
+	case 30:
+		$f.l=33;
+		$f.trap=0;
+		v6=__caught;
+		v7=v6;
+		$f.l=34;
+		v8=2;
+	case 36:
+		$f.l=36;
+		$f.trap=0;
 		return v1;
-	}while(1)
-
-}catch(error){
-	if($f.trap==1){
-		if(true) {$b=18; continue;}
-		if(false) {$b=26; continue;}
+}
+}catch(error){if($f.trap==1){
+		if(false) {$b=22; continue;}
+		if(false) {$b=30; continue;}
 	}
 throw error;
 }
 }
+
+
 
 function bench() {
 var time1 = Date.now();

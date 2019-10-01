@@ -38,6 +38,7 @@ public class Binop extends Code {
         Cmp,
         Cmpl, 
         Cmpg;
+
     }
     
     public Code left, right;

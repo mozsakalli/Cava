@@ -14,6 +14,7 @@
     <orderEntry type="module" module-name="cava-compiler" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-exec:1.3" level="project" />
     <orderEntry type="module" module-name="cava-procyon" />
+    <orderEntry type="library" name="Maven: com.mobidevelop.robovm:robovm-soot:2.5.0-6" level="project" />
     <orderEntry type="module" module-name="cava-classlib" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0" level="project" />

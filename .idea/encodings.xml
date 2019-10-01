@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/bgfx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/classlib" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/debugger" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/graphics" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libgdx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libgdx-sample" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/maven" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/procyon" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rd" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sample" charset="UTF-8" />
+  </component>
+</project>

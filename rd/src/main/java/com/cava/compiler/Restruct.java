@@ -35,6 +35,7 @@ public class Restruct {
     static class Block {
         public int start;
         public int end;
+        public Block next;
         public HashSet<Block> incoming = new HashSet();
         public HashSet<Block> outgoing = new HashSet();
         public List<Code> codes = new ArrayList();

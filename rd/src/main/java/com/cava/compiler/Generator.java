@@ -32,8 +32,9 @@ public class Generator {
     SourceWriter out;
     Map<String, Integer> globals = new HashMap();
     Map<String, Integer> classIndex = new HashMap();
+    Map<String, Integer> strings = new HashMap();
     
-    public int getGlobal(String className, String fieldName) {
+    public int getGlobalIndex(String className, String fieldName) {
         String key = className+":"+fieldName;
         return globals.computeIfAbsent(key, (k) -> globals.size());
     }
@@ -42,7 +43,11 @@ public class Generator {
         return classIndex.computeIfAbsent(name, (n) -> classIndex.size());
     }
     
-    public void generate() {
+    public int getStringIndex(String str) {
+        return strings.computeIfAbsent(str, (s) -> strings.size());
+    }
+    
+    public void generate() throws Exception {
         classList = sortClasses();
         out = new SourceWriter();
         
@@ -53,7 +58,6 @@ public class Generator {
             }
         }
         
-        System.out.println(out);
     }
     
     public void generateMethod(Method m) {

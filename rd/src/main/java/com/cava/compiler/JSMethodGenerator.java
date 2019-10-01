@@ -68,7 +68,7 @@ public class JSMethodGenerator {
                 TrapInfo t = method.traps.get(i);
                 out.println("if($f.trap==%d){", i+1).indent();
                 for(TrapInfo.Info ti : t.handlers) {
-                    out.println("if(vm.exception is %s) {$b=%d; continue;}", ti.type, ti.target);
+                    out.println("if(vm.is(vm.exception,%d)) {$b=%d; continue;}", generator.getClassIndex(ti.type), ti.target);
                 }
                 out.undent().println("}");
                 //out.println("break;");
@@ -90,9 +90,10 @@ public class JSMethodGenerator {
             if_((If)c);
         else if(c instanceof Goto)
             goto_((Goto)c);
-        else if(c instanceof Call)
+        else if(c instanceof Call) {
             call((Call)c);
-        else if(c instanceof Var)
+            out.println(";");
+        } else if(c instanceof Var)
             var((Var)c);
         else if(c instanceof Arg)
             arg((Arg)c);
@@ -145,15 +146,18 @@ public class JSMethodGenerator {
     }
     
     public void arg(Arg a) {
-        out.print("arg%d", a.index);
+        out.print("a%d", a.index);
     }
     
     public void constant(Const c) {
+        if(c.type.equals("java/lang/String")) {
+            out.print("$str%d", generator.getStringIndex(c.value.toString()));
+        } else
         out.print(c.value);
     }
     
     public void classConst(ClassConst c) {
-        out.print("class_of(%s)", c.name);
+        out.print("vm.getClass(%d)", generator.getClassIndex(c.name));
     }
     
     public void neg(Neg n) {
@@ -163,7 +167,7 @@ public class JSMethodGenerator {
     
     public void field(Field f) {
         if(f.base == null) {
-            out.print("%s.%s",f.className,f.name);
+            out.print("$g%d",generator.getGlobalIndex(f.className,f.name));
         } else {
             code(f.base);
             out.print(".%s", f.name);
@@ -171,17 +175,33 @@ public class JSMethodGenerator {
     }
     
     public void isInstance(InstanceOf i) {
-        out.print("is(");
+        out.print("vm.is(");
         code(i.value);
-        out.print(",%s)", i.type);
+        out.print(",%d)", generator.getClassIndex(i.type));
     }
     
     public void throw_(Throw t) {
         out.print("throw ");
         code(t.exception);
+        out.println(";");
     }
     
     public void cast(Cast c) {
+        if(!DecompilerUtils.isPrimitive(c.toType)) {
+            out.print("vm.cast(");
+            code(c.code);
+            out.print(",%d)", generator.getClassIndex(c.toType));
+            return;
+        }
+        switch(c.toType) {
+            case "I": code(c.code);out.print("|0"); return;
+            case "D":
+            case "F": code(c.code);return;   
+            case "B": code(c.code);out.print("&0xff");return;
+            case "C":
+            case "S": code(c.code);out.print("&0xffff");return;
+            case "J": out.print("Math.floor(");code(c.code);out.print(")");return;
+        }
         out.print("(%s)", c.toType);
         code(c.code);
     }
@@ -211,17 +231,50 @@ public class JSMethodGenerator {
         code(a.array);
         out.print(".len");
     }
+    
+    String convert(Code c) {
+        SourceWriter saved = out;
+        out = new SourceWriter();
+        code(c);
+        String result = out.toString();
+        out = saved;
+        return result;
+    }
+    
     public void binary(Binop bin) {
+        if(bin.op == Binop.Op.Cmp) {
+            String l = convert(bin.left);
+            String r = convert(bin.right);
+            out.print("(" + l + " > " + r + ") - (" + l + " < " + r + ")");            
+            return;
+        }
+        if(bin.op == Binop.Op.Cmpl) {
+            String l = convert(bin.left);
+            String r = convert(bin.right);
+            out.print(String.format("(%s != %s || %s != %s) ? -1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r));            
+            return;
+        }
+        
+        if(!DecompilerUtils.isFloatingNumber(bin.type)) out.print("(");
         code(bin.left);
         String sign = null;
         switch(bin.op) {
             case Add: sign="+";break;
             case Rem: sign="%";break;
-            default: bin.op.toString();
+            case Div: sign="/";break;
+            case Sub: sign="-";break;
+            case Mul: sign="*";break;
+            case And: sign="&";break;
+            case Or : sign="|";break;
+            case Shl: sign="<<";break;
+            case UShr: sign=">>>";break;
+            case Shr: sign=">>";break;
+            case Xor: sign="^";break;
+            default: sign = bin.op.toString();
         }
         out.print(" %s ",sign);
-        out.print(bin.op);
         code(bin.right);
+        if(!DecompilerUtils.isFloatingNumber(bin.type)) out.print(")|0");
     }
     
     public void assign(Assign a) {
@@ -287,7 +340,40 @@ public class JSMethodGenerator {
     }
     
     public void call(Call call) {
-        generator.
-        out.println("call");
+        Clazz c = CompilerContext.resolve(call.className);
+        Method m = c.findMethod(call.methodName, call.signature);
+        if(m == null) throw new RuntimeException("Cant find method: "+call.className+"::"+call.methodName+"::"+call.signature);   
+        if(call.callType == Call.CallType.Virtual && m.virtualBaseClass != null) {
+            Clazz vc = CompilerContext.resolve(m.virtualBaseClass);
+            Method vm = vc.findMethod(m.name, m.signature);
+            //cType.dependency.add(m.virtualBaseClass);
+            code(call.args.get(0));
+            out.print(".$c.$vt[%d](", vm.virtualTableIndex);
+            //out.print("virtual_%s(",naming.method(m, m.virtualBaseClass));
+        } else
+        if(call.callType == Call.CallType.Interface) {
+            code(call.args.get(0));
+            if(m.interfaceImplementor != null) {
+                m = m.interfaceImplementor;
+                out.print("%s(",generator.nameFor(m));
+                //out.print("%s(",naming.method(m));
+                //cType.dependency.add(m.declaringClass);
+            } else {
+                code(call.args.get(0));
+                out.print(".$c.$it[%d](", m.interfaceTableIndex);
+                //out.print("interface_%s(",naming.method(m));
+                //cType.dependency.add(m.declaringClass);
+            }
+        } else {    
+            out.print("%s(",generator.nameFor(m));
+            //out.print(naming.method(m)).print("(");
+            //cType.dependency.add(m.declaringClass);
+        }
+        for(int i=0; i<call.args.size(); i++) {
+            if(i > 0) out.print(",");
+            code(call.args.get(i));
+        }
+        out.print(")");        
+        //out.println("call");
     }
 }

@@ -22,16 +22,20 @@ package com.cava.compiler.code;
  */
 public class Field extends Code {
 
+    final static long serialVersionUID = 0;
+    
     public Code base;
     public String className;
     public String name;
+    public String type;
     
     public Field(){}
     
-    public Field(Code base, String className, String name) {
+    public Field(Code base, String className, String name, String type) {
         this.base = base;
         this.className = className;
         this.name = name;
+        this.type = type;
     }
 
     @Override

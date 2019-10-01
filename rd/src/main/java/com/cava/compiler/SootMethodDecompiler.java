@@ -48,6 +48,7 @@ import soot.jimple.FloatConstant;
 import soot.jimple.GeExpr;
 import soot.jimple.GtExpr;
 import soot.jimple.InstanceFieldRef;
+import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InstanceOfExpr;
 import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
@@ -520,7 +521,8 @@ public class SootMethodDecompiler {
         
         return new Field(base,
         ref.getFieldRef().declaringClass().getName().replace('.', '/'),
-        ref.getFieldRef().name());
+        ref.getFieldRef().name(),
+        SootClassLoader.toJavaType(ref.getFieldRef().type()));
     }
     
     Code bin(BinopExpr expr) {
@@ -592,6 +594,7 @@ public class SootMethodDecompiler {
     
     Code invoke(InvokeExpr expr) {
         SootMethodRef ref = expr.getMethodRef();
+
         Call call = new Call();
         call.className = ref.declaringClass().getName().replace('.', '/');
         call.methodName = ref.name();
@@ -607,14 +610,17 @@ public class SootMethodDecompiler {
         else throw new RuntimeException("Unknown invoke type: "+expr.getClass());
 
         call.args = new ArrayList();
-        if(call.callType != Call.CallType.Static)
-            call.args.add(new Arg(0));
-        int i = 0;
+        if(call.callType != Call.CallType.Static) {
+            Code base = immediate((Immediate) ((InstanceInvokeExpr) expr).getBase());
+            call.args.add(base);
+        }
         for (soot.Value sootArg : (List<soot.Value>) expr.getArgs())  {
             Code arg = immediate((Immediate) sootArg);
             call.args.add(arg);
-            i++;
         }
+        
+        call.signature = SootClassLoader.buildJavaSignature(ref.parameterTypes(), ref.returnType());
+        
         return call;
     }
     

@@ -140,7 +140,9 @@ public class SootClassLoader {
     
     public static String buildJavaSignature(Method m) {
         String signature = "(";
-        for(Var arg : m.args) {
+        int start = m.isStatic() ? 0 : 1;
+        for(int i=start; i<m.args.size(); i++) {
+            Var arg = m.args.get(i);
             signature += toJavaSignature(arg.type);
         }
         signature += ")";

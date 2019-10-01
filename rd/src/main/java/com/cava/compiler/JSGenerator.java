@@ -17,6 +17,7 @@
 package com.cava.compiler;
 
 import com.cava.compiler.model.Method;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,16 @@ public class JSGenerator extends Generator {
     public String nameFor(Object o) {
         return "_"+Integer.toHexString(names.computeIfAbsent(o, (k) -> names.size()));
     }
+
+    @Override
+    public void generate() throws Exception {
+        super.generate(); 
+        Method main = CompilerContext.getMainMethod();
+        out.println("var vm={fp:0,frames:[{trap:0},{trap:0}]};")
+           .println("%s(vm);", nameFor(main));
+        new FileOutputStream("index.js").write(out.toString().getBytes());
+    }
+    
     
     @Override
     public void generateMethod(Method m) {

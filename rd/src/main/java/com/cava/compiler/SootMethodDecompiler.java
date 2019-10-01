@@ -62,6 +62,7 @@ import soot.jimple.NeExpr;
 import soot.jimple.NegExpr;
 import soot.jimple.NewArrayExpr;
 import soot.jimple.NewExpr;
+import soot.jimple.NewMultiArrayExpr;
 import soot.jimple.NullConstant;
 import soot.jimple.OrExpr;
 import soot.jimple.ParameterRef;
@@ -460,7 +461,7 @@ public class SootMethodDecompiler {
         if(rightOp instanceof NewArrayExpr) {
             NewArrayExpr expr = (NewArrayExpr) rightOp;
             Code size = immediate((Immediate) expr.getSize());  
-            right = new AllocArray(size, SootClassLoader.toJavaType(expr.getBaseType()));
+            right = new AllocArray(size, SootClassLoader.toJavaType(expr.getType()));
         } else if(rightOp instanceof ArrayRef) {
             ArrayRef ref = (ArrayRef) rightOp;
             Code base = immediate((Immediate) ref.getBase());
@@ -491,6 +492,13 @@ public class SootMethodDecompiler {
             right = new InstanceOf(immediate((Immediate)ie.getOp()), SootClassLoader.toJavaType(ie.getCheckType()));
         } else if(rightOp instanceof NegExpr) {
             right = new Neg(immediate((Immediate)((NegExpr)rightOp).getOp()));
+        } else if(rightOp instanceof NewMultiArrayExpr) {
+            NewMultiArrayExpr expr = (NewMultiArrayExpr)rightOp;
+            right = new AllocArray(SootClassLoader.toJavaType(expr.getType()));
+            for (int i = 0; i < expr.getSizeCount(); i++) {
+                Code size = immediate((Immediate) expr.getSize(i));
+                ((AllocArray)right).sizes.add(size);
+            }
         }
         
         else

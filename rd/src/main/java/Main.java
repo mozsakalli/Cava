@@ -83,9 +83,10 @@ public class Main {
         CompilerContext.classPath = new File[]{
             new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/target/classes"),
+            new File("/Users/mustafa/Work/CAVA/rd/jbox2d.jar"),
         };
         
-        CavaOptions.mainClass("Test");
+        CavaOptions.mainClass("JBox");
         CavaOptions.buildDir(new File("./build"));
         CavaOptions.targetPlatform(Platform.iOS.toString());
         CompilerContext.transpile();

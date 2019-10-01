@@ -17,9 +17,12 @@
 package com.cava.compiler;
 
 //import compiler.backend.c.A;
+import com.cava.compiler.code.Call;
+import com.cava.compiler.code.Field;
 import com.cava.compiler.model.Clazz;
 import com.cava.compiler.model.Method;
 import com.cava.compiler.code.Visitor;
+import com.cava.compiler.model.NameAndType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -279,7 +282,7 @@ public class DependencyAnalyzer {
         }
         
         m.visit(new Visitor() {
-            /*
+            
             @Override
             public void call(Call c) {
                 Clazz tc = CompilerContext.resolve(c.className);
@@ -305,7 +308,7 @@ public class DependencyAnalyzer {
             @Override
             public void visitClassReference(String className) {
                 dependsClass(className);
-            }*/
+            }
         });
         
     }

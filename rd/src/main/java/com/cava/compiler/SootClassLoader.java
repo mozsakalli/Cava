@@ -80,7 +80,10 @@ public class SootClassLoader {
         //interface extended from another interface
         if(c.isInterface && !c.interfaces.isEmpty()) {
             c.superName = c.interfaces.remove(0);
-        }        
+        }    
+        
+        if(c.isInterface && c.superName == null) c.superName = "java/lang/Object";
+        
         for(SootField f : sc.getFields()) {
             NameAndType fd = new NameAndType(f.getName(),  toJavaType(f.getType()), false);
             fd.declaringClass = name;
@@ -161,12 +164,12 @@ public class SootClassLoader {
         if(type.getClass() == FloatType.class) return "F";
         if(type.getClass() == DoubleType.class) return "D";
         
-        if(type instanceof RefType) {
-            return ((RefType)type).getClassName().replace('.', '/');
-        }
         if(type instanceof ArrayType) {
             ArrayType a = (ArrayType)type;
             return "["+toJavaType(a.getArrayElementType());
+        }
+        if(type instanceof RefType) {
+            return ((RefType)type).getClassName().replace('.', '/');
         }
         
         if(type instanceof NullType)

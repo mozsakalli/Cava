@@ -215,9 +215,18 @@ public class JSMethodGenerator {
     }
     
     public void allocArray(AllocArray a) {
-        out.println("newArray(%s,", a.type);
-        code(a.size);
-        out.print(")");
+        if(a.sizes.size() == 1) {
+            out.print("newArray(%d,", generator.getClassIndex(a.type));
+            code(a.sizes.get(0));
+            out.print(")");
+        } else {
+            out.print("newMultiArray(%d",generator.getClassIndex(a.type));
+            for(Code s : a.sizes) {
+                out.print(",");
+                code(s);
+            }
+            out.print(")");
+        }
     }
     
     public void array(Array a) {
@@ -252,6 +261,12 @@ public class JSMethodGenerator {
             String l = convert(bin.left);
             String r = convert(bin.right);
             out.print(String.format("(%s != %s || %s != %s) ? -1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r));            
+            return;
+        }
+        if(bin.op == Binop.Op.Cmpg) {
+            String l = convert(bin.left);
+            String r = convert(bin.right);
+            out.print(String.format("(%s != %s || %s != %s) ? 1 : (%s > %s) - (%s < %s)", l, l, r, r, l, r, l, r));            
             return;
         }
         
@@ -352,7 +367,6 @@ public class JSMethodGenerator {
             //out.print("virtual_%s(",naming.method(m, m.virtualBaseClass));
         } else
         if(call.callType == Call.CallType.Interface) {
-            code(call.args.get(0));
             if(m.interfaceImplementor != null) {
                 m = m.interfaceImplementor;
                 out.print("%s(",generator.nameFor(m));

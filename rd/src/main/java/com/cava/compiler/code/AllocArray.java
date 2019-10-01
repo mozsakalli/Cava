@@ -16,6 +16,9 @@
 
 package com.cava.compiler.code;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author mustafa
@@ -23,25 +26,29 @@ package com.cava.compiler.code;
 public class AllocArray extends Code {
     final static long serialVersionUID = 0;
     
-    public Code size;
+    public List<Code> sizes = new ArrayList();
     public String type;
     
+    public AllocArray(String type) {
+        this.type = type;
+    }
+    
     public AllocArray(Code size, String type) {
-        this.size = size;
+        sizes.add(size);
         this.type = type;
     }
 
     @Override
     public void visit(Visitor visitor) {
         visitor.newArray(this);
-        size.visit(visitor);
+        sizes.forEach(size -> size.visit(visitor));
         visitor.visitClassReference(type);
     }
 
     
     @Override
     public String toString() {
-        return "newArray("+type+","+size+")";
+        return "newArray("+type+","+sizes+")";
     }
     
     

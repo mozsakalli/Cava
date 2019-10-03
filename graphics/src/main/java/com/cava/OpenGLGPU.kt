@@ -22,13 +22,9 @@ class GLGPU(gl:GL) : GPU() {
         gl.clear(flags)
     }
 
-    override fun indexBuffer(capacity: Int): IndexBuffer = GLIndexBuffer(capacity, gl)
-    override fun vertexBuffer(capacity: Int): VertexBuffer = GLVertexBuffer(capacity, gl)
-
-    override fun viewport(x: Int, y: Int, width: Int, height: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+    override fun createIndexBuffer(capacity: Int): IndexBuffer = GLIndexBuffer(capacity, gl)
+    override fun createVertexBuffer(capacity: Int): VertexBuffer = GLVertexBuffer(capacity, gl)
+    override fun createProgram(code: Any): GPUProgram = GLProgram(gl, code as Array<String>)
 
     override fun drawTriangles(vertices: VertexBuffer, indices: IndexBuffer, start: Int, count: Int) {
         var vert = vertices as GLVertexBuffer
@@ -91,4 +87,8 @@ class GLVertexBuffer(capacity: Int, gl:GL) : VertexBuffer(capacity) {
             handle = gl.createBuffer()
         }
     }
+}
+
+class GLProgram(gl:GL, code:Array<String>) : GPUProgram() {
+    val gl = gl
 }

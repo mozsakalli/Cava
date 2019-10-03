@@ -17,7 +17,6 @@
 package java.lang.reflect;
 
 import cava.annotation.Keep;
-import cava.c.CharPtr;
 import cava.c.VoidPtr;
 import cava.platform.NativeCode;
 

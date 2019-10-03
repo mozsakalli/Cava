@@ -9,7 +9,7 @@ enum class VertexLayoutDataType(val size:Int, val normalized:Boolean) {
 }
 class VertexLayoutAttribute(val name:String, val type:VertexLayoutDataType) {
     var offset:Int = 0
-    var gpuOffset:Int = 0
+    lateinit var gpuOffset:Any
 }
 
 class VertexLayout {
@@ -23,6 +23,31 @@ class VertexLayout {
             size += attr.type.size
         }
     }
+}
+
+abstract class VertexBuffer(capacity:Int, static:Boolean = false) {
+
+    var buffer = FloatArray(capacity)
+    var dirty = false
+    var size = 0
+    var static = static
+
+    abstract fun dispose()
+}
+
+abstract class IndexBuffer(capacity: Int, static:Boolean = false) {
+
+    var buffer = IntArray(capacity)
+    var dirty = false
+    var size = 0
+    var static = static
+
+    abstract fun dispose()
+
+}
+
+abstract class GPUProgram {
+
 }
 
 abstract class GPU {
@@ -60,9 +85,10 @@ abstract class GPU {
         }
     }
 
-    abstract fun createProgram(code:Any):Int
+    abstract fun createProgram(code:Any):GPUProgram
     abstract fun createIndexBuffer(capacity:Int):IndexBuffer
     abstract fun createVertexBuffer(capacity:Int):VertexBuffer
+    abstract fun registerVertexLayout(layout:VertexLayout)
 
     abstract fun commit(flags:Int = 0xffffff)
 
@@ -71,23 +97,3 @@ abstract class GPU {
 }
 
 
-abstract class VertexBuffer(capacity:Int, static:Boolean = false) {
-
-    var buffer = FloatArray(capacity)
-    var dirty = false
-    var size = 0
-    var static = static
-
-    abstract fun dispose()
-}
-
-abstract class IndexBuffer(capacity: Int, static:Boolean = false) {
-
-    var buffer = IntArray(capacity)
-    var dirty = false
-    var size = 0
-    var static = static
-
-    abstract fun dispose()
-
-}

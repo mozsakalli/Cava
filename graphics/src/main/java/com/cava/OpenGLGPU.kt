@@ -1,6 +1,7 @@
 package com.cava
 
 class GLGPU(gl:GL) : GPU() {
+
     var gl = gl;
 
     override fun clear(r: Float, g: Float, b: Float, a: Float, depth: Float, stencil: Int, colorFlag: Boolean, depthFlag: Boolean, stencilFlag: Boolean) {
@@ -22,9 +23,19 @@ class GLGPU(gl:GL) : GPU() {
         gl.clear(flags)
     }
 
+
     override fun createIndexBuffer(capacity: Int): IndexBuffer = GLIndexBuffer(capacity, gl)
     override fun createVertexBuffer(capacity: Int): VertexBuffer = GLVertexBuffer(capacity, gl)
     override fun createProgram(code: Any): GPUProgram = GLProgram(gl, code as Array<String>)
+
+    override fun registerVertexLayout(layout: VertexLayout) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun commit(flags: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     override fun drawTriangles(vertices: VertexBuffer, indices: IndexBuffer, start: Int, count: Int) {
         var vert = vertices as GLVertexBuffer

@@ -37,7 +37,7 @@ abstract class VertexBuffer(capacity:Int, static:Boolean = false) {
 
 abstract class IndexBuffer(capacity: Int, static:Boolean = false) {
 
-    var buffer = IntArray(capacity)
+    var buffer = ShortArray(capacity)
     var dirty = false
     var size = 0
     var static = static

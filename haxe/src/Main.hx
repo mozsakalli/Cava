@@ -1,23 +1,19 @@
 package;
 
-import apple.uikit.UIApplicationDelegate;
-import digiplay.platform.ios.UIView;
 
-@:objc
-class MyView extends UIView {
-    override function layoutSubviews() {
-        trace("Layout");
-    }
-}
+import digiplay.Game;
 
-class Main extends UIApplicationDelegate {
-
-    public static function main() {
-        var main = new Main();
-        main.run();
-    }
+class Main extends digiplay.Game {
 
     override function didFinishLaunchingWithOptions() {
-        trace("App started in haxe!!");
+        trace("Launched!!!!");
+    }
+
+    override function update() {
+        trace('Update! ${Game.deltaTime} / ${Game.time} / ${Sys.time()}');
+    }
+
+    public static function main() {
+        new Main();
     }
 }

@@ -1,11 +1,10 @@
-//
-//  main.m
-//  test
-//
-//  Created by Mustafa Özsakallı on 7.10.2019.
-//  Copyright © 2019 Mustafa Özsakallı. All rights reserved.
-//
-/*
+#if ios
+package digiplay.platform.ios;
+
+import digiplay.Game;
+
+@:cppFileCode('
+#include <digiplay/Game.h>
 #import <UIKit/UIKit.h>
 #import <Metal/Metal.h>
 #import <OpenGLES/ES2/gl.h>
@@ -18,6 +17,7 @@ static float ScreenScaleFactor = 1;
 static CGSize ScreenSize;
 static CGPoint SafeScreenTopLeft;
 static CGPoint SafeScreenBottomRight;
+static BOOL GameInitialized = NO;
 
 @interface DigiplayView : UIView
 @end
@@ -89,10 +89,16 @@ static CGPoint SafeScreenBottomRight;
         [displayLink setFrameInterval:1];
         [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
     }
+
+    if(!GameInitialized) {
+        ::digiplay::Game_obj::singleton->initialize();
+        GameInitialized = YES;
+    }
 }
 
 -(void) updateTimerFired {
-    NSLog(@"Update");
+    ::digiplay::Game_obj::singleton->step();
+    [self present];
 }
 
 -(void) present {
@@ -213,11 +219,13 @@ static CGPoint SafeScreenBottomRight;
 @implementation DigiplayAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    __hxcpp_lib_main();
+    ::digiplay::Game_obj::singleton->didFinishLaunchingWithOptions();
+
     UIWindow* window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[DigiplayViewController alloc] init];
-    
-    
     [window makeKeyAndVisible];
+
     return YES;
 }
 
@@ -228,4 +236,8 @@ int main(int argc, char * argv[]) {
         UIApplicationMain(argc, argv, nil, @"DigiplayAppDelegate");
     }
 }
-*/
+')
+class IosGame {
+}
+
+#end

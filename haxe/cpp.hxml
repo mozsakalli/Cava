@@ -1,0 +1,9 @@
+--class-path src
+--main Main
+--cpp bin/objc64
+-D iphone
+-D ios
+-D HXCPP_COMPILE_THREADS=8
+#-D no-compilation 
+-D objc
+-D HXCPP_ARM64

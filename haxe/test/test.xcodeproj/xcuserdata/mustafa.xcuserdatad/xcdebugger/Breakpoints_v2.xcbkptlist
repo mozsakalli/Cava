@@ -12,11 +12,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "test/main.mm"
+            timestampString = "592157475.585881"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "-initOpenGL"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-didMoveToWindow"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -28,10 +29,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "test/main.mm"
+            timestampString = "592157475.588587"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "-createOpenGLBuffers"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "test/main.mm"
+            timestampString = "592157475.588938"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "-createOpenGLBuffers"
             landmarkType = "7">
          </BreakpointContent>

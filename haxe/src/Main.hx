@@ -1,6 +1,14 @@
 package;
 
 import apple.uikit.UIApplicationDelegate;
+import digiplay.platform.ios.UIView;
+
+@:objc
+class MyView extends UIView {
+    override function layoutSubviews() {
+        trace("Layout");
+    }
+}
 
 class Main extends UIApplicationDelegate {
 

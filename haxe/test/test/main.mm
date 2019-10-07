@@ -14,6 +14,10 @@
 extern "C" void __hxcpp_lib_main();
 
 static BOOL HasMetalSupport = NO;
+static float ScreenScaleFactor = 1;
+static CGSize ScreenSize;
+static CGPoint SafeScreenTopLeft;
+static CGPoint SafeScreenBottomRight;
 
 @interface DigiplayView : UIView
 @end
@@ -23,8 +27,6 @@ static BOOL HasMetalSupport = NO;
     EAGLContext* eaglContext;
     int framebuffer, colorbuffer, depthbuffer;
     
-    @public float scaleFactor;
-    int screenWidth, screenHeight;
     
     CADisplayLink* displayLink;
 }
@@ -47,9 +49,9 @@ static BOOL HasMetalSupport = NO;
     if (self) {
         framebuffer = -1;
         if([self respondsToSelector:NSSelectorFromString(@"")])
-            scaleFactor = self.contentScaleFactor;
+            ScreenScaleFactor = self.contentScaleFactor;
         else
-            scaleFactor = 1;
+            ScreenScaleFactor = 1;
         
         if(!HasMetalSupport)
             [self initOpenGL];
@@ -65,10 +67,39 @@ static BOOL HasMetalSupport = NO;
         if(framebuffer == -1)
             [self createOpenGLBuffers];
     }
+    
+    if([self respondsToSelector:NSSelectorFromString(@"safeAreaInsets")]) {
+        UIEdgeInsets i = self.safeAreaInsets;
+        SafeScreenTopLeft = CGPointMake(i.left, i.top);
+        SafeScreenBottomRight = CGPointMake(i.right, i.bottom);
+    } else {
+        SafeScreenTopLeft = CGPointMake(0,0);
+        SafeScreenBottomRight = CGPointMake(0,0);
+    }
 }
+
 - (void)didMoveToWindow {
     if(self.window && !HasMetalSupport && framebuffer == -1)
         [self createOpenGLBuffers];
+}
+
+-(void) startAnimation {
+    if(!displayLink) {
+        displayLink=[NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(updateTimerFired)];
+        [displayLink setFrameInterval:1];
+        [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    }
+}
+
+-(void) updateTimerFired {
+    NSLog(@"Update");
+}
+
+-(void) present {
+    if([EAGLContext currentContext] != eaglContext)
+        [EAGLContext setCurrentContext:eaglContext];
+    glBindRenderbuffer(GL_RENDERBUFFER, colorbuffer);
+    [eaglContext presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 -(void) initOpenGL {
@@ -87,8 +118,9 @@ static BOOL HasMetalSupport = NO;
     if([EAGLContext currentContext] != eaglContext)
         [EAGLContext setCurrentContext:eaglContext];
 
-    screenWidth = (int)(self.layer.bounds.size.width * scaleFactor);
-    screenHeight = (int)(self.layer.bounds.size.height * scaleFactor);
+    ScreenSize.width = (int)(self.layer.bounds.size.width * ScreenScaleFactor);
+    ScreenSize.height = (int)(self.layer.bounds.size.height * ScreenScaleFactor);
+    
     
     glGenFramebuffers(1, (GLuint*)&framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -98,7 +130,7 @@ static BOOL HasMetalSupport = NO;
     glBindRenderbuffer(GL_RENDERBUFFER, depthbuffer);
     
     int internalFormat = GL_DEPTH24_STENCIL8_OES;
-    glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, screenWidth, screenHeight);
+    glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, ScreenSize.width, ScreenSize.height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthbuffer);
     if (internalFormat == GL_DEPTH24_STENCIL8_OES)
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthbuffer);
@@ -120,11 +152,38 @@ static BOOL HasMetalSupport = NO;
 }
 
 -(void) initMetal {
+#ifndef TARGET_OS_SIMULATOR
     //todo
     CAMetalLayer* layer = (CAMetalLayer*)self.layer;
+#endif
+}
+
+@end
+
+///////////////////////////
+//DigiplayWindow
+//////////////////////////
+@interface DigiplayWindow : UIWindow
+@end
+
+@implementation DigiplayWindow
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
 }
 @end
 
+///////////////////////////
+//DigiplayViewController
+//////////////////////////
 @interface DigiplayViewController : UIViewController
 @end
 
@@ -134,13 +193,18 @@ static BOOL HasMetalSupport = NO;
     self.view = [[DigiplayView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.view.clearsContextBeforeDrawing = false;
 }
+
+- (void)viewDidLoad {
+    [(DigiplayView*)self.view startAnimation];
+    if([self respondsToSelector:NSSelectorFromString(@"setNeedsUpdateOfHomeIndicatorAutoHidden")])
+        [self setNeedsUpdateOfHomeIndicatorAutoHidden];
+}
 @end
 
-@interface N : NSObject<UIApplicationDelegate>
-
+@interface DigiplayAppDelegate : NSObject<UIApplicationDelegate>
 @end
 
-@implementation N
+@implementation DigiplayAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     UIWindow* window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -155,6 +219,6 @@ static BOOL HasMetalSupport = NO;
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
-        UIApplicationMain(argc, argv, nil, @"N");
+        UIApplicationMain(argc, argv, nil, @"DigiplayAppDelegate");
     }
 }

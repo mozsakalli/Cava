@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		454D4284234B910D000B6CE8 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 454D4283234B910D000B6CE8 /* MetalKit.framework */; };
 		456E9806234B5A8F00B13C75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 456E9805234B5A8F00B13C75 /* Assets.xcassets */; };
 		456E980C234B5A8F00B13C75 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 456E980B234B5A8F00B13C75 /* main.mm */; };
 		456E9814234B5B8200B13C75 /* libMain.iphonesim-64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 456E9813234B5B8200B13C75 /* libMain.iphonesim-64.a */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		454D4283234B910D000B6CE8 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		456E97F6234B5A8E00B13C75 /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		456E9805234B5A8F00B13C75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		456E980A234B5A8F00B13C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				454D4284234B910D000B6CE8 /* MetalKit.framework in Frameworks */,
 				456E981E234B6FA800B13C75 /* CoreGraphics.framework in Frameworks */,
 				456E9814234B5B8200B13C75 /* libMain.iphonesim-64.a in Frameworks */,
 				456E9820234B6FC400B13C75 /* QuartzCore.framework in Frameworks */,
@@ -80,6 +83,7 @@
 		456E9812234B5B8200B13C75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				454D4283234B910D000B6CE8 /* MetalKit.framework */,
 				456E981F234B6FC400B13C75 /* QuartzCore.framework */,
 				456E981D234B6FA800B13C75 /* CoreGraphics.framework */,
 				456E981B234B6F7900B13C75 /* GLKit.framework */,

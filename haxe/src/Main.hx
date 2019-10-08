@@ -6,7 +6,6 @@ import digiplay.Game;
 class Main extends digiplay.Game {
 
     override function didFinishLaunchingWithOptions() {
-        var node:digiplay.Node = new digiplay.Node();
         trace("Launched!!!!");
     }
 

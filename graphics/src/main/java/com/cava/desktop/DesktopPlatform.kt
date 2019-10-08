@@ -35,7 +35,7 @@ import org.lwjgl.opengl.GL20.*;
   @author mustafa
   Created on Oct 1, 2019
 */
-open class DesktopPlatform(game:Game) : Platform(GLGPU(DesktopGL())) {
+open class DesktopPlatform(game:Game) : Platform() {
 
     var window:Long = 0;
     var game:Game = game;

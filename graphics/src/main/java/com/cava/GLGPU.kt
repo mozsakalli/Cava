@@ -1,6 +1,6 @@
 package com.cava
 
-class GLGPU(gl:GL) : GPU() {
+class GLGPU(gl:IGL) : GPU() {
 
     var gl = gl;
 
@@ -8,17 +8,17 @@ class GLGPU(gl:GL) : GPU() {
         gl.colorMask(true, true, true, true)
         gl.clearColor(r, g,b,a)
         if(depthFlag) {
-            gl.enable(GL.DEPTH_TEST)
-            gl.depthMask(GL.TRUE)
+            gl.enable(IGL.DEPTH_TEST)
+            gl.depthMask(true)
             gl.clearDepth(depth)
         }
 
         gl.stencilMask(0xff)
         gl.clearStencil(stencil)
         var flags:Int = 0
-        if(colorFlag) flags = flags or GL.COLOR_BUFFER_BIT
-        if(depthFlag) flags = flags or GL.DEPTH_BUFFER_BIT
-        if(stencilFlag) flags = flags or GL.STENCIL_BUFFER_BIT
+        if(colorFlag) flags = flags or IGL.COLOR_BUFFER_BIT
+        if(depthFlag) flags = flags or IGL.DEPTH_BUFFER_BIT
+        if(stencilFlag) flags = flags or IGL.STENCIL_BUFFER_BIT
 
         gl.clear(flags)
     }
@@ -28,9 +28,6 @@ class GLGPU(gl:GL) : GPU() {
     override fun createVertexBuffer(capacity: Int): VertexBuffer = GLVertexBuffer(capacity, gl)
     override fun createProgram(code: Any): GPUProgram = GLProgram(gl, code as Array<String>)
 
-    override fun registerVertexLayout(layout: VertexLayout) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun commit(flags: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -58,7 +55,7 @@ class GLGPU(gl:GL) : GPU() {
 
 }
 
-class GLIndexBuffer(capacity:Int, gl:GL) : IndexBuffer(capacity) {
+class GLIndexBuffer(capacity:Int, gl:IGL) : IndexBuffer(capacity) {
 
     var gl = gl
     var handle:Int = -1
@@ -81,7 +78,7 @@ class GLIndexBuffer(capacity:Int, gl:GL) : IndexBuffer(capacity) {
     }
 }
 
-class GLVertexBuffer(capacity: Int, gl:GL) : VertexBuffer(capacity) {
+class GLVertexBuffer(capacity: Int, gl:IGL) : VertexBuffer(capacity) {
     var gl = gl;
 
     var handle:Int = -1
@@ -100,6 +97,53 @@ class GLVertexBuffer(capacity: Int, gl:GL) : VertexBuffer(capacity) {
     }
 }
 
-class GLProgram(gl:GL, code:Array<String>) : GPUProgram() {
-    val gl = gl
+class GLProgram : GPUProgram {
+
+    val gl:IGL
+    var handle:Int = -1
+
+    constructor(gl:IGL, code:Array<String>)  {
+        this.gl = gl
+        var vert = compileShader(IGL.VERTEX_SHADER, code[0])
+        var frag = compileShader(IGL.FRAGMENT_SHADER,
+                """
+                #ifdef GL_ES
+                precision mediump float;
+                #endif
+                ${code[1]}
+                """)
+        handle = gl.createProgram()
+        gl.attachShader(handle, vert)
+        gl.attachShader(handle, frag)
+
+        gl.linkProgram(handle)
+
+        val comp = gl.getProgrami(handle, IGL.LINK_STATUS)
+        if (comp == IGL.FALSE) {
+            throw RuntimeException("Cant compile shaders")
+        }
+    }
+
+    private fun compileShader(type: Int, source: String): Int {
+        val shader = gl.createShader(type)
+        if (shader == 0) {
+            throw RuntimeException(
+                    "could not create shader object; check ShaderProgram.isSupported()")
+        }
+        gl.shaderSource(shader, source)
+        gl.compileShader(shader)
+
+        val comp = gl.getShaderi(shader, IGL.COMPILE_STATUS)
+        if (comp == IGL.FALSE) {
+            throw RuntimeException("Could not compile $source")
+        }
+        return shader
+    }
+
+    override fun setupVertexLayout(layout: VertexLayout) {
+        layout.attributes.forEach {
+            it.gpuOffset = gl.getAttribLocation(handle, it.name)
+        }
+    }
+
 }

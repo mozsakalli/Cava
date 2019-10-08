@@ -5,6 +5,7 @@
  */
 package com.cava.desktop
 
+import com.cava.GLGPU
 import com.cava.Game
 import com.cava.GPU
 import com.cava.Platform
@@ -34,7 +35,7 @@ import org.lwjgl.opengl.GL20.*;
   @author mustafa
   Created on Oct 1, 2019
 */
-open class DesktopPlatform(game:Game) : Platform(DesktopGPU()) {
+open class DesktopPlatform(game:Game) : Platform(GLGPU(DesktopGL())) {
 
     var window:Long = 0;
     var game:Game = game;
@@ -107,8 +108,5 @@ open class DesktopPlatform(game:Game) : Platform(DesktopGPU()) {
         }
     }
 
-    fun run(game:Game) {
-
-    }
 }
 

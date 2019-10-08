@@ -1,6 +1,6 @@
 package com.cava
 
-interface GL {
+interface IGL {
 
     companion object {
         const val ES_VERSION_2_0 = 1
@@ -321,11 +321,21 @@ interface GL {
     fun colorMask(red:Boolean, green:Boolean, blue:Boolean, alpha:Boolean)
     fun enable(flags:Int)
     fun disable(flags:Int)
-    fun depthMask(flags:Int)
+    fun depthMask(flag:Boolean)
     fun clearDepth(depth:Float)
     fun stencilMask(mask:Int)
     fun clearStencil(stencil:Int)
     fun createBuffer():Int
     fun deleteBuffer(buffer:Int)
+    fun createShader(type:Int):Int
+    fun deleteShader(type:Int)
+    fun shaderSource(shader:Int, source:String)
+    fun compileShader(shader:Int)
+    fun getShaderi(shader:Int, paramName:Int):Int
+    fun createProgram():Int
+    fun attachShader(program:Int, shader:Int)
+    fun linkProgram(program:Int)
+    fun getProgrami(program:Int, paramName:Int):Int
+    fun getAttribLocation(program:Int, name:String):Int
 
 }

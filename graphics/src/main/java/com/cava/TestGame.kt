@@ -10,6 +10,7 @@ class TestGame : Game {
     }
 
     override fun render() {
+        Platform.current.gpu.clear(1f,0f,0f,1f)
     }
 
     override fun resize(width: Float, height: Float) {

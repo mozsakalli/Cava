@@ -48,6 +48,8 @@ abstract class IndexBuffer(capacity: Int, static:Boolean = false) {
 
 abstract class GPUProgram {
 
+    abstract fun setupVertexLayout(layout: VertexLayout)
+
 }
 
 abstract class GPU {
@@ -88,7 +90,6 @@ abstract class GPU {
     abstract fun createProgram(code:Any):GPUProgram
     abstract fun createIndexBuffer(capacity:Int):IndexBuffer
     abstract fun createVertexBuffer(capacity:Int):VertexBuffer
-    abstract fun registerVertexLayout(layout:VertexLayout)
 
     abstract fun commit(flags:Int = 0xffffff)
 

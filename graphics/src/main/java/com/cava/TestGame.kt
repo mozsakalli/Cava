@@ -1,6 +1,7 @@
 package com.cava
 
 import com.cava.desktop.DesktopPlatform
+import com.cava.ios.IosPlatform
 
 class TestGame : Game {
     override fun init() {
@@ -19,5 +20,5 @@ class TestGame : Game {
 }
 
 fun main(args: Array<String>) {
-    DesktopPlatform(TestGame()).run()
+    IosPlatform(TestGame())
 }

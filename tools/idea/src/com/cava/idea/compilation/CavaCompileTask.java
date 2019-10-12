@@ -85,7 +85,7 @@ public class CavaCompileTask implements CompileTask {
             CavaOptions.simulator(runConfig.isSimulator());
             CavaOptions.simulatorId(runConfig.getSimulatorId());
             CavaOptions.debug(runConfig.isDebug);
-            CavaOptions.debugHost("192.168.1.51");
+            CavaOptions.debugHost("192.168.1.62");
 
             CavaPlugin.logInfo(module.getProject(), "Compiling %s", runConfig.isDebug ? "DEBUG" : "RELEASE");
             /*

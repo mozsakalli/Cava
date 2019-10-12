@@ -3,8 +3,11 @@ package com.cava
 abstract class Platform {
 
     lateinit var gpu:GPU
-        private set
+        internal set
 
+    constructor() {
+        Platform.current = this;
+    }
     /*
     constructor(gpu:GPU) {
         this.gpu = gpu

@@ -41,6 +41,7 @@ open class DesktopPlatform(game:Game) : Platform() {
     var game:Game = game;
 
     fun run() {
+        gpu = GLGPU(DesktopGL())
         init()
         loop()
     }

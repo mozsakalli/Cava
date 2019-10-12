@@ -6,8 +6,10 @@ import cava.apple.coreanimation.CAEAGLLayer
 import cava.apple.foundation.NSDictionary
 import cava.apple.foundation.NSObject
 import cava.apple.uikit.*
+import com.cava.GLGPU
 import com.cava.Game
 import com.cava.Platform
+import com.cava.desktop.DesktopGL
 
 
 @Keep
@@ -46,6 +48,7 @@ class IosPlatform : Platform {
 
     constructor(game:Game) {
         this.game = game;
+        gpu = GLGPU(IosGL())
         var bounds = UIScreen.getMainScreen().bounds;
         window = UIWindow().initWithFrame(bounds)
         controller = GameViewController()

@@ -48,6 +48,15 @@ public class Generator {
     }
     
     public void generate() throws Exception {
+        String[] prims = {"B","Z","C","S","I","F","J","D","V"};
+        for(String name : prims) {
+            if(!CompilerContext.classes.containsKey(name)) {
+                Clazz cls = new Clazz();
+                cls.name = name;
+                cls.superName = "java/lang/Object";
+                CompilerContext.classes.put(name, cls);
+            }
+        }
         classList = sortClasses();
         out = new SourceWriter();
         

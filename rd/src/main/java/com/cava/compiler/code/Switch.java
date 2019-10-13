@@ -30,7 +30,8 @@ public class Switch extends Code {
     public Code key;
     public List<Integer> values = new ArrayList();
     public List<Integer> labels = new ArrayList();
-
+    public int defaultLabel = -1;
+    
     @Override
     public void visit(Visitor visitor) {
         key.visit(visitor);

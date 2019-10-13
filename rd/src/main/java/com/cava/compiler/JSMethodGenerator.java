@@ -37,15 +37,16 @@ public class JSMethodGenerator {
     
     public void generate() {
         Restruct rt = new Restruct(method);
-        out.println("var $f=vm.frames[vm.fp++];");
-        if(method.hasGoto) {
+        boolean hasGoto = method.hasGoto || !method.traps.isEmpty();
+        out.println("var $f={};//vm.frames[vm.fp++];");
+        if(hasGoto) {
             out.println("var $b=-1;");
             out.print("while(1)");
         }
         if(!method.traps.isEmpty()) {
             out.print("try{");
         }
-        if(method.hasGoto) {
+        if(hasGoto) {
             //out.println("var $b=-1;");
             out.println("switch($b){").indent();
             out.println("case -1:").indent();
@@ -58,7 +59,7 @@ public class JSMethodGenerator {
             code(c);
             index++;
         }
-        if(method.hasGoto) {
+        if(hasGoto) {
             out.undent().undent().println("}");
         }
         if(!method.traps.isEmpty()) {
@@ -157,7 +158,7 @@ public class JSMethodGenerator {
     }
     
     public void classConst(ClassConst c) {
-        out.print("vm.getClass(%d)", generator.getClassIndex(c.name));
+        out.print("cls%d", generator.getClassIndex(c.name));
     }
     
     public void neg(Neg n) {
@@ -207,7 +208,11 @@ public class JSMethodGenerator {
     }
     
     public void alloc(Alloc a) {
-        out.print("new %s", a.className);
+        /*
+        Clazz cls = CompilerContext.resolve("cava/VM");
+        Method m = cls.findDeclaredMethod("allocObject", "(Ljava/lang/Class;)Ljava/lanf/Object;");
+        out.print("%s(cls%d)", generator.nameFor(m), generator.getClassIndex(a.className));*/
+        out.print("VM.allocObject(cls%d)", generator.getClassIndex(a.className));
     }
     
     public void goto_(Goto g) {
@@ -216,9 +221,9 @@ public class JSMethodGenerator {
     
     public void allocArray(AllocArray a) {
         if(a.sizes.size() == 1) {
-            out.print("newArray(%d,", generator.getClassIndex(a.type));
+            out.print("vm.newArray(cls%d,", generator.getClassIndex(a.type));
             code(a.sizes.get(0));
-            out.print(")");
+            out.print(") /*%s*/", a.type);
         } else {
             out.print("newMultiArray(%d",generator.getClassIndex(a.type));
             for(Code s : a.sizes) {
@@ -231,14 +236,14 @@ public class JSMethodGenerator {
     
     public void array(Array a) {
         code(a.array);
-        out.print("[");
+        out.print(".$a[");
         code(a.index);
         out.print("]");
     }
     
     public void arrayLength(ArrayLength a) {
         code(a.array);
-        out.print(".len");
+        out.print(".$l");
     }
     
     String convert(Code c) {
@@ -300,13 +305,24 @@ public class JSMethodGenerator {
     }
     
     public void switch_(Switch s) {
+        for(int i=0; i<s.values.size(); i++) {
+            //if(i>0) out.print("else ");
+            out.print("if(");code(s.key);out.println("==%d) {$b=%d;break;}", s.values.get(i), s.labels.get(i));
+            //out.println("case %d: $b=%d;break;", s.values.get(i), s.labels.get(i)); 
+        }
+        if(s.defaultLabel != -1) {
+            out.println("$b=%d;", s.defaultLabel);
+        }
+        out.println("break;");
+        
+        /*
         out.print("switch(");
         code(s.key);
         out.println("){");
         for(int i=0; i<s.values.size(); i++) {
             out.println("case %d: $b=%d;break;", s.values.get(i), s.labels.get(i)); 
         }
-        out.println("}");
+        out.println("}");*/
     }
     
     public void trapEnter(TrapEnter t) {
@@ -354,7 +370,26 @@ public class JSMethodGenerator {
         out.println(") {$b=%d; break;}", i.target);
     }
     
+    boolean generateVMCall(Call call) {
+        if(!call.className.equals("cava/VM")) return false;
+        switch(call.methodName) {
+            case "ceil":
+            case "sqrt":
+            case "sin":
+            case "cos":
+                out.print("Math.%s(",call.methodName);
+                for(int i=0; i<call.args.size(); i++) {
+                    if(i > 0) out.print(",");
+                    code(call.args.get(i));
+                }
+                out.print(")");
+                return true;
+        }
+        return false;
+    }
+    
     public void call(Call call) {
+        if(generateVMCall(call)) return;
         Clazz c = CompilerContext.resolve(call.className);
         Method m = c.findMethod(call.methodName, call.signature);
         if(m == null) throw new RuntimeException("Cant find method: "+call.className+"::"+call.methodName+"::"+call.signature);   
@@ -383,8 +418,9 @@ public class JSMethodGenerator {
             //out.print(naming.method(m)).print("(");
             //cType.dependency.add(m.declaringClass);
         }
+        out.print("vm");
         for(int i=0; i<call.args.size(); i++) {
-            if(i > 0) out.print(",");
+            out.print(",");
             code(call.args.get(i));
         }
         out.print(")");        

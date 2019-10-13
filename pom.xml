@@ -10,6 +10,7 @@
         <module>procyon</module>
         <module>debugger</module>
         <module>classlib</module>
+        <module>classlib2</module>
         <module>maven</module>
         <module>sample</module>
         <module>libgdx</module>

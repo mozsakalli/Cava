@@ -81,7 +81,7 @@ public class Main {
     public static void main(String...args) throws Exception {
         
         CompilerContext.classPath = new File[]{
-            new File("/Users/mustafa/Work/CAVA/classlib/target/classes"),
+            new File("/Users/mustafa/Work/CAVA/classlib2/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/target/classes"),
             new File("/Users/mustafa/Work/CAVA/rd/jbox2d.jar"),
         };

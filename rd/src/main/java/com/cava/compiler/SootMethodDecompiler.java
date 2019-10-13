@@ -191,7 +191,7 @@ public class SootMethodDecompiler {
         for (Unit u : body.getUnits()) {
 
             Code code = decompile(u);
-            if(code instanceof If || code instanceof Goto) method.hasGoto = true;
+            if(code instanceof If || code instanceof Goto || code instanceof Switch) method.hasGoto = true;
             
             unitToCode.put(u, code);
             
@@ -237,6 +237,11 @@ public class SootMethodDecompiler {
                         sw.labels.set(i, newTarget);
                         method.labels.add(newTarget);
                     }
+                }
+                
+                if(sw.defaultLabel != -1) {
+                    int newTarget = findRealTarget(sw.defaultLabel, unitToCode, codeRealStartMap);
+                    if(newTarget != -1) sw.defaultLabel = newTarget;
                 }
             }
         }
@@ -641,6 +646,9 @@ public class SootMethodDecompiler {
             sw.labels.add(unitToIndex.get(target));
         }
         sw.key = immediate((Immediate)stmt.getKey());
+        if(stmt.getDefaultTarget() != null) {
+            sw.defaultLabel = unitToIndex.get(stmt.getDefaultTarget());
+        }
         return sw;
     }
     
@@ -652,6 +660,8 @@ public class SootMethodDecompiler {
             sw.labels.add(unitToIndex.get(target));
         }        
         sw.key = immediate((Immediate)stmt.getKey());
+        if(stmt.getDefaultTarget() != null)
+            sw.defaultLabel = unitToIndex.get(stmt.getDefaultTarget());
         return sw;
     }
 }

@@ -33,6 +33,7 @@ public class Generator {
     Map<String, Integer> globals = new HashMap();
     Map<String, Integer> classIndex = new HashMap();
     Map<String, Integer> strings = new HashMap();
+    Map<String, Integer> fields = new HashMap();
     
     public int getGlobalIndex(String className, String fieldName) {
         String key = className+":"+fieldName;
@@ -46,6 +47,7 @@ public class Generator {
     public int getStringIndex(String str) {
         return strings.computeIfAbsent(str, (s) -> strings.size());
     }
+    
     
     public void generate() throws Exception {
         String[] prims = {"B","Z","C","S","I","F","J","D","V"};

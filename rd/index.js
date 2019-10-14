@@ -15404,20 +15404,19 @@ while(1)switch($b){
 	case 9:
 		$f.l=2601;
 		v5=vm.is(v2,136);
-		if(v5==0) {$b=17; break;}
+		if(v5==0) {$b=16; break;}
 		$f.l=2602;
 		v6=vm.cast(v2,136);
-		v6=vm.cast(v6,136);
 		_37e(vm,v6,v0,v1)/*java/util/Arrays:stableStringSort*/;
-		{ $b=23; break; }
-	case 17:
+		{ $b=22; break; }
+	case 16:
 		$f.l=2604;
 		v4=vm.newArray(cls34,v1) /*[java/lang/Object*/;
 		$f.l=2605;
 		_14(vm,v2,v0,v4,v0,v3)/*java/lang/System:arraycopy*/;
 		$f.l=2606;
 		_37f(vm,v4,v2,v0,v1)/*java/util/Arrays:mergeSort*/;
-	case 23:
+	case 22:
 		$f.l=2608;
 		return;
 }
@@ -15925,25 +15924,27 @@ while(1)switch($b){
 		if(v5>=v6) {$b=24; break;}
 		if(v6>=v7) {$b=19; break;}
 		v9=v1;
-		{ $b=31; break; }
+		{ $b=32; break; }
 	case 19:
 		if(v5>=v7) {$b=22; break;}
 		v9=v2;
-		{ $b=31; break; }
+		{ $b=32; break; }
 	case 22:
 		v9=v0;
-		{ $b=31; break; }
+		{ $b=32; break; }
 	case 24:
-		if(v6>=v7) {$b=30; break;}
-		if(v5>=v7) {$b=28; break;}
+		$f.l=2900;
+		if(v6>=v7) {$b=31; break;}
+		if(v5>=v7) {$b=29; break;}
 		v9=v0;
-		{ $b=31; break; }
-	case 28:
+		{ $b=32; break; }
+	case 29:
 		v9=v2;
-		{ $b=31; break; }
-	case 30:
-		v9=v1;
+		{ $b=32; break; }
 	case 31:
+		v9=v1;
+	case 32:
+		$f.l=2899;
 		return v9;
 }
 }
@@ -38926,13 +38927,13 @@ while(1)switch($b){
 		v2=v1._3.$vt[2](vm,v1)/*java/lang/Object:hashCode*/;
 		;
 	case 8:
+		$f.l=67;
 		v1=v0._6b7 /*java/util/MapEntry.value*/;
-		if(v1!=null) {$b=12; break;}
+		if(v1!=null) {$b=13; break;}
 		v3=0;
 		{ $b=15; break; }
-	case 12:
+	case 13:
 		v1=v0._6b7 /*java/util/MapEntry.value*/;
-		$f.l=67;
 		v3=v1._3.$vt[2](vm,v1)/*java/lang/Object:hashCode*/;
 		;
 	case 15:
@@ -45881,7 +45882,7 @@ while(1)switch($b){
 }
 //java/util/AbstractCollection:toArray
 function _7a4(vm,a0,a1){
-var v0,v1,v2,v3,v4,v5,v6,v7,v8;
+var v0,v1,v2,v3,v4,v5,v6,v7;
 var $f={};//vm.frames[vm.fp++];
 var $b=-1;
 while(1)switch($b){
@@ -45917,8 +45918,7 @@ while(1)switch($b){
 		{ $b=15; break; }
 	case 23:
 		$f.l=405;
-		v8=vm.cast(v2,34);
-		return v8;
+		return v2;
 }
 }
 //java/lang/Exception:<init>
@@ -48234,7 +48234,7 @@ return v1;
 }
 //java/util/AbstractList:toArray
 function _7f5(vm,a0,a1){
-var v0,v1,v2,v3,v4,v5,v6,v7;
+var v0,v1,v2,v3,v4,v5,v6;
 var $f={};//vm.frames[vm.fp++];
 var $b=-1;
 while(1)switch($b){
@@ -48267,8 +48267,7 @@ while(1)switch($b){
 		{ $b=13; break; }
 	case 21:
 		$f.l=781;
-		v7=vm.cast(v2,34);
-		return v7;
+		return v2;
 }
 }
 //java/lang/AssertionError:<init>
@@ -50581,9 +50580,9 @@ while(1)switch($b){
 		;
 		{ $b=12; break; }
 	case 7:
+		$f.l=595;
 		v3=(v0 >>> 32)|0;
 		v2=v3|0;
-		$f.l=595;
 		v2=_852(vm,v2)/*java/lang/Integer:numberOfTrailingZeros*/;
 		;
 		v2=(32 + v2)|0;
@@ -52978,7 +52977,6 @@ $f.l=103;
 v0=a0;
 v1=a1;
 v2=vm.newArray(cls34,v1) /*[java/lang/Object*/;
-v2=vm.cast(v2,34);
 return v2;
 }
 //java/util/ArrayList:add
@@ -53531,8 +53529,7 @@ while(1)switch($b){
 		v2.$a[v4]=null;
 	case 24:
 		$f.l=634;
-		v6=vm.cast(v2,34);
-		return v6;
+		return v2;
 }
 }
 //java/util/HashMap$HashMapEntrySet:<init>
@@ -53635,316 +53632,316 @@ _7a7(vm,v1,v2)/*java/util/HashMap$EntryIterator:<init>*/;
 return v1;
 }
 var $g17,$g14,$g67,$g102,$g50,$g3,$g110,$g38,$g28,$g137,$g92,$g130,$g74,$g109,$g42,$g27,$g98,$g145,$g112,$g93,$g104,$g2,$g49,$g80,$g78,$g138,$g36,$g121,$g0,$g131,$g88,$g54,$g103,$g43,$g108,$g1,$g35,$g5,$g72,$g19,$g31,$g128,$g124,$g71,$g12,$g11,$g46,$g105,$g117,$g133,$g127,$g83,$g79,$g45,$g126,$g120,$g65,$g75,$g58,$g16,$g60,$g63,$g143,$g81,$g25,$g146,$g125,$g132,$g86,$g140,$g61,$g82,$g136,$g141,$g30,$g97,$g89,$g116,$g90,$g57,$g139,$g70,$g73,$g20,$g22,$g134,$g66,$g107,$g142,$g33,$g7,$g69,$g111,$g106,$g77,$g29,$g123,$g68,$g23,$g122,$g18,$g129,$g39,$g26,$g101,$g84,$g144,$g9,$g24,$g62,$g8,$g44,$g41,$g51,$g32,$g115,$g118,$g119,$g34,$g4,$g6,$g95,$g53,$g114,$g94,$g56,$g15,$g37,$g99,$g13,$g87,$g113,$g40,$g91,$g48,$g21,$g59,$g10,$g52,$g96,$g100,$g55,$g47,$g76,$g64,$g135,$g85;
-var cls241={_325:"java/lang/Object",_31d:null,$vt:[_8,_1,_4,_10]};
+var cls241={_325:"java/lang/Object",_31d:null,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls241,_3:null};}};
 var cls34={_325:"[java/lang/Object",_31d:cls241,_2b8:cls241,$vt:cls241.$vt,$it:cls241.$it};
-var cls242={_325:"java/lang/Runnable",_31d:cls241,$vt:cls241.$vt};
-var cls120={_325:"org/jbox2d/dynamics/contacts/Velocity",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls242={_325:"java/lang/Runnable",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls242,_3:null};}};
+var cls120={_325:"org/jbox2d/dynamics/contacts/Velocity",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls120,_1a:null,_85:0,_3:null};}};
 var cls119={_325:"[org/jbox2d/dynamics/contacts/Velocity",_31d:cls241,_2b8:cls120,$vt:cls241.$vt,$it:cls241.$it};
-var cls10={_325:"org/jbox2d/dynamics/contacts/ContactSolver",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls19={_325:"org/jbox2d/collision/Collision",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls243={_325:"java/lang/reflect/Method",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls10={_325:"org/jbox2d/dynamics/contacts/ContactSolver",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls10,_38:null,_3d:null,_3f:null,_32:null,_33:null,_41:null,_3a:0,_1c:null,_1d:null,_1e:null,_1f:null,_20:null,_22:null,_23:null,_25:null,_26:null,_27:null,_28:null,_29:null,_2a:null,_2b:null,_2c:null,_2d:null,_2f:null,_30:null,_31:null,_3:null};}};
+var cls19={_325:"org/jbox2d/collision/Collision",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls19,_c7:null,_ab:null,_ad:null,_af:null,_b0:null,_b2:null,_b3:null,_b4:null,_b5:null,_b6:null,_b7:null,_b8:null,_b9:null,_ba:null,_bb:null,_bc:null,_bd:null,_be:null,_c0:null,_c1:null,_c2:null,_c3:null,_c5:null,_3:null};}};
+var cls243={_325:"java/lang/reflect/Method",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls243,_10d:null,_102:null,_108:null,_104:0,_106:null,_8d3:null,_8d4:null,_3:null};}};
 var cls129={_325:"[java/lang/reflect/Method",_31d:cls241,_2b8:cls243,$vt:cls241.$vt,$it:cls241.$it};
-var cls244={_325:"org/jbox2d/callbacks/TreeCallback",_31d:cls241,$vt:cls241.$vt};
-var cls115={_325:"org/jbox2d/dynamics/contacts/ContactSolver$ContactSolverDef",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls245={_325:"org/jbox2d/common/PlatformMathUtils",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls20={_325:"org/jbox2d/collision/shapes/MassData",_31d:cls241,$vt:[_8,_1,_4,_117]};
-var cls246={_325:"org/jbox2d/collision/shapes/Shape",_31d:cls241,$vt:[_8,_1,_4,_11d,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]};
-var cls247={_325:"java/io/Serializable",_31d:cls241,$vt:cls241.$vt};
-var cls102={_325:"org/jbox2d/collision/ManifoldPoint",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls244={_325:"org/jbox2d/callbacks/TreeCallback",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls244,_3:null};}};
+var cls115={_325:"org/jbox2d/dynamics/contacts/ContactSolver$ContactSolverDef",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls115,_37:null,_40:null,_39:0,_3c:null,_3e:null,_3:null};}};
+var cls245={_325:"org/jbox2d/common/PlatformMathUtils",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls245,_3:null};}};
+var cls20={_325:"org/jbox2d/collision/shapes/MassData",_31d:cls241,$vt:[_8,_1,_4,_117],$new:function(){return {_3:cls20,_112:0,_113:null,_111:0,_3:null};}};
+var cls246={_325:"org/jbox2d/collision/shapes/Shape",_31d:cls241,$vt:[_8,_1,_4,_11d,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],$new:function(){return {_3:cls246,_119:null,_45:0,_3:null};}};
+var cls247={_325:"java/io/Serializable",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls247,_3:null};}};
+var cls102={_325:"org/jbox2d/collision/ManifoldPoint",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls102,_81:null,_76:0,_78:0,_e0:null,_3:null};}};
 var cls101={_325:"[org/jbox2d/collision/ManifoldPoint",_31d:cls241,_2b8:cls102,$vt:cls241.$vt,$it:cls241.$it};
-var cls21={_325:"org/jbox2d/collision/Distance$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls165={_325:"org/jbox2d/collision/Collision$EPAxis",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls248={_325:"B",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls21={_325:"org/jbox2d/collision/Distance$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls21,_3:null};}};
+var cls165={_325:"org/jbox2d/collision/Collision$EPAxis",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls165,_454:null,_459:0,_455:0,_3:null};}};
+var cls248={_325:"B",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls248,_3:null};}};
 var cls155={_325:"[B",_31d:cls241,_2b8:cls248,$vt:cls241.$vt,$it:cls241.$it};
-var cls249={_325:"C",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls249={_325:"C",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls249,_3:null};}};
 var cls104={_325:"[C",_31d:cls241,_2b8:cls249,$vt:cls241.$vt,$it:cls241.$it};
-var cls250={_325:"D",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls250={_325:"D",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls250,_3:null};}};
 var cls158={_325:"[D",_31d:cls241,_2b8:cls250,$vt:cls241.$vt,$it:cls241.$it};
-var cls251={_325:"F",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls251={_325:"F",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls251,_3:null};}};
 var cls157={_325:"[F",_31d:cls241,_2b8:cls251,$vt:cls241.$vt,$it:cls241.$it};
-var cls252={_325:"I",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls252={_325:"I",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls252,_3:null};}};
 var cls22={_325:"[I",_31d:cls241,_2b8:cls252,$vt:cls241.$vt,$it:cls241.$it};
-var cls253={_325:"J",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls253={_325:"J",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls253,_3:null};}};
 var cls159={_325:"[J",_31d:cls241,_2b8:cls253,$vt:cls241.$vt,$it:cls241.$it};
-var cls254={_325:"java/lang/Iterable",_31d:cls241,$vt:cls241.$vt};
-var cls255={_325:"S",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls254={_325:"java/lang/Iterable",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls254,_3:null};}};
+var cls255={_325:"S",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls255,_3:null};}};
 var cls156={_325:"[S",_31d:cls241,_2b8:cls255,$vt:cls241.$vt,$it:cls241.$it};
-var cls256={_325:"V",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls257={_325:"Z",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls256={_325:"V",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls256,_3:null};}};
+var cls257={_325:"Z",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls257,_3:null};}};
 var cls143={_325:"[Z",_31d:cls241,_2b8:cls257,$vt:cls241.$vt,$it:cls241.$it};
-var cls258={_325:"java/lang/annotation/Annotation",_31d:cls241,$vt:cls241.$vt};
-var cls25={_325:"org/jbox2d/collision/broadphase/DynamicTree$TreeNodeStack",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls73={_325:"org/jbox2d/collision/TimeOfImpact$TOIInput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls33={_325:"org/jbox2d/dynamics/Fixture",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls35={_325:"org/jbox2d/pooling/normal/OrderedStack",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null]};
-var cls69={_325:"org/jbox2d/collision/RayCastInput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls259={_325:"org/jbox2d/callbacks/DestructionListener",_31d:cls241,$vt:cls241.$vt};
-var cls138={_325:"org/jbox2d/collision/Distance$SimplexVertex",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls258={_325:"java/lang/annotation/Annotation",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls258,_3:null};}};
+var cls25={_325:"org/jbox2d/collision/broadphase/DynamicTree$TreeNodeStack",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls25,_131:null,_133:0,_132:0,_130:null,_3:null};}};
+var cls73={_325:"org/jbox2d/collision/TimeOfImpact$TOIInput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls73,_13c:null,_13d:null,_13f:null,_140:null,_24a:0,_3:null};}};
+var cls33={_325:"org/jbox2d/dynamics/Fixture",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls33,_153:0,_148:null,_147:null,_14b:null,_157:0,_159:0,_149:null,_14a:0,_14d:null,_150:0,_146:null,_143:null,_144:null,_145:null,_3:null};}};
+var cls35={_325:"org/jbox2d/pooling/normal/OrderedStack",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null],$new:function(){return {_3:cls35,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls69={_325:"org/jbox2d/collision/RayCastInput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls69,_175:null,_176:null,_177:0,_3:null};}};
+var cls259={_325:"org/jbox2d/callbacks/DestructionListener",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls259,_3:null};}};
+var cls138={_325:"org/jbox2d/collision/Distance$SimplexVertex",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls138,_17a:null,_17b:null,_17c:null,_17e:0,_17f:0,_180:0,_179:null,_3:null};}};
 var cls139={_325:"[org/jbox2d/collision/Distance$SimplexVertex",_31d:cls241,_2b8:cls138,$vt:cls241.$vt,$it:cls241.$it};
-var cls36={_325:"org/jbox2d/common/Settings",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls124={_325:"org/jbox2d/dynamics/contacts/ContactEdge",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls13={_325:"org/jbox2d/collision/DistanceOutput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls260={_325:"java/lang/reflect/Field",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls36={_325:"org/jbox2d/common/Settings",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls36,_3:null};}};
+var cls124={_325:"org/jbox2d/dynamics/contacts/ContactEdge",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls124,_185:null,_186:null,_187:null,_188:null,_3:null};}};
+var cls13={_325:"org/jbox2d/collision/DistanceOutput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls13,_189:null,_18a:null,_d2:0,_3f9:0,_3:null};}};
+var cls260={_325:"java/lang/reflect/Field",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls260,_193:null,_18d:null,_191:null,_18f:0,_8d5:null,_3:null};}};
 var cls131={_325:"[java/lang/reflect/Field",_31d:cls241,_2b8:cls260,$vt:cls241.$vt,$it:cls241.$it};
-var cls18={_325:"org/jbox2d/collision/Collision$ClipVertex",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls18={_325:"org/jbox2d/collision/Collision$ClipVertex",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls18,_d4:null,_d7:null,_3:null};}};
 var cls15={_325:"[org/jbox2d/collision/Collision$ClipVertex",_31d:cls241,_2b8:cls18,$vt:cls241.$vt,$it:cls241.$it};
-var cls60={_325:"org/jbox2d/dynamics/joints/Joint",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null]};
+var cls60={_325:"org/jbox2d/dynamics/joints/Joint",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null],$new:function(){return {_3:cls60,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
 var cls117={_325:"[org/jbox2d/dynamics/joints/Joint",_31d:cls241,_2b8:cls60,$vt:cls241.$vt,$it:cls241.$it};
-var cls79={_325:"org/jbox2d/dynamics/World",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls261={_325:"org/jbox2d/callbacks/QueryCallback",_31d:cls241,$vt:cls241.$vt};
-var cls113={_325:"java/lang/StringToReal$StringExponentPair",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls64={_325:"org/jbox2d/common/Timer",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls262={_325:"java/util/NumberComparator",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls133={_325:"JBox$Scene",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls263={_325:"org/jbox2d/collision/broadphase/BroadPhaseStrategy",_31d:cls241,$vt:cls241.$vt};
-var cls264={_325:"org/jbox2d/callbacks/ContactListener",_31d:cls241,$vt:cls241.$vt};
-var cls76={_325:"org/jbox2d/dynamics/contacts/ContactRegister",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls30={_325:"org/jbox2d/dynamics/Filter",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls72={_325:"org/jbox2d/dynamics/Profile",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls123={_325:"org/jbox2d/collision/Manifold",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls87={_325:"java/lang/Character",_31d:cls241,$vt:[_298,_28e,_28f,_10]};
-var cls12={_325:"org/jbox2d/collision/Distance$SimplexCache",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls27={_325:"org/jbox2d/collision/Distance$DistanceProxy",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls265={_325:"java/lang/StringToReal",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls266={_325:"java/lang/Math",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls267={_325:"java/net/URL",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls179={_325:"java/util/Map$Entry",_31d:cls241,$vt:cls241.$vt};
-var cls268={_325:"org/jbox2d/callbacks/DebugDraw",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls70={_325:"org/jbox2d/dynamics/Island",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls204={_325:"org/jbox2d/callbacks/ContactFilter",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls269={_325:"java/lang/CharSequence",_31d:cls241,$vt:cls241.$vt};
-var cls11={_325:"org/jbox2d/collision/DistanceInput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls270={_325:"org/jbox2d/collision/Collision$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls77={_325:"org/jbox2d/dynamics/contacts/Contact",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_30f]};
+var cls79={_325:"org/jbox2d/dynamics/World",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls79,_1c2:0,_1c3:0,_1fc:0,_1ff:null,_1f3:null,_1f4:null,_1f5:0,_1f6:0,_1c4:null,_1fb:0,_1f1:null,_1f2:null,_1f0:null,_1fd:0,_1f7:0,_1f8:0,_1f9:0,_1fa:0,_200:null,_1c5:null,_1c7:null,_1c9:null,_1ca:null,_1cc:null,_1cd:null,_1ce:null,_1cf:null,_1d1:null,_1d3:null,_1d5:null,_1d6:null,_1d8:null,_1d9:null,_1db:null,_1dc:null,_1dd:null,_1de:null,_1e0:null,_1e1:null,_1e2:null,_1e3:null,_1e4:null,_1e5:0,_1e6:0,_1e7:null,_1e8:null,_1ea:null,_1eb:null,_1ec:null,_1ed:null,_1ee:null,_1ef:null,_3:null};}};
+var cls261={_325:"org/jbox2d/callbacks/QueryCallback",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls261,_3:null};}};
+var cls113={_325:"java/lang/StringToReal$StringExponentPair",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls113,_2d6:null,_2d3:0,_25b:0,_25a:0,_2d4:0,_3:null};}};
+var cls64={_325:"org/jbox2d/common/Timer",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls64,_25e:0,_3:null};}};
+var cls262={_325:"java/util/NumberComparator",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls262,_3:null};}};
+var cls133={_325:"JBox$Scene",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls133,_26b:null,_276:null,_27a:null,_271:0,_272:0,_3:null};}};
+var cls263={_325:"org/jbox2d/collision/broadphase/BroadPhaseStrategy",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls263,_3:null};}};
+var cls264={_325:"org/jbox2d/callbacks/ContactListener",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls264,_3:null};}};
+var cls76={_325:"org/jbox2d/dynamics/contacts/ContactRegister",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls76,_204:null,_205:0,_3:null};}};
+var cls30={_325:"org/jbox2d/dynamics/Filter",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls30,_284:0,_285:0,_286:0,_3:null};}};
+var cls72={_325:"org/jbox2d/dynamics/Profile",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls72,_224:0,_21e:0,_220:0,_228:0,_229:0,_22a:0,_240:0,_222:0,_3:null};}};
+var cls123={_325:"org/jbox2d/collision/Manifold",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls123,_72:null,_6a:null,_6c:null,_70:null,_48:0,_3:null};}};
+var cls87={_325:"java/lang/Character",_31d:cls241,$vt:[_298,_28e,_28f,_10],$new:function(){return {_3:cls87,_28a:0,_3:null};}};
+var cls12={_325:"org/jbox2d/collision/Distance$SimplexCache",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls12,_2bb:0,_d0:0,_2b9:null,_2ba:null,_3:null};}};
+var cls27={_325:"org/jbox2d/collision/Distance$DistanceProxy",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls27,_2bc:null,_2be:0,_2bf:0,_2bd:null,_3:null};}};
+var cls265={_325:"java/lang/StringToReal",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls265,_3:null};}};
+var cls266={_325:"java/lang/Math",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls266,_3:null};}};
+var cls267={_325:"java/net/URL",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls267,_8d6:null,_8d7:null,_8d8:0,_8d9:null,_8da:null,_8db:null,_8dc:null,_3:null};}};
+var cls179={_325:"java/util/Map$Entry",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls179,_3:null};}};
+var cls268={_325:"org/jbox2d/callbacks/DebugDraw",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls268,_8dd:0,_8de:null,_3:null};}};
+var cls70={_325:"org/jbox2d/dynamics/Island",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls70,_2ee:null,_23e:null,_2f0:null,_2ef:null,_2f2:null,_2f1:null,_23d:0,_2ed:0,_253:0,_252:0,_254:0,_2ec:0,_2e3:null,_2e4:null,_2e6:null,_2e7:null,_2e8:null,_2e9:null,_2eb:null,_3:null};}};
+var cls204={_325:"org/jbox2d/callbacks/ContactFilter",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls204,_3:null};}};
+var cls269={_325:"java/lang/CharSequence",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls269,_3:null};}};
+var cls11={_325:"org/jbox2d/collision/DistanceInput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls11,_c9:null,_cb:null,_cc:null,_ce:null,_cf:0,_3:null};}};
+var cls270={_325:"org/jbox2d/collision/Collision$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls270,_3:null};}};
+var cls77={_325:"org/jbox2d/dynamics/contacts/Contact",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_30f],$new:function(){return {_3:cls77,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
 var cls118={_325:"[org/jbox2d/dynamics/contacts/Contact",_31d:cls241,_2b8:cls77,$vt:cls241.$vt,$it:cls241.$it};
-var cls271={_325:"java/lang/Class",_31d:cls241,$vt:[_32e,_33e,_4,_10]};
+var cls271={_325:"java/lang/Class",_31d:cls241,$vt:[_32e,_33e,_4,_10],$new:function(){return {_3:cls271,_3a9:0,_325:null,_31d:null,_2b8:null,_320:0,_348:null,_340:null,_342:null,_3:null};}};
 var cls127={_325:"[java/lang/Class",_31d:cls241,_2b8:cls271,$vt:cls241.$vt,$it:cls241.$it};
-var cls134={_325:"JBox",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls137={_325:"java/lang/Comparable",_31d:cls241,$vt:cls241.$vt};
-var cls272={_325:"org/jbox2d/pooling/IWorldPool",_31d:cls241,$vt:cls241.$vt};
-var cls78={_325:"org/jbox2d/dynamics/Body",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls134={_325:"JBox",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls134,_351:null,_3:null};}};
+var cls137={_325:"java/lang/Comparable",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls137,_3:null};}};
+var cls272={_325:"org/jbox2d/pooling/IWorldPool",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls272,_3:null};}};
+var cls78={_325:"org/jbox2d/dynamics/Body",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls78,_244:null,_22e:0,_50:0,_354:null,_63:null,_2f6:null,_2f7:0,_225:null,_226:0,_362:null,_20f:null,_210:null,_369:null,_36a:0,_212:null,_237:null,_365:0,_53:0,_366:0,_56:0,_2fb:0,_2fc:0,_2fa:0,_303:0,_368:null,_355:null,_356:null,_357:null,_3:null};}};
 var cls71={_325:"[org/jbox2d/dynamics/Body",_31d:cls241,_2b8:cls78,$vt:cls241.$vt,$it:cls241.$it};
-var cls273={_325:"java/util/Arrays",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls140={_325:"org/jbox2d/collision/Distance$Simplex",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls274={_325:"java/util/AbstractList$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls7={_325:"org/jbox2d/dynamics/contacts/ContactPositionConstraint",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls273={_325:"java/util/Arrays",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls273,_3:null};}};
+var cls140={_325:"org/jbox2d/collision/Distance$Simplex",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls140,_38b:null,_38c:null,_38d:null,_38e:null,_39a:0,_38f:null,_390:null,_391:null,_392:null,_393:null,_394:null,_395:null,_396:null,_397:null,_398:null,_38a:null,_3:null};}};
+var cls274={_325:"java/util/AbstractList$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls274,_3:null};}};
+var cls7={_325:"org/jbox2d/dynamics/contacts/ContactPositionConstraint",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls7,_80:null,_69:null,_6b:null,_5e:0,_5f:0,_60:0,_61:0,_62:null,_66:null,_67:0,_68:0,_71:null,_6e:0,_6f:0,_6d:0,_3:null};}};
 var cls5={_325:"[org/jbox2d/dynamics/contacts/ContactPositionConstraint",_31d:cls241,_2b8:cls7,$vt:cls241.$vt,$it:cls241.$it};
-var cls275={_325:"java/util/Iterator",_31d:cls241,$vt:cls241.$vt};
-var cls276={_325:"java/lang/StrictMath",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls180={_325:"java/util/Map",_31d:cls241,$vt:cls241.$vt};
-var cls122={_325:"org/jbox2d/dynamics/contacts/Position",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls275={_325:"java/util/Iterator",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls275,_3:null};}};
+var cls276={_325:"java/lang/StrictMath",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls276,_3:null};}};
+var cls180={_325:"java/util/Map",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls180,_3:null};}};
+var cls122={_325:"org/jbox2d/dynamics/contacts/Position",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls122,_88:null,_89:0,_3:null};}};
 var cls121={_325:"[org/jbox2d/dynamics/contacts/Position",_31d:cls241,_2b8:cls122,$vt:cls241.$vt,$it:cls241.$it};
-var cls141={_325:"java/lang/System",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls85={_325:"java/lang/Boolean",_31d:cls241,$vt:[_3b5,_3b3,_3b4,_10]};
-var cls164={_325:"org/jbox2d/collision/Collision$ReferenceFace",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls3={_325:"org/jbox2d/collision/WorldManifold",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls4={_325:"org/jbox2d/dynamics/contacts/PositionSolverManifold",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls144={_325:"org/jbox2d/pooling/arrays/IntArray",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls145={_325:"org/jbox2d/dynamics/joints/Joint$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls65={_325:"org/jbox2d/common/Color3f",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls277={_325:"java/lang/AutoCloseable",_31d:cls241,$vt:cls241.$vt};
-var cls74={_325:"org/jbox2d/collision/TimeOfImpact$TOIOutput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls200={_325:"org/jbox2d/collision/RayCastOutput",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls163={_325:"org/jbox2d/collision/Collision$TempPolygon",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls146={_325:"org/jbox2d/dynamics/contacts/PositionSolverManifold$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls278={_325:"org/jbox2d/callbacks/PairCallback",_31d:cls241,$vt:cls241.$vt};
-var cls279={_325:"org/jbox2d/callbacks/TreeRayCastCallback",_31d:cls241,$vt:cls241.$vt};
-var cls280={_325:"org/jbox2d/pooling/IDynamicStack",_31d:cls241,$vt:cls241.$vt};
-var cls281={_325:"org/jbox2d/dynamics/joints/JointDef",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls63={_325:"org/jbox2d/dynamics/TimeStep",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls14={_325:"org/jbox2d/collision/Collision$EdgeResults",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls32={_325:"org/jbox2d/dynamics/FixtureProxy",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls141={_325:"java/lang/System",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls141,_3:null};}};
+var cls85={_325:"java/lang/Boolean",_31d:cls241,$vt:[_3b5,_3b3,_3b4,_10],$new:function(){return {_3:cls85,_3b1:0,_3:null};}};
+var cls164={_325:"org/jbox2d/collision/Collision$ReferenceFace",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls164,_457:0,_458:0,_3bc:null,_3bd:null,_3be:null,_3bf:null,_45a:0,_3c0:null,_45b:0,_3:null};}};
+var cls3={_325:"org/jbox2d/collision/WorldManifold",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls3,_90:null,_91:null,_3c1:null,_3c2:null,_3:null};}};
+var cls4={_325:"org/jbox2d/dynamics/contacts/PositionSolverManifold",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls4,_a2:null,_a3:null,_a4:0,_3:null};}};
+var cls144={_325:"org/jbox2d/pooling/arrays/IntArray",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls144,_3c6:null,_3:null};}};
+var cls145={_325:"org/jbox2d/dynamics/joints/Joint$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls145,_3:null};}};
+var cls65={_325:"org/jbox2d/common/Color3f",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls65,_3cf:0,_3ce:0,_3cd:0,_3:null};}};
+var cls277={_325:"java/lang/AutoCloseable",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls277,_3:null};}};
+var cls74={_325:"org/jbox2d/collision/TimeOfImpact$TOIOutput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls74,_24d:null,_24c:0,_3:null};}};
+var cls200={_325:"org/jbox2d/collision/RayCastOutput",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls200,_3d2:null,_3d3:0,_3:null};}};
+var cls163={_325:"org/jbox2d/collision/Collision$TempPolygon",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls163,_3d5:null,_3d6:null,_451:0,_3:null};}};
+var cls146={_325:"org/jbox2d/dynamics/contacts/PositionSolverManifold$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls146,_3:null};}};
+var cls278={_325:"org/jbox2d/callbacks/PairCallback",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls278,_3:null};}};
+var cls279={_325:"org/jbox2d/callbacks/TreeRayCastCallback",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls279,_3:null};}};
+var cls280={_325:"org/jbox2d/pooling/IDynamicStack",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls280,_3:null};}};
+var cls281={_325:"org/jbox2d/dynamics/joints/JointDef",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls281,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls63={_325:"org/jbox2d/dynamics/TimeStep",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls63,_218:0,_21b:0,_75:0,_219:0,_21a:0,_74:0,_3:null};}};
+var cls14={_325:"org/jbox2d/collision/Collision$EdgeResults",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls14,_ec:0,_eb:0,_3:null};}};
+var cls32={_325:"org/jbox2d/dynamics/FixtureProxy",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls32,_163:null,_15f:null,_165:0,_160:0,_3:null};}};
 var cls31={_325:"[org/jbox2d/dynamics/FixtureProxy",_31d:cls241,_2b8:cls32,$vt:cls241.$vt,$it:cls241.$it};
-var cls147={_325:"java/lang/Void",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls98={_325:"org/jbox2d/dynamics/FixtureDef",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls282={_325:"java/lang/StringToReal$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls149={_325:"org/jbox2d/collision/TimeOfImpact",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls110={_325:"org/jbox2d/collision/Distance",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls150={_325:"org/jbox2d/collision/WorldManifold$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls148={_325:"org/jbox2d/collision/SeparationFunction",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls153={_325:"org/jbox2d/dynamics/contacts/ContactVelocityConstraint$VelocityConstraintPoint",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls147={_325:"java/lang/Void",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls147,_3:null};}};
+var cls98={_325:"org/jbox2d/dynamics/FixtureDef",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls98,_15d:null,_155:null,_156:0,_158:0,_161:0,_15c:0,_15a:null,_3:null};}};
+var cls282={_325:"java/lang/StringToReal$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls282,_3:null};}};
+var cls149={_325:"org/jbox2d/collision/TimeOfImpact",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls149,_3dd:null,_3de:null,_3df:null,_3e0:null,_3e1:null,_3e3:null,_3e4:null,_3e5:null,_3e6:null,_3e7:null,_3:null};}};
+var cls110={_325:"org/jbox2d/collision/Distance",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls110,_3f0:null,_3f1:null,_3f2:null,_3f3:null,_3f4:null,_3f5:null,_3f6:null,_3:null};}};
+var cls150={_325:"org/jbox2d/collision/WorldManifold$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls150,_3:null};}};
+var cls148={_325:"org/jbox2d/collision/SeparationFunction",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls148,_40b:null,_40c:null,_40f:null,_3fb:null,_3fc:null,_40d:null,_40e:null,_3fd:null,_3fe:null,_3ff:null,_400:null,_401:null,_402:null,_403:null,_404:null,_405:null,_406:null,_407:null,_408:null,_409:null,_40a:null,_3:null};}};
+var cls153={_325:"org/jbox2d/dynamics/contacts/ContactVelocityConstraint$VelocityConstraintPoint",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls153,_7a:null,_7c:null,_77:0,_79:0,_7d:0,_7e:0,_7f:0,_3:null};}};
 var cls151={_325:"[org/jbox2d/dynamics/contacts/ContactVelocityConstraint$VelocityConstraintPoint",_31d:cls241,_2b8:cls153,$vt:cls241.$vt,$it:cls241.$it};
-var cls114={_325:"org/jbox2d/dynamics/SolverData",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls8={_325:"org/jbox2d/dynamics/contacts/ContactVelocityConstraint",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls114={_325:"org/jbox2d/dynamics/SolverData",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls114,_2fd:null,_2fe:null,_2ff:null,_3:null};}};
+var cls8={_325:"org/jbox2d/dynamics/contacts/ContactVelocityConstraint",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls8,_73:null,_86:null,_5d:null,_5b:null,_51:0,_52:0,_54:0,_55:0,_57:0,_58:0,_4b:0,_4d:0,_4f:0,_5a:0,_59:0,_3:null};}};
 var cls6={_325:"[org/jbox2d/dynamics/contacts/ContactVelocityConstraint",_31d:cls241,_2b8:cls8,$vt:cls241.$vt,$it:cls241.$it};
-var cls283={_325:"cava/VM",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls284={_325:"java/lang/reflect/Array",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls285={_325:"java/util/RandomAccess",_31d:cls241,$vt:cls241.$vt};
-var cls182={_325:"java/lang/StringBuffer",_31d:cls241,$vt:[_41c,_1,_4,_10]};
-var cls286={_325:"java/util/HashMap$AbstractMapIterator",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls66={_325:"org/jbox2d/pooling/arrays/Vec2Array",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls287={_325:"java/util/Comparator",_31d:cls241,$vt:cls241.$vt};
-var cls59={_325:"org/jbox2d/dynamics/joints/JointEdge",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls201={_325:"org/jbox2d/collision/broadphase/DynamicTreeNode",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls283={_325:"cava/VM",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls283,_3:null};}};
+var cls284={_325:"java/lang/reflect/Array",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls284,_3:null};}};
+var cls285={_325:"java/util/RandomAccess",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls285,_3:null};}};
+var cls182={_325:"java/lang/StringBuffer",_31d:cls241,$vt:[_41c,_1,_4,_10],$new:function(){return {_3:cls182,_416:null,_3:null};}};
+var cls286={_325:"java/util/HashMap$AbstractMapIterator",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls286,_41e:0,_421:0,_422:null,_429:null,_42b:null,_41f:null,_3:null};}};
+var cls66={_325:"org/jbox2d/pooling/arrays/Vec2Array",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls66,_42d:null,_3:null};}};
+var cls287={_325:"java/util/Comparator",_31d:cls241,$vt:cls241.$vt,$new:function(){return {_3:cls287,_3:null};}};
+var cls59={_325:"org/jbox2d/dynamics/joints/JointEdge",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls59,_1b4:null,_1b3:null,_1b5:null,_1b6:null,_3:null};}};
+var cls201={_325:"org/jbox2d/collision/broadphase/DynamicTreeNode",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls201,_434:null,_73c:null,_736:null,_432:null,_743:null,_435:0,_8df:0,_737:0,_3:null};}};
 var cls24={_325:"[org/jbox2d/collision/broadphase/DynamicTreeNode",_31d:cls241,_2b8:cls201,$vt:cls241.$vt,$it:cls241.$it};
-var cls17={_325:"org/jbox2d/collision/Collision$EPCollider",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls96={_325:"org/jbox2d/dynamics/BodyDef",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls29={_325:"org/jbox2d/collision/AABB",_31d:cls241,$vt:[_45f,_1,_4,_10]};
-var cls116={_325:"org/jbox2d/callbacks/ContactImpulse",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls166={_325:"org/jbox2d/collision/SeparationFunction$1",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls37={_325:"org/jbox2d/dynamics/joints/MouseJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_479,_474,_47a]};
-var cls58={_325:"org/jbox2d/dynamics/joints/RopeJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls52={_325:"org/jbox2d/dynamics/joints/GearJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls41={_325:"org/jbox2d/dynamics/joints/PrismaticJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4bd,_49e,_4b5]};
-var cls55={_325:"org/jbox2d/dynamics/joints/ConstantVolumeJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4d7,_4d6,_4d8]};
-var cls53={_325:"org/jbox2d/dynamics/joints/PulleyJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4fb,_4ef,_4fa]};
-var cls170={_325:"org/jbox2d/dynamics/contacts/PolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_4fe,null,null,null,null,null,null,null,null,null,null,null,null,_30f]};
-var cls56={_325:"org/jbox2d/dynamics/joints/ConstantVolumeJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls288={_325:"java/io/Closeable",_31d:cls277,$vt:cls241.$vt};
-var cls196={_325:"java/lang/StringIndexOutOfBoundsException",_31d:cls106,$vt:[_70d,_1,_4,_10]};
-var cls171={_325:"org/jbox2d/dynamics/contacts/EdgeAndPolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_509,null,null,null,null,null,null,null,null,null,null,null,null,_506]};
-var cls51={_325:"org/jbox2d/dynamics/joints/GearJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_53f,_52c,_53e]};
-var cls172={_325:"org/jbox2d/common/MathUtils",_31d:cls245,$vt:[_8,_1,_4,_10]};
-var cls109={_325:"org/jbox2d/collision/shapes/EdgeShape",_31d:cls246,$vt:[_8,_1,_4,_54f,null,null,null,null,null,null,null,null,null,null,null,null,_54b,_54e,_54c,_54d]};
-var cls289={_325:"java/lang/IncompatibleClassChangeError",_31d:cls290,$vt:[_70d,_1,_4,_10]};
-var cls126={_325:"java/lang/reflect/Constructor",_31d:cls243,$vt:[_8,_1,_4,_10]};
-var cls173={_325:"org/jbox2d/dynamics/contacts/PolygonAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_554,null,null,null,null,null,null,null,null,null,null,null,null,_30f]};
-var cls99={_325:"org/jbox2d/collision/shapes/PolygonShape",_31d:cls246,$vt:[_8,_1,_4,_565,null,null,null,null,null,null,null,null,null,null,null,null,_562,_55e,_563,_564]};
-var cls38={_325:"org/jbox2d/dynamics/joints/MouseJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls174={_325:"org/jbox2d/dynamics/contacts/ChainAndPolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_56c,null,null,null,null,null,null,null,null,null,null,null,null,_569]};
-var cls23={_325:"java/lang/NoSuchFieldError",_31d:cls289,$vt:[_70d,_1,_4,_10]};
-var cls175={_325:"org/jbox2d/dynamics/contacts/CircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_572,null,null,null,null,null,null,null,null,null,null,null,null,_30f]};
-var cls176={_325:"org/jbox2d/dynamics/contacts/ChainAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_57c,null,null,null,null,null,null,null,null,null,null,null,null,_579]};
-var cls46={_325:"org/jbox2d/dynamics/joints/WeldJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls195={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$13",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_583]};
-var cls194={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$12",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_588]};
-var cls193={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$11",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_58c]};
-var cls192={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$10",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_590]};
-var cls43={_325:"org/jbox2d/dynamics/joints/RevoluteJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_5b4,_5a8,_5b3]};
-var cls54={_325:"org/jbox2d/dynamics/joints/PulleyJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls42={_325:"org/jbox2d/dynamics/joints/PrismaticJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls40={_325:"org/jbox2d/dynamics/joints/DistanceJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls108={_325:"org/jbox2d/collision/shapes/ChainShape",_31d:cls246,$vt:[_8,_1,_4,_5c8,null,null,null,null,null,null,null,null,null,null,null,null,_5c3,_5c6,_5c4,_5c5]};
-var cls48={_325:"org/jbox2d/dynamics/joints/FrictionJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls135={_325:"java/lang/ArrayIndexOutOfBoundsException",_31d:cls106,$vt:[_70d,_1,_4,_10]};
-var cls50={_325:"org/jbox2d/dynamics/joints/WheelJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls191={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$9",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_5ce]};
-var cls190={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$8",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_5d2]};
-var cls47={_325:"org/jbox2d/dynamics/joints/FrictionJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_5ee,_5e2,_5ed]};
-var cls178={_325:"org/jbox2d/dynamics/contacts/EdgeAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_5f4,null,null,null,null,null,null,null,null,null,null,null,null,_5f1]};
-var cls44={_325:"org/jbox2d/dynamics/joints/RevoluteJointDef",_31d:cls281,$vt:[_8,_1,_4,_10]};
-var cls291={_325:"java/util/Collection",_31d:cls254,$vt:cls241.$vt};
-var cls112={_325:"java/lang/NumberFormatException",_31d:cls107,$vt:[_70d,_1,_4,_10]};
-var cls39={_325:"org/jbox2d/dynamics/joints/DistanceJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_611,_605,_610]};
+var cls17={_325:"org/jbox2d/collision/Collision$EPCollider",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls17,_436:null,_437:null,_438:null,_439:null,_43a:null,_43b:null,_43c:null,_43d:null,_43e:null,_43f:null,_440:null,_8e0:null,_8e1:null,_441:null,_442:null,_452:0,_450:0,_443:null,_444:null,_445:null,_446:null,_447:null,_448:null,_449:null,_44a:null,_44b:null,_44c:null,_44d:null,_44e:null,_3:null};}};
+var cls96={_325:"org/jbox2d/dynamics/BodyDef",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls96,_274:null,_367:null,_275:null,_363:0,_359:null,_364:0,_35c:0,_35b:0,_35f:0,_360:0,_35e:0,_35d:0,_361:0,_35a:0,_3:null};}};
+var cls29={_325:"org/jbox2d/collision/AABB",_31d:cls241,$vt:[_45f,_1,_4,_10],$new:function(){return {_3:cls29,_167:null,_168:null,_3:null};}};
+var cls116={_325:"org/jbox2d/callbacks/ContactImpulse",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls116,_305:null,_306:null,_304:0,_3:null};}};
+var cls166={_325:"org/jbox2d/collision/SeparationFunction$1",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls166,_3:null};}};
+var cls37={_325:"org/jbox2d/dynamics/joints/MouseJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_479,_474,_47a],$new:function(){return {_3:cls37,_463:null,_464:null,_470:0,_471:0,_472:0,_465:null,_46f:0,_473:0,_475:0,_466:null,_467:null,_476:0,_477:0,_468:null,_469:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls58={_325:"org/jbox2d/dynamics/joints/RopeJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls58,_64a:null,_64b:null,_64c:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls52={_325:"org/jbox2d/dynamics/joints/GearJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls52,_518:null,_51a:null,_528:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls41={_325:"org/jbox2d/dynamics/joints/PrismaticJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4bd,_49e,_4b5],$new:function(){return {_3:cls41,_481:null,_483:null,_485:null,_486:null,_488:0,_48a:null,_48c:0,_48e:0,_490:0,_492:0,_494:0,_496:0,_498:0,_499:null,_4a0:0,_4a2:0,_47d:null,_47e:null,_4a3:0,_4a4:0,_4a5:0,_4a6:0,_49c:null,_49d:null,_4aa:0,_4ab:0,_4a8:0,_4a9:0,_49b:null,_48b:0,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls55={_325:"org/jbox2d/dynamics/joints/ConstantVolumeJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4d7,_4d6,_4d8],$new:function(){return {_3:cls55,_4c3:null,_4c4:null,_4c7:0,_4d2:null,_4c0:0,_4c1:null,_4ca:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls53={_325:"org/jbox2d/dynamics/joints/PulleyJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_4fb,_4ef,_4fa],$new:function(){return {_3:cls53,_4d9:null,_4da:null,_4ea:0,_4ec:0,_4db:null,_4dc:null,_4ed:0,_4e8:0,_4ee:0,_4f1:0,_4f3:0,_4dd:null,_4de:null,_4df:null,_4e0:null,_4e1:null,_4e2:null,_4f4:0,_4f5:0,_4f6:0,_4f7:0,_4f9:0,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls170={_325:"org/jbox2d/dynamics/contacts/PolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_4fe,null,null,null,null,null,null,null,null,null,null,null,null,_30f],$new:function(){return {_3:cls170,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls56={_325:"org/jbox2d/dynamics/joints/ConstantVolumeJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls56,_4cb:0,_4cd:0,_4c2:null,_4c8:null,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls288={_325:"java/io/Closeable",_31d:cls277,$vt:cls241.$vt,$new:function(){return {_3:cls288,_3:null};}};
+var cls196={_325:"java/lang/StringIndexOutOfBoundsException",_31d:cls106,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls196,_705:null,_704:null,_715:null,_3:null};}};
+var cls171={_325:"org/jbox2d/dynamics/contacts/EdgeAndPolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_509,null,null,null,null,null,null,null,null,null,null,null,null,_506],$new:function(){return {_3:cls171,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls51={_325:"org/jbox2d/dynamics/joints/GearJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_53f,_52c,_53e],$new:function(){return {_3:cls51,_519:null,_51b:null,_51c:null,_51d:null,_51e:null,_525:null,_50c:null,_50d:null,_50e:null,_50f:null,_510:null,_511:null,_523:0,_527:0,_52a:0,_529:0,_52b:0,_52d:0,_52e:0,_52f:0,_530:0,_512:null,_513:null,_514:null,_515:null,_531:0,_532:0,_533:0,_534:0,_535:0,_536:0,_537:0,_538:0,_516:null,_517:null,_53a:0,_53c:0,_53b:0,_53d:0,_539:0,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls172={_325:"org/jbox2d/common/MathUtils",_31d:cls245,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls172,_3:null};}};
+var cls109={_325:"org/jbox2d/collision/shapes/EdgeShape",_31d:cls246,$vt:[_8,_1,_4,_54f,null,null,null,null,null,null,null,null,null,null,null,null,_54b,_54e,_54c,_54d],$new:function(){return {_3:cls109,_f5:null,_f6:null,_f9:null,_fb:null,_f8:0,_fa:0,_54a:null,_119:null,_45:0,_3:null};}};
+var cls289={_325:"java/lang/IncompatibleClassChangeError",_31d:cls290,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls289,_705:null,_704:null,_715:null,_3:null};}};
+var cls126={_325:"java/lang/reflect/Constructor",_31d:cls243,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls126,_10d:null,_102:null,_108:null,_104:0,_106:null,_8d3:null,_8d4:null,_3:null};}};
+var cls173={_325:"org/jbox2d/dynamics/contacts/PolygonAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_554,null,null,null,null,null,null,null,null,null,null,null,null,_30f],$new:function(){return {_3:cls173,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls99={_325:"org/jbox2d/collision/shapes/PolygonShape",_31d:cls246,$vt:[_8,_1,_4,_565,null,null,null,null,null,null,null,null,null,null,null,null,_562,_55e,_563,_564],$new:function(){return {_3:cls99,_ea:null,_e5:null,_e6:null,_e4:0,_559:null,_55a:null,_55b:null,_55c:null,_55d:null,_119:null,_45:0,_3:null};}};
+var cls38={_325:"org/jbox2d/dynamics/joints/MouseJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls38,_46a:null,_46b:0,_46c:0,_46d:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls174={_325:"org/jbox2d/dynamics/contacts/ChainAndPolygonContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_56c,null,null,null,null,null,null,null,null,null,null,null,null,_569],$new:function(){return {_3:cls174,_568:null,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls23={_325:"java/lang/NoSuchFieldError",_31d:cls289,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls23,_705:null,_704:null,_715:null,_3:null};}};
+var cls175={_325:"org/jbox2d/dynamics/contacts/CircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_572,null,null,null,null,null,null,null,null,null,null,null,null,_30f],$new:function(){return {_3:cls175,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls176={_325:"org/jbox2d/dynamics/contacts/ChainAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_57c,null,null,null,null,null,null,null,null,null,null,null,null,_579],$new:function(){return {_3:cls176,_578:null,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls46={_325:"org/jbox2d/dynamics/joints/WeldJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls46,_663:null,_665:null,_667:0,_669:0,_66b:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls195={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$13",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_583],$new:function(){return {_3:cls195,_581:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls194={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$12",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_588],$new:function(){return {_3:cls194,_585:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls193={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$11",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_58c],$new:function(){return {_3:cls193,_58a:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls192={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$10",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_590],$new:function(){return {_3:cls192,_58e:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls43={_325:"org/jbox2d/dynamics/joints/RevoluteJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_5b4,_5a8,_5b3],$new:function(){return {_3:cls43,_520:null,_521:null,_591:null,_59a:0,_5a6:0,_5a0:0,_5a2:0,_5a4:0,_522:0,_59c:0,_59e:0,_5aa:0,_5ac:0,_592:null,_593:null,_594:null,_595:null,_5ad:0,_5ae:0,_5af:0,_5b0:0,_596:null,_5b2:0,_5a7:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls54={_325:"org/jbox2d/dynamics/joints/PulleyJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls54,_4e3:null,_4e4:null,_4e5:null,_4e6:null,_4e9:0,_4eb:0,_4e7:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls42={_325:"org/jbox2d/dynamics/joints/PrismaticJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls42,_47f:null,_482:null,_484:null,_487:0,_495:0,_48d:0,_48f:0,_497:0,_491:0,_493:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls40={_325:"org/jbox2d/dynamics/joints/DistanceJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls40,_5b8:null,_5b9:null,_5ba:0,_4cc:0,_4ce:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls108={_325:"org/jbox2d/collision/shapes/ChainShape",_31d:cls246,$vt:[_8,_1,_4,_5c8,null,null,null,null,null,null,null,null,null,null,null,null,_5c3,_5c6,_5c4,_5c5],$new:function(){return {_3:cls108,_2c1:null,_2c0:0,_5be:null,_5bf:null,_5c0:0,_5c1:0,_5c2:null,_119:null,_45:0,_3:null};}};
+var cls48={_325:"org/jbox2d/dynamics/joints/FrictionJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls48,_5d8:null,_5da:null,_5de:0,_5e0:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls135={_325:"java/lang/ArrayIndexOutOfBoundsException",_31d:cls106,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls135,_705:null,_704:null,_715:null,_3:null};}};
+var cls50={_325:"org/jbox2d/dynamics/joints/WheelJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls50,_61d:null,_61e:null,_61f:null,_626:0,_622:0,_624:0,_628:0,_62a:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls191={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$9",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_5ce],$new:function(){return {_3:cls191,_5cc:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls190={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$8",_31d:cls35,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,_5d2],$new:function(){return {_3:cls190,_5d0:null,_16d:null,_16e:0,_16c:0,_16f:null,_3:null};}};
+var cls47={_325:"org/jbox2d/dynamics/joints/FrictionJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_5ee,_5e2,_5ed],$new:function(){return {_3:cls47,_5d9:null,_5db:null,_5dc:null,_5dd:0,_5df:0,_5e1:0,_5e4:0,_5e6:0,_5d3:null,_5d4:null,_5d5:null,_5d6:null,_5e7:0,_5e8:0,_5e9:0,_5ea:0,_5d7:null,_5ec:0,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls178={_325:"org/jbox2d/dynamics/contacts/EdgeAndCircleContact",_31d:cls77,$vt:[_8,_1,_4,_10,null,null,null,_5f4,null,null,null,null,null,null,null,null,null,null,null,null,_5f1],$new:function(){return {_3:cls178,_230:0,_312:null,_231:null,_30b:null,_30c:null,_42:null,_43:null,_310:0,_311:0,_20a:null,_242:0,_243:0,_4a:0,_4c:0,_4e:0,_30e:null,_30d:null,_3:null};}};
+var cls44={_325:"org/jbox2d/dynamics/joints/RevoluteJointDef",_31d:cls281,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls44,_597:null,_598:null,_599:0,_5a3:0,_59b:0,_59d:0,_5a5:0,_5a1:0,_59f:0,_196:null,_1af:null,_1a4:null,_1a5:null,_1ac:0,_3:null};}};
+var cls291={_325:"java/util/Collection",_31d:cls254,$vt:cls241.$vt,$new:function(){return {_3:cls291,_3:null};}};
+var cls112={_325:"java/lang/NumberFormatException",_31d:cls107,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls112,_705:null,_704:null,_715:null,_3:null};}};
+var cls39={_325:"org/jbox2d/dynamics/joints/DistanceJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_611,_605,_610],$new:function(){return {_3:cls39,_601:0,_602:0,_604:0,_5fd:null,_5fe:null,_603:0,_600:0,_5ff:0,_607:0,_609:0,_5f8:null,_5f9:null,_5fa:null,_5fb:null,_5fc:null,_60a:0,_60b:0,_60c:0,_60d:0,_60f:0,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
 var cls169={_325:"[org/jbox2d/dynamics/joints/DistanceJoint",_31d:cls241,_2b8:cls39,$vt:cls241.$vt,$it:cls241.$it};
-var cls49={_325:"org/jbox2d/dynamics/joints/WheelJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_642,_62c,_641]};
-var cls57={_325:"org/jbox2d/dynamics/joints/RopeJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_65d,_652,_65c]};
-var cls45={_325:"org/jbox2d/dynamics/joints/WeldJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_67f,_66e,_67c]};
-var cls97={_325:"org/jbox2d/collision/shapes/CircleShape",_31d:cls246,$vt:[_8,_1,_4,_684,null,null,null,null,null,null,null,null,null,null,null,null,_681,_680,_682,_683]};
-var cls0={_325:"java/lang/StringBuilder",_31d:cls241,$vt:[_692,_1,_4,_10]};
-var cls292={_325:"java/lang/Thread",_31d:cls241,$vt:[_694,_1,_4,_10]};
-var cls28={_325:"org/jbox2d/common/Sweep",_31d:cls241,$vt:[_696,_1,_4,_10]};
-var cls95={_325:"java/util/NumberComparator$Z",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls89={_325:"java/util/NumberComparator$F",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls90={_325:"java/util/NumberComparator$I",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls94={_325:"java/util/NumberComparator$L",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls293={_325:"java/util/AbstractMap",_31d:cls241,$vt:[_6a8,_6a2,_6a4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6a6,_6a3,_6a1,_6a5,_6a7,null]};
-var cls91={_325:"java/util/NumberComparator$S",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls92={_325:"java/util/NumberComparator$B",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls88={_325:"java/util/NumberComparator$D",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls93={_325:"java/util/NumberComparator$C",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls294={_325:"java/io/OutputStream",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6b2,null,null,null,null,_6b4]};
-var cls295={_325:"java/util/MapEntry",_31d:cls241,$vt:[_6bc,_6b8,_6bb,_10]};
-var cls167={_325:"org/jbox2d/common/Vec3",_31d:cls241,$vt:[_6c0,_6c2,_6c1,_6c5]};
-var cls1={_325:"org/jbox2d/common/Vec2",_31d:cls241,$vt:[_6c9,_6cb,_6ca,_6cc]};
+var cls49={_325:"org/jbox2d/dynamics/joints/WheelJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_642,_62c,_641],$new:function(){return {_3:cls49,_629:0,_62b:0,_612:null,_613:null,_614:null,_615:null,_640:0,_621:0,_63f:0,_623:0,_625:0,_627:0,_62e:0,_630:0,_616:null,_617:null,_631:0,_632:0,_633:0,_634:0,_618:null,_619:null,_63d:0,_63e:0,_637:0,_638:0,_639:0,_620:0,_63a:0,_63b:0,_63c:0,_61a:null,_61b:null,_61c:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls57={_325:"org/jbox2d/dynamics/joints/RopeJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_65d,_652,_65c],$new:function(){return {_3:cls57,_643:null,_644:null,_64d:0,_651:0,_64f:0,_654:0,_656:0,_645:null,_646:null,_647:null,_648:null,_649:null,_657:0,_658:0,_659:0,_65a:0,_64e:0,_650:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls45={_325:"org/jbox2d/dynamics/joints/WeldJoint",_31d:cls60,$vt:[_8,_1,_4,_10,_67f,_66e,_67c],$new:function(){return {_3:cls45,_66a:0,_66c:0,_67a:0,_664:null,_666:null,_668:0,_679:0,_66d:null,_670:0,_672:0,_65e:null,_65f:null,_660:null,_661:null,_673:0,_674:0,_675:0,_676:0,_662:null,_1a7:null,_1a8:null,_1a9:null,_1b2:null,_1b7:null,_1aa:null,_1ab:null,_1ae:0,_1ad:0,_1b0:null,_1a6:null,_3:null};}};
+var cls97={_325:"org/jbox2d/collision/shapes/CircleShape",_31d:cls246,$vt:[_8,_1,_4,_684,null,null,null,null,null,null,null,null,null,null,null,null,_681,_680,_682,_683],$new:function(){return {_3:cls97,_de:null,_119:null,_45:0,_3:null};}};
+var cls0={_325:"java/lang/StringBuilder",_31d:cls241,$vt:[_692,_1,_4,_10],$new:function(){return {_3:cls0,_686:null,_68a:0,_3:null};}};
+var cls292={_325:"java/lang/Thread",_31d:cls241,$vt:[_694,_1,_4,_10],$new:function(){return {_3:cls292,_8e2:null,_8e3:0,_695:null,_8e4:0,_3:null};}};
+var cls28={_325:"org/jbox2d/common/Sweep",_31d:cls241,$vt:[_696,_1,_4,_10],$new:function(){return {_3:cls28,_64:null,_2f8:null,_2f4:null,_2f9:0,_2f5:0,_241:0,_3:null};}};
+var cls95={_325:"java/util/NumberComparator$Z",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls95,_3:null};}};
+var cls89={_325:"java/util/NumberComparator$F",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls89,_3:null};}};
+var cls90={_325:"java/util/NumberComparator$I",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls90,_3:null};}};
+var cls94={_325:"java/util/NumberComparator$L",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls94,_3:null};}};
+var cls293={_325:"java/util/AbstractMap",_31d:cls241,$vt:[_6a8,_6a2,_6a4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6a6,_6a3,_6a1,_6a5,_6a7,null],$new:function(){return {_3:cls293,_8e5:null,_8e6:null,_3:null};}};
+var cls91={_325:"java/util/NumberComparator$S",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls91,_3:null};}};
+var cls92={_325:"java/util/NumberComparator$B",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls92,_3:null};}};
+var cls88={_325:"java/util/NumberComparator$D",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls88,_3:null};}};
+var cls93={_325:"java/util/NumberComparator$C",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls93,_3:null};}};
+var cls294={_325:"java/io/OutputStream",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6b2,null,null,null,null,_6b4],$new:function(){return {_3:cls294,_3:null};}};
+var cls295={_325:"java/util/MapEntry",_31d:cls241,$vt:[_6bc,_6b8,_6bb,_10],$new:function(){return {_3:cls295,_6b6:null,_6b7:null,_3:null};}};
+var cls167={_325:"org/jbox2d/common/Vec3",_31d:cls241,$vt:[_6c0,_6c2,_6c1,_6c5],$new:function(){return {_3:cls167,_4b2:0,_4b3:0,_4b0:0,_3:null};}};
+var cls1={_325:"org/jbox2d/common/Vec2",_31d:cls241,$vt:[_6c9,_6cb,_6ca,_6cc],$new:function(){return {_3:cls1,_82:0,_83:0,_3:null};}};
 var cls100={_325:"[org/jbox2d/common/Vec2",_31d:cls241,_2b8:cls1,$vt:cls241.$vt,$it:cls241.$it};
-var cls61={_325:"org/jbox2d/pooling/normal/DefaultWorldPool",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls296={_325:"java/io/Writer",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_700,null,null,_6ff]};
-var cls197={_325:"java/lang/Throwable",_31d:cls241,$vt:[_70d,_1,_4,_10]};
-var cls232={_325:"java/util/AbstractList$SimpleListIterator",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls68={_325:"org/jbox2d/dynamics/WorldRayCastWrapper",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls168={_325:"org/jbox2d/common/Mat33",_31d:cls241,$vt:[_8,_726,_725,_10]};
-var cls231={_325:"java/util/List",_31d:cls291,$vt:cls241.$vt};
-var cls297={_325:"java/io/InputStream",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls236={_325:"java/util/HashMap$Entry",_31d:cls295,$vt:[_6bc,_6b8,_6bb,_10]};
+var cls61={_325:"org/jbox2d/pooling/normal/DefaultWorldPool",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls61,_6df:null,_6e0:null,_6e1:null,_6e4:null,_6e2:null,_6e3:null,_6cd:null,_6ce:null,_6cf:null,_6d0:null,_6d2:null,_6d4:null,_6d6:null,_6d8:null,_6da:null,_6dc:null,_6de:null,_6e6:null,_6e7:null,_6e5:null,_3:null};}};
+var cls296={_325:"java/io/Writer",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_700,null,null,_6ff],$new:function(){return {_3:cls296,_701:null,_3:null};}};
+var cls197={_325:"java/lang/Throwable",_31d:cls241,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls197,_705:null,_704:null,_715:null,_3:null};}};
+var cls232={_325:"java/util/AbstractList$SimpleListIterator",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls232,_71a:0,_71c:0,_71d:0,_719:null,_3:null};}};
+var cls68={_325:"org/jbox2d/dynamics/WorldRayCastWrapper",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls68,_721:null,_722:null,_723:null,_8e7:null,_8e8:null,_3:null};}};
+var cls168={_325:"org/jbox2d/common/Mat33",_31d:cls241,$vt:[_8,_726,_725,_10],$new:function(){return {_3:cls168,_4ac:null,_4ae:null,_4af:null,_3:null};}};
+var cls231={_325:"java/util/List",_31d:cls291,$vt:cls241.$vt,$new:function(){return {_3:cls231,_3:null};}};
+var cls297={_325:"java/io/InputStream",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls297,_3:null};}};
+var cls236={_325:"java/util/HashMap$Entry",_31d:cls295,$vt:[_6bc,_6b8,_6bb,_10],$new:function(){return {_3:cls236,_729:0,_42a:null,_6b6:null,_6b7:null,_3:null};}};
 var cls234={_325:"[java/util/HashMap$Entry",_31d:cls241,_2b8:cls236,$vt:cls241.$vt,$it:cls241.$it};
-var cls26={_325:"org/jbox2d/collision/broadphase/DynamicTree",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls203={_325:"java/lang/Enum",_31d:cls241,$vt:[_74d,_74b,_74c,_749]};
-var cls16={_325:"org/jbox2d/collision/ContactID",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls67={_325:"org/jbox2d/dynamics/WorldQueryWrapper",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls75={_325:"org/jbox2d/dynamics/ContactManager",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls205={_325:"org/jbox2d/collision/broadphase/BroadPhase",_31d:cls241,$vt:[_8,_1,_4,_10]};
-var cls152={_325:"org/jbox2d/common/Mat22",_31d:cls241,$vt:[_76c,_770,_76f,_771]};
-var cls298={_325:"java/lang/Number",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null]};
-var cls207={_325:"org/jbox2d/collision/broadphase/Pair",_31d:cls241,$vt:[_8,_1,_4,_10]};
+var cls26={_325:"org/jbox2d/collision/broadphase/DynamicTree",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls26,_732:null,_735:null,_733:0,_734:0,_738:0,_739:0,_72a:null,_72b:null,_72c:null,_72d:null,_72e:null,_72f:null,_730:null,_731:null,_3:null};}};
+var cls203={_325:"java/lang/Enum",_31d:cls241,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls203,_747:null,_748:0,_3:null};}};
+var cls16={_325:"org/jbox2d/collision/ContactID",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls16,_d8:0,_d9:0,_db:0,_dc:0,_3:null};}};
+var cls67={_325:"org/jbox2d/dynamics/WorldQueryWrapper",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls67,_754:null,_756:null,_3:null};}};
+var cls75={_325:"org/jbox2d/dynamics/ContactManager",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls75,_36b:null,_22f:null,_22b:0,_757:null,_22c:null,_759:null,_3:null};}};
+var cls205={_325:"org/jbox2d/collision/broadphase/BroadPhase",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls205,_766:null,_75e:0,_765:null,_763:0,_764:0,_761:null,_75f:0,_760:0,_767:0,_3:null};}};
+var cls152={_325:"org/jbox2d/common/Mat22",_31d:cls241,$vt:[_76c,_770,_76f,_771],$new:function(){return {_3:cls152,_94:null,_96:null,_3:null};}};
+var cls298={_325:"java/lang/Number",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null],$new:function(){return {_3:cls298,_3:null};}};
+var cls207={_325:"org/jbox2d/collision/broadphase/Pair",_31d:cls241,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls207,_769:0,_76a:0,_3:null};}};
 var cls206={_325:"[org/jbox2d/collision/broadphase/Pair",_31d:cls241,_2b8:cls207,$vt:cls241.$vt,$it:cls241.$it};
-var cls208={_325:"java/lang/StackTraceElement",_31d:cls241,$vt:[_780,_781,_783,_10]};
+var cls208={_325:"java/lang/StackTraceElement",_31d:cls241,$vt:[_780,_781,_783,_10],$new:function(){return {_3:cls208,_777:null,_778:0,_779:null,_77a:null,_3:null};}};
 var cls199={_325:"[java/lang/StackTraceElement",_31d:cls241,_2b8:cls208,$vt:cls241.$vt,$it:cls241.$it};
-var cls209={_325:"org/jbox2d/pooling/normal/MutableStack",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null]};
-var cls2={_325:"org/jbox2d/common/Transform",_31d:cls241,$vt:[_78f,_1,_4,_10]};
-var cls239={_325:"java/util/Set",_31d:cls291,$vt:cls241.$vt};
-var cls177={_325:"org/jbox2d/common/Rot",_31d:cls241,$vt:[_792,_1,_4,_794]};
-var cls210={_325:"org/jbox2d/dynamics/BodyType",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls209={_325:"org/jbox2d/pooling/normal/MutableStack",_31d:cls241,$vt:[_8,_1,_4,_10,null,null,null,null,null],$new:function(){return {_3:cls209,_787:null,_786:0,_789:0,_3:null};}};
+var cls2={_325:"org/jbox2d/common/Transform",_31d:cls241,$vt:[_78f,_1,_4,_10],$new:function(){return {_3:cls2,_8c:null,_8a:null,_3:null};}};
+var cls239={_325:"java/util/Set",_31d:cls291,$vt:cls241.$vt,$new:function(){return {_3:cls239,_3:null};}};
+var cls177={_325:"org/jbox2d/common/Rot",_31d:cls241,$vt:[_792,_1,_4,_794],$new:function(){return {_3:cls177,_8e:0,_8d:0,_3:null};}};
+var cls210={_325:"org/jbox2d/dynamics/BodyType",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls210,_747:null,_748:0,_3:null};}};
 var cls211={_325:"[org/jbox2d/dynamics/BodyType",_31d:cls241,_2b8:cls210,$vt:cls241.$vt,$it:cls241.$it};
-var cls212={_325:"org/jbox2d/collision/ContactID$Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls212={_325:"org/jbox2d/collision/ContactID$Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls212,_747:null,_748:0,_3:null};}};
 var cls213={_325:"[org/jbox2d/collision/ContactID$Type",_31d:cls241,_2b8:cls212,$vt:cls241.$vt,$it:cls241.$it};
-var cls214={_325:"org/jbox2d/collision/TimeOfImpact$TOIOutputState",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls214={_325:"org/jbox2d/collision/TimeOfImpact$TOIOutputState",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls214,_747:null,_748:0,_3:null};}};
 var cls215={_325:"[org/jbox2d/collision/TimeOfImpact$TOIOutputState",_31d:cls241,_2b8:cls214,$vt:cls241.$vt,$it:cls241.$it};
-var cls216={_325:"org/jbox2d/dynamics/joints/LimitState",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls216={_325:"org/jbox2d/dynamics/joints/LimitState",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls216,_747:null,_748:0,_3:null};}};
 var cls217={_325:"[org/jbox2d/dynamics/joints/LimitState",_31d:cls241,_2b8:cls216,$vt:cls241.$vt,$it:cls241.$it};
-var cls299={_325:"java/util/AbstractCollection",_31d:cls241,$vt:[_7a3,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7a0,null,_7a4,_79f,_7a2]};
-var cls300={_325:"java/lang/Exception",_31d:cls197,$vt:[_70d,_1,_4,_10]};
-var cls240={_325:"java/util/HashMap$EntryIterator",_31d:cls286,$vt:[_8,_1,_4,_10]};
-var cls233={_325:"java/io/ConsolePrintStream$1",_31d:cls294,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6b2,_7ac,null,null,null,_6b4]};
-var cls219={_325:"org/jbox2d/collision/Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls299={_325:"java/util/AbstractCollection",_31d:cls241,$vt:[_7a3,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7a0,null,_7a4,_79f,_7a2],$new:function(){return {_3:cls299,_3:null};}};
+var cls300={_325:"java/lang/Exception",_31d:cls197,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls300,_705:null,_704:null,_715:null,_3:null};}};
+var cls240={_325:"java/util/HashMap$EntryIterator",_31d:cls286,$vt:[_8,_1,_4,_10],$new:function(){return {_3:cls240,_41e:0,_421:0,_422:null,_429:null,_42b:null,_41f:null,_3:null};}};
+var cls233={_325:"java/io/ConsolePrintStream$1",_31d:cls294,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_6b2,_7ac,null,null,null,_6b4],$new:function(){return {_3:cls233,_3:null};}};
+var cls219={_325:"org/jbox2d/collision/Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls219,_747:null,_748:0,_3:null};}};
 var cls218={_325:"[org/jbox2d/collision/Type",_31d:cls241,_2b8:cls219,$vt:cls241.$vt,$it:cls241.$it};
-var cls220={_325:"org/jbox2d/collision/Collision$EPAxis$Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls220={_325:"org/jbox2d/collision/Collision$EPAxis$Type",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls220,_747:null,_748:0,_3:null};}};
 var cls221={_325:"[org/jbox2d/collision/Collision$EPAxis$Type",_31d:cls241,_2b8:cls220,$vt:cls241.$vt,$it:cls241.$it};
-var cls301={_325:"java/io/FilterOutputStream",_31d:cls294,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7b2,_7b4,null,null,null,_7b3]};
-var cls187={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$5",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7b7]};
-var cls188={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$6",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7ba]};
-var cls223={_325:"org/jbox2d/collision/Manifold$ManifoldType",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls301={_325:"java/io/FilterOutputStream",_31d:cls294,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7b2,_7b4,null,null,null,_7b3],$new:function(){return {_3:cls301,_7b1:null,_3:null};}};
+var cls187={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$5",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7b7],$new:function(){return {_3:cls187,_7b5:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls188={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$6",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7ba],$new:function(){return {_3:cls188,_7b8:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls223={_325:"org/jbox2d/collision/Manifold$ManifoldType",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls223,_747:null,_748:0,_3:null};}};
 var cls222={_325:"[org/jbox2d/collision/Manifold$ManifoldType",_31d:cls241,_2b8:cls223,$vt:cls241.$vt,$it:cls241.$it};
-var cls189={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$7",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7be]};
-var cls183={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$1",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c1]};
-var cls184={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$2",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c4]};
-var cls185={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$3",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c7]};
-var cls186={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$4",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7ca]};
-var cls225={_325:"org/jbox2d/dynamics/joints/JointType",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls189={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$7",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7be],$new:function(){return {_3:cls189,_7bc:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls183={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$1",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c1],$new:function(){return {_3:cls183,_7bf:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls184={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$2",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c4],$new:function(){return {_3:cls184,_7c2:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls185={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$3",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7c7],$new:function(){return {_3:cls185,_7c5:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls186={_325:"org/jbox2d/pooling/normal/DefaultWorldPool$4",_31d:cls209,$vt:[_8,_1,_4,_10,null,null,null,null,_7ca],$new:function(){return {_3:cls186,_7c8:null,_787:null,_786:0,_789:0,_3:null};}};
+var cls225={_325:"org/jbox2d/dynamics/joints/JointType",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls225,_747:null,_748:0,_3:null};}};
 var cls224={_325:"[org/jbox2d/dynamics/joints/JointType",_31d:cls241,_2b8:cls225,$vt:cls241.$vt,$it:cls241.$it};
-var cls302={_325:"java/lang/Error",_31d:cls197,$vt:[_70d,_1,_4,_10]};
-var cls227={_325:"org/jbox2d/collision/shapes/ShapeType",_31d:cls203,$vt:[_74d,_74b,_74c,_749]};
+var cls302={_325:"java/lang/Error",_31d:cls197,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls302,_705:null,_704:null,_715:null,_3:null};}};
+var cls227={_325:"org/jbox2d/collision/shapes/ShapeType",_31d:cls203,$vt:[_74d,_74b,_74c,_749],$new:function(){return {_3:cls227,_747:null,_748:0,_3:null};}};
 var cls226={_325:"[org/jbox2d/collision/shapes/ShapeType",_31d:cls241,_2b8:cls227,$vt:cls241.$vt,$it:cls241.$it};
-var cls229={_325:"java/io/PrintWriter",_31d:cls296,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7d3,_7cf,_7d2,_7d4]};
-var cls228={_325:"java/io/IOException",_31d:cls300,$vt:[_70d,_1,_4,_10]};
-var cls128={_325:"java/lang/NoSuchMethodError",_31d:cls302,$vt:[_70d,_1,_4,_10]};
-var cls103={_325:"java/lang/String",_31d:cls241,$vt:[_7e3,_7dc,_7df,_10]};
+var cls229={_325:"java/io/PrintWriter",_31d:cls296,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7d3,_7cf,_7d2,_7d4],$new:function(){return {_3:cls229,_8e9:0,_7d1:0,_8ea:0,_7d0:null,_701:null,_3:null};}};
+var cls228={_325:"java/io/IOException",_31d:cls300,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls228,_705:null,_704:null,_715:null,_3:null};}};
+var cls128={_325:"java/lang/NoSuchMethodError",_31d:cls302,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls128,_705:null,_704:null,_715:null,_3:null};}};
+var cls103={_325:"java/lang/String",_31d:cls241,$vt:[_7e3,_7dc,_7df,_10],$new:function(){return {_3:cls103,_7d7:null,_7d8:0,_7d9:0,_7d6:0,_3:null};}};
 var cls136={_325:"[java/lang/String",_31d:cls241,_2b8:cls103,$vt:cls241.$vt,$it:cls241.$it};
-var cls202={_325:"java/lang/CloneNotSupportedException",_31d:cls300,$vt:[_70d,_1,_4,_10]};
-var cls290={_325:"java/lang/LinkageError",_31d:cls302,$vt:[_70d,_1,_4,_10]};
-var cls303={_325:"java/io/PrintStream",_31d:cls301,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7e6,_7ee,null,null,null,_7ec,null,null,null,_7e9]};
-var cls304={_325:"java/lang/StackOverflowError",_31d:cls302,$vt:[_70d,_1,_4,_10]};
-var cls305={_325:"java/util/AbstractList",_31d:cls299,$vt:[_7a3,_7f2,_7f3,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7f4,_7a0,null,_7f5,_7f1,_7a2,null,null,null,null,null,null,_7f0]};
-var cls9={_325:"java/lang/AssertionError",_31d:cls302,$vt:[_70d,_1,_4,_10]};
-var cls132={_325:"java/lang/RuntimeException",_31d:cls300,$vt:[_70d,_1,_4,_10]};
-var cls198={_325:"java/lang/IllegalStateException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls105={_325:"java/lang/NullPointerException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls154={_325:"java/lang/NegativeArraySizeException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls160={_325:"java/util/ConcurrentModificationException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls125={_325:"java/lang/ClassNotFoundException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls161={_325:"java/util/NoSuchElementException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls181={_325:"java/lang/ClassCastException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls111={_325:"java/lang/UnsupportedOperationException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls106={_325:"java/lang/IndexOutOfBoundsException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls107={_325:"java/lang/IllegalArgumentException",_31d:cls132,$vt:[_70d,_1,_4,_10]};
-var cls142={_325:"java/io/ConsolePrintStream",_31d:cls303,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7f9,_7ee,null,null,null,_7ec,null,null,null,_7f8]};
-var cls230={_325:"java/io/UnsupportedEncodingException",_31d:cls228,$vt:[_70d,_1,_4,_10]};
-var cls162={_325:"java/util/HashMap",_31d:cls293,$vt:[_6a8,_6a2,_6a4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_80f,_807,_803,_80e,_814,_805]};
-var cls82={_325:"java/lang/Float",_31d:cls298,$vt:[_829,_81e,_822,_10,null,null,null,null,null,_828,_827,_821,_81c,_824,_81d]};
-var cls83={_325:"java/lang/Long",_31d:cls298,$vt:[_84a,_83c,_841,_10,null,null,null,null,null,_845,_843,_83d,_834,_842,_83b]};
+var cls202={_325:"java/lang/CloneNotSupportedException",_31d:cls300,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls202,_705:null,_704:null,_715:null,_3:null};}};
+var cls290={_325:"java/lang/LinkageError",_31d:cls302,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls290,_705:null,_704:null,_715:null,_3:null};}};
+var cls303={_325:"java/io/PrintStream",_31d:cls301,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7e6,_7ee,null,null,null,_7ec,null,null,null,_7e9],$new:function(){return {_3:cls303,_7eb:0,_7ed:0,_7ea:null,_7b1:null,_3:null};}};
+var cls304={_325:"java/lang/StackOverflowError",_31d:cls302,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls304,_705:null,_704:null,_715:null,_3:null};}};
+var cls305={_325:"java/util/AbstractList",_31d:cls299,$vt:[_7a3,_7f2,_7f3,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7f4,_7a0,null,_7f5,_7f1,_7a2,null,null,null,null,null,null,_7f0],$new:function(){return {_3:cls305,_71b:0,_3:null};}};
+var cls9={_325:"java/lang/AssertionError",_31d:cls302,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls9,_705:null,_704:null,_715:null,_3:null};}};
+var cls132={_325:"java/lang/RuntimeException",_31d:cls300,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls132,_705:null,_704:null,_715:null,_3:null};}};
+var cls198={_325:"java/lang/IllegalStateException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls198,_705:null,_704:null,_715:null,_3:null};}};
+var cls105={_325:"java/lang/NullPointerException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls105,_705:null,_704:null,_715:null,_3:null};}};
+var cls154={_325:"java/lang/NegativeArraySizeException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls154,_705:null,_704:null,_715:null,_3:null};}};
+var cls160={_325:"java/util/ConcurrentModificationException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls160,_705:null,_704:null,_715:null,_3:null};}};
+var cls125={_325:"java/lang/ClassNotFoundException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls125,_705:null,_704:null,_715:null,_3:null};}};
+var cls161={_325:"java/util/NoSuchElementException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls161,_705:null,_704:null,_715:null,_3:null};}};
+var cls181={_325:"java/lang/ClassCastException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls181,_705:null,_704:null,_715:null,_3:null};}};
+var cls111={_325:"java/lang/UnsupportedOperationException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls111,_705:null,_704:null,_715:null,_3:null};}};
+var cls106={_325:"java/lang/IndexOutOfBoundsException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls106,_705:null,_704:null,_715:null,_3:null};}};
+var cls107={_325:"java/lang/IllegalArgumentException",_31d:cls132,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls107,_705:null,_704:null,_715:null,_3:null};}};
+var cls142={_325:"java/io/ConsolePrintStream",_31d:cls303,$vt:[_8,_1,_4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7f9,_7ee,null,null,null,_7ec,null,null,null,_7f8],$new:function(){return {_3:cls142,_7f7:null,_7eb:0,_7ed:0,_7ea:null,_7b1:null,_3:null};}};
+var cls230={_325:"java/io/UnsupportedEncodingException",_31d:cls228,$vt:[_70d,_1,_4,_10],$new:function(){return {_3:cls230,_705:null,_704:null,_715:null,_3:null};}};
+var cls162={_325:"java/util/HashMap",_31d:cls293,$vt:[_6a8,_6a2,_6a4,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_80f,_807,_803,_80e,_814,_805],$new:function(){return {_3:cls162,_7ff:0,_424:null,_420:0,_800:0,_802:0,_8e5:null,_8e6:null,_3:null};}};
+var cls82={_325:"java/lang/Float",_31d:cls298,$vt:[_829,_81e,_822,_10,null,null,null,null,null,_828,_827,_821,_81c,_824,_81d],$new:function(){return {_3:cls82,_816:0,_3:null};}};
+var cls83={_325:"java/lang/Long",_31d:cls298,$vt:[_84a,_83c,_841,_10,null,null,null,null,null,_845,_843,_83d,_834,_842,_83b],$new:function(){return {_3:cls83,_831:0,_3:null};}};
 var cls237={_325:"[java/lang/Long",_31d:cls241,_2b8:cls83,$vt:cls241.$vt,$it:cls241.$it};
-var cls84={_325:"java/lang/Short",_31d:cls298,$vt:[_860,_85e,_85f,_10,null,null,null,null,null,_864,_866,_867,_863,_865,_868]};
-var cls86={_325:"java/lang/Byte",_31d:cls298,$vt:[_86f,_86d,_86e,_10,null,null,null,null,null,_875,_877,_878,_874,_876,_879]};
-var cls80={_325:"java/lang/Integer",_31d:cls298,$vt:[_891,_885,_88a,_10,null,null,null,null,null,_88e,_88c,_886,_87e,_88b,_884]};
+var cls84={_325:"java/lang/Short",_31d:cls298,$vt:[_860,_85e,_85f,_10,null,null,null,null,null,_864,_866,_867,_863,_865,_868],$new:function(){return {_3:cls84,_85b:0,_3:null};}};
+var cls86={_325:"java/lang/Byte",_31d:cls298,$vt:[_86f,_86d,_86e,_10,null,null,null,null,null,_875,_877,_878,_874,_876,_879],$new:function(){return {_3:cls86,_86b:0,_3:null};}};
+var cls80={_325:"java/lang/Integer",_31d:cls298,$vt:[_891,_885,_88a,_10,null,null,null,null,null,_88e,_88c,_886,_87e,_88b,_884],$new:function(){return {_3:cls80,_87c:0,_3:null};}};
 var cls238={_325:"[java/lang/Integer",_31d:cls241,_2b8:cls80,$vt:cls241.$vt,$it:cls241.$it};
-var cls81={_325:"java/lang/Double",_31d:cls298,$vt:[_8b6,_8aa,_8ac,_10,null,null,null,null,null,_8b5,_8b4,_8ab,_8a5,_8ad,_8a9]};
-var cls306={_325:"java/util/AbstractSet",_31d:cls299,$vt:[_7a3,_8bc,_8bd,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7a0,null,_7a4,_79f,_7a2]};
-var cls130={_325:"java/util/ArrayList",_31d:cls305,$vt:[_7a3,_7f2,_7f3,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_8cc,_7f4,_8c9,null,_8cd,_8c8,_8cb,null,null,null,null,null,_8ca,_8c3]};
-var cls235={_325:"java/util/HashMap$HashMapEntrySet",_31d:cls306,$vt:[_7a3,_8bc,_8bd,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_8cf,_8d2,_8d0,null,_7a4,_79f,_7a2]};
+var cls81={_325:"java/lang/Double",_31d:cls298,$vt:[_8b6,_8aa,_8ac,_10,null,null,null,null,null,_8b5,_8b4,_8ab,_8a5,_8ad,_8a9],$new:function(){return {_3:cls81,_8a0:0,_3:null};}};
+var cls306={_325:"java/util/AbstractSet",_31d:cls299,$vt:[_7a3,_8bc,_8bd,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_7a0,null,_7a4,_79f,_7a2],$new:function(){return {_3:cls306,_3:null};}};
+var cls130={_325:"java/util/ArrayList",_31d:cls305,$vt:[_7a3,_7f2,_7f3,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_8cc,_7f4,_8c9,null,_8cd,_8c8,_8cb,null,null,null,null,null,_8ca,_8c3],$new:function(){return {_3:cls130,_8c0:0,_8bf:0,_8c2:null,_71b:0,_3:null};}};
+var cls235={_325:"java/util/HashMap$HashMapEntrySet",_31d:cls306,$vt:[_7a3,_8bc,_8bd,_10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,_8cf,_8d2,_8d0,null,_7a4,_79f,_7a2],$new:function(){return {_3:cls235,_8ce:null,_3:null};}};
 var $str24={_3:cls103,_7d7:{_3:cls104,$l:0,$a:[]},_7d8:0,_7d9:0,_7d6:0},$str102={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[80,79,76,89,71,79,78]},_7d8:0,_7d9:7,_7d6:0},$str52={_3:cls103,_7d7:{_3:cls104,$l:11,$a:[67,97,117,115,101,100,32,98,121,58,32]},_7d8:0,_7d9:11,_7d6:0},$str90={_3:cls103,_7d7:{_3:cls104,$l:9,$a:[80,82,73,83,77,65,84,73,67]},_7d8:0,_7d9:9,_7d6:0},$str65={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[82,111,116,40,115,58]},_7d8:0,_7d9:6,_7d6:0},$str61={_3:cls103,_7d7:{_3:cls104,$l:31,$a:[105,110,118,97,108,105,100,32,97,114,103,117,109,101,110,116,32,116,111,32,99,111,110,115,116,114,117,99,116,111,114]},_7d8:0,_7d9:31,_7d6:0},$str38={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[10]},_7d8:0,_7d9:1,_7d6:0},$str33={_3:cls103,_7d7:{_3:cls104,$l:70,$a:[89,111,117,32,99,97,110,110,111,116,32,99,114,101,97,116,101,32,97,32,99,111,110,115,116,97,110,116,32,118,111,108,117,109,101,32,106,111,105,110,116,32,119,105,116,104,32,108,101,115,115,32,116,104,97,110,32,116,104,114,101,101,32,98,111,100,105,101,115,46]},_7d8:0,_7d9:70,_7d6:0},$str63={_3:cls103,_7d7:{_3:cls104,$l:10,$a:[80,111,115,105,116,105,111,110,58,32]},_7d8:0,_7d9:10,_7d6:0},$str67={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[83,84,65,84,73,67]},_7d8:0,_7d9:6,_7d6:0},$str44={_3:cls103,_7d7:{_3:cls104,$l:10,$a:[40,116,104,105,115,32,77,97,112,41]},_7d8:0,_7d9:10,_7d6:0},$str22={_3:cls103,_7d7:{_3:cls104,$l:23,$a:[32,105,115,32,110,111,116,32,112,114,105,109,105,116,105,118,101,32,99,108,97,115,115]},_7d8:0,_7d9:23,_7d6:0},$str73={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[70,65,73,76,69,68]},_7d8:0,_7d9:6,_7d6:0},$str29={_3:cls103,_7d7:{_3:cls104,$l:33,$a:[65,114,114,97,121,32,110,111,116,32,98,117,105,108,116,32,111,102,32,99,111,114,114,101,99,116,32,108,101,110,103,116,104]},_7d8:0,_7d9:33,_7d6:0},$str70={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[86,69,82,84,69,88]},_7d8:0,_7d9:6,_7d6:0},$str12={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[32,99,108,97,115,115]},_7d8:0,_7d9:6,_7d6:0},$str83={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[80,79,73,78,84,83]},_7d8:0,_7d9:6,_7d6:0},$str115={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[49,46]},_7d8:0,_7d9:2,_7d6:0},$str26={_3:cls103,_7d7:{_3:cls104,$l:21,$a:[73,110,118,97,108,105,100,32,99,111,109,112,111,110,101,116,32,115,105,122,101]},_7d8:0,_7d9:21,_7d6:0},$str2={_3:cls103,_7d7:{_3:cls104,$l:51,$a:[66,101,103,105,110,110,105,110,103,32,111,102,32,115,116,97,99,107,32,114,101,97,99,104,101,100,44,32,112,117,115,104,47,112,111,112,115,32,97,114,101,32,117,110,109,97,116,99,104,101,100]},_7d8:0,_7d9:51,_7d6:0},$str3={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[73,110,118,97,108,105,100,32]},_7d8:0,_7d9:8,_7d6:0},$str109={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[45,48,120,48,46,48,112,48]},_7d8:0,_7d9:8,_7d6:0},$str91={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[68,73,83,84,65,78,67,69]},_7d8:0,_7d9:8,_7d6:0},$str7={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[34]},_7d8:0,_7d9:1,_7d6:0},$str56={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[32,32,32,46,46,46]},_7d8:0,_7d9:6,_7d6:0},$str0={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[35]},_7d8:0,_7d9:1,_7d6:0},$str51={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[58,32]},_7d8:0,_7d9:2,_7d6:0},$str4={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[100,111,117,98,108,101]},_7d8:0,_7d9:6,_7d6:0},$str47={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[40]},_7d8:0,_7d9:1,_7d6:0},$str49={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[41]},_7d8:0,_7d9:1,_7d6:0},$str117={_3:cls103,_7d7:{_3:cls104,$l:15,$a:[73,110,118,97,108,105,100,32,114,97,100,105,120,58,32]},_7d8:0,_7d9:15,_7d6:0},$str48={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[44]},_7d8:0,_7d9:1,_7d6:0},$str10={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[60,105,110,105,116,62]},_7d8:0,_7d9:6,_7d6:0},$str42={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[44,32,97,58,32]},_7d8:0,_7d9:5,_7d6:0},$str120={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[48]},_7d8:0,_7d9:1,_7d6:0},$str64={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[82,58,32,10]},_7d8:0,_7d9:4,_7d6:0},$str111={_3:cls103,_7d7:{_3:cls104,$l:3,$a:[45,48,120]},_7d8:0,_7d9:3,_7d6:0},$str46={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[61]},_7d8:0,_7d9:1,_7d6:0},$str39={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[99,48,58,32]},_7d8:0,_7d9:4,_7d6:0},$str110={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[48,120,48,46,48,112,48]},_7d8:0,_7d9:7,_7d6:0},$str97={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[70,82,73,67,84,73,79,78]},_7d8:0,_7d9:8,_7d6:0},$str108={_3:cls103,_7d7:{_3:cls104,$l:9,$a:[45,73,110,102,105,110,105,116,121]},_7d8:0,_7d9:9,_7d6:0},$str14={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[66]},_7d8:0,_7d9:1,_7d6:0},$str54={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[32,32,32,97,116,32]},_7d8:0,_7d9:6,_7d6:0},$str16={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[67]},_7d8:0,_7d9:1,_7d6:0},$str21={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[68]},_7d8:0,_7d9:1,_7d6:0},$str19={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[70]},_7d8:0,_7d9:1,_7d6:0},$str112={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[48,120]},_7d8:0,_7d9:2,_7d6:0},$str30={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[65,65,66,66,91]},_7d8:0,_7d9:5,_7d6:0},$str18={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[73]},_7d8:0,_7d9:1,_7d6:0},$str20={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[74]},_7d8:0,_7d9:1,_7d6:0},$str60={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[93,10]},_7d8:0,_7d9:2,_7d6:0},$str36={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[84,104,114,101,97,100,32]},_7d8:0,_7d9:7,_7d6:0},$str59={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[32,110,117,108,108]},_7d8:0,_7d9:5,_7d6:0},$str17={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[83]},_7d8:0,_7d9:1,_7d6:0},$str15={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[90]},_7d8:0,_7d9:1,_7d6:0},$str23={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[91]},_7d8:0,_7d9:1,_7d6:0},$str32={_3:cls103,_7d7:{_3:cls104,$l:1,$a:[93]},_7d8:0,_7d9:1,_7d6:0},$str81={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[91,93]},_7d8:0,_7d9:2,_7d6:0},$str43={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[123,125]},_7d8:0,_7d9:2,_7d6:0},$str55={_3:cls103,_7d7:{_3:cls104,$l:11,$a:[60,60,85,110,107,110,111,119,110,62,62]},_7d8:0,_7d9:11,_7d6:0},$str8={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[73,110,102,105,110,105,116,121]},_7d8:0,_7d9:8,_7d6:0},$str114={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[112,45,49,50,54]},_7d8:0,_7d9:5,_7d6:0},$str68={_3:cls103,_7d7:{_3:cls104,$l:9,$a:[75,73,78,69,77,65,84,73,67]},_7d8:0,_7d9:9,_7d6:0},$str99={_3:cls103,_7d7:{_3:cls104,$l:15,$a:[67,79,78,83,84,65,78,84,95,86,79,76,85,77,69]},_7d8:0,_7d9:15,_7d6:0},$str82={_3:cls103,_7d7:{_3:cls104,$l:17,$a:[40,116,104,105,115,32,67,111,108,108,101,99,116,105,111,110,41]},_7d8:0,_7d9:17,_7d6:0},$str69={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[68,89,78,65,77,73,67]},_7d8:0,_7d9:7,_7d6:0},$str1={_3:cls103,_7d7:{_3:cls104,$l:56,$a:[69,110,100,32,111,102,32,115,116,97,99,107,32,114,101,97,99,104,101,100,44,32,116,104,101,114,101,32,105,115,32,112,114,111,98,97,98,108,121,32,97,32,108,101,97,107,32,115,111,109,101,119,104,101,114,101]},_7d8:0,_7d9:56,_7d6:0},$str103={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[67,72,65,73,78]},_7d8:0,_7d9:5,_7d6:0},$str122={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[112,45,49,48,50,50]},_7d8:0,_7d9:6,_7d6:0},$str53={_3:cls103,_7d7:{_3:cls104,$l:30,$a:[32,32,32,60,60,78,111,32,115,116,97,99,107,116,114,97,99,101,32,97,118,97,105,108,97,98,108,101,62,62]},_7d8:0,_7d9:30,_7d6:0},$str45={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[44,32]},_7d8:0,_7d9:2,_7d6:0},$str77={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[73,78,65,67,84,73,86,69]},_7d8:0,_7d9:8,_7d6:0},$str41={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[97,48,58,32]},_7d8:0,_7d9:4,_7d6:0},$str71={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[70,65,67,69]},_7d8:0,_7d9:4,_7d6:0},$str57={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[32,109,111,114,101]},_7d8:0,_7d9:5,_7d6:0},$str11={_3:cls103,_7d7:{_3:cls104,$l:33,$a:[32,100,111,101,115,110,39,116,32,104,97,118,101,32,100,101,102,97,117,108,116,32,99,111,110,115,116,114,117,99,116,111,114]},_7d8:0,_7d9:33,_7d6:0},$str37={_3:cls103,_7d7:{_3:cls104,$l:20,$a:[83,119,101,101,112,58,10,108,111,99,97,108,67,101,110,116,101,114,58,32]},_7d8:0,_7d9:20,_7d6:0},$str89={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[82,69,86,79,76,85,84,69]},_7d8:0,_7d9:8,_7d6:0},$str5={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[102,108,111,97,116]},_7d8:0,_7d9:5,_7d6:0},$str75={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[84,79,85,67,72,73,78,71]},_7d8:0,_7d9:8,_7d6:0},$str34={_3:cls103,_7d7:{_3:cls104,$l:68,$a:[73,110,99,111,114,114,101,99,116,32,106,111,105,110,116,32,100,101,102,105,110,105,116,105,111,110,46,32,32,74,111,105,110,116,115,32,104,97,118,101,32,116,111,32,99,111,114,114,101,115,112,111,110,100,32,116,111,32,116,104,101,32,98,111,100,105,101,115]},_7d8:0,_7d9:68,_7d6:0},$str118={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[114,97,100,105,120,32]},_7d8:0,_7d9:6,_7d6:0},$str119={_3:cls103,_7d7:{_3:cls104,$l:14,$a:[32,110,111,116,32,105,110,32,91,49,44,51,54,93]},_7d8:0,_7d9:14,_7d6:0},$str121={_3:cls103,_7d7:{_3:cls104,$l:14,$a:[73,110,118,97,108,105,100,32,105,110,116,58,32,34]},_7d8:0,_7d9:14,_7d6:0},$str101={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[69,68,71,69]},_7d8:0,_7d9:4,_7d6:0},$str58={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[69,108,101,109,101,110,116,32]},_7d8:0,_7d9:8,_7d6:0},$str116={_3:cls103,_7d7:{_3:cls104,$l:15,$a:[73,110,118,97,108,105,100,32,108,111,110,103,58,32,34]},_7d8:0,_7d9:15,_7d6:0},$str86={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[69,68,71,69,95,65]},_7d8:0,_7d9:6,_7d6:0},$str62={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[88,70,111,114,109,58,10]},_7d8:0,_7d9:7,_7d6:0},$str105={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[85,84,70,45,56]},_7d8:0,_7d9:5,_7d6:0},$str50={_3:cls103,_7d7:{_3:cls104,$l:35,$a:[65,114,114,97,121,32,110,111,116,32,98,117,105,108,116,32,119,105,116,104,32,99,111,114,114,101,99,116,32,108,101,110,103,116,104]},_7d8:0,_7d9:35,_7d6:0},$str40={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[44,32,99,58,32]},_7d8:0,_7d9:5,_7d6:0},$str94={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[71,69,65,82]},_7d8:0,_7d9:4,_7d6:0},$str123={_3:cls103,_7d7:{_3:cls104,$l:106,$a:[67,111,108,108,101,99,116,105,111,110,46,116,111,65,114,114,97,121,40,84,91,93,41,32,114,101,113,117,105,114,101,115,32,97,110,32,97,114,114,97,121,32,111,102,32,116,104,101,32,115,97,109,101,32,115,105,122,101,32,97,115,32,116,104,101,32,99,111,108,108,101,99,116,105,111,110,32,116,111,32,98,101,32,112,97,115,115,101,100,32,97,115,32,97,32,112,97,114,97,109,101,116,101,114,46,32]},_7d8:0,_7d9:106,_7d6:0},$str100={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[67,73,82,67,76,69]},_7d8:0,_7d9:6,_7d6:0},$str104={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[110,117,108,108]},_7d8:0,_7d9:4,_7d6:0},$str27={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[116,114,117,101]},_7d8:0,_7d9:4,_7d6:0},$str6={_3:cls103,_7d7:{_3:cls104,$l:3,$a:[58,32,34]},_7d8:0,_7d9:3,_7d6:0},$str25={_3:cls103,_7d7:{_3:cls104,$l:9,$a:[32,111,117,116,32,111,102,58,32]},_7d8:0,_7d9:9,_7d6:0},$str66={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[44,32,99,58]},_7d8:0,_7d9:4,_7d6:0},$str85={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[70,65,67,69,95,66]},_7d8:0,_7d9:6,_7d6:0},$str95={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[87,72,69,69,76]},_7d8:0,_7d9:5,_7d6:0},$str79={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[65,84,95,85,80,80,69,82]},_7d8:0,_7d9:8,_7d6:0},$str31={_3:cls103,_7d7:{_3:cls104,$l:3,$a:[32,46,32]},_7d8:0,_7d9:3,_7d6:0},$str98={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[82,79,80,69]},_7d8:0,_7d9:4,_7d6:0},$str35={_3:cls103,_7d7:{_3:cls104,$l:46,$a:[86,101,114,116,105,99,101,115,32,111,102,32,99,104,97,105,110,32,115,104,97,112,101,32,97,114,101,32,116,111,111,32,99,108,111,115,101,32,116,111,103,101,116,104,101,114]},_7d8:0,_7d9:46,_7d6:0},$str9={_3:cls103,_7d7:{_3:cls104,$l:3,$a:[78,97,78]},_7d8:0,_7d9:3,_7d6:0},$str87={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[69,68,71,69,95,66]},_7d8:0,_7d9:6,_7d6:0},$str76={_3:cls103,_7d7:{_3:cls104,$l:9,$a:[83,69,80,65,82,65,84,69,68]},_7d8:0,_7d9:9,_7d6:0},$str80={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[69,81,85,65,76]},_7d8:0,_7d9:5,_7d6:0},$str93={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[77,79,85,83,69]},_7d8:0,_7d9:5,_7d6:0},$str106={_3:cls103,_7d7:{_3:cls104,$l:14,$a:[115,116,114,105,110,103,32,61,61,32,110,117,108,108]},_7d8:0,_7d9:14,_7d6:0},$str28={_3:cls103,_7d7:{_3:cls104,$l:5,$a:[102,97,108,115,101]},_7d8:0,_7d9:5,_7d6:0},$str74={_3:cls103,_7d7:{_3:cls104,$l:10,$a:[79,86,69,82,76,65,80,80,69,68]},_7d8:0,_7d9:10,_7d6:0},$str92={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[80,85,76,76,69,89]},_7d8:0,_7d9:6,_7d6:0},$str96={_3:cls103,_7d7:{_3:cls104,$l:4,$a:[87,69,76,68]},_7d8:0,_7d9:4,_7d6:0},$str88={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[67,73,82,67,76,69,83]},_7d8:0,_7d9:7,_7d6:0},$str13={_3:cls103,_7d7:{_3:cls104,$l:19,$a:[78,117,108,108,32,97,110,110,111,116,97,116,105,111,110,84,121,112,101]},_7d8:0,_7d9:19,_7d6:0},$str107={_3:cls103,_7d7:{_3:cls104,$l:11,$a:[111,117,116,32,61,61,32,110,117,108,108]},_7d8:0,_7d9:11,_7d6:0},$str84={_3:cls103,_7d7:{_3:cls104,$l:6,$a:[70,65,67,69,95,65]},_7d8:0,_7d9:6,_7d6:0},$str72={_3:cls103,_7d7:{_3:cls104,$l:7,$a:[85,78,75,78,79,87,78]},_7d8:0,_7d9:7,_7d6:0},$str78={_3:cls103,_7d7:{_3:cls104,$l:8,$a:[65,84,95,76,79,87,69,82]},_7d8:0,_7d9:8,_7d6:0},$str113={_3:cls103,_7d7:{_3:cls104,$l:2,$a:[48,46]},_7d8:0,_7d9:2,_7d6:0};
 var vm={fp:0,frames:[{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0}]};
 var VM={};
-VM.allocObject=function(cls) {return {_3:cls};}
+VM.allocObject=function(cls) {return cls.$new();}
 vm.newArray=function(cls,len){return {_3:cls,$l:len,$a:[]};}
 vm.cast=function(o,c){return o;}
 _12a(vm);

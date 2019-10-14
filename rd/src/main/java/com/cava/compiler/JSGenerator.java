@@ -18,6 +18,7 @@ package com.cava.compiler;
 
 import com.cava.compiler.model.Clazz;
 import com.cava.compiler.model.Method;
+import com.cava.compiler.model.NameAndType;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class JSGenerator extends Generator {
             }
             out.println(";");
         }
-        
+
         for(Clazz cls : classList) {
             defineClass(cls);
         }
@@ -76,7 +77,7 @@ public class JSGenerator extends Generator {
         String klassField = nameFor("java/lang/Object:klass");
         out.println("var vm={fp:0,frames:[{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0}]};")
             .println("var VM={};")
-            .println("VM.allocObject=function(cls) {return {%s:cls};}",klassField)
+            .println("VM.allocObject=function(cls) {return cls.$new();}",klassField)
             .println("vm.newArray=function(cls,len){return {%s:cls,$l:len,$a:[]};}", klassField)
             .println("vm.cast=function(o,c){return o;}");
         
@@ -132,6 +133,18 @@ public class JSGenerator extends Generator {
             }
             out.print("]");
         }
+        out.print(",$new:function(){return {%s:cls%d", nameFor("java/lang/Object:klass"), getClassIndex(cls.name));
+        Clazz c = cls;
+        while(c != null) {
+            for(NameAndType f : c.fields) {
+                if(!f.isStatic()) {
+                    out.print(",%s:%s", nameFor(c.name+":"+f.name), DecompilerUtils.isPrimitive(f.type) ? "0" : "null");
+                }
+            }
+            if(c.superName == null) break;
+            c = CompilerContext.resolve(c.superName);
+        }
+        out.print("};}");
         
         out.println("};");
         String name = cls.name;

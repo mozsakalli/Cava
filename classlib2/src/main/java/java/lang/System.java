@@ -48,7 +48,6 @@ public final class System {
      * Otherwise, if any actual component of the source array from position srcOffset through srcOffset+length-1 cannot be converted to the component type of the destination array by assignment conversion, an ArrayStoreException is thrown. In this case, let k be the smallest nonnegative integer less than length such that src[srcOffset+k] cannot be converted to the component type of the destination array; when the exception is thrown, source array components from positions srcOffset through srcOffset+k-1 will already have been copied to destination array positions dstOffset through dstOffset+k-1 and no other positions of the destination array will have been modified. (Because of the restrictions already itemized, this paragraph effectively applies only to the situation where both arrays have component types that are reference types.)
      */
     public static void arraycopy(java.lang.Object src, int srcOffset, java.lang.Object dst, int dstOffset, int length) {
-        /*
         //both must be array
         if(src.klass.componentType == null || dst.klass.componentType == null) return;
         boolean srcIsPrim = src.klass.componentType.isPrimitive();
@@ -60,16 +59,16 @@ public final class System {
         if(dstOffset + length > dstLen) throw new IndexOutOfBoundsException();
         if(srcIsPrim) {
             if(src.klass.componentType.size == dst.klass.componentType.size) {
-                if(src.klass.componentType.size < 0 || src.klass.componentType.size > 8) throw new RuntimeException("Invalid componet size");
+                if(src.klass.componentType.size <= 0 || src.klass.componentType.size > 8) throw new RuntimeException("Invalid componet size");
                 int size = src.klass.componentType.size;
-                CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
+                VM.memmove(dst, dstOffset*size, src, srcOffset*size, length*size);
+                //CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
             }
         } else {
             //todo: check if classes are compatible
-            int size = NativeCode.Int("sizeof(JOBJECT)");
-            CLib.memmove(CharPtr.fromArray(dst), dstOffset*size, CharPtr.fromArray(src), srcOffset * size, length * size);
-        }*/
-        throw new UnsupportedOperationException();
+            VM.memmovePtr(dst, dstOffset, src, srcOffset, length);
+        }
+        //throw new UnsupportedOperationException();
     }
 
     /**

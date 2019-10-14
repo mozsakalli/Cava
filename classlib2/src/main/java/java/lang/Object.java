@@ -18,14 +18,12 @@ package java.lang;
 
 import cava.VM;
 import cava.annotation.Keep;
+import java.lang.reflect.Array;
 
 @Keep
 public class Object{
     
     public Class klass;
-    public int mark;
-    public Object next;
-    public int size;
     
     public Object(){
     }
@@ -62,19 +60,21 @@ public class Object{
     public final void wait(long timeout, int nanos) throws java.lang.InterruptedException {}
 
     protected Object clone() throws CloneNotSupportedException {
-        /*
+        
         if(getClass().isArray()) {
-            int len = Array.getLength(this);
+            int len = VM.getArrayLength(this);
             Object result = Array.newInstance(getClass().getComponentType(), len);
             System.arraycopy(this, 0, result, 0, len);
             return result;
         } else {
-            Object result = NativeCode.Object("JvmAllocObject(%s)", getClass());
-            CLib.memmove(result, 0, this, 0, getClass().size);
-            //CLib.memcpy(result, this, getClass().size);
+            Object result = VM.allocObject(getClass());
+            VM.memmoveObject(result, this);
             return result;
-        }*/
-        throw new UnsupportedOperationException();
+            //Object result = NativeCode.Object("JvmAllocObject(%s)", getClass());
+            //CLib.memmove(result, 0, this, 0, getClass().size);
+            //CLib.memcpy(result, this, getClass().size);
+            //return result;
+        }
     }
     
     protected void finalize() throws Throwable {}

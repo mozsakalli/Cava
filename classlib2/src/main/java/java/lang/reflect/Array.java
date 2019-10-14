@@ -70,7 +70,9 @@ class Array {
         if(componentType == double.class) return new double[length];
         if(componentType == long.class) return new long[length];
         
-        return VM.allocObjectArray(componentType, length);
+        Object[] result = new Object[length];
+        result.klass = Class.getArrayClassFor(componentType);
+        return result;
     }
 
     /**
@@ -123,7 +125,7 @@ class Array {
     public static int getLength(Object array)
         throws IllegalArgumentException {
         if(!array.getClass().isArray()) throw new IllegalArgumentException();
-        return array.size;
+        return VM.getArrayLength(array);
     }
 
     /**

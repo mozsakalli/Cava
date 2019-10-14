@@ -49,25 +49,35 @@ public class JSGenerator extends Generator {
             out.println(";");
         }
         
+        for(Clazz cls : classList) {
+            defineClass(cls);
+        }
+
         if(!strings.isEmpty()) {
             out.print("var ");
             int count=0;
             for(Map.Entry<String,Integer> e : strings.entrySet()) {
                 if(count++ > 0) out.print(",");
-                out.print("$str%d", e.getValue());
+                char[] chars = e.getKey().toCharArray();
+                out.print("$str%d={%s:cls%d,", e.getValue(), nameFor("java/lang/Object:klass"), getClassIndex("java/lang/String"))
+                   .print("%s:{%s:cls%d,$l:%d,$a:[",
+                           nameFor("java/lang/String:value"),nameFor("java/lang/Object:klass"),
+                           getClassIndex("[C"), chars.length);
+                for(int i=0; i<chars.length; i++) {
+                    if(i>0) out.print(","); out.print((int)chars[i]);
+                }        
+                out.print("]},%s:0,%s:%d,%s:0}", nameFor("java/lang/String:offset"),
+                        nameFor("java/lang/String:count"),chars.length,nameFor("java/lang/String:hashCode"));
             }
             out.println(";");
         }
         
-        for(Clazz cls : classList) {
-            defineClass(cls);
-        }
-        
         Method main = CompilerContext.getMainMethod();
+        String klassField = nameFor("java/lang/Object:klass");
         out.println("var vm={fp:0,frames:[{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0},{trap:0}]};")
             .println("var VM={};")
-            .println("VM.allocObject=function(cls) {return {$c:cls};}")
-            .println("vm.newArray=function(cls,len){return {$c:cls,$l:len,$a:[]};}")
+            .println("VM.allocObject=function(cls) {return {%s:cls};}",klassField)
+            .println("vm.newArray=function(cls,len){return {%s:cls,$l:len,$a:[]};}", klassField)
             .println("vm.cast=function(o,c){return o;}");
         
         List<Method> initializers = new BootstrapSorter().process();
@@ -81,8 +91,8 @@ public class JSGenerator extends Generator {
     
     void defineClass(Clazz cls) {
         out.print("var cls%d={", getClassIndex(cls.name))
-        .print("n:\"%s\"",cls.name)
-        .print(",s:");
+        .print("%s:\"%s\"",nameFor("java/lang/Class:name"), cls.name)
+        .print(",%s:",nameFor("java/lang/Class:superClass"));
         if(cls.superName != null)
             out.print("cls%d", getClassIndex(cls.superName));
         else out.print("null");
@@ -137,9 +147,9 @@ public class JSGenerator extends Generator {
     void defineArrayClass(String element) {
         int jlo = classIndex.get("java/lang/Object");
         out.print("var cls%d={", classIndex.get("["+element))
-           .print("n:\"[%s\"",element)
-           .print(",s:cls%d", jlo)
-           .print(",e:cls%d", classIndex.get(element))
+           .print("%s:\"[%s\"",nameFor("java/lang/Class:name"), element)
+           .print(",%s:cls%d", nameFor("java/lang/Class:superClass"),jlo)
+           .print(",%s:cls%d", nameFor("java/lang/Class:componentType"), classIndex.get(element))
            .print(",$vt:cls%d.$vt",jlo)
            .print(",$it:cls%d.$it",jlo)
            .println("};");

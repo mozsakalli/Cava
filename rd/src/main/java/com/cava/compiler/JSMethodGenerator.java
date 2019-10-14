@@ -171,7 +171,7 @@ public class JSMethodGenerator {
             out.print("$g%d",generator.getGlobalIndex(f.className,f.name));
         } else {
             code(f.base);
-            out.print(".%s", f.name);
+            out.print(".%s /*%s.%s*/", generator.nameFor(f.className+":"+f.name), f.className, f.name);
         }
     }
     
@@ -384,6 +384,11 @@ public class JSMethodGenerator {
                 }
                 out.print(")");
                 return true;
+                
+            case "getArrayLength":
+                code(call.args.get(0));
+                out.print(".$l");
+                return true;                
         }
         return false;
     }
@@ -398,7 +403,7 @@ public class JSMethodGenerator {
             Method vm = vc.findMethod(m.name, m.signature);
             //cType.dependency.add(m.virtualBaseClass);
             code(call.args.get(0));
-            out.print(".$c.$vt[%d](", vm.virtualTableIndex);
+            out.print(".%s.$vt[%d](", generator.nameFor("java/lang/Object:klass"), vm.virtualTableIndex);
             //out.print("virtual_%s(",naming.method(m, m.virtualBaseClass));
         } else
         if(call.callType == Call.CallType.Interface) {
@@ -409,7 +414,7 @@ public class JSMethodGenerator {
                 //cType.dependency.add(m.declaringClass);
             } else {
                 code(call.args.get(0));
-                out.print(".$c.$it[%d](", m.interfaceTableIndex);
+                out.print(".%s.$it[%d](", generator.nameFor("java/lang/Object:klass"), m.interfaceTableIndex);
                 //out.print("interface_%s(",naming.method(m));
                 //cType.dependency.add(m.declaringClass);
             }
@@ -423,7 +428,8 @@ public class JSMethodGenerator {
             out.print(",");
             code(call.args.get(i));
         }
-        out.print(")");        
+        out.print(")");  
+        out.print("/*%s:%s*/", call.className,call.methodName);
         //out.println("call");
     }
 }

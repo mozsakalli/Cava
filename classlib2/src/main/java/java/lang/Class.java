@@ -48,12 +48,13 @@ public final class Class<T> {
     public Method[] methods;
     
     public static java.lang.Class forName(java.lang.String className)  {
+        /*
         switch(className) {
             case "[B": return byte[].class;
             case "[Z": return boolean[].class;
             case "[S": return short[].class;
             case "[C": return char[].class;
-        }
+        }*/
         Class[] allClasses = VM.getAllClasses();
         for(int i=0; i<allClasses.length; i++)
             if(allClasses[i].getName().equals(className))

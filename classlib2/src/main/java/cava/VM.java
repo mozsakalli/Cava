@@ -39,7 +39,12 @@ public class VM {
     public native static double longToDouble(long value);
     
     public native static Object allocObject(Class type);
-    public native static Object allocObjectArray(Class type, int length);
+    //public native static Object allocObjectArray(Class type, int length);
+    
+    public native static int getArrayLength(Object array);
+    public native static void memmove(Object dst, int dstOffset, Object src, int srcOffset, int size);
+    public native static void memmovePtr(Object dst, int dstOffset, Object src, int srcOffset, int size);
+    public native static void memmoveObject(Object dst, Object src);
     
     /*
     public native static long addressToLong(Object address);

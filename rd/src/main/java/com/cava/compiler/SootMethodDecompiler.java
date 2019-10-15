@@ -241,7 +241,10 @@ public class SootMethodDecompiler {
                 
                 if(sw.defaultLabel != -1) {
                     int newTarget = findRealTarget(sw.defaultLabel, unitToCode, codeRealStartMap);
-                    if(newTarget != -1) sw.defaultLabel = newTarget;
+                    if(newTarget != -1) {
+                        sw.defaultLabel = newTarget;
+                        method.labels.add(newTarget);
+                    }
                 }
             }
         }

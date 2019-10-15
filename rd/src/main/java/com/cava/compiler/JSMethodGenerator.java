@@ -44,7 +44,7 @@ public class JSMethodGenerator {
             out.print("while(1)");
         }
         if(!method.traps.isEmpty()) {
-            out.print("try{");
+            //out.print("try{");
         }
         if(hasGoto) {
             //out.println("var $b=-1;");
@@ -63,6 +63,7 @@ public class JSMethodGenerator {
             out.undent().undent().println("}");
         }
         if(!method.traps.isEmpty()) {
+            /*
             out.undent().print("}catch(error){").indent();
             //out.println("switch($f.trap) {").indent();
             for(int i=0; i<method.traps.size(); i++) {
@@ -77,6 +78,7 @@ public class JSMethodGenerator {
             out.undent()
                 .println("throw error;")
                 .undent().println("}");
+            */
         }
     }
 

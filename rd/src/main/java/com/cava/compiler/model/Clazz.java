@@ -122,6 +122,7 @@ public class Clazz implements Serializable {
         return result;
     }
 
+    
     @Override
     public int hashCode() {
         return name.hashCode();

@@ -195,4 +195,14 @@ public class DecompilerUtils {
         return "jobject";
     }
     */
+    
+    public static int primitiveSize(String name) {
+        switch(name) {
+            case "B": case "Z": return 1;
+            case "S": case "C": return 2;
+            case "I": case "F": return 4;
+            case "J": case "D": return 8;
+            default: return 8;
+        }
+    }
 }

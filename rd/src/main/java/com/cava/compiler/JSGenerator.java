@@ -59,6 +59,9 @@ public class JSGenerator extends Generator {
             int count=0;
             for(Map.Entry<String,Integer> e : strings.entrySet()) {
                 if(count++ > 0) out.print(",");
+                out.print("$str%d=", e.getValue());
+                defineStringConstant(e.getKey());
+                /*
                 char[] chars = e.getKey().toCharArray();
                 out.print("$str%d={%s:cls%d,", e.getValue(), nameFor("java/lang/Object:klass"), getClassIndex("java/lang/String"))
                    .print("%s:{%s:cls%d,$l:%d,$a:[",
@@ -69,6 +72,7 @@ public class JSGenerator extends Generator {
                 }        
                 out.print("]},%s:0,%s:%d,%s:0}", nameFor("java/lang/String:offset"),
                         nameFor("java/lang/String:count"),chars.length,nameFor("java/lang/String:hashCode"));
+                */
             }
             out.println(";");
         }
@@ -92,12 +96,22 @@ public class JSGenerator extends Generator {
     
     void defineClass(Clazz cls) {
         out.print("var cls%d={", getClassIndex(cls.name))
-        .print("%s:\"%s\"",nameFor("java/lang/Class:name"), cls.name)
-        .print(",%s:",nameFor("java/lang/Class:superClass"));
+        .print("%s:",nameFor("java/lang/Class:name"));
+        defineStringConstant(cls.name);
+        out.print(",%s:",nameFor("java/lang/Class:superClass"));
         if(cls.superName != null)
             out.print("cls%d", getClassIndex(cls.superName));
         else out.print("null");
         
+        if(DecompilerUtils.isPrimitive(cls.name)) {
+            out.print(",%s:", nameFor("java/lang/Class:size"));
+            switch(cls.name) {
+                case "B": case "Z": out.print("1");break;
+                case "S": case "C": out.print("2");break;
+                case "I": case "F": out.print("4");break;
+                default: out.print("8");
+            }
+        }
         List<Method> virtualMethods = new ArrayList();
         Set<String> virtualMethodSignatures = new HashSet();
         int tableSize = 0;
@@ -160,8 +174,9 @@ public class JSGenerator extends Generator {
     void defineArrayClass(String element) {
         int jlo = classIndex.get("java/lang/Object");
         out.print("var cls%d={", classIndex.get("["+element))
-           .print("%s:\"[%s\"",nameFor("java/lang/Class:name"), element)
-           .print(",%s:cls%d", nameFor("java/lang/Class:superClass"),jlo)
+           .print("%s:",nameFor("java/lang/Class:name"));
+        defineStringConstant("["+element);
+        out.print(",%s:cls%d", nameFor("java/lang/Class:superClass"),jlo)
            .print(",%s:cls%d", nameFor("java/lang/Class:componentType"), classIndex.get(element))
            .print(",$vt:cls%d.$vt",jlo)
            .print(",$it:cls%d.$it",jlo)
@@ -198,5 +213,16 @@ public class JSGenerator extends Generator {
         out.println("}");
     }
 
-    
+    void defineStringConstant(String str) {
+        char[] chars = str.toCharArray();
+        out.print("{%s:cls%d,", nameFor("java/lang/Object:klass"), getClassIndex("java/lang/String"))
+           .print("%s:{%s:cls%d,$l:%d,$a:[",
+                   nameFor("java/lang/String:value"),nameFor("java/lang/Object:klass"),
+                   getClassIndex("[C"), chars.length);
+        for(int i=0; i<chars.length; i++) {
+            if(i>0) out.print(","); out.print((int)chars[i]);
+        }        
+        out.print("]},%s:0,%s:%d,%s:0}", nameFor("java/lang/String:offset"),
+                nameFor("java/lang/String:count"),chars.length,nameFor("java/lang/String:hashCode"));
+    }
 }

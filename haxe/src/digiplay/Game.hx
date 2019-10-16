@@ -1,7 +1,6 @@
 package digiplay;
 
-class Game extends 
-#if ios digiplay.platform.ios.IosGame #end {
+class Game {
 
 	static var singleton:Game;
 

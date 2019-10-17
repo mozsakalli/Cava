@@ -12,10 +12,11 @@ class UIView extends ObjCObject {
         untyped __cpp__("[(id)nativePeer initWithFrame:bounds]");
     }
 
+    /*
     @:selector("layerClass")
     @:static
     public function layerClass():ObjCClass {
         return null;
     }
-
+    */
 }

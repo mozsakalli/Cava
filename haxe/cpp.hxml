@@ -12,6 +12,6 @@
 -D HXCPP_STACK_LINE
 -D HXCPP_STACK_TRACE
 -D HXCPP_CHECK_POINTER
-#-debug
-#-D HXCPP_DEBUGGER
-#-lib hxcpp-debug-server
+-debug
+-D HXCPP_DEBUGGER
+-lib hxcpp-debug-server

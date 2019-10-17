@@ -5,19 +5,25 @@
 //  Created by Mustafa Özsakallı on 7.10.2019.
 //  Copyright © 2019 Mustafa Özsakallı. All rights reserved.
 //
-/*
+
 #import <UIKit/UIKit.h>
 #import <Metal/Metal.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
 extern "C" void __hxcpp_lib_main();
+extern "C" void __digiplay_didFinishLaunching();
+extern "C" void __digiplay_Update();
+extern "C" void __digiplay_notify_haxe(const char* name, void* data);
+extern "C" void __digiplay_notify_native(const char* name, void* data);
 
 static BOOL HasMetalSupport = NO;
 static float ScreenScaleFactor = 1;
 static CGSize ScreenSize;
 static CGPoint SafeScreenTopLeft;
 static CGPoint SafeScreenBottomRight;
+static BOOL IsTouching;
+static CGPoint TouchPosition;
 
 @interface DigiplayView : UIView
 @end
@@ -170,20 +176,29 @@ static CGPoint SafeScreenBottomRight;
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     NSArray *touchArr = [touches allObjects];
-    NSInteger touchCnt = [touchArr count];
-    for(int i=0; i<touchCnt; i++) {
-        UITouch *aTouch = [touchArr objectAtIndex:i];
-        
-        CGPoint pt = [aTouch locationInView:aTouch.view];
-    }
+    UITouch *aTouch = [touchArr objectAtIndex:0];
+    IsTouching = YES;
+    TouchPosition = [aTouch locationInView:aTouch.view];
+    TouchPosition.x *= ScreenScaleFactor;
+    TouchPosition.y *= ScreenScaleFactor;
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
+    NSArray *touchArr = [touches allObjects];
+    UITouch *aTouch = [touchArr objectAtIndex:0];
+    IsTouching = NO;
+    TouchPosition = [aTouch locationInView:aTouch.view];
+    TouchPosition.x *= ScreenScaleFactor;
+    TouchPosition.y *= ScreenScaleFactor;
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    
+    NSArray *touchArr = [touches allObjects];
+    UITouch *aTouch = [touchArr objectAtIndex:0];
+    IsTouching = YES;
+    TouchPosition = [aTouch locationInView:aTouch.view];
+    TouchPosition.x *= ScreenScaleFactor;
+    TouchPosition.y *= ScreenScaleFactor;
 }
 @end
 
@@ -202,8 +217,9 @@ static CGPoint SafeScreenBottomRight;
 
 - (void)viewDidLoad {
     [(DigiplayView*)self.view startAnimation];
-    if([self respondsToSelector:NSSelectorFromString(@"setNeedsUpdateOfHomeIndicatorAutoHidden")])
+    if (@available(iOS 11.0, *)) {
         [self setNeedsUpdateOfHomeIndicatorAutoHidden];
+    }
 }
 @end
 
@@ -213,20 +229,28 @@ static CGPoint SafeScreenBottomRight;
 @implementation DigiplayAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    __digiplay_notify_haxe("app:launching", NULL);
+    
     UIWindow* window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[DigiplayViewController alloc] init];
     
-    
     [window makeKeyAndVisible];
+    
+    __digiplay_notify_haxe("app:launched", NULL);
     return YES;
 }
-
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    __digiplay_notify_haxe("app:background", NULL);
+}
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    __digiplay_notify_haxe("app:foreground", NULL);
+}
 @end
 
 int main(int argc, char * argv[]) {
+    __hxcpp_lib_main();
     @autoreleasepool {
         UIApplicationMain(argc, argv, nil, @"DigiplayAppDelegate");
     }
 }
-*/
 

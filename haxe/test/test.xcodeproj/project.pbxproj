@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		454D4284234B910D000B6CE8 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 454D4283234B910D000B6CE8 /* MetalKit.framework */; };
+		455237D123588C2200518CCF /* Graphics.c in Sources */ = {isa = PBXBuildFile; fileRef = 455237D023588C2200518CCF /* Graphics.c */; };
 		456E9806234B5A8F00B13C75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 456E9805234B5A8F00B13C75 /* Assets.xcassets */; };
 		456E980C234B5A8F00B13C75 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 456E980B234B5A8F00B13C75 /* main.mm */; };
-		456E9814234B5B8200B13C75 /* libMain.iphonesim-64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 456E9813234B5B8200B13C75 /* libMain.iphonesim-64.a */; };
 		456E9816234B5CB000B13C75 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 456E9815234B5CB000B13C75 /* UIKit.framework */; };
 		456E9818234B6F5000B13C75 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 456E9817234B6F5000B13C75 /* Metal.framework */; };
 		456E981A234B6F5900B13C75 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 456E9819234B6F5900B13C75 /* OpenGLES.framework */; };
@@ -21,11 +21,12 @@
 
 /* Begin PBXFileReference section */
 		454D4283234B910D000B6CE8 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		455237CF23588C2200518CCF /* Graphics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Graphics.h; sourceTree = "<group>"; };
+		455237D023588C2200518CCF /* Graphics.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Graphics.c; sourceTree = "<group>"; };
 		456E97F6234B5A8E00B13C75 /* test.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		456E9805234B5A8F00B13C75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		456E980A234B5A8F00B13C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		456E980B234B5A8F00B13C75 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
-		456E9813234B5B8200B13C75 /* libMain.iphonesim-64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libMain.iphonesim-64.a"; path = "../bin/x64/libMain.iphonesim-64.a"; sourceTree = "<group>"; };
 		456E9815234B5CB000B13C75 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		456E9817234B6F5000B13C75 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		456E9819234B6F5900B13C75 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -41,7 +42,6 @@
 			files = (
 				454D4284234B910D000B6CE8 /* MetalKit.framework in Frameworks */,
 				456E981E234B6FA800B13C75 /* CoreGraphics.framework in Frameworks */,
-				456E9814234B5B8200B13C75 /* libMain.iphonesim-64.a in Frameworks */,
 				456E9820234B6FC400B13C75 /* QuartzCore.framework in Frameworks */,
 				456E9818234B6F5000B13C75 /* Metal.framework in Frameworks */,
 				456E9816234B5CB000B13C75 /* UIKit.framework in Frameworks */,
@@ -76,6 +76,8 @@
 				456E9805234B5A8F00B13C75 /* Assets.xcassets */,
 				456E980A234B5A8F00B13C75 /* Info.plist */,
 				456E980B234B5A8F00B13C75 /* main.mm */,
+				455237CF23588C2200518CCF /* Graphics.h */,
+				455237D023588C2200518CCF /* Graphics.c */,
 			);
 			path = test;
 			sourceTree = "<group>";
@@ -90,7 +92,6 @@
 				456E9819234B6F5900B13C75 /* OpenGLES.framework */,
 				456E9817234B6F5000B13C75 /* Metal.framework */,
 				456E9815234B5CB000B13C75 /* UIKit.framework */,
-				456E9813234B5B8200B13C75 /* libMain.iphonesim-64.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				455237D123588C2200518CCF /* Graphics.c in Sources */,
 				456E980C234B5A8F00B13C75 /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +295,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = /Users/mustafa/Work/CAVA/haxe/bin/x64;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.memory.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -312,6 +315,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = /Users/mustafa/Work/CAVA/haxe/bin/x64;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.memory.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

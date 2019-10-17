@@ -19,7 +19,7 @@ import digiplay.Game;
 @end
 
 extern "C" void __hxcpp_lib_main();
-int main(int argc, char * argv[]) {
+extern "C" int main(int argc, char * argv[]) {
     __hxcpp_lib_main();
     @autoreleasepool {
         UIApplicationMain(argc, argv, nil, @"DigiplayAppDelegate");

@@ -326,6 +326,9 @@ public class DependencyAnalyzer {
     
     
     private void dependsClass(Clazz c) {
+        if(c.name.startsWith("L")) {
+            System.out.println("...");
+        }
         if(!analyzedClasses.contains(c) && !classQueue.contains(c))
             classQueue.add(c);
     }

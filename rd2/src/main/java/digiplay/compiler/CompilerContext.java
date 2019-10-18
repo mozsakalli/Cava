@@ -57,7 +57,7 @@ public class CompilerContext {
     
     static Clazz load(String name) throws Exception {
         System.out.println("Decompiling "+name);
-        return ClassParser.parse(name);
+        return new ClassParser().parse(name);
     }
     
     
@@ -156,8 +156,9 @@ public class CompilerContext {
         classCacheDir = new File(buildDir,"classcache");
         classCacheDir.mkdirs();
         
-        //resolve("Test");
-        
+        resolve("Test");
+        if(true) return;;
+
         long time = System.currentTimeMillis();
         new DependencyAnalyzer().analyze(CavaOptions.mainClass());
         time = System.currentTimeMillis() - time;

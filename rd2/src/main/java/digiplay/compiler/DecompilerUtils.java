@@ -70,8 +70,10 @@ public class DecompilerUtils {
             int start = p;
             while(str.charAt(p) == '[') p++;
             if(str.charAt(p) == 'L') {
+                String arr = p > start ? str.substring(start, p) : "";
+                start = p+1;
                 while(str.charAt(p) != ';') p++;
-                result.add(str.substring(start+1, p));
+                result.add(arr+str.substring(start, p));
                 p++;
             } else {
                 result.add(str.substring(start,p+1));

@@ -27,8 +27,22 @@ public class Test {
         //int sum = 0;
         byte sumb = 0;
         for(int i=0; i<20; i++) {
-            //sum += i;
-            sumb += (byte)i + (byte)constant(i) + (byte)array[i];
+            try {
+                //sum += i;
+                sumb += (byte) i + (byte) constant(i) + (byte) array[i];
+                if(sumb % 10 == 0) return;
+            }
+            catch (NullPointerException e2) {
+                sumb += 10;
+                //System.out.println("e2");
+            }
+            catch(Exception e1) {
+                sumb += 10;
+                //System.out.println("e1");
+            }
+            finally {
+                sumb -= 10;
+            }
             array[i+1] = sumb;
         }
     }

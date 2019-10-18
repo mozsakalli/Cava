@@ -35,8 +35,7 @@ import digiplay.compiler.model.op.Op;
 
 import javax.management.RuntimeErrorException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -45,7 +44,34 @@ import java.util.List;
  */
 public class ClassParser {
 
-    public static Clazz parse(String name) throws Exception {
+    private static class Target {
+        int     address;
+        boolean requiresSplit;
+
+
+        public Target(int address, boolean requiresSplit) {
+            this.address = address;
+            this.requiresSplit = requiresSplit;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Target) {
+                Target otherTarget = (Target) obj;
+                return this.address == otherTarget.address;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return address;
+        }
+    }
+
+
+    public Clazz parse(String name) throws Exception {
         ClassSource src = ClassFileFinder.findClass(name);
         if(src == null) throw new RuntimeException("Class "+name+" not found");
         
@@ -67,9 +93,9 @@ public class ClassParser {
         return cls;
     }
 
-    static int maxRegisterNumber;
+    int maxRegisterNumber;
 
-    static Method parseMethod(com.android.dx.cf.iface.Method dm, DirectClassFile cf) {
+    Method parseMethod(com.android.dx.cf.iface.Method dm, DirectClassFile cf) {
         Method m = new Method();
         final boolean localInfo = true;
         final int positionInfo = PositionList.LINES;
@@ -120,22 +146,58 @@ public class ClassParser {
             }
         };
         code.assignIndices(callback);
+        CatchTable catches = code.getCatches();
 
         DalvInsnList instructions = code.getInsns();
         maxRegisterNumber = -1;
+        Set<Integer> seenTraps = new HashSet<>();
 
-        System.out.println(m.name+" / "+m.signature);
-
+        System.out.println(m.name+" / "+m.signature+" / "+catches.size());
+        Map<Integer, Op> opAdresses = new HashMap();
+        int trapDepth = 0;
         for(int i=0; i<instructions.size(); i++) {
             DalvInsn ins = instructions.get(i);
-            parseInstruction(ins, m);
+            for(int k=0; k<catches.size(); k++) {
+                CatchTable.Entry e = catches.get(k);
+                int addr = e.getStart();
+                if(addr == ins.getAddress() && !seenTraps.contains(addr)) {
+                    seenTraps.add(addr);
+                    System.out.println("----- try-begin ----");
+                    trapDepth++;
+                }
+            }
+            parseInstruction(ins, m, opAdresses, trapDepth);
+            for(int k=0; k<catches.size(); k++) {
+                CatchTable.Entry e = catches.get(k);
+                int addr = e.getEnd();
+                if(addr == ins.getAddress() && !seenTraps.contains(addr)) {
+                    seenTraps.add(addr);
+                    trapDepth--;
+                    System.out.println("----- try-end ----");
+                    for(int l=0; l<e.getHandlers().size(); l++) {
+                        CatchHandlerList.Entry he = e.getHandlers().get(l);
+                        String type = he.getExceptionType().getClassType().getClassName();
+                        System.out.println("if("+type+") goto "+he.getHandler());
+                    }
+                }
+                /*
+                for(int l=0; l<e.getHandlers().size(); l++) {
+                    if(e.getHandlers().get(l).getHandler() == ins.getAddress()) {
+                        System.out.println("---- handler ----> "+e.getHandlers().get(l).getExceptionType());
+                        break;
+                    }
+                }
+                /*if(catches.get(k).getStart() == ins.getAddress()) {
+                    System.out.println("-------------------->catch start: "+k);
+                }*/
+            }
         }
 
         m.registerCount = maxRegisterNumber + 1;
         return m;
     }
 
-    static void parseInstruction(DalvInsn ins, Method method) {
+    void parseInstruction(DalvInsn ins, Method method, Map<Integer, Op> opAdresses, int trapDepth) {
         Op op = null;
         if (ins instanceof CodeAddress) {
             return;
@@ -192,7 +254,7 @@ public class ClassParser {
                 else if(con.getClass() == CstInteger.class) {
                     op = new Op(ins.getOpcode().getName(), ((CstInteger) con).getValue());
                 } else if(con.getClass() == CstType.class) {
-                    op = new Op(ins.getOpcode().getName(), new ClassConstant(((CstType) con).getDescriptor().toHuman()));
+                    op = new Op(ins.getOpcode().getName(), new ClassConstant(((CstType)con).getClassType().getClassName()));
                 } else if(con.getClass() == CstString.class) {
                     op = new Op(ins.getOpcode().getName(), ((CstString) con).getString().toHuman());
                 } else if(con.getClass() == CstKnownNull.class) {
@@ -218,7 +280,7 @@ public class ClassParser {
                 HighRegisterPrefix highRegisterPrefix = (HighRegisterPrefix)ins;
                 SimpleInsn[] moveInstructions = highRegisterPrefix.getMoveInstructions();
                 for (SimpleInsn moveInstruction : moveInstructions) {
-                    parseInstruction(moveInstruction, method);
+                    parseInstruction(moveInstruction, method, opAdresses, trapDepth);
                 }
                 return;
         } else {
@@ -228,8 +290,16 @@ public class ClassParser {
             throw new RuntimeException("Unknown instruction");
         }
         if(op == null) throw new RuntimeException("Unknown instruction "+ins+" / "+ins.getClass());
+        if(trapDepth > 0 && op.name.startsWith("return")) {
+            Op r = new Op("trap-restore", null);
+            method.instructions.add(r);
+            opAdresses.put(ins.getAddress(), r);
+            System.out.println(ins.getAddress()+":"+ r);
+        }
         method.instructions.add(op);
-        System.out.println(op);
+        if(!opAdresses.containsKey(ins.getAddress()))
+            opAdresses.put(ins.getAddress(), op);
+        System.out.println(ins.getAddress()+":"+ op);
     }
     private static boolean isInvokeInstruction(CstInsn cstInsn) {
         final Dop[] invokeInstructions = { Dops.INVOKE_VIRTUAL, Dops.INVOKE_VIRTUAL_RANGE,
@@ -244,16 +314,7 @@ public class ClassParser {
         return false;
     }
 
-    private static boolean isInvokeStaticInstruction(CstInsn cstInsn) {
-        final Dop[] staticInvokeInstructions = { Dops.INVOKE_STATIC, Dops.INVOKE_STATIC_RANGE };
-        for (Dop dop : staticInvokeInstructions) {
-            if (dop.equals(cstInsn.getOpcode())) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private static int registerNumber(String vFormat) throws RuntimeException {
+    private int registerNumber(String vFormat) throws RuntimeException {
         if (!vFormat.startsWith("v")) {
             throw new RuntimeErrorException(new Error(
                     "Register name doesn't start with 'v' prefix: " + vFormat));
@@ -268,7 +329,7 @@ public class ClassParser {
         }
     }
 
-    private static void addRegisters(Op op, RegisterSpecList registers) {
+    private void addRegisters(Op op, RegisterSpecList registers) {
         if(registers.size() > 3) throw new RuntimeException("Too much registers");
         for(int i=0; i<registers.size(); i++) {
             int number = registerNumber(registers.get(i).regString());
@@ -278,6 +339,42 @@ public class ClassParser {
                 case 2: op.vz = number;break;
             }
         }
+    }
+
+    private static Map<Integer, Target> extractTargets(DalvInsnList instructions, CatchTable catches) {
+        Map<Integer, Target> targets = new HashMap<Integer, Target>();
+
+        // First, add non-catch targets.
+        for (int i = 0; i < instructions.size(); ++i) {
+            // If the target is generic, we have to assume it might jump into a
+            // catch block, so we require splitting.
+            if (instructions.get(i) instanceof TargetInsn) {
+                TargetInsn targetInsn = (TargetInsn) instructions.get(i);
+                targets.put(targetInsn.getTargetAddress(), new Target(
+                        targetInsn.getTargetAddress(), true));
+            } else if (instructions.get(i) instanceof SwitchData) {
+                // If a switch-statement is enclosed by a try-block, we
+                // will also require splitting.
+                SwitchData switchData = (SwitchData) instructions.get(i);
+                CodeAddress[] caseTargets = switchData.getTargets();
+                for (CodeAddress caseTarget : caseTargets) {
+                    targets.put(caseTarget.getAddress(), new Target(caseTarget.getAddress(), true));
+                }
+            }
+        }
+
+        // Then, add all catch-handler targets. We need this info, so using
+        // Map.put will potentially override an existing target, so the
+        // information about a potential catch-handler target is not lost.
+        for (int i = 0; i < catches.size(); ++i) {
+            CatchHandlerList handlers = catches.get(i).getHandlers();
+            for (int j = 0; j < handlers.size(); ++j) {
+                int handlerAddress = handlers.get(j).getHandler();
+                targets.put(handlerAddress, new Target(handlerAddress, true));
+            }
+        }
+
+        return targets;
     }
     
 }

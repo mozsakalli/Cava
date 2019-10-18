@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dx">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/rd2/dx.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

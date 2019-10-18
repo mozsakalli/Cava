@@ -18,5 +18,6 @@
         <module>bgfx</module>
         <module>libgdx-sample</module>
         <module>rd</module>
+        <module>rd2</module>
     </modules>
 </project>

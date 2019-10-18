@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cava-compiler" />
+        <module name="cava-procyon" />
+        <module name="cava-classlib" />
+        <module name="cava-maven" />
+        <module name="cava-libgdx-sample" />
+        <module name="cava-rd2" />
+        <module name="cava-libgdx" />
+        <module name="cava-bgfx" />
+        <module name="cava-rd" />
+        <module name="cava-classlib2" />
+        <module name="cava-sample" />
+        <module name="cava-graphics" />
+        <module name="cava-debugger" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cava-bgfx" target="1.8" />
+      <module name="cava-classlib" target="1.8" />
+      <module name="cava-classlib2" target="1.8" />
+      <module name="cava-compiler" target="1.8" />
+      <module name="cava-debugger" target="1.8" />
+      <module name="cava-graphics" target="1.8" />
+      <module name="cava-libgdx" target="1.8" />
+      <module name="cava-libgdx-sample" target="1.8" />
+      <module name="cava-maven" target="1.8" />
+      <module name="cava-parent" target="1.5" />
+      <module name="cava-procyon" target="1.8" />
+      <module name="cava-rd" target="1.8" />
+      <module name="cava-rd2" target="1.8" />
+      <module name="cava-sample" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

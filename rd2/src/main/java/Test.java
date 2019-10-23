@@ -23,13 +23,27 @@ public class Test {
     static int constant(int v) { return 10000; }
 
     public static void main() {
-        short[] array = new short[10];
+        short[] array = new short[]{1,2,3};
+        Object[] oarray = new Object[]{"Deneme",12};
+        double[] da = new double[]{1,2,3};
+        float[] fa = new float[]{1,23};
+        byte[] ba = new byte[]{1,2};
         //int sum = 0;
         byte sumb = 0;
         for(int i=0; i<20; i++) {
             try {
                 //sum += i;
                 sumb += (byte) i + (byte) constant(i) + (byte) array[i];
+                switch (i) {
+                    case 0:
+                        sumb -= 100;
+                        break;
+                    case 10:
+                        sumb += 100;
+                        da[0]++;
+                    default:
+                        da[0]--;
+                }
                 if(sumb % 10 == 0) return;
             }
             catch (NullPointerException e2) {

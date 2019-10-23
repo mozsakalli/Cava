@@ -33,7 +33,6 @@ public class Method extends NameAndType implements Serializable {
     public String signature;
     public List<NameAndType> args = new ArrayList();
     public int registerCount;
-    public List<Op> instructions = new ArrayList();
 
 
     //public List<NameAndType> locals = new ArrayList();

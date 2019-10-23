@@ -25,11 +25,11 @@ import com.android.dx.dex.code.CstInsn;
 import com.android.dx.rop.code.*;
 import com.android.dx.rop.cst.*;
 import com.android.dx.ssa.Optimizer;
+import com.android.dx.util.IntList;
 import digiplay.compiler.model.Clazz;
 import digiplay.compiler.model.Method;
 import digiplay.compiler.model.NameAndType;
 import digiplay.compiler.model.op.ClassConstant;
-import digiplay.compiler.model.op.Field;
 import digiplay.compiler.model.op.Invoke;
 import digiplay.compiler.model.op.Op;
 
@@ -43,32 +43,6 @@ import java.util.*;
  * @author mustafa
  */
 public class ClassParser {
-
-    private static class Target {
-        int     address;
-        boolean requiresSplit;
-
-
-        public Target(int address, boolean requiresSplit) {
-            this.address = address;
-            this.requiresSplit = requiresSplit;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof Target) {
-                Target otherTarget = (Target) obj;
-                return this.address == otherTarget.address;
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            return address;
-        }
-    }
 
 
     public Clazz parse(String name) throws Exception {
@@ -131,11 +105,11 @@ public class ClassParser {
 
         // Optimize
         rmeth = Optimizer.optimize(rmeth, paramSize, m.isStatic(), localInfo, advice);
-
         LocalVariableInfo locals = null;
 
         if (localInfo) {
             locals = LocalVariableExtractor.extract(rmeth);
+            locals.debugDump();
         }
         
         DalvCode code = RopTranslator.translate(rmeth, positionInfo, locals, paramSize);
@@ -149,36 +123,62 @@ public class ClassParser {
         CatchTable catches = code.getCatches();
 
         DalvInsnList instructions = code.getInsns();
+        Map<Integer, List<Object>> arrayData = extractArrayData(instructions);
+        Map<Integer, SwitchData> switchData = extractSwitchData(instructions);
+        Set<Integer> sourceLines = new HashSet<>();
+
         maxRegisterNumber = -1;
         Set<Integer> seenTraps = new HashSet<>();
+        Set<Integer> seenDebugInfo = new HashSet<>();
 
-        System.out.println(m.name+" / "+m.signature+" / "+catches.size());
+        //System.out.println(m.name+" / "+m.signature+" / "+catches.size());
         Map<Integer, Op> opAdresses = new HashMap();
+
         int trapDepth = 0;
         for(int i=0; i<instructions.size(); i++) {
             DalvInsn ins = instructions.get(i);
+            if(locals != null) {
+                int addr = ins.getAddress();
+                if(!seenDebugInfo.contains(addr)) {
+                    BasicBlock block = null;
+                    for(int k=0; k<rmeth.getBlocks().size(); k++) {
+                        BasicBlock bb = rmeth.getBlocks().get(k);
+                    }
+                    RegisterSpecSet set = locals.getStarts(addr);
+                    if (set != null && set.size() > 0) {
+                        Op op = new Op("debug-vars", set);
+                        m.body.add(op);
+                        seenDebugInfo.add(addr);
+                    }
+                }
+            }
             for(int k=0; k<catches.size(); k++) {
                 CatchTable.Entry e = catches.get(k);
                 int addr = e.getStart();
                 if(addr == ins.getAddress() && !seenTraps.contains(addr)) {
                     seenTraps.add(addr);
-                    System.out.println("----- try-begin ----");
+                    Op op = new Op("trap-begin", null);
+                    m.body.add(op);
+                    //System.out.println("----- try-begin ----");
                     trapDepth++;
                 }
             }
-            parseInstruction(ins, m, opAdresses, trapDepth);
+            parseInstruction(ins, m, opAdresses, trapDepth, arrayData, switchData, -1, sourceLines);
             for(int k=0; k<catches.size(); k++) {
                 CatchTable.Entry e = catches.get(k);
                 int addr = e.getEnd();
                 if(addr == ins.getAddress() && !seenTraps.contains(addr)) {
                     seenTraps.add(addr);
                     trapDepth--;
-                    System.out.println("----- try-end ----");
+                    Op op = new Op("trap-end", null);
+                    op.exceptionHandlers = new ArrayList<>();
+                    //System.out.println("----- try-end ----");
                     for(int l=0; l<e.getHandlers().size(); l++) {
                         CatchHandlerList.Entry he = e.getHandlers().get(l);
                         String type = he.getExceptionType().getClassType().getClassName();
-                        System.out.println("if("+type+") goto "+he.getHandler());
+                        op.exceptionHandlers.add(new Op.ExceptionHandler(type, he.getHandler()));
                     }
+                    m.body.add(op);
                 }
                 /*
                 for(int l=0; l<e.getHandlers().size(); l++) {
@@ -193,14 +193,81 @@ public class ClassParser {
             }
         }
 
+        for(Op op : m.body) {
+            if(op.target != -1) {
+                Op target = opAdresses.get(op.target);
+                if(target == null) throw new RuntimeException(op.target+" address not found");
+                op.target = m.body.indexOf(target);
+            }
+            if(op.cases != null) {
+                for(Op.SwitchCase cas : op.cases) {
+                    Op target = opAdresses.get(cas.target);
+                    if(target == null) throw new RuntimeException(cas.target+" address not found");
+                    cas.target = m.body.indexOf(target);
+                }
+            }
+            if(op.exceptionHandlers != null) {
+                for(Op.ExceptionHandler handler : op.exceptionHandlers) {
+                    Op target = opAdresses.get(handler.target);
+                    if(target == null) throw new RuntimeException(handler.target+" address not found");
+                    handler.target = m.body.indexOf(target);
+                }
+            }
+
+            System.out.println(m.body.indexOf(op)+":"+op);
+        }
         m.registerCount = maxRegisterNumber + 1;
         return m;
     }
 
-    void parseInstruction(DalvInsn ins, Method method, Map<Integer, Op> opAdresses, int trapDepth) {
+    Map<Integer, List<Object>> extractArrayData(DalvInsnList list) {
+        Map result = new HashMap();
+        for(int i=0; i<list.size(); i++) {
+            DalvInsn ins = list.get(i);
+            if(ins instanceof ArrayData) {
+                List values = new ArrayList();
+                List<Constant> constants = ((ArrayData)ins).getValues();
+                for(int k=0; k<constants.size(); k++) {
+                    Constant con = constants.get(k);
+                    Object value = null;
+                    if(con.getClass() == CstInteger.class) {
+                        value = ((CstInteger) con).getValue();
+                    } else if(con.getClass() == CstLong.class) {
+                        value = ((CstLong)con).getValue();
+                    } else if(con.getClass() == CstFloat.class) {
+                        value = ((CstFloat)con).getValue();
+                    } else if(con.getClass() == CstDouble.class) {
+                        value = ((CstDouble)con).getValue();
+                    } else throw new RuntimeException("Unknown array data type: "+con.getClass());
+                    values.add(value);
+                }
+                result.put(((ArrayData)ins).getAddress(), values);
+            }
+        }
+        return result;
+    }
+
+    Map<Integer, SwitchData> extractSwitchData(DalvInsnList instructions) {
+        Map<Integer, SwitchData> result = new HashMap<Integer, SwitchData>();
+        for (int i = 0; i < instructions.size(); ++i) {
+            if (instructions.get(i) instanceof SwitchData) {
+                SwitchData switchData = (SwitchData) instructions.get(i);
+                result.put(switchData.getAddress(), switchData);
+            }
+        }
+        return result;
+    }
+
+    void parseInstruction(DalvInsn ins, Method method, Map<Integer, Op> opAdresses, int trapDepth, Map<Integer, List<Object>> arrayData, Map<Integer, SwitchData> switchData, int highAddress, Set<Integer> sourceLines) {
         Op op = null;
         if (ins instanceof CodeAddress) {
-            return;
+            SourcePosition sourcePosition = ins.getPosition();
+            CstUtf8 sourceFile = sourcePosition.getSourceFile();
+            int sourceLine = sourcePosition.getLine();
+            if(sourceLine >= 0 && !sourceLines.contains(sourceLine)) {
+                op = new Op("source-line", sourceLine);
+                sourceLines.add(sourceLine);
+            } else return;
         } else if (ins instanceof LocalSnapshot) {
             // Ignore.
             return;
@@ -231,8 +298,8 @@ public class ClassParser {
                 inv.name = ins.getOpcode().getName();
 
                 CstMethodRef methodRef = (CstMethodRef) cstInsn.getConstant();
-                inv.className = methodRef.getDefiningClass().toHuman();
-                inv.methodName = methodRef.getNat().getName().toHuman();
+                inv.value = new ClassConstant(methodRef.getDefiningClass().toHuman());
+                inv.memberName = methodRef.getNat().getName().toHuman();
                 inv.signature = methodRef.getNat().getDescriptor().toHuman();
 
                 RegisterSpecList registerList = cstInsn.getRegisters();
@@ -245,10 +312,10 @@ public class ClassParser {
                 Constant con = cstInsn.getConstant();
                 if(con instanceof CstMemberRef) {
                     CstMemberRef memberRef = (CstMemberRef)con;
-                    Field f = new Field();
+                    Op f = new Op();
                     f.name = ins.getOpcode().getName();
-                    f.className = memberRef.getDefiningClass().getClassType().toHuman();
-                    f.name = memberRef.getNat().getName().toHuman();
+                    f.value = new ClassConstant(memberRef.getDefiningClass().getClassType().toHuman());
+                    f.memberName = memberRef.getNat().getName().toHuman();
                     op = f;
                 }
                 else if(con.getClass() == CstInteger.class) {
@@ -276,11 +343,33 @@ public class ClassParser {
             op.name = ins.getOpcode().getName();
             op.target = targetInsn.getTargetAddress();
             addRegisters(op, ins.getRegisters());
+
+            if(op.name.equals("fill-array-data")) {
+                op.arrayData = arrayData.get(op.target);
+                op.target = -1;
+            } else if(op.name.equals("sparse-switch") || op.name.equals("packed-switch")) {
+                op.target = -1;
+                SwitchData data = switchData.get(targetInsn.getTargetAddress());
+                if (data == null) {
+                    throw new RuntimeException("Couldn't find SwitchData block.");
+                }
+                IntList cases = data.getCases();
+                CodeAddress[] caseTargets = data.getTargets();
+
+                // Sanity check.
+                if (cases.size() != caseTargets.length) {
+                    throw new RuntimeException("SwitchData size mismatch: cases vs targets.");
+                }
+                op.cases = new ArrayList();
+                for(int i=0; i<cases.size(); i++) {
+                    op.cases.add(new Op.SwitchCase(cases.get(i), caseTargets[i].getAddress()));
+                }
+            }
         } else if (ins instanceof HighRegisterPrefix) {
                 HighRegisterPrefix highRegisterPrefix = (HighRegisterPrefix)ins;
                 SimpleInsn[] moveInstructions = highRegisterPrefix.getMoveInstructions();
                 for (SimpleInsn moveInstruction : moveInstructions) {
-                    parseInstruction(moveInstruction, method, opAdresses, trapDepth);
+                    parseInstruction(moveInstruction, method, opAdresses, trapDepth, arrayData, switchData, ins.getAddress(), sourceLines);
                 }
                 return;
         } else {
@@ -292,14 +381,16 @@ public class ClassParser {
         if(op == null) throw new RuntimeException("Unknown instruction "+ins+" / "+ins.getClass());
         if(trapDepth > 0 && op.name.startsWith("return")) {
             Op r = new Op("trap-restore", null);
-            method.instructions.add(r);
+            method.body.add(r);
             opAdresses.put(ins.getAddress(), r);
-            System.out.println(ins.getAddress()+":"+ r);
         }
-        method.instructions.add(op);
-        if(!opAdresses.containsKey(ins.getAddress()))
-            opAdresses.put(ins.getAddress(), op);
-        System.out.println(ins.getAddress()+":"+ op);
+        method.body.add(op);
+        int addr = highAddress;
+        if(addr == -1) addr = ins.getAddress();
+        if (!opAdresses.containsKey(addr))
+            opAdresses.put(addr, op);
+
+        return;
     }
     private static boolean isInvokeInstruction(CstInsn cstInsn) {
         final Dop[] invokeInstructions = { Dops.INVOKE_VIRTUAL, Dops.INVOKE_VIRTUAL_RANGE,
@@ -341,40 +432,6 @@ public class ClassParser {
         }
     }
 
-    private static Map<Integer, Target> extractTargets(DalvInsnList instructions, CatchTable catches) {
-        Map<Integer, Target> targets = new HashMap<Integer, Target>();
 
-        // First, add non-catch targets.
-        for (int i = 0; i < instructions.size(); ++i) {
-            // If the target is generic, we have to assume it might jump into a
-            // catch block, so we require splitting.
-            if (instructions.get(i) instanceof TargetInsn) {
-                TargetInsn targetInsn = (TargetInsn) instructions.get(i);
-                targets.put(targetInsn.getTargetAddress(), new Target(
-                        targetInsn.getTargetAddress(), true));
-            } else if (instructions.get(i) instanceof SwitchData) {
-                // If a switch-statement is enclosed by a try-block, we
-                // will also require splitting.
-                SwitchData switchData = (SwitchData) instructions.get(i);
-                CodeAddress[] caseTargets = switchData.getTargets();
-                for (CodeAddress caseTarget : caseTargets) {
-                    targets.put(caseTarget.getAddress(), new Target(caseTarget.getAddress(), true));
-                }
-            }
-        }
-
-        // Then, add all catch-handler targets. We need this info, so using
-        // Map.put will potentially override an existing target, so the
-        // information about a potential catch-handler target is not lost.
-        for (int i = 0; i < catches.size(); ++i) {
-            CatchHandlerList handlers = catches.get(i).getHandlers();
-            for (int j = 0; j < handlers.size(); ++j) {
-                int handlerAddress = handlers.get(j).getHandler();
-                targets.put(handlerAddress, new Target(handlerAddress, true));
-            }
-        }
-
-        return targets;
-    }
     
 }

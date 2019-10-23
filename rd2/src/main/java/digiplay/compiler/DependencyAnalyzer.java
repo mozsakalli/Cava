@@ -277,19 +277,26 @@ public class DependencyAnalyzer {
             }
         }
 
-        for(Op ins : m.instructions) {
+        for(Op ins : m.body) {
             if(ins.value != null && ins.value instanceof ClassConstant)
                 dependsClass(((ClassConstant)ins.value).name);
             if(ins instanceof Invoke) {
                 Invoke inv = (Invoke)ins;
-                Clazz tc = CompilerContext.resolve(inv.className);
+                String className = ((ClassConstant)inv.value).name;
+                Clazz tc = CompilerContext.resolve(className);
                 dependsClass(tc);
-                Method tm = tc.findMethod(inv.methodName, inv.signature);
+                Method tm = tc.findMethod(inv.memberName, inv.signature);
                 if(tm == null) {
-                    throw new RuntimeException("Can't find method: "+inv.className+"."+inv.methodName+inv.signature);
+                    throw new RuntimeException("Can't find method: "+className+"."+inv.memberName+inv.signature);
                 }
                 dependsMethod(tm);
             }
+            if(ins.exceptionHandlers != null) {
+                ins.exceptionHandlers.forEach(handler -> {
+                    dependsClass(handler.className);
+                });
+            }
+
         }
         /*
         m.visit(new Visitor() {
@@ -326,9 +333,6 @@ public class DependencyAnalyzer {
     
     
     private void dependsClass(Clazz c) {
-        if(c.name.startsWith("L")) {
-            System.out.println("...");
-        }
         if(!analyzedClasses.contains(c) && !classQueue.contains(c))
             classQueue.add(c);
     }

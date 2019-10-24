@@ -28,6 +28,15 @@ import java.util.Set;
  * @author mustafa
  */
 public class Method extends NameAndType implements Serializable {
+
+    public static class VariableInfo implements Serializable {
+        public String name;
+        public String type;
+        public int index;
+        public int firstLine;
+        public int lastLine;
+    }
+
     final static long serialVersionUID = 0;
 
     public String signature;

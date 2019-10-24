@@ -4,42 +4,9 @@
     <list default="true" id="b9a21be7-13d9-4f2f-93bc-b9688af16011" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classcache/Test.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/Test.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.ArrayIndexOutOfBoundsException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.ArrayIndexOutOfBoundsException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Boolean.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Boolean.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Byte.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Byte.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Character.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Character.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Class.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Class.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.ClassCastException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.ClassCastException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Double.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Double.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Error.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Error.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Exception.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Exception.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Float.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Float.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.IllegalArgumentException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.IllegalArgumentException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.IndexOutOfBoundsException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.IndexOutOfBoundsException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Integer.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Integer.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Long.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Long.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.NullPointerException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.NullPointerException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Number.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Number.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Object.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Object.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.RuntimeException.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.RuntimeException.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Short.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Short.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.StackOverflowError.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.StackOverflowError.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.String.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.String.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Thread.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Thread.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.Throwable.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.Throwable.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Constructor.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Constructor.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Field.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Field.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Method.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.lang.reflect.Method.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.util.AbstractCollection.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.util.AbstractCollection.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.util.AbstractList.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.util.AbstractList.model" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classcache/java.util.ArrayList.model" beforeDir="false" afterPath="$PROJECT_DIR$/build/classcache/java.util.ArrayList.model" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rd2/src/main/java/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/ClassParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/ClassParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Field.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Invoke.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Invoke.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java" beforeDir="false" afterPath="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/rd/target/" />
@@ -67,15 +34,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/ClassParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="111" column="31" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="31" />
+            <state relative-caret-position="182">
+              <caret line="274" column="42" selection-start-line="274" selection-start-column="42" selection-end-line="274" selection-end-column="42" />
               <folding>
-                <element signature="e#0#16129#0" expanded="true" />
                 <element signature="imports" expanded="true" />
-                <element signature="e#8162#8183#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,8 +49,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/rd2/dx.jar!/com/android/dx/rop/code/LocalVariableInfo.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1273">
-              <caret line="101" column="75" selection-start-line="101" selection-start-column="64" selection-end-line="101" selection-end-column="75" />
+            <state relative-caret-position="150">
+              <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/rd2/dx.jar!/com/android/dx/rop/code/RegisterSpec.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2792">
+              <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -93,7 +67,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1291">
+            <state relative-caret-position="4635">
               <caret line="329" column="13" selection-start-line="329" selection-start-column="13" selection-end-line="329" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -105,8 +79,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="35" selection-start-line="35" selection-end-line="35" />
+            <state relative-caret-position="153">
+              <caret line="33" column="27" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -114,7 +88,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
+            <state relative-caret-position="570">
               <caret line="55" selection-start-line="55" selection-end-line="55" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -138,11 +112,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="675">
-              <caret line="59" column="12" selection-start-line="59" selection-start-column="12" selection-end-line="59" selection-end-column="12" />
+            <state relative-caret-position="398">
+              <caret line="41" column="36" lean-forward="true" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -150,8 +124,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/CompilerContext.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="158" column="8" lean-forward="true" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
+            <state relative-caret-position="495">
+              <caret line="59" selection-start-line="59" selection-end-line="59" />
             </state>
           </provider>
         </entry>
@@ -159,7 +133,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Invoke.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
+            <state relative-caret-position="180">
               <caret line="13" column="50" selection-start-line="13" selection-start-column="50" selection-end-line="13" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -200,6 +174,12 @@
       <find>new op</find>
       <find>localvaria</find>
       <find>sourceline</find>
+      <find>locals</find>
+      <find>debug-va</find>
+      <find>snaps</find>
+      <find>&gt;&gt;</find>
+      <find>debugdu</find>
+      <find>localsna</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -216,13 +196,13 @@
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DecompilerUtils.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/TrapBegin.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Switch.java" />
-        <option value="$PROJECT_DIR$/rd2/src/main/java/Test.java" />
-        <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Invoke.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/CompilerContext.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java" />
+        <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java" />
         <option value="$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/ClassParser.java" />
+        <option value="$PROJECT_DIR$/rd2/src/main/java/Test.java" />
       </list>
     </option>
   </component>
@@ -238,7 +218,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -311,6 +290,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -361,9 +341,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="6" y="23" width="1654" height="972" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2853598" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28846154" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -372,7 +351,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.31022727" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.31022727" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39886364" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -451,6 +430,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/TrapBegin.java" />
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/TrapEnd.java" />
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Switch.java" />
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Field.java" />
+    <entry file="jar://$PROJECT_DIR$/rd2/dx.jar!/com/android/dx/rop/code/LocalVariableExtractor.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="10" column="19" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4635">
+          <caret line="329" column="13" selection-start-line="329" selection-start-column="13" selection-end-line="329" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="55" selection-start-line="55" selection-end-line="55" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/ClassConstant.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -464,34 +472,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Switch.java">
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/CompilerContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Field.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        <state relative-caret-position="495">
+          <caret line="59" selection-start-line="59" selection-end-line="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Invoke.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
+        <state relative-caret-position="180">
           <caret line="13" column="50" selection-start-line="13" selection-start-column="50" selection-end-line="13" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/DependencyAnalyzer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1291">
-          <caret line="329" column="13" selection-start-line="329" selection-start-column="13" selection-end-line="329" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -500,51 +491,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/Method.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/CompilerContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="158" column="8" lean-forward="true" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/model/op/Op.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="55" selection-start-line="55" selection-end-line="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="153">
+          <caret line="33" column="27" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$PROJECT_DIR$/rd2/dx.jar!/com/android/dx/rop/code/LocalVariableInfo.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1273">
-          <caret line="101" column="75" selection-start-line="101" selection-start-column="64" selection-end-line="101" selection-end-column="75" />
+        <state relative-caret-position="150">
+          <caret line="14" column="41" selection-start-line="14" selection-start-column="41" selection-end-line="14" selection-end-column="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/Test.java">
+    <entry file="jar://$PROJECT_DIR$/rd2/dx.jar!/com/android/dx/rop/code/RegisterSpec.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="59" column="12" selection-start-line="59" selection-start-column="12" selection-end-line="59" selection-end-column="12" />
+        <state relative-caret-position="-2792">
+          <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/rd2/src/main/java/digiplay/compiler/ClassParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="329">
-          <caret line="111" column="31" selection-start-line="111" selection-start-column="31" selection-end-line="111" selection-end-column="31" />
+        <state relative-caret-position="182">
+          <caret line="274" column="42" selection-start-line="274" selection-start-column="42" selection-end-line="274" selection-end-column="42" />
           <folding>
-            <element signature="e#0#16129#0" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#8162#8183#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rd2/src/main/java/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="41" column="36" lean-forward="true" selection-start-line="41" selection-start-column="36" selection-end-line="41" selection-end-column="36" />
         </state>
       </provider>
     </entry>

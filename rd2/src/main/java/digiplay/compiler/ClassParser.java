@@ -109,7 +109,6 @@ public class ClassParser {
 
         if (localInfo) {
             locals = LocalVariableExtractor.extract(rmeth);
-            locals.debugDump();
         }
         
         DalvCode code = RopTranslator.translate(rmeth, positionInfo, locals, paramSize);
@@ -125,6 +124,7 @@ public class ClassParser {
         DalvInsnList instructions = code.getInsns();
         Map<Integer, List<Object>> arrayData = extractArrayData(instructions);
         Map<Integer, SwitchData> switchData = extractSwitchData(instructions);
+        extractLocals(instructions);
         Set<Integer> sourceLines = new HashSet<>();
 
         maxRegisterNumber = -1;
@@ -146,9 +146,9 @@ public class ClassParser {
                     }
                     RegisterSpecSet set = locals.getStarts(addr);
                     if (set != null && set.size() > 0) {
-                        Op op = new Op("debug-vars", set);
-                        m.body.add(op);
-                        seenDebugInfo.add(addr);
+                        //Op op = new Op("debug-vars", set);
+                        //m.body.add(op);
+                        //seenDebugInfo.add(addr);
                     }
                 }
             }
@@ -258,6 +258,61 @@ public class ClassParser {
         return result;
     }
 
+    void extractLocals(DalvInsnList instructions) {
+        List<Method.VariableInfo> locals = new ArrayList<>();
+        Set<String> lastLocals = new HashSet();
+        Set<String> newLocals = new HashSet();
+        Set<Method.VariableInfo> completed = new HashSet<>();
+
+        for(int i=0; i<instructions.size(); i++) {
+            if(instructions.get(i) instanceof LocalSnapshot) {
+                LocalSnapshot ls = (LocalSnapshot)instructions.get(i);
+                if(ls.getPosition() != null) {
+                    int line = ls.getPosition().getLine();
+                    RegisterSpecSet registers = ls.getLocals();
+                    for(int k=0; k<registers.size(); k++) {
+                        RegisterSpec reg = registers.get(k);
+                        if(reg == null || reg.getLocalItem() == null) continue;;
+                        String name = reg.getLocalItem().getName().toHuman();
+                        String type = reg.getType().toHuman();
+                        int index = reg.getReg();
+
+                        Method.VariableInfo var = locals.stream()
+                                .filter(v -> v.name.equals(name) && v.type.equals(type))
+                                .findFirst()
+                                .orElse(null);
+
+                        if(var == null || completed.contains(var)) {
+                            var = new Method.VariableInfo();
+                            var.name = name;
+                            var.type = type;
+                            var.index = index;
+                            var.firstLine = var.lastLine = line;
+                            locals.add(0,var);
+                        } else {
+                            var.lastLine = line;
+                        }
+                        newLocals.add(name);
+                        lastLocals.remove(name);
+                    }
+
+                    for(String name : lastLocals) {
+                        Method.VariableInfo var = locals.stream().filter(v -> v.name.equals(name)).findFirst().orElse(null);
+                        if(var != null) completed.add(var);
+                    }
+                    lastLocals.clear();
+                    lastLocals.addAll(newLocals);
+                    newLocals.clear();
+                }
+            }
+        }
+
+        Collections.reverse(locals);
+        for(Method.VariableInfo var : locals) {
+            System.out.println(var.name+"["+var.index+" / "+var.type+"] -> "+var.firstLine+":"+var.lastLine);
+        }
+    }
+
     void parseInstruction(DalvInsn ins, Method method, Map<Integer, Op> opAdresses, int trapDepth, Map<Integer, List<Object>> arrayData, Map<Integer, SwitchData> switchData, int highAddress, Set<Integer> sourceLines) {
         Op op = null;
         if (ins instanceof CodeAddress) {
@@ -269,6 +324,9 @@ public class ClassParser {
                 sourceLines.add(sourceLine);
             } else return;
         } else if (ins instanceof LocalSnapshot) {
+            RegisterSpecSet locals = ((LocalSnapshot)ins).getLocals();
+
+            //System.out.println(((LocalSnapshot)ins).getPosition()+":"+locals);
             // Ignore.
             return;
         } else if (ins instanceof OddSpacer) {
@@ -281,6 +339,8 @@ public class ClassParser {
         } else if (ins instanceof LocalStart) {
             // As we extract the locals information up-front we don't need to
             // handle local-start.
+            //LocalStart ls = (LocalStart)ins;
+            //System.out.println(">>  "+ls);
             return;
         } else if (ins instanceof ArrayData) {
             // Ignore here because we already processed these and they were

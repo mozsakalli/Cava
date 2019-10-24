@@ -48,6 +48,7 @@ public class Test {
             }
             catch (NullPointerException e2) {
                 sumb += 10;
+                e2.printStackTrace();
                 //System.out.println("e2");
             }
             catch(Exception e1) {

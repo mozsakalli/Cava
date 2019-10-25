@@ -20,6 +20,7 @@ import com.android.dx.cf.code.ConcreteMethod;
 import com.android.dx.cf.code.Ropper;
 import com.android.dx.cf.direct.DirectClassFile;
 import com.android.dx.cf.direct.StdAttributeFactory;
+import com.android.dx.cf.iface.Field;
 import com.android.dx.dex.code.*;
 import com.android.dx.dex.code.CstInsn;
 import com.android.dx.rop.code.*;
@@ -57,7 +58,22 @@ public class ClassParser {
         cls.name = name;
         if(dxClass.getSuperclass() != null)
             cls.superName = dxClass.getSuperclass().getClassType().getClassName();
-        
+
+        for(int i=0; i<dxClass.getFields().size(); i++) {
+            Field field = dxClass.getFields().get(i);
+            int accessFlags = field.getAccessFlags();
+            int modifier = 0;
+            if(AccessFlags.isNative(accessFlags)) modifier |= Modifier.NATIVE;
+            if(AccessFlags.isStatic(accessFlags)) modifier |= Modifier.STATIC;
+            if(AccessFlags.isAbstract(accessFlags)) modifier |= Modifier.ABSTRACT;
+
+            NameAndType f = new NameAndType();
+            f.declaringClass = cls.name;
+            f.type = field.getNat().getFieldType().toString();
+            f.modifiers = modifier;
+            cls.fields.add(f);
+        }
+
         for(int i=0; i<dxClass.getMethods().size(); i++) {
             com.android.dx.cf.iface.Method dm = dxClass.getMethods().get(i);
             Method m = parseMethod(dm, dxClass);
@@ -131,7 +147,7 @@ public class ClassParser {
         Set<Integer> seenTraps = new HashSet<>();
         Set<Integer> seenDebugInfo = new HashSet<>();
 
-        //System.out.println(m.name+" / "+m.signature+" / "+catches.size());
+        System.out.println(m.name+" / "+m.signature+" / "+catches.size());
         Map<Integer, Op> opAdresses = new HashMap();
 
         int trapDepth = 0;
@@ -258,52 +274,69 @@ public class ClassParser {
         return result;
     }
 
+    void addLocal(RegisterSpec reg, int line, List<Method.VariableInfo> locals, Set<Method.VariableInfo> completed) {
+        if(reg == null || reg.getLocalItem() == null) return;
+        String name = reg.getLocalItem().getName().toHuman();
+        String type = reg.getType().toHuman();
+        int index = reg.getReg();
+
+        Method.VariableInfo var = locals.stream()
+                .filter(v -> v.name.equals(name) && v.type.equals(type))
+                .findFirst()
+                .orElse(null);
+
+        if(var == null || completed.contains(var)) {
+            var = new Method.VariableInfo();
+            var.name = name;
+            var.type = type;
+            var.index = index;
+            var.firstLine = var.lastLine = line;
+            locals.add(0,var);
+        } else {
+            if(line < var.firstLine) var.firstLine = line;
+            if(line > var.lastLine) var.lastLine = line;
+        }
+    }
+
     void extractLocals(DalvInsnList instructions) {
         List<Method.VariableInfo> locals = new ArrayList<>();
         Set<String> lastLocals = new HashSet();
         Set<String> newLocals = new HashSet();
         Set<Method.VariableInfo> completed = new HashSet<>();
+        int lastLine = -1;
 
         for(int i=0; i<instructions.size(); i++) {
+            if(instructions.get(i).getPosition() != null) {
+                int line = instructions.get(i).getPosition().getLine();
+                if(line != -1) lastLine = line;
+            }
+
+            if(instructions.get(i) instanceof LocalStart) {
+                LocalStart ls = (LocalStart)instructions.get(i);
+                RegisterSpec reg = ls.getLocal();
+                addLocal(reg, lastLine, locals, completed);
+            } else
             if(instructions.get(i) instanceof LocalSnapshot) {
                 LocalSnapshot ls = (LocalSnapshot)instructions.get(i);
-                if(ls.getPosition() != null) {
-                    int line = ls.getPosition().getLine();
-                    RegisterSpecSet registers = ls.getLocals();
-                    for(int k=0; k<registers.size(); k++) {
-                        RegisterSpec reg = registers.get(k);
-                        if(reg == null || reg.getLocalItem() == null) continue;;
-                        String name = reg.getLocalItem().getName().toHuman();
-                        String type = reg.getType().toHuman();
-                        int index = reg.getReg();
+                RegisterSpecSet registers = ls.getLocals();
+                for(int k=0; k<registers.size(); k++) {
+                    RegisterSpec reg = registers.get(k);
+                    if(reg == null || reg.getLocalItem() == null) continue;;
+                    String name = reg.getLocalItem().getName().toHuman();
 
-                        Method.VariableInfo var = locals.stream()
-                                .filter(v -> v.name.equals(name) && v.type.equals(type))
-                                .findFirst()
-                                .orElse(null);
+                    addLocal(reg, lastLine, locals, completed);
 
-                        if(var == null || completed.contains(var)) {
-                            var = new Method.VariableInfo();
-                            var.name = name;
-                            var.type = type;
-                            var.index = index;
-                            var.firstLine = var.lastLine = line;
-                            locals.add(0,var);
-                        } else {
-                            var.lastLine = line;
-                        }
-                        newLocals.add(name);
-                        lastLocals.remove(name);
-                    }
-
-                    for(String name : lastLocals) {
-                        Method.VariableInfo var = locals.stream().filter(v -> v.name.equals(name)).findFirst().orElse(null);
-                        if(var != null) completed.add(var);
-                    }
-                    lastLocals.clear();
-                    lastLocals.addAll(newLocals);
-                    newLocals.clear();
+                    newLocals.add(name);
+                    lastLocals.remove(name);
                 }
+
+                for(String name : lastLocals) {
+                    Method.VariableInfo var = locals.stream().filter(v -> v.name.equals(name)).findFirst().orElse(null);
+                    if(var != null) completed.add(var);
+                }
+                lastLocals.clear();
+                lastLocals.addAll(newLocals);
+                newLocals.clear();
             }
         }
 
@@ -314,6 +347,7 @@ public class ClassParser {
     }
 
     void parseInstruction(DalvInsn ins, Method method, Map<Integer, Op> opAdresses, int trapDepth, Map<Integer, List<Object>> arrayData, Map<Integer, SwitchData> switchData, int highAddress, Set<Integer> sourceLines) {
+        //System.out.println(ins.getClass().getSimpleName()+":"+ins);
         Op op = null;
         if (ins instanceof CodeAddress) {
             SourcePosition sourcePosition = ins.getPosition();

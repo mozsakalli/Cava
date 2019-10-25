@@ -46,7 +46,8 @@ public final class Class<T> {
     public Field[] fields;
     public Class[] interfaces;
     public Method[] methods;
-    
+    public boolean initialized;
+
     public static java.lang.Class forName(java.lang.String className)  {
         /*
         switch(className) {

@@ -1,6 +1,6 @@
---class-path src
---main Main
---cpp bin/x64
+-cp src
+-main Main
+-cpp bin/x64
 -D iphone
 -D ios
 -D simulator
@@ -8,10 +8,11 @@
 #-D no-compilation 
 -D objc
 -D HXCPP_M64
--D IPHONE_VER=13.0
+#-D IPHONE_VER=13.0
 -D HXCPP_STACK_LINE
 -D HXCPP_STACK_TRACE
 -D HXCPP_CHECK_POINTER
+-D HXCPP_CPP11
 -debug
--D HXCPP_DEBUGGER
--lib hxcpp-debug-server
+#-D HXCPP_DEBUGGER
+#-lib hxcpp-debug-server

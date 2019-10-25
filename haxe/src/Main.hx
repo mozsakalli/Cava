@@ -1,42 +1,37 @@
 package;
 
+import cpp.objc.Protocol;
 import digiplay.Game;
 import native.objc.*;
 
-@:headerCode('
-#import <UIKit/UIKit.h>
-@interface _hx_objc_Ctrl : UIViewController {
-    @public ::hx::ObjectPtr<::Ctrl_obj> haxePeer;
+
+class Main {
+
+    public static function main() {
+        trace("Started");
+    }
 }
-@end
-')
-@:cppFileCode('
-#import <UIKit/UIKit.h>
-@implementation _hx_objc_Ctrl
-- (void)loadView {
-    haxePeer->loadView();
-}
-@end
-')
-class Ctrl extends UIViewController {
+/*
+class Controller implements _UIViewController {
 
     public function new() {
-        var thiz = this;
-        untyped __cpp__('
-            _hx_objc_Ctrl* other = [_hx_objc_Ctrl alloc];
-            other->haxePeer = thiz;
-            thiz->nativePeer = other;
-        ');
         
-        nativePeerOwner = false;
-        super();
     }
 
-    override public function loadView() {
+    public function loadView():Void {
         trace("Load View");
     }
 }
 
+class MyView extends UIView {
+
+    public function new() {
+        super();
+        initWithFrame(UIScreen.mainScreen().bounds);
+        trace("View Created...");
+    }
+}
+/*
 class Ctrl2 extends UIViewController {
     public function new() {
         super();
@@ -51,27 +46,29 @@ class Ctrl2 extends UIViewController {
     }
 }
 
-class View extends UIView {
-
-}
 
 class Main extends UIApplicationDelegate {
+
+    static var uiController:Protocol<_UIViewController>;
 
     override function didFinishLaunchingWithOptions() {
         var bounds = UIScreen.mainScreen().bounds;
         var window = UIWindow.alloc().initWithFrame(bounds);
-        var ctrl = new Ctrl2();
-        ctrl.init();
-        window.rootViewController = ctrl;
+        var ctrl = new Controller();
+        uiController = ctrl;
+        //ctrl.init();
+        window.rootViewController = uiController;
         window.makeKeyAndVisible();
 
         var view = new UIView();
         view.initWithFrame(bounds);
-
+        var sel = OBJC.selector("deneme");
         trace('bounds: ${bounds.size.width}x${bounds.size.height}');
     }
 
     public static function main() {
         UIApplication.start(new Main());
     }
-}
+}*/
+
+

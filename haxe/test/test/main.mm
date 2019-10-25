@@ -10,6 +10,7 @@
 #import <Metal/Metal.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
+#include "/Users/mustafa/haxelib/hxcpp/4,0,52/include/hx/CFFI.h"
 
 extern "C" void __hxcpp_lib_main();
 extern "C" void __digiplay_didFinishLaunching();
@@ -24,6 +25,7 @@ static CGPoint SafeScreenTopLeft;
 static CGPoint SafeScreenBottomRight;
 static BOOL IsTouching;
 static CGPoint TouchPosition;
+static AutoGCRoot* H;
 
 @interface DigiplayView : UIView
 @end
@@ -226,25 +228,30 @@ static CGPoint TouchPosition;
 @interface DigiplayAppDelegate : NSObject<UIApplicationDelegate>
 @end
 
+extern value _hx_objc_to_value(id val);
+
 @implementation DigiplayAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    __digiplay_notify_haxe("app:launching", NULL);
+    _hx_objc_to_value(nil);
+    //__digiplay_notify_haxe("app:launching", NULL);
     
     UIWindow* window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[DigiplayViewController alloc] init];
     
     [window makeKeyAndVisible];
     
-    __digiplay_notify_haxe("app:launched", NULL);
+    //__digiplay_notify_haxe("app:launched", NULL);
     return YES;
 }
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    __digiplay_notify_haxe("app:background", NULL);
+    //__digiplay_notify_haxe("app:background", NULL);
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    __digiplay_notify_haxe("app:foreground", NULL);
-}
+    //__digiplay_notify_haxe("app:foreground", NULL);
+    //val_call0(H->get());
+    //value o = alloc_empty_object();
+ }
 @end
 
 int main(int argc, char * argv[]) {

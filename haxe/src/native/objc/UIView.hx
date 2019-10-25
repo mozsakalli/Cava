@@ -6,6 +6,7 @@ class UIView extends ObjCObject {
 
     public function new() {
         super();
+        nativePeerOwner = false;
     }
 
     public function initWithFrame(bounds:CGRect) {

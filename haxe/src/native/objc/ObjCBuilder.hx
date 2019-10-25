@@ -12,8 +12,8 @@ using Lambda;
 class ObjCBuilder {
 #if macro
     public static function build():Array<Field> {
-
         var fields = haxe.macro.Context.getBuildFields();   
+        /*
         var cls = haxe.macro.Context.getLocalClass().get();
         var localPackage = cls.pack.join('.');
         var localClassName:String = Std.string(Context.getLocalClass().get().name);
@@ -72,10 +72,11 @@ class ObjCBuilder {
         //setMeta(':headerCode', code);
         
         setMeta(':cppFileCode', code);
-        
+        */
         return fields;
     }
 
+    /*
     static function buildObjCHeader(fun:Function, f:Field, meta:Array<String>, isStatic:Bool) {
         var ret = fun.ret == null ? "void" : toObjCType(fun.ret);
         var isVoid = ret == "void";
@@ -145,7 +146,7 @@ class ObjCBuilder {
         }
 
         return res;
-    }    
+    }    */
 
 #end
 }

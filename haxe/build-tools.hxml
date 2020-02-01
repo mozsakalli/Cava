@@ -1,3 +1,3 @@
 --class-path tools
 --main tools.Main
---neko bin/digiplay
+--neko digiplay.n

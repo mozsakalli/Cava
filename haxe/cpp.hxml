@@ -5,7 +5,7 @@
 -D ios
 -D simulator
 -D HXCPP_COMPILE_THREADS=8
-#-D no-compilation 
+-D no-compilation 
 -D objc
 -D HXCPP_M64
 #-D IPHONE_VER=13.0
@@ -14,5 +14,5 @@
 -D HXCPP_CHECK_POINTER
 -D HXCPP_CPP11
 -debug
-#-D HXCPP_DEBUGGER
-#-lib hxcpp-debug-server
+-D HXCPP_DEBUGGER
+-lib hxcpp-debug-server
